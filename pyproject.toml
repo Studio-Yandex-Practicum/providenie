@@ -1,0 +1,5 @@
+[tool.poetry.dependencies]
+isort = "^5.11.3"
+flake8 = "^6.0.0"
+black = "^22.12.0"
+pre-commit = "^2.20.0"
