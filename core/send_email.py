@@ -4,18 +4,16 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 from .logger import logger
-from .settings import PORT_SMTP_SERVER, SMTP_SERVER
+from .settings import (
+    PORT_SMTP_SERVER,
+    SMTP_SERVER,
+    EMAIL_BOT,
+    EMAIL_BOT_PASSWORD,
+    EMAIL_CURATOR
+)
 
 
-load_dotenv()
-
-EMAIL_BOT = os.getenv('EMAIL_BOT', 'FondProvidenieBot@yandex.ru')
-
-# ЗАМЕНИТЬ НА МЫЛО КУРАТОРА ФОНДА
-EMAIL_CURATOR = os.getenv('EMAIL_CURATOR', 'k.danilow2009@yandex.ru')
-EMAIL_BOT_PASSWORD = os.getenv('EMAIL_BOT_PASSWORD', 'jyvsejdjxyixsxkh')
-
-ERROR_CANT_SAND_MSG_TO_EMAIL = 'Неудается отправить сообщение на email куратора!'
+ERROR_CANT_SEND_MSG_TO_EMAIL = 'Неудается отправить сообщение на email куратора!'
 
 
 # тестовый шаблон. СДелай со мной что-нибудь.
@@ -29,11 +27,16 @@ HTML_TEMPLATE = """
 """
 
 # ИСПАРВЬ МЕНЯ, КАК ТОЛЬКО БОТ ОЖИВЕТ И ПОЛУЧИТ СООБЩЕНИЕ ОТ ПОЛЬЗОВАТЕЛЯ
+# УБРАТЬ ТЕСТОВЫЕ ТЕМУ СООБЩЕНИЯ И ТЕКСТ. РАСКОММЕНТИТЬ subject, text_from_user
 def bot_send_email_to_curator(subject: str, text_from_user: str):
     """
     Отправка ботом сообщение на email куратору.
     Subject - тема сообщения.
     Text_from_user - сообщение пользователя.
+    В месте, где будет вызываться данная функция
+    нужно будет проверить истинность(True/False)
+    для вывода пользователю об успехе отправки сообщения или 
+    же неудачной попытке.
     """
     try:
         smtp_server = smtplib.SMTP(SMTP_SERVER, PORT_SMTP_SERVER)
@@ -53,8 +56,11 @@ def bot_send_email_to_curator(subject: str, text_from_user: str):
 
         smtp_server.send_message(message)
 
+        return True
+
     except Exception as error:
-        logger.error(ERROR_CANT_SAND_MSG_TO_EMAIL, error)
+        logger.error(ERROR_CANT_SEND_MSG_TO_EMAIL, error)
+        return False
 
     finally:
         smtp_server.quit()
