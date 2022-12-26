@@ -5,8 +5,19 @@ from telegram.ext import (
     MessageHandler,
     filters,
 )
+from .conversations.volunteer_application import volunteer_application
+from .conversations.parents_chat import (select_chat,
+                                         end_second_level,
+                                         stop_nested,
+                                         parents_surname,
+                                         telephone_number,
+                                         baby_surname)
+from .conversations.fund_application import fund_application
+from .conversations.menu import talk_friends, give_donation, get_events, ask_question, request, start, end
 
-(SELECTING_ACTION, CHAT, APPLICATION, VOLUNTEER,
+
+
+(SELECTING_ACTION, CHAT, REQUEST, VOLUNTEER,
 TALK, DONATION, EVENTS, QUESTION, ABOUT
  ) = map(chr, range(9))
 
@@ -49,13 +60,13 @@ description_conv = ConversationHandler(
 selection_handlers = [
     description_conv,
     CallbackQueryHandler(select_chat, pattern="^" + str(CHAT) + "$"),
-    CallbackQueryHandler(application, pattern="^" + str(APPLICATION) + "$"),
-    CallbackQueryHandler(become_volunteer, pattern="^" + str(VOLUNTEER) + "$"),
+    CallbackQueryHandler(request, pattern="^" + str(REQUEST) + "$"),
+    CallbackQueryHandler(volunteer_application, pattern="^" + str(VOLUNTEER) + "$"),
     CallbackQueryHandler(talk_friends, pattern="^" + str(TALK) + "$"),
     CallbackQueryHandler(give_donation, pattern="^" + str(DONATION) + "$"),
     CallbackQueryHandler(get_events, pattern="^" + str(EVENTS) + "$"),
     CallbackQueryHandler(ask_question, pattern="^" + str(QUESTION) + "$"),
-    CallbackQueryHandler(get_about_fond, pattern="^" + str(ABOUT) + "$"),
+    CallbackQueryHandler(fund_application, pattern="^" + str(ABOUT) + "$"),
     CallbackQueryHandler(end, pattern="^" + str(END) + "$")
 ]
 

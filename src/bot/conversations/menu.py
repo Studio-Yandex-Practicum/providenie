@@ -5,22 +5,10 @@ from telegram.ext import (
 )
 
 
-(SELECTING_ACTION, CHAT, APPLICATION, VOLUNTEER,
+(SELECTING_ACTION, CHAT, REQUEST, VOLUNTEER,
 TALK, DONATION, EVENTS, QUESTION, ABOUT
  ) = map(chr, range(9))
 
-(SELECTING_CHAT, CHAT_BABY, CHAT_CHILD,
-SHUNTATA, RETINOPATIA, GRANDMOTHERS, CRY,
-ANGELS, RETINOPATIA_4_5, PROBLEMS,
-TELECRAM_CHAT) = map(chr, range(9, 20))
-
-
-(PARENTS_SURNAME, TELEPHONE_NUMBER, BABY_SURNAME,
-DATE_OF_BIRTH, PLACE_OF_BIRTH, TERM_OF_BIRTH,
-WEIGHT, HEIGHT) = map(chr, range(21, 29))
-SELECTING_CHAT, TYPING = map(chr, range(29, 31))
-
-STOPPING, SHOWING = map(chr, range(31, 33))
 END = ConversationHandler.END
 (START_OVER, CURRENT_CHAT) = map(chr, range(19, 21))
 
@@ -39,12 +27,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
+async def start_menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Главное меню бота. Выбор пункта меню"""
     text = 'Вы можете выбрать любую программу:'
     buttons = [
         [InlineKeyboardButton(text='Хочу попасть в родительский чат', callback_data=str(CHAT))],
-        [InlineKeyboardButton(text='Заявка в фонд', callback_data=str(APPLICATION))],
+        [InlineKeyboardButton(text='Заявка в фонд', callback_data=str(REQUEST))],
         [InlineKeyboardButton(text='Хочу стать волонтером', callback_data=str(VOLUNTEER))],
         [InlineKeyboardButton(text='Рассказать о Фонде своим друзьям', callback_data=str(TALK))],
         [InlineKeyboardButton(text='Пожертвование', callback_data=str(DONATION))],

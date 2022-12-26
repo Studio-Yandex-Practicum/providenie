@@ -1,7 +1,8 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import (ContextTypes, ConversationHandler)
-(SELECTING_ACTION, CHAT, APPLICATION, VOLUNTEER,
-TALK, DONATION, EVENTS, QUESTION, ABOUT) = map(chr, range(9))
+
+from .menu import start_menu
+
 
 (SELECTING_CHAT, CHAT_BABY, CHAT_CHILD,
 SHUNTATA, RETINOPATIA, GRANDMOTHERS, CRY,
@@ -56,7 +57,7 @@ async def select_chat(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str
 async def end_second_level(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Возврат к главному меню"""
     context.user_data[START_OVER] = True
-    await start(update, context)
+    await start_menu(update, context)
 
     return END
 
