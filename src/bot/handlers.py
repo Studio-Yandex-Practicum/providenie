@@ -3,7 +3,7 @@ from telegram.ext import (CallbackQueryHandler, CommandHandler,
 
 from .conversations.fund_application import fund_application
 from .conversations.menu import (ask_question, end, get_events, give_donation,
-                                 request, start, start_menu, talk_friends)
+                                 request, start, start_welcome, talk_friends)
 from .conversations.parents_chat import (baby_surname, end_second_level,
                                          parents_surname, select_chat,
                                          stop_nested, telephone_number)
@@ -47,7 +47,7 @@ from .conversations.volunteer_application import volunteer_application
     WEIGHT,
     HEIGHT,
 ) = map(chr, range(21, 29))
-SELECTING_CHAT, TYPING = map(chr, range(29, 31))
+
 
 STOPPING, SHOWING = map(chr, range(31, 33))
 END = ConversationHandler.END
@@ -90,7 +90,7 @@ description_conv = ConversationHandler(
 
 selection_handlers = [
     description_conv,
-    CallbackQueryHandler(start_menu, pattern="^" + str("MAIN") + "$"),
+    CallbackQueryHandler(start, pattern="^" + str("MAIN") + "$"),
     CallbackQueryHandler(select_chat, pattern="^" + str(CHAT) + "$"),
     CallbackQueryHandler(request, pattern="^" + str(REQUEST) + "$"),
     CallbackQueryHandler(
@@ -108,7 +108,7 @@ conv_handler = ConversationHandler(
     allow_reentry=True,
     entry_points=[
         CommandHandler("start", start),
-        CommandHandler("menu", start_menu),
+        CommandHandler("start_welcome", start_welcome),
     ],
     states={
         SHOWING: [CallbackQueryHandler(start, pattern="^" + str(END) + "$")],

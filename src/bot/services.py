@@ -9,7 +9,11 @@ from core.settings import TELEGRAM_TOKEN
 
 def start_bot():
     """Функция инициализации и запуска бота."""
-    application = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
+    application = (
+        ApplicationBuilder()
+        .token(TELEGRAM_TOKEN)
+        .build()
+    )
     application.add_handler(conv_handler)
     return application
 
