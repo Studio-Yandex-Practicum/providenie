@@ -18,7 +18,7 @@ END = ConversationHandler.END
 (START_OVER, CURRENT_CHAT) = map(chr, range(19, 21))
 
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def start_welcome(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Кнопка старт. Вывод приветствия."""
     text_start_button = (
         "Привет! Я бот-помощник фонда помощи "
@@ -32,10 +32,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
-async def start_menu(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> str:
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Главное меню бота. Выбор пункта меню"""
+
     text = "Вы можете выбрать любую программу:"
     buttons = [
         [
