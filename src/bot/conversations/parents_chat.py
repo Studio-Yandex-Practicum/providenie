@@ -1,7 +1,7 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes, ConversationHandler
 
-from .menu import start_menu
+from .menu import start
 from core.logger import logger
 
 
@@ -116,7 +116,7 @@ async def end_second_level(
 ) -> int:
     """Возврат к главному меню"""
     context.user_data[START_OVER] = True
-    await start_menu(update, context)
+    await start(update, context)
 
     return END
 
