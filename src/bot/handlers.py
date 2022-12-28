@@ -4,9 +4,11 @@ from telegram.ext import (CallbackQueryHandler, CommandHandler,
 from .conversations.fund_application import fund_application
 from .conversations.menu import (ask_question, end, get_events, give_donation,
                                  request, start, start_welcome, talk_friends)
-from .conversations.parents_chat import (baby_surname, end_second_level,
-                                         parents_surname, select_chat,
-                                         stop_nested, telephone_number)
+from .conversations.parents_chat import (angels, chat_baby, chat_child, cry,
+                                         end_second_level, grandmothers,
+                                         problems, rethinopatia,
+                                         rethinopatia_4_5, select_chat,
+                                         shuntata, stop_nested, telegram_chat)
 from .conversations.volunteer_application import volunteer_application
 
 
@@ -24,6 +26,7 @@ from .conversations.volunteer_application import volunteer_application
 
 (
     SELECTING_CHAT,
+    CHAT,
     CHAT_BABY,
     CHAT_CHILD,
     SHUNTATA,
@@ -34,8 +37,7 @@ from .conversations.volunteer_application import volunteer_application
     RETINOPATIA_4_5,
     PROBLEMS,
     TELECRAM_CHAT,
-) = map(chr, range(9, 20))
-
+) = map(chr, range(9, 21))
 
 (
     PARENTS_SURNAME,
@@ -47,36 +49,35 @@ from .conversations.volunteer_application import volunteer_application
     WEIGHT,
     HEIGHT,
 ) = map(chr, range(21, 29))
-
+TYPING = map(chr, range(30, 31))
 
 STOPPING, SHOWING = map(chr, range(31, 33))
 END = ConversationHandler.END
 (START_OVER, CURRENT_CHAT) = map(chr, range(19, 21))
 
+chat_handlers = [
+    CallbackQueryHandler(chat_child, pattern="^" + str(CHAT_CHILD) + "$"),
+    CallbackQueryHandler(chat_baby, pattern="^" + str(CHAT_BABY) + "$"),
+    CallbackQueryHandler(rethinopatia, pattern="^" + str(RETINOPATIA) + "$"),
+    CallbackQueryHandler(shuntata, pattern="^" + str(SHUNTATA) + "$"),
+    CallbackQueryHandler(grandmothers, pattern="^" + str(GRANDMOTHERS) + "$"),
+    CallbackQueryHandler(cry, pattern="^" + str(CRY) + "$"),
+    CallbackQueryHandler(angels, pattern="^" + str(ANGELS) + "$"),
+    CallbackQueryHandler(
+        rethinopatia_4_5, pattern="^" + str(RETINOPATIA_4_5) + "$"
+    ),
+    CallbackQueryHandler(problems, pattern="^" + str(PROBLEMS) + "$"),
+    CallbackQueryHandler(
+        telegram_chat, pattern="^" + str(TELECRAM_CHAT) + "$"
+    ),
+]
 
-description_conv = ConversationHandler(
+chat_conv = ConversationHandler(
+    allow_reentry=True,
     entry_points=[
-        CallbackQueryHandler(
-            select_chat,
-            pattern="^" + str(CHAT_BABY) + "$|^" + str(CHAT_CHILD) + "$|"
-            "^" + str(RETINOPATIA) + "$|^" + str(SHUNTATA) + "$|"
-            "^" + str(GRANDMOTHERS) + "$|^" + str(CRY) + "$|"
-            "^" + str(ANGELS) + "$|"
-            "^" + str(RETINOPATIA_4_5) + "$|"
-            "^" + str(PROBLEMS) + "$|^" + str(TELECRAM_CHAT) + "$",
-        )
+        CallbackQueryHandler(select_chat, pattern="^" + str(CHAT) + "$")
     ],
-    states={
-        PARENTS_SURNAME: [
-            MessageHandler(filters.TEXT & ~filters.COMMAND, parents_surname)
-        ],
-        TELEPHONE_NUMBER: [
-            MessageHandler(filters.TEXT & ~filters.COMMAND, telephone_number)
-        ],
-        BABY_SURNAME: [
-            MessageHandler(filters.TEXT & ~filters.COMMAND, baby_surname)
-        ],
-    },
+    states={SELECTING_CHAT: chat_handlers},
     fallbacks=[
         CallbackQueryHandler(end_second_level, pattern="^" + str(END) + "$"),
         CommandHandler("stop", stop_nested),
@@ -89,7 +90,7 @@ description_conv = ConversationHandler(
 
 
 selection_handlers = [
-    description_conv,
+    chat_conv,
     CallbackQueryHandler(start, pattern="^" + str("MAIN") + "$"),
     CallbackQueryHandler(select_chat, pattern="^" + str(CHAT) + "$"),
     CallbackQueryHandler(request, pattern="^" + str(REQUEST) + "$"),
@@ -113,6 +114,7 @@ conv_handler = ConversationHandler(
     states={
         SHOWING: [CallbackQueryHandler(start, pattern="^" + str(END) + "$")],
         SELECTING_ACTION: selection_handlers,
+        SELECTING_CHAT: [chat_conv],
         STOPPING: [CommandHandler("start", start)],
     },
     fallbacks=[CommandHandler("end", end)],
