@@ -6,6 +6,7 @@ from core.logger import logger
 
 
 (
+    SELECTING_CHAT,
     CHAT,
     CHAT_BABY,
     CHAT_CHILD,
@@ -17,8 +18,7 @@ from core.logger import logger
     RETINOPATIA_4_5,
     PROBLEMS,
     TELECRAM_CHAT,
-) = map(chr, range(9, 20))
-
+) = map(chr, range(9, 21))
 
 (
     PARENTS_SURNAME,
@@ -30,7 +30,7 @@ from core.logger import logger
     WEIGHT,
     HEIGHT,
 ) = map(chr, range(21, 29))
-SELECTING_CHAT, TYPING = map(chr, range(29, 31))
+TYPING = map(chr, range(30, 31))
 
 STOPPING, SHOWING = map(chr, range(31, 33))
 END = ConversationHandler.END
@@ -108,7 +108,7 @@ async def select_chat(
         text = "Мы получили от Вас информацию!"
         await update.message.reply_text(text=text, reply_markup=keyboard)
     context.user_data[START_OVER] = False
-    return PARENTS_SURNAME
+    return SELECTING_CHAT
 
 
 async def end_second_level(
@@ -128,6 +128,68 @@ async def stop_nested(
     await update.message.reply_text("Возврат к главному меню")
 
     return STOPPING
+
+
+async def chat_baby(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
+    await update.callback_query.answer()
+    text = "chat_baby"
+    await update.callback_query.edit_message_text(text=text)
+    return SELECTING_CHAT
+
+
+async def chat_child(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> str:
+    await update.callback_query.answer()
+    text = "chat_child"
+    await update.callback_query.edit_message_text(text=text)
+    return SELECTING_CHAT
+
+
+async def rethinopatia(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> str:
+    await update.callback_query.answer()
+    text = "rethinopatia"
+    await update.callback_query.edit_message_text(text=text)
+    return SELECTING_CHAT
+
+
+async def angels(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
+    await update.callback_query.answer()
+    text = "angels"
+    await update.callback_query.edit_message_text(text=text)
+    return SELECTING_CHAT
+
+
+async def grandmothers(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> str:
+    pass
+
+
+async def shuntata(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
+    pass
+
+
+async def cry(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
+    pass
+
+
+async def rethinopatia_4_5(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> str:
+    pass
+
+
+async def problems(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
+    pass
+
+
+async def telegram_chat(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> str:
+    pass
 
 
 async def parents_surname(
