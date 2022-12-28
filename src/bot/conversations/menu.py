@@ -83,8 +83,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
         await update.callback_query.edit_message_text(reply_markup=keyboard)
     else:
         await update.message.reply_text(
-            "Я бот-помощник фонда помощи"
-            ' недоношенным детям и их семьям "Провидение". '
+            "Привет! Я бот-помощник фонда помощи "
+            'недоношенным детям и их семьям "Провидение".\n '
+            "Мы спасаем зрение недоношенным детям.\n"
+            "Я помогу Вам как получить, так и оказать помощь!\n"
         )
         await update.message.reply_text(reply_markup=keyboard, text=text)
 
