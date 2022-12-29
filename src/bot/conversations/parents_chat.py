@@ -34,7 +34,7 @@ TYPING = map(chr, range(30, 31))
 
 STOPPING, SHOWING = map(chr, range(31, 33))
 END = ConversationHandler.END
-(START_OVER, CURRENT_CHAT) = map(chr, range(19, 21))
+(START_OVER, CURRENT_CHAT) = map(chr, range(40, 42))
 
 
 async def select_chat(
@@ -96,18 +96,13 @@ async def select_chat(
         ],
     ]
     keyboard = InlineKeyboardMarkup(buttons_chat)
-    if not context.user_data.get(START_OVER):
-        context.user_data[CHAT] = {CHAT: update.callback_query.data}
-        text = "Выберите чат для вступления:"
+    context.user_data[CHAT] = {CURRENT_CHAT: update.callback_query.data}
+    text = "Выберите чат для вступления:"
+    await update.callback_query.answer()
+    await update.callback_query.edit_message_text(
+        text=text, reply_markup=keyboard
+    )
 
-        await update.callback_query.answer()
-        await update.callback_query.edit_message_text(
-            text=text, reply_markup=keyboard
-        )
-    else:
-        text = "Мы получили от Вас информацию!"
-        await update.message.reply_text(text=text, reply_markup=keyboard)
-    context.user_data[START_OVER] = False
     return SELECTING_CHAT
 
 
@@ -134,7 +129,7 @@ async def chat_baby(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     await update.callback_query.answer()
     text = "chat_baby"
     await update.callback_query.edit_message_text(text=text)
-    return SELECTING_CHAT
+    return TYPING
 
 
 async def chat_child(

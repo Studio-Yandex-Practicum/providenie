@@ -1,5 +1,5 @@
 from telegram.ext import (CallbackQueryHandler, CommandHandler,
-                          ConversationHandler, MessageHandler, filters)
+                          ConversationHandler)
 
 from .conversations.fund_application import fund_application
 from .conversations.menu import (ask_question, end, get_events, give_donation,
@@ -14,7 +14,7 @@ from .conversations.volunteer_application import volunteer_application
 
 (
     SELECTING_ACTION,
-    CHAT,
+    CHATS,
     REQUEST,
     VOLUNTEER,
     TALK,
@@ -26,7 +26,7 @@ from .conversations.volunteer_application import volunteer_application
 
 (
     SELECTING_CHAT,
-    CHAT,
+    CURRENT_CHAT,
     CHAT_BABY,
     CHAT_CHILD,
     SHUNTATA,
@@ -53,7 +53,8 @@ TYPING = map(chr, range(30, 31))
 
 STOPPING, SHOWING = map(chr, range(31, 33))
 END = ConversationHandler.END
-(START_OVER, CURRENT_CHAT) = map(chr, range(19, 21))
+(START_OVER, CURRENT_CHAT) = map(chr, range(40, 42))
+
 
 chat_handlers = [
     CallbackQueryHandler(chat_child, pattern="^" + str(CHAT_CHILD) + "$"),
@@ -70,12 +71,13 @@ chat_handlers = [
     CallbackQueryHandler(
         telegram_chat, pattern="^" + str(TELECRAM_CHAT) + "$"
     ),
+    CallbackQueryHandler(end, pattern="^" + str(END) + "$"),
 ]
 
 chat_conv = ConversationHandler(
     allow_reentry=True,
     entry_points=[
-        CallbackQueryHandler(select_chat, pattern="^" + str(CHAT) + "$")
+        CallbackQueryHandler(select_chat, pattern="^" + str(CHATS) + "$")
     ],
     states={SELECTING_CHAT: chat_handlers},
     fallbacks=[
@@ -90,9 +92,8 @@ chat_conv = ConversationHandler(
 
 
 selection_handlers = [
-    chat_conv,
     CallbackQueryHandler(start, pattern="^" + str("MAIN") + "$"),
-    CallbackQueryHandler(select_chat, pattern="^" + str(CHAT) + "$"),
+    CallbackQueryHandler(select_chat, pattern="^" + str(CHATS) + "$"),
     CallbackQueryHandler(request, pattern="^" + str(REQUEST) + "$"),
     CallbackQueryHandler(
         volunteer_application, pattern="^" + str(VOLUNTEER) + "$"
@@ -113,8 +114,8 @@ conv_handler = ConversationHandler(
     ],
     states={
         SHOWING: [CallbackQueryHandler(start, pattern="^" + str(END) + "$")],
-        SELECTING_ACTION: selection_handlers,
         SELECTING_CHAT: [chat_conv],
+        SELECTING_ACTION: selection_handlers,
         STOPPING: [CommandHandler("start", start)],
     },
     fallbacks=[CommandHandler("end", end)],

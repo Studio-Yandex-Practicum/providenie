@@ -15,7 +15,7 @@ from telegram.ext import ContextTypes, ConversationHandler
 ) = map(chr, range(9))
 
 END = ConversationHandler.END
-(START_OVER, CURRENT_CHAT) = map(chr, range(19, 21))
+(START_OVER, CURRENT_CHAT) = map(chr, range(40, 42))
 
 
 async def start_welcome(update: Update, context: ContextTypes.DEFAULT_TYPE):
