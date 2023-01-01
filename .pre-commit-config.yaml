@@ -15,29 +15,25 @@ repos:
       name: black
       entry: black
       files: ^(bot/|core/|src/)
+      exclude: settings.py
       language: system
       types: [python]
-      args: [
-        --line-length=79,
-      ]
+      args: [--line-length=79]
 
     - id: isort
       name: isort
       entry: isort
       files: ^(bot/|core/|src/)
+      exclude: settings.py
       language: system
       types: [python]
-      args: [
-        --line-length=79,
-      ]
+      args: ["--profile", "black", --line-length=79]
 
     - id: flake8
       name: flake8
       entry: flake8
       files: ^(bot/|core/|src/)
+      exclude: settings.py
       language: system
       types: [python]
-      args: [
-        "--ignore=E203,W503,FI10,FI11,FI12,FI13,FI14,FI15,FI16,FI17,FI58,PT013",
-        "--max-line-length=79"
-      ]
+      args: [--config, setup.cfg]
