@@ -1,3 +1,5 @@
+# from telegram.ext import CommandHandler
+
 import core.logger  # noqa
 from bot.services import start_bot
 
