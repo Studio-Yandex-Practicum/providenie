@@ -7,18 +7,19 @@ from core.logger import logger
 
 (
     SELECTING_CHAT,
-    CHAT,
+    SELECTING_ACTION_IN_CHAT,
     CHAT_BABY,
     CHAT_CHILD,
-    SHUNTATA,
     RETINOPATIA,
+    SHUNTATA,
     GRANDMOTHERS,
     CRY,
     ANGELS,
     RETINOPATIA_4_5,
     PROBLEMS,
+    REHABILITATION,
     TELECRAM_CHAT,
-) = map(chr, range(9, 21))
+) = map(chr, range(9, 22))
 
 (
     PARENTS_SURNAME,
@@ -29,7 +30,7 @@ from core.logger import logger
     TERM_OF_BIRTH,
     WEIGHT,
     HEIGHT,
-) = map(chr, range(21, 29))
+) = map(chr, range(22, 30))
 TYPING = map(chr, range(30, 31))
 
 STOPPING, SHOWING = map(chr, range(31, 33))
@@ -41,6 +42,8 @@ async def select_chat(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Выбрать чат"""
+    chat = update.callback_query.data
+    context.user_data[CURRENT_CHAT] = chat
     buttons_chat = [
         [
             InlineKeyboardButton(
@@ -96,7 +99,6 @@ async def select_chat(
         ],
     ]
     keyboard = InlineKeyboardMarkup(buttons_chat)
-    context.user_data[CHAT] = {CURRENT_CHAT: update.callback_query.data}
     text = "Выберите чат для вступления:"
     await update.callback_query.answer()
     await update.callback_query.edit_message_text(
@@ -127,64 +129,395 @@ async def stop_nested(
 
 async def chat_baby(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     await update.callback_query.answer()
-    text = "chat_baby"
-    await update.callback_query.edit_message_text(text=text)
-    return TYPING
+
+    text = (
+        "В группе информационная и психологическая помощь "
+        "родителям по любым вопросам, "
+        "связанным с недоношенными детьми младше 1,5 лет."
+    )
+
+    buttons = [
+        [
+            InlineKeyboardButton(
+                text="Вступить в чат", callback_data=str(TYPING)
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Вернуться в список чатов",
+                callback_data=str(SELECTING_CHAT),
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Вернуться в главное меню", callback_data=str(END)
+            )
+        ],
+    ]
+    keyboard = InlineKeyboardMarkup(buttons)
+    await update.callback_query.answer()
+    await update.callback_query.edit_message_text(
+        text=text, reply_markup=keyboard
+    )
+
+    return SELECTING_ACTION_IN_CHAT
 
 
 async def chat_child(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     await update.callback_query.answer()
-    text = "chat_child"
-    await update.callback_query.edit_message_text(text=text)
-    return SELECTING_CHAT
+
+    text = (
+        "В группе информационная и психологическая помощь "
+        "родителям по любым вопросам, "
+        "связанным с недоношенными детьми старше 1,5 лет."
+    )
+
+    buttons = [
+        [
+            InlineKeyboardButton(
+                text="Вступить в чат", callback_data=str(TYPING)
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Вернуться в список чатов",
+                callback_data=str(SELECTING_CHAT),
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Вернуться в главное меню", callback_data=str(END)
+            )
+        ],
+    ]
+    keyboard = InlineKeyboardMarkup(buttons)
+    await update.callback_query.answer()
+    await update.callback_query.edit_message_text(
+        text=text, reply_markup=keyboard
+    )
+
+    return SELECTING_ACTION_IN_CHAT
 
 
-async def rethinopatia(
+async def retinopatia(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     await update.callback_query.answer()
-    text = "rethinopatia"
-    await update.callback_query.edit_message_text(text=text)
-    return SELECTING_CHAT
 
+    text = "Группа для родителей деток с ретинопатией"
 
-async def angels(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
+    buttons = [
+        [
+            InlineKeyboardButton(
+                text="Вступить в чат", callback_data=str(TYPING)
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Вернуться в список чатов",
+                callback_data=str(SELECTING_CHAT),
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Вернуться в главное меню", callback_data=str(END)
+            )
+        ],
+    ]
+    keyboard = InlineKeyboardMarkup(buttons)
     await update.callback_query.answer()
-    text = "angels"
-    await update.callback_query.edit_message_text(text=text)
-    return SELECTING_CHAT
+    await update.callback_query.edit_message_text(
+        text=text, reply_markup=keyboard
+    )
+
+    return SELECTING_ACTION_IN_CHAT
+
+
+async def shuntata(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
+    await update.callback_query.answer()
+
+    text = "Группа для родителей деток с шунтами"
+
+    buttons = [
+        [
+            InlineKeyboardButton(
+                text="Вступить в чат", callback_data=str(TYPING)
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Вернуться в список чатов",
+                callback_data=str(SELECTING_CHAT),
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Вернуться в главное меню", callback_data=str(END)
+            )
+        ],
+    ]
+    keyboard = InlineKeyboardMarkup(buttons)
+    await update.callback_query.answer()
+    await update.callback_query.edit_message_text(
+        text=text, reply_markup=keyboard
+    )
+
+    return SELECTING_ACTION_IN_CHAT
 
 
 async def grandmothers(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
-    pass
+    await update.callback_query.answer()
 
+    text = (
+        "Бабушки хотят помочь своим детям, внукам, "
+        "но не знают как. "
+        "При этом, сами нуждаются в поддержке! "
+        "Именно поэтому, создана группа "
+        "взаимной поддержки бабушек недоношенных детей."
+    )
 
-async def shuntata(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
-    pass
+    buttons = [
+        [
+            InlineKeyboardButton(
+                text="Вступить в чат", callback_data=str(TYPING)
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Вернуться в список чатов",
+                callback_data=str(SELECTING_CHAT),
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Вернуться в главное меню", callback_data=str(END)
+            )
+        ],
+    ]
+    keyboard = InlineKeyboardMarkup(buttons)
+    await update.callback_query.answer()
+    await update.callback_query.edit_message_text(
+        text=text, reply_markup=keyboard
+    )
+
+    return SELECTING_ACTION_IN_CHAT
 
 
 async def cry(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
-    pass
+    await update.callback_query.answer()
+
+    text = (
+        "Иногда очень хочется пожаловаться и поплакать. "
+        "Ведь вокруг так много несправедливости! "
+        "ЧАТ психологической направленности. "
+        "В чате всегда готовы помочь Вам "
+        "профессиональные психологи и, конечно, мамы."
+    )
+
+    buttons = [
+        [
+            InlineKeyboardButton(
+                text="Вступить в чат", callback_data=str(TYPING)
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Вернуться в список чатов",
+                callback_data=str(SELECTING_CHAT),
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Вернуться в главное меню", callback_data=str(END)
+            )
+        ],
+    ]
+    keyboard = InlineKeyboardMarkup(buttons)
+    await update.callback_query.answer()
+    await update.callback_query.edit_message_text(
+        text=text, reply_markup=keyboard
+    )
+
+    return SELECTING_ACTION_IN_CHAT
+
+
+async def angels(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
+    await update.callback_query.answer()
+
+    text = "Для родителей, которые столкнулись со смертью ребенка."
+
+    buttons = [
+        [
+            InlineKeyboardButton(
+                text="Вступить в чат", callback_data=str(TYPING)
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Вернуться в список чатов",
+                callback_data=str(SELECTING_CHAT),
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Вернуться в главное меню", callback_data=str(END)
+            )
+        ],
+    ]
+    keyboard = InlineKeyboardMarkup(buttons)
+    await update.callback_query.answer()
+    await update.callback_query.edit_message_text(
+        text=text, reply_markup=keyboard
+    )
+
+    return SELECTING_ACTION_IN_CHAT
 
 
 async def rethinopatia_4_5(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
-    pass
+    await update.callback_query.answer()
+
+    text = "Ретинопатия недоношенных 4-5 стадии"
+
+    buttons = [
+        [
+            InlineKeyboardButton(
+                text="Вступить в чат", callback_data=str(TYPING)
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Вернуться в список чатов",
+                callback_data=str(SELECTING_CHAT),
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Вернуться в главное меню", callback_data=str(END)
+            )
+        ],
+    ]
+
+    keyboard = InlineKeyboardMarkup(buttons)
+    await update.callback_query.answer()
+    await update.callback_query.edit_message_text(
+        text=text, reply_markup=keyboard
+    )
+
+    return SELECTING_ACTION_IN_CHAT
 
 
 async def problems(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
-    pass
+    await update.callback_query.answer()
+
+    text = (
+        "Зрение детей с различными "
+        "офтальмологическими проблемами (включая косоглазие)"
+    )
+
+    buttons = [
+        [
+            InlineKeyboardButton(
+                text="Вступить в чат", callback_data=str(TYPING)
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Вернуться в список чатов",
+                callback_data=str(SELECTING_CHAT),
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Вернуться в главное меню", callback_data=str(END)
+            )
+        ],
+    ]
+
+    keyboard = InlineKeyboardMarkup(buttons)
+    await update.callback_query.answer()
+    await update.callback_query.edit_message_text(
+        text=text, reply_markup=keyboard
+    )
+
+    return SELECTING_ACTION_IN_CHAT
+
+
+async def rehabilitation(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> str:
+    await update.callback_query.answer()
+
+    text = "Реабилитация зрения"
+
+    buttons = [
+        [
+            InlineKeyboardButton(
+                text="Вступить в чат", callback_data=str(TYPING)
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Вернуться в список чатов",
+                callback_data=str(SELECTING_CHAT),
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Вернуться в главное меню", callback_data=str(END)
+            )
+        ],
+    ]
+    keyboard = InlineKeyboardMarkup(buttons)
+    await update.callback_query.answer()
+    await update.callback_query.edit_message_text(
+        text=text, reply_markup=keyboard
+    )
+
+    return SELECTING_ACTION_IN_CHAT
 
 
 async def telegram_chat(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
-    pass
+    await update.callback_query.answer()
+
+    text = (
+        "Группа поддержки в Телеграмм "
+        "«Помощь семьям торопыжек» t.me/toropizhki"
+    )
+
+    buttons = [
+        [
+            InlineKeyboardButton(
+                text="Вступить в чат", callback_data=str(TYPING)
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Вернуться в список чатов",
+                callback_data=str(SELECTING_CHAT),
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="Вернуться в главное меню", callback_data=str(END)
+            )
+        ],
+    ]
+
+    keyboard = InlineKeyboardMarkup(buttons)
+    await update.callback_query.answer()
+    await update.callback_query.edit_message_text(
+        text=text, reply_markup=keyboard
+    )
+
+    return SELECTING_ACTION_IN_CHAT
 
 
 async def parents_surname(
