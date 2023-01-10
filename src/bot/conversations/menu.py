@@ -18,7 +18,7 @@ END = ConversationHandler.END
 (START_OVER, CURRENT_CHAT) = map(chr, range(40, 42))
 
 
-async def start_welcome(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Кнопка старт. Вывод приветствия."""
     text_start_button = (
         "Привет! Я бот-помощник фонда помощи "
@@ -32,7 +32,7 @@ async def start_welcome(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
+async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Главное меню бота. Выбор пункта меню"""
     text = "У фонда 'Провидение' есть следующие программы:"
     buttons = [
@@ -42,11 +42,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
                 callback_data=str(CHATS),
             )
         ],
-        [
-            InlineKeyboardButton(
-                text="Заявка в фонд", callback_data=str(REQUEST)
-            )
-        ],
+        [InlineKeyboardButton(text="Заявка в фонд", callback_data=str(REQUEST))],
         [
             InlineKeyboardButton(
                 text="Хочу стать волонтером", callback_data=str(VOLUNTEER)
@@ -58,18 +54,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
                 callback_data=str(TALK),
             )
         ],
+        [InlineKeyboardButton(text="Пожертвование", callback_data=str(DONATION))],
         [
-            InlineKeyboardButton(
-                text="Пожертвование", callback_data=str(DONATION)
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                text="Наши события", callback_data=str(EVENTS)
-            ),
-            InlineKeyboardButton(
-                text="Задать вопрос", callback_data=str(QUESTION)
-            ),
+            InlineKeyboardButton(text="Наши события", callback_data=str(EVENTS)),
+            InlineKeyboardButton(text="Задать вопрос", callback_data=str(QUESTION)),
         ],
         [
             InlineKeyboardButton(text="О Фонде", callback_data=str(ABOUT)),
@@ -107,44 +95,34 @@ async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 async def end(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Завершение по команде из меню"""
     await update.callback_query.answer()
-    text = (
-        "Будем рады видеть Вас на нашем сайте! \n https://fond-providenie.ru"
-    )
+    text = "Будем рады видеть Вас на нашем сайте! \n https://fond-providenie.ru"
     await update.callback_query.edit_message_text(text=text)
 
     return END
 
 
-async def talk_friends(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> str:
+async def talk_friends(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     await update.callback_query.answer()
     text = "talk_friends"
     await update.callback_query.edit_message_text(text=text)
     return SELECTING_ACTION
 
 
-async def give_donation(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> str:
+async def give_donation(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     await update.callback_query.answer()
     text = "give_donation"
     await update.callback_query.edit_message_text(text=text)
     return SELECTING_ACTION
 
 
-async def get_events(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> str:
+async def get_events(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     await update.callback_query.answer()
     text = "get_events"
     await update.callback_query.edit_message_text(text=text)
     return SELECTING_ACTION
 
 
-async def ask_question(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> str:
+async def ask_question(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     await update.callback_query.answer()
     text = "ask_question"
     await update.callback_query.edit_message_text(text=text)
