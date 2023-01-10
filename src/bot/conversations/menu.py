@@ -4,7 +4,7 @@ from telegram.ext import ContextTypes, ConversationHandler
 
 (
     SELECTING_ACTION,
-    CHAT,
+    CHATS,
     REQUEST,
     VOLUNTEER,
     TALK,
@@ -35,11 +35,12 @@ async def start_welcome(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Главное меню бота. Выбор пункта меню"""
 
-    text = "Вы можете выбрать любую программу:"
+    text = "У фонда 'Провидение' есть следующие программы:"
     buttons = [
         [
             InlineKeyboardButton(
-                text="Хочу попасть в родительский чат", callback_data=str(CHAT)
+                text="Хочу попасть в родительский чат",
+                callback_data=str(CHATS),
             )
         ],
         [
