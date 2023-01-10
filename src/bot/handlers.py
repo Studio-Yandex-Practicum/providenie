@@ -95,7 +95,7 @@ chat_conv = ConversationHandler(
     },
 )
 
-
+#   handlers главного меню
 selection_handlers = [
     chat_conv,
     CallbackQueryHandler(start, pattern="^" + str("MAIN") + "$"),
