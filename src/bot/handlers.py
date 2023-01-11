@@ -1,18 +1,11 @@
-from telegram.ext import CallbackQueryHandler, CommandHandler, ConversationHandler
+from telegram.ext import (CallbackQueryHandler, CommandHandler,
+                          ConversationHandler)
 
 from .conversations.fund_application import fund_application
-from .conversations.menu import (
-    ask_question,
-    end,
-    get_events,
-    give_donation,
-    request,
-    start,
-    menu,
-    talk_friends,
-)
-from .conversations.parents_chat import select_chat
+from .conversations.menu import (ask_question, end, get_events, give_donation,
+                                 menu, request, select_chat, start, talk_friends)
 from .conversations.volunteer_application import volunteer_application
+
 
 (
     SELECTING_ACTION,
@@ -35,7 +28,9 @@ selection_handlers = [
     CallbackQueryHandler(start, pattern="^" + str("MAIN") + "$"),
     CallbackQueryHandler(select_chat, pattern="^" + str(CHATS) + "$"),
     CallbackQueryHandler(request, pattern="^" + str(REQUEST) + "$"),
-    CallbackQueryHandler(volunteer_application, pattern="^" + str(VOLUNTEER) + "$"),
+    CallbackQueryHandler(
+        volunteer_application, pattern="^" + str(VOLUNTEER) + "$"
+    ),
     CallbackQueryHandler(talk_friends, pattern="^" + str(TALK) + "$"),
     CallbackQueryHandler(give_donation, pattern="^" + str(DONATION) + "$"),
     CallbackQueryHandler(get_events, pattern="^" + str(EVENTS) + "$"),
