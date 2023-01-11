@@ -1,17 +1,20 @@
 from telegram import InlineKeyboardMarkup, Update
 from telegram.error import Forbidden, TelegramError
-from telegram.ext import ApplicationBuilder, CommandHandler
+from telegram.ext import ApplicationBuilder
 
-from bot.conversations.menu import start
+from bot.handlers import conv_handler
 from core.logger import logger
 from core.settings import TELEGRAM_TOKEN
 
 
 def start_bot():
     """Функция инициализации и запуска бота."""
-    application = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
-    start_handler = CommandHandler("start", start)
-    application.add_handler(start_handler)
+    application = (
+        ApplicationBuilder()
+        .token(TELEGRAM_TOKEN)
+        .build()
+    )
+    application.add_handler(conv_handler)
     return application
 
 
