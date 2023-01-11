@@ -43,7 +43,8 @@ selection_handlers = [
 conv_handler = ConversationHandler(
     allow_reentry=True,
     entry_points=[
-        CommandHandler("start", menu),
+        CommandHandler("start", start),
+        CommandHandler("menu", menu),
     ],
     states={
         SHOWING: [CallbackQueryHandler(start, pattern="^" + str(END) + "$")],
