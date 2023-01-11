@@ -3,7 +3,8 @@ from telegram.ext import (CallbackQueryHandler, CommandHandler,
 
 from .conversations.fund_application import fund_application
 from .conversations.menu import (ask_question, end, get_events, give_donation,
-                                 menu, request, select_chat, start, talk_friends)
+                                 menu, request, select_chat, start,
+                                 talk_friends)
 from .conversations.volunteer_application import volunteer_application
 
 
@@ -43,7 +44,6 @@ conv_handler = ConversationHandler(
     allow_reentry=True,
     entry_points=[
         CommandHandler("start", menu),
-        CommandHandler("start", start),
     ],
     states={
         SHOWING: [CallbackQueryHandler(start, pattern="^" + str(END) + "$")],
