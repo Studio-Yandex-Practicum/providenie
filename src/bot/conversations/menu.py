@@ -1,7 +1,7 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
-from bot import constants as const
+from bot import states
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -11,13 +11,13 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [
             InlineKeyboardButton(
                 text="Хочу стать волонтёром",
-                callback_data=str(const.ADD_VOLUNTEER),
+                callback_data=str(states.ADD_VOLUNTEER),
             ),
         ],
     ]
     keyboard = InlineKeyboardMarkup(buttons)
 
-    if context.user_data.get(const.START_OVER):
+    if context.user_data.get(states.START_OVER):
         await update.callback_query.answer()
         await update.callback_query.edit_message_text(
             text=text, reply_markup=keyboard
@@ -25,8 +25,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await update.message.reply_text(text=text, reply_markup=keyboard)
 
-    context.user_data[const.START_OVER] = False
-    return const.SELECTING_ACTION
+    context.user_data[states.START_OVER] = False
+    return states.SELECTING_ACTION
 
 
 async def stop(update: Update, _) -> int:
@@ -34,7 +34,7 @@ async def stop(update: Update, _) -> int:
     await update.message.reply_text(
         "До свидания! " "Нажмите /start для повторного запуска"
     )
-    return const.END
+    return states.END
 
 
 async def stop_nested(update: Update, _) -> str:
@@ -42,19 +42,19 @@ async def stop_nested(update: Update, _) -> str:
     await update.message.reply_text(
         "До свидания! " "Нажмите /start для повторного запуска"
     )
-    return const.STOPPING
+    return states.STOPPING
 
 
 async def end(update: Update, _) -> int:
     """Завершение разговора."""
     await update.callback_query.answer()
-    return const.END
+    return states.END
 
 
 async def end_second_level(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
     """Завершение вложенного разговора."""
-    context.user_data[const.START_OVER] = True
+    context.user_data[states.START_OVER] = True
     await start(update, context)
-    return const.END
+    return states.END
