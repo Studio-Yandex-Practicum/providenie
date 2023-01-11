@@ -83,11 +83,8 @@ async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
         await update.callback_query.edit_message_text(reply_markup=keyboard)
     else:
         await update.message.reply_text(
-            "Привет! Я бот-помощник фонда помощи "
-            'недоношенным детям и их семьям "Провидение".\n '
-            "Мы спасаем зрение недоношенным детям.\n"
-            "Я помогу Вам как получить, так и оказать помощь!\n"
-        )
+            'Я бот-помощник фонда помощи "Провидение".\n '
+            )
         await update.message.reply_text(reply_markup=keyboard, text=text)
 
     context.user_data[START_OVER] = False
