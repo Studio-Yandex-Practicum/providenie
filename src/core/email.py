@@ -22,7 +22,7 @@ HTML_TEMPLATE = """
 """
 
 
-def bot_send_email_to_curator(subject: str, text_from_user: str) -> bool:
+def bot_send_email_to_curator(subject: str, html: str) -> bool:
     """
     Отправка ботом сообщение на email куратору.
     Subject - тема сообщения.
@@ -32,6 +32,7 @@ def bot_send_email_to_curator(subject: str, text_from_user: str) -> bool:
     для вывода пользователю об успехе отправки сообщения или
     же неудачной попытке.
     """
+    smtp_server = None
     try:
         smtp_server = smtplib.SMTP(
             settings.SMTP_SERVER, settings.PORT_SMTP_SERVER
@@ -45,8 +46,7 @@ def bot_send_email_to_curator(subject: str, text_from_user: str) -> bool:
 
         smtp_server.login(settings.EMAIL_BOT, settings.EMAIL_BOT_PASSWORD)
 
-        message.attach(MIMEText(text_from_user))
-        message.attach(MIMEText(HTML_TEMPLATE, "html"))
+        message.attach(MIMEText(html, "html"))
 
         smtp_server.send_message(message)
         logger.info(SUCCESSFUL_SENDING_MSG)
