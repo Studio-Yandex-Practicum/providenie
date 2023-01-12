@@ -1,10 +1,11 @@
+import logging
+
 from telegram import InlineKeyboardMarkup, Update
 from telegram.error import Forbidden, TelegramError
 from telegram.ext import ApplicationBuilder
 
 from bot import constants as const
 from bot.handlers.handler import conv_handler
-from core.logger import logger
 from core.settings import TELEGRAM_TOKEN
 
 
@@ -23,6 +24,6 @@ async def reply_message(
         message = update.message
         await message.reply_markdown_v2(text=text, reply_markup=reply_markup)
     except Forbidden:
-        logger.error(const.LOG_BOT_BLOCKED_BY_USER)
+        logging.error(const.LOG_BOT_BLOCKED_BY_USER)
     except TelegramError:
-        logger.error(const.LOG_ERROR_IN_RESPONSE)
+        logging.error(const.LOG_ERROR_IN_RESPONSE)

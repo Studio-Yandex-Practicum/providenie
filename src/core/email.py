@@ -1,9 +1,9 @@
+import logging
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 from . import settings
-from .logger import logger
 from bot import constants as const
 
 
@@ -34,12 +34,12 @@ def bot_send_email_to_curator(subject: str, html: str) -> bool:
         message.attach(MIMEText(html, "html"))
 
         smtp_server.send_message(message)
-        logger.info(const.SUCCESSFUL_SENDING_MSG)
+        logging.info(const.SUCCESSFUL_SENDING_MSG)
 
         return True
 
     except Exception as error:
-        logger.error(const.ERROR_CANT_SEND_MSG_TO_EMAIL, error)
+        logging.error(const.ERROR_CANT_SEND_MSG_TO_EMAIL, error)
         return False
 
     finally:
