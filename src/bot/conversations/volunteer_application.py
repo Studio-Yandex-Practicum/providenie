@@ -1,6 +1,7 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
+from bot import constants as const
 from bot import states
 from bot.conversations.menu import start
 from core.email import bot_send_email_to_curator
@@ -12,13 +13,15 @@ async def add_volunteer(
     """Путь вступления в ряды волонтёров."""
     user_data = context.user_data
     user_data[states.START_OVER] = False
-    text = "Далее необходимо предоставить информацию для куратора"
+    text = const.MSG_NEED_INFORMATION
     buttons = [
         [
             InlineKeyboardButton(
-                text="Начать", callback_data=str(states.VOLUNTEER)
+                text=const.BTN_BEGIN, callback_data=str(states.VOLUNTEER)
             ),
-            InlineKeyboardButton(text="Назад", callback_data=str(states.END)),
+            InlineKeyboardButton(
+                text=const.BTN_BACK, callback_data=str(states.END)
+            ),
         ],
     ]
     keyboard = InlineKeyboardMarkup(buttons)
@@ -36,7 +39,7 @@ async def adding_volunteer(
     user_data = context.user_data
     user_data[states.FEATURES] = {states.LEVEL: states.VOLUNTEER}
     user_data[states.CURRENT_FEATURE] = states.NAME
-    text = "Фамилия, Имя, Отчество?"
+    text = const.MSG_FULL_NAME
     await update.callback_query.answer()
     await update.callback_query.edit_message_text(text=text)
     return states.ADDING_NAME
@@ -50,7 +53,7 @@ async def adding_name(
     message = update.message.text
     user_data[states.FEATURES][user_data[states.CURRENT_FEATURE]] = message
     user_data[states.CURRENT_FEATURE] = states.BIRTHDAY
-    text = "Дата рождения?"
+    text = const.MSG_BIRTHDAY
     await update.message.reply_text(text=text)
     return states.ADDING_BIRTHDAY
 
@@ -63,7 +66,7 @@ async def adding_birthday(
     message = update.message.text
     user_data[states.FEATURES][user_data[states.CURRENT_FEATURE]] = message
     user_data[states.CURRENT_FEATURE] = states.CITY
-    text = "Город проживания?"
+    text = const.MSG_CITY
     await update.message.reply_text(text=text)
     return states.ADDING_CITY
 
@@ -76,7 +79,7 @@ async def adding_city(
     message = update.message.text
     user_data[states.FEATURES][user_data[states.CURRENT_FEATURE]] = message
     user_data[states.CURRENT_FEATURE] = states.PHONE
-    text = "Номер телефона?"
+    text = const.MSG_PHONE
     await update.message.reply_text(text=text)
     return states.ADDING_PHONE
 
@@ -89,7 +92,7 @@ async def adding_phone(
     message = update.message.text
     user_data[states.FEATURES][user_data[states.CURRENT_FEATURE]] = message
     user_data[states.CURRENT_FEATURE] = states.EMAIL
-    text = "Email?"
+    text = const.MSG_EMAIL
     await update.message.reply_text(text=text)
     return states.ADDING_EMAIL
 
@@ -102,10 +105,7 @@ async def adding_email(
     message = update.message.text
     user_data[states.FEATURES][user_data[states.CURRENT_FEATURE]] = message
     user_data[states.CURRENT_FEATURE] = states.MESSAGE
-    text = (
-        "Вы можете предложить свой вариант помощи (необязательно). "
-        "Нажмите /skip чтобы пропустить."
-    )
+    text = const.MSG_YOUR_HELP_OPTION
     await update.message.reply_text(text=text)
     return states.ADDING_MESSAGE
 
@@ -149,12 +149,14 @@ async def show_volunteer(
     buttons = [
         [
             InlineKeyboardButton(
-                text="Редактировать", callback_data=str(states.EDIT_VOLUNTEER)
+                text=const.BTN_EDIT, callback_data=str(states.EDIT_VOLUNTEER)
             ),
             InlineKeyboardButton(
-                text="Отправить", callback_data=str(states.SEND_VOLUNTEER)
+                text=const.BTN_SEND, callback_data=str(states.SEND_VOLUNTEER)
             ),
-            InlineKeyboardButton(text="Назад", callback_data=str(states.END)),
+            InlineKeyboardButton(
+                text=const.BTN_BACK, callback_data=str(states.END)
+            ),
         ]
     ]
     keyboard = InlineKeyboardMarkup(buttons)
@@ -177,29 +179,36 @@ async def select_volunteer_field(
     buttons = [
         [
             InlineKeyboardButton(
-                text="Ф.И.О.", callback_data=str(states.NAME)
+                text=const.BTN_FULL_NAME, callback_data=str(states.NAME)
             ),
             InlineKeyboardButton(
-                text="Дата рождения", callback_data=str(states.BIRTHDAY)
-            ),
-            InlineKeyboardButton(text="Город", callback_data=str(states.CITY)),
-            InlineKeyboardButton(
-                text="Телефон", callback_data=str(states.PHONE)
-            ),
-            InlineKeyboardButton(
-                text="Email", callback_data=str(states.EMAIL)
+                text=const.BTN_BIRTHDAY, callback_data=str(states.BIRTHDAY)
             ),
         ],
         [
             InlineKeyboardButton(
-                text="Ваш вариант помощи", callback_data=str(states.MESSAGE)
+                text=const.BTN_CITY, callback_data=str(states.CITY)
             ),
-            InlineKeyboardButton(text="Готово", callback_data=str(states.END)),
+            InlineKeyboardButton(
+                text=const.BTN_PHONE, callback_data=str(states.PHONE)
+            ),
+            InlineKeyboardButton(
+                text=const.BTN_EMAIL, callback_data=str(states.EMAIL)
+            ),
+        ],
+        [
+            InlineKeyboardButton(
+                text=const.BTN_YOUR_HELP_OPTION,
+                callback_data=str(states.MESSAGE)
+            ),
+            InlineKeyboardButton(
+                text=const.BTN_DONE, callback_data=str(states.END)
+            ),
         ],
     ]
     keyboard = InlineKeyboardMarkup(buttons)
     state = context.user_data.get(states.START_OVER)
-    text = "Выберите для редактирования:"
+    text = const.MSG_CHOOSE_TO_EDIT
     if not state:
         await update.callback_query.answer()
         await update.callback_query.edit_message_text(
@@ -216,7 +225,7 @@ async def ask_volunteer(
 ) -> str:
     """Ввод нового значения, при редактировании данных."""
     context.user_data[states.CURRENT_FEATURE] = update.callback_query.data
-    text = "Введите новое значение:"
+    text = const.MSG_ENTER_NEW_VALUE
     await update.callback_query.answer()
     await update.callback_query.edit_message_text(text=text)
     return states.TYPING_VOLUNTEER
@@ -282,13 +291,13 @@ async def send_email(
 
     func = bot_send_email_to_curator(subject, html)
     if func:
-        return_text = (
-            "Ваша заявка отправлена.\n"
-            "<контакты куратора-волонтёра для связи>"
-        )
+        return_text = const.MSG_REQUEST_SENT
+        return_text += "\n<контакты куратора-волонтёра для связи>"
     else:
-        return_text = "Ошибка отправки email куратору!"
-    button = InlineKeyboardButton(text="Назад", callback_data=str(states.SENT))
+        return_text = const.MSG_SENDING_ERROR
+    button = InlineKeyboardButton(
+        text=const.BTN_BACK, callback_data=str(states.SENT)
+    )
     keyboard = InlineKeyboardMarkup.from_button(button)
     await update.callback_query.answer()
     await update.callback_query.edit_message_text(

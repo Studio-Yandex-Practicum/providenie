@@ -4,29 +4,14 @@ from email.mime.text import MIMEText
 
 from . import settings
 from .logger import logger
-
-
-ERROR_CANT_SEND_MSG_TO_EMAIL = (
-    "Неудается отправить сообщение на email куратора!"
-)
-SUCCESSFUL_SENDING_MSG = "Сообщение отправлено куратору."
-
-# Исправится, скорее всего, на этапе сбора информации от пользователя и отправке куратору
-HTML_TEMPLATE = """
-    <html>
-        <body>
-            <h1>Тестовое письмо</h1>
-            <p> Здесь должна быть какой-то интересны шаблон :)</p>
-        </body>
-    </html>
-"""
+from bot import constants as const
 
 
 def bot_send_email_to_curator(subject: str, html: str) -> bool:
     """
     Отправка ботом сообщение на email куратору.
     Subject - тема сообщения.
-    Text_from_user - сообщение пользователя.
+    Html - тело письма в html формате.
     В месте, где будет вызываться данная функция
     нужно будет проверить истинность(True/False)
     для вывода пользователю об успехе отправки сообщения или
@@ -49,12 +34,12 @@ def bot_send_email_to_curator(subject: str, html: str) -> bool:
         message.attach(MIMEText(html, "html"))
 
         smtp_server.send_message(message)
-        logger.info(SUCCESSFUL_SENDING_MSG)
+        logger.info(const.SUCCESSFUL_SENDING_MSG)
 
         return True
 
     except Exception as error:
-        logger.error(ERROR_CANT_SEND_MSG_TO_EMAIL, error)
+        logger.error(const.ERROR_CANT_SEND_MSG_TO_EMAIL, error)
         return False
 
     finally:
