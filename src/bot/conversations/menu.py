@@ -16,14 +16,16 @@ from telegram.ext import ContextTypes, ConversationHandler
 
 END = ConversationHandler.END
 (START_OVER, CURRENT_CHAT) = map(chr, range(40, 42))
+
 (
+    SELECTING_MEDIA,
     WEBSITE,
     VK,
     INSTAGRAM,
     FACEBOOK,
-    TG_CHANEL,
+    TG_CHANNEL,
     TG_BOT,
-) = map(chr, range(10, 16))
+) = map(chr, range(9, 16))
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -172,7 +174,7 @@ async def select_chat(
     return SELECTING_ACTION
 
 
-async def about(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def about(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Функция, отображающая меню со ссылками на страницы фонда."""
     text = "Выберите интересующую вас соцсеть/страницу"
     buttons = [
@@ -186,7 +188,7 @@ async def about(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [InlineKeyboardButton(text="Facebook", callback_data=str(FACEBOOK))],
         [
             InlineKeyboardButton(
-                text="Новостной канал в ТГ", callback_data=str(TG_CHANEL)
+                text="Новостной канал в ТГ", callback_data=str(TG_CHANNEL)
             )
         ],
         [
@@ -197,4 +199,39 @@ async def about(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]
     keyboard = InlineKeyboardMarkup(buttons)
 
-    await update.message.reply_text(text=text, reply_markup=keyboard)
+    await update.callback_query.answer()
+    await update.callback_query.edit_message_text(
+        text=text, reply_markup=keyboard
+    )
+    return SELECTING_MEDIA
+
+
+async def social_link(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> str:
+    """Функция, отображающая ссылку выбранной соцсети."""
+    social_link_dict = {
+        WEBSITE: "https://fond-providenie.ru/",
+        VK: "https://vk.com/fond_providenie",
+        INSTAGRAM: "https://vk.com/fond_providenie",
+        FACEBOOK: "https://www.facebook.com/fond.providenie/",
+        TG_CHANNEL: "https://t.me/providenie_fond",
+        TG_BOT: "TODO",
+    }
+
+    buttons = [
+        [
+            InlineKeyboardButton(
+                text="В главное меню", callback_data=str(START_OVER)
+            )
+        ],
+        [InlineKeyboardButton(text="Назад", callback_data=str(END))],
+    ]
+    keyboard = InlineKeyboardMarkup(buttons)
+
+    query = update.callback_query
+    text = social_link_dict[query.data]
+
+    await query.answer()
+    await query.edit_message_text(text=text, reply_markup=keyboard)
+    return SELECTING_MEDIA
