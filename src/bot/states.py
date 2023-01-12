@@ -4,8 +4,15 @@ from telegram.ext import ConversationHandler
 """Константы ConversationHandler"""
 (
     SELECTING_ACTION,
+    CHATS,
+    REQUEST,
     ADD_VOLUNTEER,
-) = map(chr, range(2))
+    TALK,
+    DONATION,
+    EVENTS,
+    QUESTION,
+    ABOUT,
+) = map(chr, range(9))
 
 (
     VOLUNTEER,
