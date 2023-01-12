@@ -48,6 +48,7 @@ MSG_GOODBYE = (
 )
 MSG_CHOOSE_TO_EDIT = "Выберите для редактирования:"
 MSG_ENTER_NEW_VALUE = "Введите новое значение:"
+MSG_NO_DATA = "Нет данных."
 
 """Volunteer."""
 MSG_NEED_INFORMATION = "Далее необходимо предоставить информацию для куратора"

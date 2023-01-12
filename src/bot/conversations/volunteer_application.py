@@ -3,6 +3,7 @@ from telegram.ext import ContextTypes
 
 from bot import constants as const
 from bot import states
+from bot import templates
 from bot.conversations.menu import start
 from core.email import bot_send_email_to_curator
 
@@ -135,16 +136,17 @@ async def show_volunteer(
     """Отображение всех введённых данных волонтёра."""
     user_data = context.user_data
     data = user_data.get(states.FEATURES)
+    full_name = data.get(states.NAME, "-")
+    birthday = data.get(states.BIRTHDAY, "-")
+    city = data.get(states.CITY, "-")
+    phone = data.get(states.PHONE, "-")
+    email = data.get(states.EMAIL, "-")
+    message = data.get(states.MESSAGE, "-")
     if not data:
-        text = "\nДанных нет.\n"
+        text = const.MSG_NO_DATA
     else:
-        text = (
-            f'Ф.И.О.\n {data.get(states.NAME, "-")}\n'
-            f'Дата рождения\n {data.get(states.BIRTHDAY, "-")}\n'
-            f'Город\n {data.get(states.CITY, "-")}\n'
-            f'Телефон\n {data.get(states.PHONE, "-")}\n'
-            f'Email\n {data.get(states.EMAIL, "-")}\n'
-            f'Сообщение\n {data.get(states.MESSAGE, "-")}\n'
+        text = templates.MSG_VOLUNTEER_DATA.format(
+            full_name, birthday, city, phone, email, message
         )
     buttons = [
         [
@@ -160,14 +162,16 @@ async def show_volunteer(
         ]
     ]
     keyboard = InlineKeyboardMarkup(buttons)
-    state = context.user_data.get(states.START_OVER)
+    state = user_data.get(states.START_OVER)
     if state:
         await update.callback_query.answer()
         await update.callback_query.edit_message_text(
-            text=text, reply_markup=keyboard
+            parse_mode='html', text=text, reply_markup=keyboard
         )
     else:
-        await update.message.reply_text(text=text, reply_markup=keyboard)
+        await update.message.reply_text(
+            parse_mode='html', text=text, reply_markup=keyboard
+        )
     user_data[states.START_OVER] = False
     return states.SHOWING_VOLUNTEER
 
@@ -272,22 +276,10 @@ async def send_email(
     phone = data.get(states.PHONE, "-")
     email = data.get(states.EMAIL, "-")
     message = data.get(states.MESSAGE, "-")
-    subject = "Новый волонтёр"
-    html = f"""
-        <html>
-            <body>
-                <h1>{subject}</h1>
-                <p>
-                    <b>ФИО:</b> {name}<br/>
-                    <b>Дата рождения:</b> {birthday}<br/>
-                    <b>Город проживания:</b> {city}<br/>
-                    <b>Телефон:</b> {phone}<br/>
-                    <b>Почта:</b> {email}<br/>
-                    <b>Вариант помощи:</b> {message}
-                </p>
-            </body>
-        </html>
-    """
+    subject = templates.VOLUNTEER_DATA_SUBJECT
+    html = templates.HTML_VOLUNTEER_DATA.format(
+        subject, name, birthday, city, phone, email, message
+    )
 
     func = bot_send_email_to_curator(subject, html)
     if func:
