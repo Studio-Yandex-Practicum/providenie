@@ -5,7 +5,7 @@ from bot import states
 
 
 (
-    CHAT_PARENTS_RNAME,
+    CHAT_PARENTS_NAME,
     CHAT_PARENTS_PHONE,
     CHAT_CHILD_NAME,
     CHAT_CHILD_BIRTHDAY,
