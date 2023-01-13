@@ -7,13 +7,12 @@ from telegram.ext import (
 from bot import states
 from bot.conversations import menu
 from bot.conversations.fund_application import fund_application
+from bot.conversations.parents_chat.chat_main_menu import select_chat
 from bot.handlers.volunteer import add_volunteer_conv
 
 
 selection_handlers = [
-    CallbackQueryHandler(
-        menu.select_chat, pattern="^" + str(states.CHATS) + "$"
-    ),
+    CallbackQueryHandler(select_chat, pattern="^" + str(states.CHATS) + "$"),
     CallbackQueryHandler(
         menu.request, pattern="^" + str(states.REQUEST) + "$"
     ),
