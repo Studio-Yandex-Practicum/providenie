@@ -2,6 +2,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
 from bot import states
+from core import settings
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -72,9 +73,27 @@ async def talk_friends(update: Update, _) -> str:
 
 
 async def give_donation(update: Update, _) -> str:
+    text = "Отчёты и пожертвование"
+    buttons = [
+        [
+            InlineKeyboardButton(
+                text="Годовые отчёты", url=settings.URL_REPORTS
+            ),
+            InlineKeyboardButton(
+                text="Пожертвование", url=settings.URL_DONATION
+            ),
+        ],
+        [
+            InlineKeyboardButton(
+                text="Возврат в главное меню", callback_data=str(states.END)
+            )
+        ],
+    ]
+    keyboard = InlineKeyboardMarkup(buttons)
     await update.callback_query.answer()
-    text = "give_donation"
-    await update.callback_query.edit_message_text(text=text)
+    await update.callback_query.edit_message_text(
+        text=text, reply_markup=keyboard
+    )
     return states.SELECTING_ACTION
 
 
@@ -136,8 +155,8 @@ async def end_second_level(
 
 async def select_chat(update: Update, _) -> str:
     """Эту функцию надо перенести.
-     В файл conversations/parents_chat.py.
-     """
+    В файл conversations/parents_chat.py.
+    """
     await update.callback_query.answer()
     text = "select_chat"
     await update.callback_query.edit_message_text(text=text)

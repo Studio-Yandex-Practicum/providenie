@@ -18,3 +18,7 @@ SMTP_SERVER = 'smtp.yandex.ru'
 EMAIL_BOT = os.getenv('EMAIL_BOT', 'FondProvidenieBot@yandex.ru')
 EMAIL_CURATOR = os.getenv('EMAIL_CURATOR', 'k.danilow2009@yandex.ru') # ЗАМЕНИТЬ НА МЫЛО КУРАТОРА ФОНДА
 EMAIL_BOT_PASSWORD = os.getenv('EMAIL_BOT_PASSWORD', 'jyvsejdjxyixsxkh')
+
+URL_REPORTS = 'https://fond-providenie.ru/docs/'
+URL_DONATION = ('https://fond-providenie.ru/help-chidren/sdelat-pozhertovanie'
+                '/sdelat-pozhertvovanie-s-bankovskoj-karty/')
