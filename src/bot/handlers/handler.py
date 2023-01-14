@@ -6,8 +6,10 @@ from telegram.ext import (
 
 from bot import states
 from bot.conversations import menu
-from bot.conversations.fund_application import fund_application
 from bot.handlers.volunteer import add_volunteer_conv
+
+from ..constans import fund_app_constans
+from .join_to_fond import conv_handler_join_to_fond
 
 
 selection_handlers = [
@@ -31,8 +33,12 @@ selection_handlers = [
         menu.ask_question, pattern="^" + str(states.QUESTION) + "$"
     ),
     CallbackQueryHandler(
-        fund_application, pattern="^" + str(states.ABOUT) + "$"
+        menu.start,
+        pattern="^" + str(fund_app_constans.GO_MAIN_MENU) + "$"
     ),
+    # CallbackQueryHandler(
+    #     , pattern="^" + str(states.ABOUT) + "$"
+    # ),
     CallbackQueryHandler(menu.end, pattern="^" + str(states.END) + "$"),
     CallbackQueryHandler(menu.end, pattern="^" + str(states.SENT) + "$"),
 ]
@@ -43,6 +49,8 @@ conv_handler = ConversationHandler(
     entry_points=[CommandHandler("start", menu.start)],
     states={
         states.SELECTING_ACTION: selection_handlers,
+        fund_app_constans.START_JOIN_TO_FOND: [conv_handler_join_to_fond],
+        fund_app_constans.RETURN_FROM_JOIN_TO_FOND: selection_handlers,
         states.STOPPING: [CommandHandler("start", menu.start)],
     },
     fallbacks=[CommandHandler("stop", menu.stop)],

@@ -2,6 +2,12 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
 from bot import states
+from ..constans import fund_app_constans as fund_const
+from core.logger import logger
+from .fund_application import clean_dictionary
+
+#Tests
+from .fund_application import FLAGS_OBJ
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -93,13 +99,30 @@ async def ask_question(update: Update, _) -> str:
 
 
 async def request(update: Update, _) -> str:
+    """Функция перехода в 'Вступить в фонд.'"""
     await update.callback_query.answer()
-    text = "request"
-    await update.callback_query.edit_message_text(text=text)
-    return states.SELECTING_ACTION
+    await update.callback_query.edit_message_text(
+        text=fund_const.MSG_PRESS_ANY_BUTTON
+    )
+    buttons = [
+        [
+            InlineKeyboardButton(
+                text="Продолжить",
+                callback_data=str(fund_const.GO_TO_JOIN_FOND)  # КОНСТАНТА
+            ),
+        ],
+    ]
+
+    keyboard = InlineKeyboardMarkup(buttons)
+
+    await update.callback_query.edit_message_text(
+        text=fund_const.MSG_PRESS_NEXT_BUTTON,
+        reply_markup=keyboard
+    )
+    return fund_const.START_JOIN_TO_FOND
 
 
-async def stop(update: Update, _) -> int:
+async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Завершение работы по команде /stop."""
     await update.message.reply_text(
         "До свидания! Будем рады видеть Вас на нашем сайте!\n"
@@ -109,8 +132,18 @@ async def stop(update: Update, _) -> int:
     return states.END
 
 
-async def stop_nested(update: Update, _) -> str:
+async def stop_nested(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE
+) -> str:
     """Завершение работы по команде /stop из вложенного разговора."""
+    clean_dictionary(context=context.user_data)
+    logger.info("Я сработал на Stop!")
+    logger.info(context.user_data)
+    logger.info(FLAGS_OBJ.first_start)
+    logger.info(FLAGS_OBJ.edit_mode_first_flag)
+    logger.info(FLAGS_OBJ.edit_mode_second_flag)
+
     await update.message.reply_text(
         "До свидания! Будем рады видеть Вас на нашем сайте!\n"
         "https://fond-providenie.ru\n"
@@ -136,8 +169,8 @@ async def end_second_level(
 
 async def select_chat(update: Update, _) -> str:
     """Эту функцию надо перенести.
-     В файл conversations/parents_chat.py.
-     """
+    В файл conversations/parents_chat.py.
+    """
     await update.callback_query.answer()
     text = "select_chat"
     await update.callback_query.edit_message_text(text=text)

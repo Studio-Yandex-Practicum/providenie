@@ -11,16 +11,6 @@ ERROR_CANT_SEND_MSG_TO_EMAIL = (
 )
 SUCCESSFUL_SENDING_MSG = "Сообщение отправлено куратору."
 
-# Исправится, скорее всего, на этапе сбора информации от пользователя и отправке куратору
-HTML_TEMPLATE = """
-    <html>
-        <body>
-            <h1>Тестовое письмо</h1>
-            <p> Здесь должна быть какой-то интересны шаблон :)</p>
-        </body>
-    </html>
-"""
-
 
 def bot_send_email_to_curator(subject: str, html: str) -> bool:
     """
