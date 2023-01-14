@@ -5,39 +5,6 @@ from .chat_show_data import chat_show_data
 from bot import states
 
 
-(
-    CHAT_PARENTS_NAME,
-    CHAT_PARENTS_PHONE,
-    CHAT_CHILD_NAME,
-    CHAT_CHILD_BIRTHDAY,
-    CHAT_CHILD_PLACE_BIRTHDAY,
-    CHAT_CHILD_TERM,
-    CHAT_CHILD_WEIGHT,
-    CHAT_CHILD_HEIGHT,
-    CHAT_CHILD_DIAGNOSE,
-    CHAT_CHILD_OPERATION,
-    CHAT_DATE_ADDRESS,
-    CHAT_ABOUT_FOND,
-) = map(chr, range(140, 153))
-
-(
-    START_OVER,
-    STOPPING,
-    END,
-    CHAT_FEATURE,
-    CURRENT_CHAT,
-    SELECTING_CHAT,
-    FEATURES,
-    CURRENT_FEATURE,
-    ENTRY_CHAT,
-    ENTERING_CHAT,
-    CHAT_TYPING,
-    CHAT_SHOWING,
-    CHAT_DATA_EDIT,
-    CHAT_SEND,
-) = map(chr, range(120, 134))
-
-
 async def select_chat_field(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:

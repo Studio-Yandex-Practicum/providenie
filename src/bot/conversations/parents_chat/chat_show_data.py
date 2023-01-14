@@ -4,37 +4,6 @@ from telegram.ext import ContextTypes
 from bot import states
 
 
-(
-    CHAT_PARENTS_NAME,
-    CHAT_PARENTS_PHONE,
-    CHAT_CHILD_NAME,
-    CHAT_CHILD_BIRTHDAY,
-    CHAT_CHILD_PLACE_BIRTHDAY,
-    CHAT_CHILD_TERM,
-    CHAT_CHILD_WEIGHT,
-    CHAT_CHILD_HEIGHT,
-    CHAT_CHILD_DIAGNOSE,
-    CHAT_CHILD_OPERATION,
-    CHAT_DATE_ADDRESS,
-    CHAT_ABOUT_FOND,
-) = map(chr, range(140, 153))
-
-
-(
-    CURRENT_CHAT,
-    SELECTING_CHAT,
-    ENTRY_CHAT,
-    ENTERING_CHAT,
-    CHAT_TYPING,
-    CHAT_FEATURE,
-    CHAT_SHOWING,
-    CHAT_DATA_EDIT,
-    CHAT_SEND,
-    FEATURES,
-    CURRENT_FEATURE,
-) = map(chr, range(120, 131))
-
-
 async def chat_show_data(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:

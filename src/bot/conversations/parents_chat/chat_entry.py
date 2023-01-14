@@ -1,32 +1,7 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
-from telegram.ext import ContextTypes, ConversationHandler
+from telegram.ext import ContextTypes
 
 from bot import states
-
-
-(CURRENT_CHAT, SELECTING_CHAT, ENTRY_CHAT, ENTERING_CHAT) = map(
-    chr, range(120, 124)
-)
-
-
-(
-    CHAT_PARENTS_NAME,
-    CHAT_PARENTS_PHONE,
-    CHAT_CHILD_NAME,
-    CHAT_CHILD_BIRTHDAY,
-    CHAT_CHILD_PLACE_BIRTHDAY,
-    CHAT_CHILD_TERM,
-    CHAT_CHILD_WEIGHT,
-    CHAT_CHILD_HEIGHT,
-    CHAT_CHILD_DIAGNOSE,
-    CHAT_CHILD_OPERATION,
-    CHAT_DATE_ADDRESS,
-    CHAT_ABOUT_FOND,
-) = map(chr, range(140, 153))
-
-
-END = ConversationHandler.END
-(START_OVER, STOPPING) = map(chr, range(160, 102))
 
 
 async def enter_chat_baby(
@@ -50,7 +25,7 @@ async def enter_chat_baby(
         [
             InlineKeyboardButton(
                 text="Вернуться в список чатов",
-                callback_data=str(SELECTING_CHAT),
+                callback_data=str(states.SELECTING_CHAT),
             )
         ],
         [
@@ -89,7 +64,7 @@ async def enter_chat_child(
         [
             InlineKeyboardButton(
                 text="Вернуться в список чатов",
-                callback_data=str(SELECTING_CHAT),
+                callback_data=str(states.SELECTING_CHAT),
             )
         ],
         [
@@ -126,7 +101,7 @@ async def enter_chat_retinopatia(
         [
             InlineKeyboardButton(
                 text="Вернуться в список чатов",
-                callback_data=str(SELECTING_CHAT),
+                callback_data=str(states.SELECTING_CHAT),
             )
         ],
         [
@@ -163,7 +138,7 @@ async def enter_chat_shuntata(
         [
             InlineKeyboardButton(
                 text="Вернуться в список чатов",
-                callback_data=str(SELECTING_CHAT),
+                callback_data=str(states.SELECTING_CHAT),
             )
         ],
         [
@@ -245,7 +220,7 @@ async def enter_chat_cry(
         [
             InlineKeyboardButton(
                 text="Вернуться в список чатов",
-                callback_data=str(SELECTING_CHAT),
+                callback_data=str(states.SELECTING_CHAT),
             )
         ],
         [
@@ -282,7 +257,7 @@ async def enter_chat_angels(
         [
             InlineKeyboardButton(
                 text="Вернуться в список чатов",
-                callback_data=str(SELECTING_CHAT),
+                callback_data=str(states.SELECTING_CHAT),
             )
         ],
         [
@@ -319,7 +294,7 @@ async def enter_chat_retinopatia_4_5(
         [
             InlineKeyboardButton(
                 text="Вернуться в список чатов",
-                callback_data=str(SELECTING_CHAT),
+                callback_data=str(states.SELECTING_CHAT),
             )
         ],
         [
@@ -358,7 +333,7 @@ async def enter_chat_problems(
         [
             InlineKeyboardButton(
                 text="Вернуться в список чатов",
-                callback_data=str(SELECTING_CHAT),
+                callback_data=str(states.SELECTING_CHAT),
             )
         ],
         [
@@ -397,7 +372,7 @@ async def enter_chat_rehabilitation(
         [
             InlineKeyboardButton(
                 text="Вернуться в список чатов",
-                callback_data=str(SELECTING_CHAT),
+                callback_data=str(states.SELECTING_CHAT),
             )
         ],
         [
@@ -436,7 +411,7 @@ async def enter_chat_telegram(
         [
             InlineKeyboardButton(
                 text="Вернуться в список чатов",
-                callback_data=str(SELECTING_CHAT),
+                callback_data=str(states.SELECTING_CHAT),
             )
         ],
         [

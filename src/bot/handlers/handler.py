@@ -8,6 +8,7 @@ from bot import states
 from bot.conversations import menu
 from bot.conversations.fund_application import fund_application
 from bot.conversations.parents_chat.chat_main_menu import select_chat
+from bot.handlers.chat_handler import chat_conv
 from bot.handlers.volunteer import add_volunteer_conv
 
 
@@ -42,6 +43,7 @@ conv_handler = ConversationHandler(
     entry_points=[CommandHandler("start", menu.start)],
     states={
         states.SELECTING_ACTION: selection_handlers,
+        states.SELECTING_CHAT: [chat_conv],
         states.STOPPING: [CommandHandler("start", menu.start)],
     },
     fallbacks=[CommandHandler("stop", menu.stop)],

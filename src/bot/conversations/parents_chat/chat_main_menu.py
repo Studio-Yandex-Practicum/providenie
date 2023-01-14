@@ -1,27 +1,7 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
-from telegram.ext import ContextTypes, ConversationHandler
+from telegram.ext import ContextTypes
 
 from bot import states
-
-
-(
-    CHAT_BABY,
-    CHAT_CHILD,
-    CHAT_RETINOPATIA,
-    CHAT_SHUNTATA,
-    CHAT_GRANDMOTHERS,
-    CHAT_CRY,
-    CHAT_ANGELS,
-    CHAT_RETINOPATIA_4_5,
-    CHAT_PROBLEMS,
-    CHAT_REHABILITATION,
-    CHAT_TELECRAM,
-) = map(chr, range(100, 112))
-
-(CURRENT_CHAT, SELECTING_CHAT) = map(chr, range(120, 122))
-
-
-END = ConversationHandler.END
 
 
 async def select_chat(
@@ -29,7 +9,7 @@ async def select_chat(
 ) -> str:
     """Выбрать чат"""
     chat = update.callback_query.data
-    context.user_data[CURRENT_CHAT] = chat
+    context.user_data[states.CURRENT_CHAT] = chat
     buttons_chat = [
         [
             InlineKeyboardButton(
@@ -96,7 +76,7 @@ async def select_chat(
         ],
         [
             InlineKeyboardButton(
-                text="Возврат в главное меню", callback_data=str(END)
+                text="Возврат в главное меню", callback_data=str(states.END)
             )
         ],
     ]
@@ -107,4 +87,4 @@ async def select_chat(
         text=text, reply_markup=keyboard
     )
 
-    return SELECTING_CHAT
+    return states.SELECTING_CHAT
