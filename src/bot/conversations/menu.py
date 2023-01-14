@@ -43,7 +43,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             ),
             InlineKeyboardButton(
                 text=const.BTN_TO_ASK_A_QUESTION,
-                callback_data=str(states.QUESTION)
+                callback_data=str(states.ASK_QUESTION)
             ),
         ],
         [
@@ -87,13 +87,6 @@ async def get_events(update: Update, _) -> str:
     return states.SELECTING_ACTION
 
 
-async def ask_question(update: Update, _) -> str:
-    await update.callback_query.answer()
-    text = "ask_question"
-    await update.callback_query.edit_message_text(text=text)
-    return states.SELECTING_ACTION
-
-
 async def request(update: Update, _) -> str:
     await update.callback_query.answer()
     text = "request"
@@ -130,6 +123,15 @@ async def end_second_level(
     context.user_data[states.START_OVER] = True
     await start(update, context)
     return states.END
+
+
+async def end_sending(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> int:
+    """Возвращение в главное меню после отправки данных."""
+    context.user_data[states.START_OVER] = True
+    await start(update, context)
+    return states.STOPPING
 
 
 async def select_chat(update: Update, _) -> str:

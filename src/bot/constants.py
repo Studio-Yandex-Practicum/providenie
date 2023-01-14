@@ -12,6 +12,7 @@ BTN_DONE = "Готово"
 
 """Person."""
 BTN_FULL_NAME = "Ф.И.О."
+BTN_NAME = "Ваше имя"
 BTN_BIRTHDAY = "Дата рождения"
 BTN_CITY = "Город"
 BTN_PHONE = "Телефон"
@@ -30,11 +31,15 @@ BTN_TO_ABOUT_FUND = "О Фонде"
 """Volunteer."""
 BTN_YOUR_HELP_OPTION = "Ваш вариант помощи"
 
+"""Question"""
+BTN_THEME = "Тема вопроса"
+BTN_QUESTION = "Ваш вопрос"
 
 """BOT MESSAGES."""
 
 """General."""
 MSG_FULL_NAME = "Фамилия, Имя, Отчество?"
+MSG_NAME = "Как к вам обращаться?"
 MSG_BIRTHDAY = "Дата рождения?"
 MSG_CITY = "Город проживания?"
 MSG_PHONE = "Номер телефона?"
@@ -56,6 +61,10 @@ MSG_YOUR_HELP_OPTION = (
     "Вы можете предложить свой вариант помощи (необязательно).\n"
     "Нажмите /skip чтобы пропустить."
 )
+
+"""Question"""
+MSG_THEME = "Введите тему вопроса"
+MSG_QUESTION = "Задайте ваш вопрос"
 
 
 """LOG MESSAGES."""

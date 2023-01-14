@@ -10,7 +10,7 @@ from telegram.ext import ConversationHandler
     TALK,
     DONATION,
     EVENTS,
-    QUESTION,
+    ASK_QUESTION,
     ABOUT,
 ) = map(chr, range(9))
 
@@ -45,6 +45,19 @@ from telegram.ext import ConversationHandler
     PHONE,
     EMAIL,
     MESSAGE,
-) = map(chr, range(100, 110))
+    THEME,
+) = map(chr, range(100, 111))
 
 END = ConversationHandler.END
+
+(
+    ASKING_QUESTION,
+    QUESTION,
+    ADDING_THEME,
+    ADDING_QUESTION,
+    EDIT_QUESTION,
+    SEND_QUESTION,
+    SHOWING_QUESTION,
+    QUESTION_FEATURE,
+    TYPING_QUESTION,
+) = map(chr, range(200, 209))
