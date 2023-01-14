@@ -3,11 +3,6 @@ from telegram.ext import ContextTypes
 
 from bot import states
 from ..constans import fund_app_constans as fund_const
-from core.logger import logger
-from .fund_application import clean_dictionary
-
-#Tests
-from .fund_application import FLAGS_OBJ
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -137,13 +132,6 @@ async def stop_nested(
     context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Завершение работы по команде /stop из вложенного разговора."""
-    clean_dictionary(context=context.user_data)
-    logger.info("Я сработал на Stop!")
-    logger.info(context.user_data)
-    logger.info(FLAGS_OBJ.first_start)
-    logger.info(FLAGS_OBJ.edit_mode_first_flag)
-    logger.info(FLAGS_OBJ.edit_mode_second_flag)
-
     await update.message.reply_text(
         "До свидания! Будем рады видеть Вас на нашем сайте!\n"
         "https://fond-providenie.ru\n"

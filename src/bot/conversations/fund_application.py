@@ -966,7 +966,8 @@ async def show_user_edit_information(
     информации после редактирования."""
 
     for key, dates in context.user_data.items():
-        await update.message.reply_text(f"{key}: {dates}")
+        if key != 'd':
+            await update.message.reply_text(f"{key}: {dates}")
 
     await update.message.reply_text(
         constans.MSG_PRESS_NEXT_BUTTON,
@@ -1256,11 +1257,7 @@ async def stop_nested(
 ) -> str:
     """Завершение работы по команде /stop из вложенного разговора."""
     clean_dictionary(context=context.user_data)
-    logger.info("Я сработал на Stop!")
-    logger.info(context.user_data)
-    logger.info(FLAGS_OBJ.first_start)
-    logger.info(FLAGS_OBJ.edit_mode_first_flag)
-    logger.info(FLAGS_OBJ.edit_mode_second_flag)
+    logger.info("Словарь очищен!")
 
     await update.message.reply_text(
         "До свидания! Будем рады видеть Вас на нашем сайте!\n"
