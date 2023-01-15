@@ -6,13 +6,13 @@ from bot.conversations.menu import start
 from core.email import bot_send_email_to_curator
 
 
-async def send_email(
+async def chat_send_email(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
     """Отправка письма куратору."""
 
     user_data = context.user_data
-    data = user_data.get(states.FEATURES)
+    data = user_data.get(states.CHAT_FEATURES)
     chat_parents_name = data.get(states.CHAT_PARENTS_NAME, "-")
     chat_parents_phone = data.get(states.states.CHAT_PARENTS_PHONE, "-")
     chat_child_name = data.get(states.CHAT_CHILD_NAME, "-")
@@ -69,7 +69,7 @@ async def send_email(
     return states.CHAT_SEND
 
 
-async def end_sending(
+async def chat_end_sending(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
     """Возвращение в главное меню после отправки письма."""

@@ -18,7 +18,7 @@ async def entering_chat(
     return states.CHAT_GETTING_PARENTS_NAME
 
 
-async def chat_getting_parents_surname(
+async def chat_getting_parents_name(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем ФИО, получаем номер телефона родителя"""

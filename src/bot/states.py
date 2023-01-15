@@ -61,7 +61,7 @@ END = ConversationHandler.END
     CHAT_RETINOPATIA_4_5,
     CHAT_PROBLEMS,
     CHAT_REHABILITATION,
-    CHAT_TELECRAM,
+    CHAT_TELEGRAM,
 ) = map(chr, range(200, 211))
 
 (
@@ -71,8 +71,8 @@ END = ConversationHandler.END
     CHAT_FEATURE,
     CURRENT_CHAT,
     SELECTING_CHAT,
-    # FEATURES,
-    # CURRENT_FEATURE,
+    CHAT_FEATURES,
+    CHAT_CURRENT_FEATURE,
     ENTRY_CHAT,
     ENTERING_CHAT,
     CHAT_TYPING,
@@ -80,7 +80,7 @@ END = ConversationHandler.END
     CHAT_DATA_EDIT,
     CHAT_SEND,
 ) = map(
-    chr, range(220, 229)
+    chr, range(220, 231)
 )  # 234
 
 (
@@ -100,7 +100,7 @@ END = ConversationHandler.END
 
 
 (
-    CHAT_GETTING_PARENTS_SURNAME,
+    CHAT_GETTING_PARENTS_NAME,
     CHAT_GETTING_PARENTS_PHONE,
     CHAT_GETTING_CHILD_NAME,
     CHAT_GETTING_CHILD_BIRTHDAY,

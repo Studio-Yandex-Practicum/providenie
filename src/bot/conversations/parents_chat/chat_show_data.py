@@ -14,18 +14,18 @@ async def chat_show_data(
         text = "\nДанных нет.\n"
     else:
         text = (
-            f'ФИО родителя (опекуна)\n {data.get(states.CHAT_PARENTS_NAME, "-")}\n'
-            f'Номер телефона родителя(опекуна)\n {data.get(states.CHAT_PARENTS_PHONE, "-")}\n'
-            f'ФИО ребенка\n {data.get(states.CHAT_CHILD_NAME, "-")}\n'
-            f'Дата рождения ребенка\n {data.get(states.CHAT_CHILD_BIRTHDAY, "-")}\n'
-            f'Место рождения ребенка\n {data.get(states.CHAT_CHILD_PLACE_BIRTHDAY, "-")}\n'
-            f'Срок беременности рождения ребенка\n {data.get(states.CHAT_CHILD_TERM, "-")}\n'
-            f'Вес при рождении\n {data.get(states.CHAT_CHILD_WEIGHT, "-")}\n'
-            f'Рост при рождении\n {data.get(states.CHAT_CHILD_HEIGHT, "-")}\n'
-            f'Диагнозы\n {data.get(states.CHAT_CHILD_DIAGNOSE, "-")}\n'
-            f'Операции\n {data.get(states.CHAT_CHILD_OPERATION, "-")}\n'
-            f'Дата обращения\n {data.get(states.CHAT_DATE_ADDRESS, "-")}\n'
-            f'Как узнали о фонде\n {data.get(states.CHAT_ABOUT_FOND, "-")}\n'
+            f'<b>ФИО родителя (опекуна)</b>\n  <i>{data.get(states.CHAT_PARENTS_NAME, "-")}</i>\n'
+            f'<b>Номер телефона родителя(опекуна)</b>\n  <i>{data.get(states.CHAT_PARENTS_PHONE, "-")}</i>\n'
+            f'<b>ФИО ребенка</b>\n  <i>{data.get(states.CHAT_CHILD_NAME, "-")}</i>\n'
+            f'<b>Дата рождения ребенка</b>\n  <i>{data.get(states.CHAT_CHILD_BIRTHDAY, "-")}</i>\n'
+            f'<b>Место рождения ребенка</b>\n  <i>{data.get(states.CHAT_CHILD_PLACE_BIRTHDAY, "-")}</i>\n'
+            f'<b>Срок беременности при рождении ребенка</b>\n  <i>{data.get(states.CHAT_CHILD_TERM, "-")}</i>\n'
+            f'<b>Вес при рождении</b>\n  <i>{data.get(states.CHAT_CHILD_WEIGHT, "-")}</i>\n'
+            f'<b>Рост при рождении</b>\n  <i>{data.get(states.CHAT_CHILD_HEIGHT, "-")}</i>\n'
+            f'<b>Диагнозы</b>\n  <i>{data.get(states.CHAT_CHILD_DIAGNOSE, "-")}</i>\n'
+            f'<b>Операции</b>\n  <i>{data.get(states.CHAT_CHILD_OPERATION, "-")}</i>\n'
+            f'<b>Дата обращения</b>\n  <i>{data.get(states.CHAT_DATE_ADDRESS, "-")}</i>\n'
+            f'<b>Как узнали о фонде</b>\n  <i>{data.get(states.CHAT_ABOUT_FOND, "-")}</i>\n'
         )
 
     buttons = [
@@ -54,6 +54,6 @@ async def chat_show_data(
             text=text, reply_markup=keyboard
         )
     else:
-        await update.message.reply_text(text=text, reply_markup=keyboard)
+        await update.message.reply_html(text=text, reply_markup=keyboard)
     user_data[states.START_OVER] = False
     return states.CHAT_SHOWING

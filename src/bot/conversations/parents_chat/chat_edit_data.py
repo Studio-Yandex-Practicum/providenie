@@ -96,9 +96,11 @@ async def select_chat_field(
     return states.CHAT_FEATURE
 
 
-async def chat_data(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
+async def chat_edit_data(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> str:
     """Ввод нового значения при редактировании данных."""
-    context.user_data[states.CURRENT_FEATURE] = update.callback_query.data
+    context.user_data[states.CHAT_CURRENT_FEATURE] = update.callback_query.data
     text = "Введите новое значение:"
     await update.callback_query.answer()
     await update.callback_query.edit_message_text(text=text)
@@ -111,12 +113,14 @@ async def save_chat_input(
     """Сохранение нового значения при редактировании данных."""
     user_data = context.user_data
     message = update.message.text
-    user_data[states.FEATURES][user_data[states.CURRENT_FEATURE]] = message
+    user_data[states.CHAT_FEATURES][
+        user_data[states.CHAT_CURRENT_FEATURE]
+    ] = message
     user_data[states.START_OVER] = True
     return await select_chat_field(update, context)
 
 
-async def end_editing(
+async def chat_end_editing(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
     """Возвращение к просмотру данных после редактирования."""
