@@ -99,6 +99,25 @@ async def request(update: Update, _) -> str:
     return states.SELECTING_ACTION
 
 
+async def about(update: Update, _) -> str:
+    await update.callback_query.answer()
+    text = "Информация о фонде"
+    button = [
+        [
+            InlineKeyboardButton(
+                text="Возврат в главное меню",
+                callback_data=str(states.START_OVER),
+            )
+        ]
+    ]
+    keyboard = InlineKeyboardMarkup(button)
+    await update.callback_query.edit_message_text(
+        text=text,
+        reply_markup=keyboard
+    )
+    return states.SELECTING_ACTION
+
+
 async def stop(update: Update, _) -> int:
     """Завершение работы по команде /stop."""
     await update.message.reply_text(
