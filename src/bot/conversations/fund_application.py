@@ -7,10 +7,12 @@ from telegram import (
 from telegram.ext import ContextTypes, ConversationHandler
 
 from bot import states
+
 from ..constans import fund_app_constans as constans
 from core.email import bot_send_email_to_curator
 from core.logger import logger
 from ..flags.flag import Flags
+from .menu import start
 from ..templates import HTML_TEMPLATE_JOIN_FOND
 from ..validators import fund_app_validators as validators
 
@@ -1162,6 +1164,7 @@ async def end(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     await update.callback_query.answer()
     clean_dictionary(context=context.user_data)
     await application_to_the_fond(update, context)
+
 
 
 async def end_second_menu(
