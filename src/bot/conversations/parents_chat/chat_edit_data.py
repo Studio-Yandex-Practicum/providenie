@@ -91,7 +91,7 @@ async def select_chat_field(
             text=text, reply_markup=keyboard
         )
     else:
-        await update.message.reply_text(text=text, reply_markup=keyboard)
+        await update.message.reply_markdown(text=text, reply_markup=keyboard)
     context.user_data[states.START_OVER] = True
     return states.CHAT_FEATURE
 

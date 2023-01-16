@@ -14,19 +14,17 @@ async def chat_send_email(
     user_data = context.user_data
     data = user_data.get(states.CHAT_FEATURES)
     chat_parents_name = data.get(states.CHAT_PARENTS_NAME, "-")
-    chat_parents_phone = data.get(states.states.CHAT_PARENTS_PHONE, "-")
+    chat_parents_phone = data.get(states.CHAT_PARENTS_PHONE, "-")
     chat_child_name = data.get(states.CHAT_CHILD_NAME, "-")
-    chat_child_birthday = data.get(states.states.CHAT_CHILD_BIRTHDAY, "-")
-    chat_place_birthday = data.get(
-        states.states.CHAT_CHILD_PLACE_BIRTHDAY, "-"
-    )
-    chat_child_term = data.get(states.states.CHAT_CHILD_TERM, "-")
+    chat_child_birthday = data.get(states.CHAT_CHILD_BIRTHDAY, "-")
+    chat_child_place_birthday = data.get(states.CHAT_CHILD_PLACE_BIRTHDAY, "-")
+    chat_child_term = data.get(states.CHAT_CHILD_TERM, "-")
     chat_child_weight = data.get(states.CHAT_CHILD_WEIGHT, "-")
-    chat_child_height = data.get(states.states.CHAT_CHILD_HEIGHT, "-")
+    chat_child_height = data.get(states.CHAT_CHILD_HEIGHT, "-")
     chat_child_diagnose = data.get(states.CHAT_CHILD_DIAGNOSE, "-")
-    chat_child_operation = data.get(states.states.CHAT_CHILD_OPERATION, "-")
+    chat_child_operation = data.get(states.CHAT_CHILD_OPERATION, "-")
     chat_date_address = data.get(states.CHAT_DATE_ADDRESS, "-")
-    chat_about_fond = data.get(states.states.CHAT_ABOUT_FOND, "-")
+    chat_about_fond = data.get(states.CHAT_ABOUT_FOND, "-")
     subject = "Вступление в чат"
     html = f"""
         <html>
@@ -37,7 +35,7 @@ async def chat_send_email(
                     <b>Телефон родителя(опекуна):</b> {chat_parents_phone}<br/>
                     <b>ФИО ребенка:</b> {chat_child_name}<br/>
                     <b>Дата рождения:</b> {chat_child_birthday}<br/>
-                    <b>Место рождения:</b> {chat_place_birthday}<br/>
+                    <b>Место рождения:</b> {chat_child_place_birthday}<br/>
                     <b>Срок беременности при рождении:</b> {chat_child_term}
                     <b>Вес при рождении:</b> {chat_child_weight}<br/>
                     <b>Рост при рождении:</b> {chat_child_height}<br/>
