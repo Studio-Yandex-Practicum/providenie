@@ -11,7 +11,7 @@ def checking_not_digits(data: str) -> bool:
     if (
         all(x.isalpha() or x.isspace() or
             x in constans.SPEC_SYM for x in data) and
-            data != "" and len(data) < 100
+            data != " " and len(data) < 100
     ):
         return True
     return False

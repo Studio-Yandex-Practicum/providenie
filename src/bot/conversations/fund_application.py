@@ -167,6 +167,13 @@ async def asking_fio_mother(
     context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Получение фамилии мамы."""
+    if FLAGS_OBJ.bad_request:
+        await update.message.reply_text(
+            constans.QUESTIONS_DICT["fio_mother"]
+        )
+        FLAGS_OBJ.changing_bad_request(False)
+        return constans.FIO_MOTHER
+
     if FLAGS_OBJ.edit_mode_first_flag:
         query = update.callback_query
         await query.answer()
@@ -991,7 +998,6 @@ async def send_message_to_curator(
 ) -> int:
     """Отправка сообщения куратору с данными.
     Пока без фотографии/сканов."""
-
     query = update.callback_query
     await query.answer()
     try:
