@@ -14,6 +14,7 @@ async def chat_show_data(
         text = "\nДанных нет.\n"
     else:
         text = (
+            f'*Чат для вступления:*\n  _{data.get(states.CURRENT_CHAT, "-")}_\n'
             f'*ФИО родителя (опекуна):*\n  _{data.get(states.CHAT_PARENTS_NAME, "-")}_\n'
             f'*Номер телефона родителя(опекуна):*\n  _{data.get(states.CHAT_PARENTS_PHONE, "-")}_\n'
             f'*ФИО ребенка:*\n  _{data.get(states.CHAT_CHILD_NAME, "-")}_\n'

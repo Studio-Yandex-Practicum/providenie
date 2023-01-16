@@ -5,7 +5,7 @@ from .chat_show_data import chat_show_data
 from bot import states
 
 
-async def select_chat_field(
+async def chat_select_field(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Вывод меню редактирования введённых ранее данных."""
@@ -107,7 +107,7 @@ async def chat_edit_data(
     return states.CHAT_TYPING
 
 
-async def save_chat_input(
+async def chat_save_input(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохранение нового значения при редактировании данных."""
@@ -117,7 +117,7 @@ async def save_chat_input(
         user_data[states.CHAT_CURRENT_FEATURE]
     ] = message
     user_data[states.START_OVER] = True
-    return await select_chat_field(update, context)
+    return await chat_select_field(update, context)
 
 
 async def chat_end_editing(

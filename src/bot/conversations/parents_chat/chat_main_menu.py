@@ -8,8 +8,7 @@ async def select_chat(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Выбрать чат"""
-    chat = update.callback_query.data
-    context.user_data[states.CURRENT_CHAT] = chat
+
     buttons_chat = [
         [
             InlineKeyboardButton(
@@ -64,7 +63,7 @@ async def select_chat(
         ],
         [
             InlineKeyboardButton(
-                text="Чат 'Реабилитация зрения'",
+                text="Реабилитация зрения",
                 callback_data=str(states.CHAT_REHABILITATION),
             )
         ],
