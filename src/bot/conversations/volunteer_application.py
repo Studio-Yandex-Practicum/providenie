@@ -2,8 +2,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
 from bot import constants as const
-from bot import states
-from bot import templates
+from bot import states, templates
 from bot.conversations.menu import start
 from core.email import bot_send_email_to_curator
 
@@ -166,11 +165,11 @@ async def show_volunteer(
     if state:
         await update.callback_query.answer()
         await update.callback_query.edit_message_text(
-            parse_mode='html', text=text, reply_markup=keyboard
+            parse_mode="html", text=text, reply_markup=keyboard
         )
     else:
         await update.message.reply_text(
-            parse_mode='html', text=text, reply_markup=keyboard
+            parse_mode="html", text=text, reply_markup=keyboard
         )
     user_data[states.START_OVER] = False
     return states.SHOWING_VOLUNTEER
@@ -203,7 +202,7 @@ async def select_volunteer_field(
         [
             InlineKeyboardButton(
                 text=const.BTN_YOUR_HELP_OPTION,
-                callback_data=str(states.MESSAGE)
+                callback_data=str(states.MESSAGE),
             ),
             InlineKeyboardButton(
                 text=const.BTN_DONE, callback_data=str(states.END)
