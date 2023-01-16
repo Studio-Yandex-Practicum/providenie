@@ -39,6 +39,9 @@ BTN_FACEBOOK = "Facebook"
 BTN_TG_CHANNEL = "Новостной канал в ТГ"
 BTN_TG_BOT = "Приглашение в чат бот"
 
+"""DONATION"""
+BTN_REPORTS = "Годовые отчёты"
+BTN_DONATION = "Пожертвование"
 
 """BOT MESSAGES."""
 
@@ -74,6 +77,8 @@ MSG_FACEBOOK = "https://www.facebook.com/fond.providenie/"
 MSG_TG_CHANNEL = "https://t.me/providenie_fond"
 MSG_TG_BOT = "TODO"
 
+"""DONATION"""
+MSG_DONATION = "Отчёты и пожертвование"
 
 """LOG MESSAGES."""
 
@@ -83,3 +88,12 @@ ERROR_CANT_SEND_MSG_TO_EMAIL = (
     "Не удаётся отправить сообщение на email куратора!"
 )
 SUCCESSFUL_SENDING_MSG = "Сообщение отправлено куратору."
+
+"""URLS"""
+
+"""DONATION"""
+URL_REPORTS = "https://fond-providenie.ru/docs/"
+URL_DONATION = (
+    "https://fond-providenie.ru/help-chidren/sdelat-pozhertovanie"
+    "/sdelat-pozhertvovanie-s-bankovskoj-karty/"
+)

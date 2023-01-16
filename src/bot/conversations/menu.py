@@ -149,9 +149,27 @@ async def social_link(update: Update, _) -> str:
 
 
 async def give_donation(update: Update, _) -> str:
+    text = const.MSG_DONATION
+    buttons = [
+        [
+            InlineKeyboardButton(
+                text=const.BTN_REPORTS, url=const.URL_REPORTS
+            ),
+            InlineKeyboardButton(
+                text=const.BTN_DONATION, url=const.URL_DONATION
+            ),
+        ],
+        [
+            InlineKeyboardButton(
+                text=const.BTN_BACK, callback_data=str(states.END)
+            )
+        ],
+    ]
+    keyboard = InlineKeyboardMarkup(buttons)
     await update.callback_query.answer()
-    text = "give_donation"
-    await update.callback_query.edit_message_text(text=text)
+    await update.callback_query.edit_message_text(
+        text=text, reply_markup=keyboard
+    )
     return states.SELECTING_ACTION
 
 
