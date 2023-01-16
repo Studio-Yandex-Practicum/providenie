@@ -66,7 +66,7 @@ def checking_date_birth(data: str) -> bool:
     return flag
 
 
-def checking_wight_and_hight(data: str) -> bool:
+def checking_weight_and_height(data: str) -> bool:
     """Проверка правильности ввода веса и роста."""
     if data.isdigit() and int(data) > 0 and int(data) < 100:
         return True

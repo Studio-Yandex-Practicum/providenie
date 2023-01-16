@@ -1,4 +1,5 @@
 from telegram.ext import ConversationHandler
+from .constans.fund_app_constans import GO_MAIN_MENU
 
 
 """Константы ConversationHandler"""
@@ -48,3 +49,5 @@ from telegram.ext import ConversationHandler
 ) = map(chr, range(100, 110))
 
 END = ConversationHandler.END
+
+GO_MAIN_MENU = GO_MAIN_MENU

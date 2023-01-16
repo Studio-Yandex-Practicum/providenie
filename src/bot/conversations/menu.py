@@ -2,7 +2,6 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
 from bot import states
-from ..constans import fund_app_constans as fund_const
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -93,28 +92,28 @@ async def ask_question(update: Update, _) -> str:
     return states.SELECTING_ACTION
 
 
-async def request(update: Update, _) -> str:
-    """Функция перехода в 'Вступить в фонд.'"""
-    await update.callback_query.answer()
-    await update.callback_query.edit_message_text(
-        text=fund_const.MSG_PRESS_ANY_BUTTON
-    )
-    buttons = [
-        [
-            InlineKeyboardButton(
-                text="Продолжить",
-                callback_data=str(fund_const.GO_TO_JOIN_FOND)  # КОНСТАНТА
-            ),
-        ],
-    ]
+# async def request(update: Update, _) -> str:
+#     """Функция перехода в 'Вступить в фонд.'"""
+#     await update.callback_query.answer()
+#     await update.callback_query.edit_message_text(
+#         text=fund_const.MSG_PRESS_ANY_BUTTON
+#     )
+#     buttons = [
+#         [
+#             InlineKeyboardButton(
+#                 text="Продолжить",
+#                 callback_data=str(fund_const.GO_TO_JOIN_FOND)  # КОНСТАНТА
+#             ),
+#         ],
+#     ]
 
-    keyboard = InlineKeyboardMarkup(buttons)
+#     keyboard = InlineKeyboardMarkup(buttons)
 
-    await update.callback_query.edit_message_text(
-        text=fund_const.MSG_PRESS_NEXT_BUTTON,
-        reply_markup=keyboard
-    )
-    return fund_const.START_JOIN_TO_FOND
+#     await update.callback_query.edit_message_text(
+#         text=fund_const.MSG_PRESS_NEXT_BUTTON,
+#         reply_markup=keyboard
+#     )
+#     return fund_const.START_JOIN_TO_FOND
 
 
 async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:

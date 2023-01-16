@@ -5,31 +5,31 @@ from telegram import ReplyKeyboardMarkup
 (
     LOOK_WORLD_PROGRAMM, REABILITATION_PROGRAMM,
     PSIHO_PROGRAMM, KIND_ARMS_PROGRAMM
-) = map(chr, range(4))
+) = map(int, range(4))
 
 (
     FIO_MOTHER,
     PHONE,
     EMAIL,
     FIO_CHILD,
-    HOW_MANY_PEOPLES,
+    HOW_MANY_PEOPLE,
     CITY,
-    ADRESS,
+    ADDRESS,
     DATE_BIRTH,
     LOCAL_OF_BIRTH,
     SPACING,
     WEIGHT,
     HEIGHT,
-    DIAGNOZES,
+    DIAGNOSIS,
     DATE_OF_APPLICATION,
     HOW_FIND_US,
     WHICH_FOND,
     WHICH_FOND_WAS_PREVIOUSLY,
     START_OVER,
-) = map(chr, range(4, 22))
+) = map(int, range(4, 22))
 
 
-CHOISE_PROGRAMM, JOIN_TO_PROGRAMM = map(chr, range(22, 24))
+CHOICE_PROGRAMM, JOIN_TO_PROGRAMM = map(int, range(22, 24))
 (
     JOIN_BUTTON,
     BAD_ANSWER_SECOND_LEVEL,
@@ -37,7 +37,7 @@ CHOISE_PROGRAMM, JOIN_TO_PROGRAMM = map(chr, range(22, 24))
     CONFIRM_AND_SEND,
     END_SECOND_LEVEL,
     SEND_CHANGE_END,
-    CHANGE_DATES,
+    CHANGE_DATA,
     MESSAGE_SENT_SUCCESSFULLY,
     END_FIRST_LEVEL,
     EDIT_MODE,
@@ -49,9 +49,9 @@ CHOISE_PROGRAMM, JOIN_TO_PROGRAMM = map(chr, range(22, 24))
     BAD_VALUES,
     RETURN_MOTHER_FIO,
     GO_SECOND_LEVEL,
-) = map(chr, range(24, 42))
+) = map(int, range(24, 42))
 
-EDIT_PHONE, EDIT_USER_DATES, PLACE_BIRTH = map(chr, range(42, 45))
+EDIT_PHONE, EDIT_USER_DATES, PLACE_BIRTH = map(int, range(42, 45))
 
 (
     START_JOIN_TO_FOND,
@@ -61,7 +61,9 @@ EDIT_PHONE, EDIT_USER_DATES, PLACE_BIRTH = map(chr, range(42, 45))
     MAIN_MENU,
     GO_TO_JOIN_FOND,
     START_QUATIONS,
-) = map(chr, range(45, 52))
+) = map(int, range(45, 52))
+
+REABILITATION_PROG = map(chr, range(52, 53))
 
 # Различные ответы, вопросы, описание и документы
 ANSWERS_DICT = {
@@ -87,7 +89,7 @@ ANSWERS_DICT = {
     "bad_city": """
         Неверно введено название города, пожалуйста, нажмите исправить.
     """,
-    "bad_adress": """
+    "bad_address": """
         Неверно введён адрес, пожалуйста, нажмите исправить.
     """,
     "bad_date_birth": """
@@ -102,13 +104,13 @@ ANSWERS_DICT = {
         Неверно введён срок рождения ребёнка,
         пожалуйста, нажмите исправить.
     """,
-    "bad_wight": """
+    "bad_weight": """
         Неверно введён вес ребёнка, пожалуйста, нажмите исправить.
     """,
-    "bad_hight": """
+    "bad_height": """
         Неверно введён рост ребёнка, пожалуйста, нажмите исправить.
     """,
-    "bad_diagnoz": """
+    "bad_diagnosis": """
         Неверно введён диагноз ребёнка, пожалуйста, нажмите исправить.
     """,
     "bad_date_application": """
@@ -116,20 +118,20 @@ ANSWERS_DICT = {
     """,
 }
 
-QUATIONS_DICT = {
+QUESTIONS_DICT = {
     "fio_mother": "Введите ФИО мамы.",
     "phone_number": "Введите телефон.(Начиная с 8)",
     "email": "Введите ваш email.",
     "fio_child": "Введите ФИО ребёнка.",
     "how_many_people": "Введите количество членов семьи. (числом)",
     "city": "Введите город проживания.",
-    "adress": "Введите адрес проживания.",
+    "address": "Введите адрес проживания.",
     "date_birth": "Введите дату рождения ребёнка. (ДД.ММ.ГГГГ)",
     "place_birth": "Введите место рождения ребёнка.",
     "spacing": "Введите срок на котором родился ребёнок. (Неделя, числом)",
-    "wight": "Введите вес ребёнка. (Числом)",
-    "hight": "Введите рост ребёнка. (Числом)",
-    "diagnoz": """
+    "weight": "Введите вес ребёнка. (Числом)",
+    "height": "Введите рост ребёнка. (Числом)",
+    "diagnosis": """
         Введите диагнозы ребёнка.
         (Через запятую, при наличии нескольких)""",
     "date_aplication": "Введите дату обращения в Фонд. (ДД.ММ.ГГГГ)",
@@ -168,22 +170,22 @@ KIND_HANDS_DESCRIPTION = "Описание программы 'Добрые ур
 
 
 PROGRAMM_FOND = {
-    "\x00": (
+    "0": (
         "Смотри на мир",
         LOOK_AT_WORLD_DESCRIPTION,
         REQUIRED_DOCUMENTS
     ),
-    "\x01": (
+    "1": (
         "Реабилитация",
         REABILITATION_DESCRIPTION,
         REQUIRED_DOCUMENTS
     ),
-    "\x02": (
+    "2": (
         "Психологическая помощь",
         PSYCHOLOGICAL_HELP_DESCRIPTION,
         REQUIRED_DOCUMENTS,
     ),
-    "\x03": (
+    "3": (
         "Добрые уроки",
         KIND_HANDS_DESCRIPTION,
         REQUIRED_DOCUMENTS
@@ -193,10 +195,10 @@ PROGRAMM_FOND = {
 
 # Для перевода ответа кнопок выбора программы в читаемый вид
 ALLIAS_DICT = {
-    "Смотри на мир": "\x00",
-    "Реабилитация": "\x01",
-    "Психологическая помощь": "\x02",
-    "Добрые уроки": "\x03",
+    "Смотри на мир": "0",
+    "Реабилитация": "1",
+    "Психологическая помощь": "2",
+    "Добрые уроки": "3",
 }
 
 # Спец символы для if в проверках адреса, диагноза

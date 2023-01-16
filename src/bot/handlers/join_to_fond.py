@@ -18,8 +18,8 @@ selection_handlers_second_level = [
         pattern="^" + str(constans.CONFIRM_AND_SEND) + "$"
     ),
     CallbackQueryHandler(
-        fund.change_dates,
-        pattern="^" + str(constans.CHANGE_DATES) + "$"
+        fund.change_data,
+        pattern="^" + str(constans.CHANGE_DATA) + "$"
     ),
     CallbackQueryHandler(
         fund.end_second_menu,
@@ -43,15 +43,15 @@ selection_handlers_second_level = [
     ),
     CallbackQueryHandler(
         fund.asking_how_many_people_in_famaly,
-        pattern="^" + str(constans.HOW_MANY_PEOPLES) + "$"
+        pattern="^" + str(constans.HOW_MANY_PEOPLE) + "$"
     ),
     CallbackQueryHandler(
         fund.asking_city,
         pattern="^" + str(constans.CITY) + "$"
     ),
     CallbackQueryHandler(
-        fund.asking_adress,
-        pattern="^" + str(constans.ADRESS) + "$"
+        fund.asking_address,
+        pattern="^" + str(constans.ADDRESS) + "$"
     ),
     CallbackQueryHandler(
         fund.asking_child_birthday,
@@ -74,8 +74,8 @@ selection_handlers_second_level = [
         pattern="^" + str(constans.HEIGHT) + "$"
     ),
     CallbackQueryHandler(
-        fund.asking_child_diagnozes,
-        pattern="^" + str(constans.DIAGNOZES) + "$"
+        fund.asking_child_diagnosis,
+        pattern="^" + str(constans.DIAGNOSIS) + "$"
     ),
     CallbackQueryHandler(
         fund.asking_date_of_application,
@@ -131,7 +131,7 @@ dates_about_parent_and_child = ConversationHandler(
                 fund.asking_how_many_people_in_famaly
             )
         ],
-        constans.HOW_MANY_PEOPLES: [
+        constans.HOW_MANY_PEOPLE: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 fund.asking_city
@@ -140,10 +140,10 @@ dates_about_parent_and_child = ConversationHandler(
         constans.CITY: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
-                fund.asking_adress
+                fund.asking_address
             )
         ],
-        constans.ADRESS: [
+        constans.ADDRESS: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 fund.asking_child_birthday
@@ -176,10 +176,10 @@ dates_about_parent_and_child = ConversationHandler(
         constans.HEIGHT: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
-                fund.asking_child_diagnozes
+                fund.asking_child_diagnosis
             )
         ],
-        constans.DIAGNOZES: [
+        constans.DIAGNOSIS: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 fund.asking_date_of_application
@@ -212,7 +212,7 @@ dates_about_parent_and_child = ConversationHandler(
         constans.SHOW_INFORMATION: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
-                fund.send_or_change_dates
+                fund.send_or_change_data
             )
         ],
         constans.SHOW_EDIT_INFORMATIONS: [
@@ -231,8 +231,8 @@ dates_about_parent_and_child = ConversationHandler(
     # Возврат на первый уровень
     map_to_parent={
         constans.END_FIRST_LEVEL: constans.JOIN_TO_PROGRAMM,
-        constans.MESSAGE_SENT_SUCCESSFULLY: constans.CHOISE_PROGRAMM,
-        constans.QUESTION_THIRD_MENU: constans.CHOISE_PROGRAMM,
+        constans.MESSAGE_SENT_SUCCESSFULLY: constans.CHOICE_PROGRAMM,
+        constans.QUESTION_THIRD_MENU: constans.CHOICE_PROGRAMM,
         constans.BAD_FIO_MOTHER: constans.BAD_VALUES,
         constans.RETURN_MOTHER_FIO: constans.GO_SECOND_LEVEL,
         states.STOPPING: states.STOPPING
@@ -281,11 +281,11 @@ conv_handler_join_to_fond = ConversationHandler(
     entry_points=[
         CallbackQueryHandler(
             fund.application_to_the_fond,
-            pattern="^" + str(constans.GO_TO_JOIN_FOND) + "$"
-        )
+            pattern="^" + str(states.REQUEST) + "$"
+        ),
     ],
     states={
-        constans.CHOISE_PROGRAMM: selection_handlers,
+        constans.CHOICE_PROGRAMM: selection_handlers,
         constans.JOIN_TO_PROGRAMM: selection_handlers,
         constans.BAD_VALUES: selection_handlers,
         constans.GO_SECOND_LEVEL: [dates_about_parent_and_child]

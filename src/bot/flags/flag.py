@@ -10,7 +10,6 @@ class Flags:
 
     edit_mode_first_flag = False
     edit_mode_second_flag = False
-    # first_start = False
     first_start = True
     bad_request = False
     first_start_menu = True
