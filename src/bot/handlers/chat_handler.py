@@ -10,7 +10,7 @@ from bot import states
 from bot.conversations import menu
 from bot.conversations.parents_chat import chat_edit_data, chat_get_data
 from bot.conversations.parents_chat.chat_entry import enter_chat
-from bot.conversations.parents_chat.chat_main_menu import select_chat
+from bot.conversations.parents_chat.chat_main_menu import select_chat, chat_end
 from bot.conversations.parents_chat.chat_send_email import (
     chat_end_sending,
     chat_send_email,
@@ -62,7 +62,7 @@ chat_edit_conv = ConversationHandler(
         CommandHandler("stop", menu.stop_nested),
     ],
     map_to_parent={
-        states.END: states.SELECTING_CHAT,
+        states.END: states.CHAT_SHOWING,
         states.CHAT_SEND: states.STOPPING,
         states.STOPPING: states.END,
     },
@@ -162,10 +162,13 @@ chat_get_conv = ConversationHandler(
         CallbackQueryHandler(
             menu.end_second_level, pattern="^" + str(states.END) + "$"
         ),
+        CallbackQueryHandler(chat_end, pattern="^" + str(states.CHAT_END) + "$"
+        ),
         CommandHandler("stop", menu.stop_nested),
     ],
     map_to_parent={
-        states.END: states.SELECTING_CHAT,
+        states.CHAT_END: states.SELECTING_CHAT,
+        states.END: states.END,
         states.STOPPING: states.STOPPING,
     },
 )
