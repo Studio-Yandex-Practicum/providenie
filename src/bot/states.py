@@ -79,8 +79,9 @@ END = ConversationHandler.END
     CHAT_SHOWING,
     CHAT_DATA_EDIT,
     CHAT_SEND,
+    CHAT_END,
 ) = map(
-    chr, range(220, 231)
+    chr, range(220, 232)
 )  # 234
 
 (

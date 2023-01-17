@@ -42,7 +42,7 @@ async def chat_show_data(
         ],
         [
             InlineKeyboardButton(
-                text="Список чатов", callback_data=str(states.END)
+                text="Главное меню", callback_data=str(states.END)
             )
         ],
     ]

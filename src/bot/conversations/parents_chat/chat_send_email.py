@@ -6,6 +6,15 @@ from bot.conversations.menu import start
 from core.email import bot_send_email_to_curator
 
 
+async def chat_end_sending(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> int:
+    """Возвращение в главное меню после отправки письма."""
+    context.user_data[states.START_OVER] = True
+    await start(update, context)
+    return states.STOPPING
+
+
 async def chat_send_email(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
@@ -13,6 +22,7 @@ async def chat_send_email(
 
     user_data = context.user_data
     data = user_data.get(states.CHAT_FEATURES)
+    current_chat = data.get(states.CURRENT_CHAT, "-")
     chat_parents_name = data.get(states.CHAT_PARENTS_NAME, "-")
     chat_parents_phone = data.get(states.CHAT_PARENTS_PHONE, "-")
     chat_child_name = data.get(states.CHAT_CHILD_NAME, "-")
@@ -31,6 +41,7 @@ async def chat_send_email(
             <body>
                 <h1>{subject}</h1>
                 <p>
+                    <b>Чат для вступления</b> {current_chat}<br/>
                     <b>ФИО родителя(опекуна):</b> {chat_parents_name}<br/>
                     <b>Телефон родителя(опекуна):</b> {chat_parents_phone}<br/>
                     <b>ФИО ребенка:</b> {chat_child_name}<br/>
@@ -65,12 +76,3 @@ async def chat_send_email(
         text=return_text, reply_markup=keyboard
     )
     return states.CHAT_SEND
-
-
-async def chat_end_sending(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> int:
-    """Возвращение в главное меню после отправки письма."""
-    context.user_data[states.START_OVER] = True
-    await start(update, context)
-    return states.STOPPING

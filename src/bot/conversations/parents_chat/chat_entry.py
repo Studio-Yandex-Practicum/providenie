@@ -107,8 +107,13 @@ async def enter_chat(
 ) -> str:
     await update.callback_query.answer()
     chat = update.callback_query.data
-    context.user_data[states.CURRENT_CHAT] = chat
+    user_data = context.user_data
+    user_data[states.CURRENT_CHAT] = chat
     text = f'{chat_description[chat]["description"]}'
+    user_data[states.CHAT_FEATURES] = {states.LEVEL: states.ENTRY_CHAT}
+    user_data[states.CHAT_FEATURES][
+        user_data[states.CURRENT_CHAT]
+    ] = chat_description[chat]["name"]
 
     buttons = [
         [
@@ -119,7 +124,7 @@ async def enter_chat(
         [
             InlineKeyboardButton(
                 text="Вернуться в список чатов",
-                callback_data=str(states.SELECTING_CHAT),
+                callback_data=str(states.CHAT_END),
             )
         ],
         [
