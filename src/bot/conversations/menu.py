@@ -1,8 +1,8 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
-from bot import states
 from bot import constants as const
+from bot import states
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -43,7 +43,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             ),
             InlineKeyboardButton(
                 text=const.BTN_TO_ASK_A_QUESTION,
-                callback_data=str(states.ASK_QUESTION)
+                callback_data=str(states.ASK_QUESTION),
             ),
         ],
         [
@@ -74,9 +74,27 @@ async def talk_friends(update: Update, _) -> str:
 
 
 async def give_donation(update: Update, _) -> str:
+    text = const.MSG_DONATION
+    buttons = [
+        [
+            InlineKeyboardButton(
+                text=const.BTN_REPORTS, url=const.URL_REPORTS
+            ),
+            InlineKeyboardButton(
+                text=const.BTN_DONATION, url=const.URL_DONATION
+            ),
+        ],
+        [
+            InlineKeyboardButton(
+                text=const.BTN_BACK, callback_data=str(states.END)
+            )
+        ],
+    ]
+    keyboard = InlineKeyboardMarkup(buttons)
     await update.callback_query.answer()
-    text = "give_donation"
-    await update.callback_query.edit_message_text(text=text)
+    await update.callback_query.edit_message_text(
+        text=text, reply_markup=keyboard
+    )
     return states.SELECTING_ACTION
 
 
@@ -107,8 +125,7 @@ async def about(update: Update, _) -> str:
     ]
     keyboard = InlineKeyboardMarkup(button)
     await update.callback_query.edit_message_text(
-        text=text,
-        reply_markup=keyboard
+        text=text, reply_markup=keyboard
     )
     return states.SELECTING_ACTION
 
@@ -121,7 +138,7 @@ async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
 
 async def stop_nested(
-        update: Update, context: ContextTypes.DEFAULT_TYPE
+    update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Завершение работы по команде /stop из вложенного разговора."""
     context.user_data[states.START_OVER] = False
@@ -155,7 +172,7 @@ async def end_sending(
 
 async def select_chat(update: Update, _) -> str:
     """Эту функцию надо будет перенести.
-       В файл conversations/parents_chat.py.
+    В файл conversations/parents_chat.py.
     """
     await update.callback_query.answer()
     text = "select_chat"

@@ -36,6 +36,11 @@ BTN_YOUR_HELP_OPTION = "Ваш вариант помощи"
 BTN_THEME = "Тема вопроса"
 BTN_QUESTION = "Ваш вопрос"
 
+"""Donation"""
+BTN_REPORTS = "Годовые отчёты"
+BTN_DONATION = "Пожертвование"
+
+
 """BOT MESSAGES."""
 
 """General."""
@@ -69,6 +74,9 @@ MSG_QUESTION = "Задайте ваш вопрос"
 MSG_QUESTION_SENT = "Ваш вопрос отправлен."
 MSG_QUESTION_ERROR_SENT = "Ошибка отправки вопроса."
 
+"""Donation"""
+MSG_DONATION = "Отчёты и пожертвование"
+
 
 """LOG MESSAGES."""
 
@@ -78,3 +86,12 @@ ERROR_CANT_SEND_MSG_TO_EMAIL = (
     "Не удаётся отправить сообщение на email куратора!"
 )
 SUCCESSFUL_SENDING_MSG = "Сообщение отправлено куратору."
+
+"""URLS"""
+
+"""DONATION"""
+URL_REPORTS = "https://fond-providenie.ru/docs/"
+URL_DONATION = (
+    "https://fond-providenie.ru/help-chidren/sdelat-pozhertovanie"
+    "/sdelat-pozhertvovanie-s-bankovskoj-karty/"
+)
