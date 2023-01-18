@@ -9,6 +9,7 @@ BTN_BACK = "Назад"
 BTN_EDIT = "Редактировать"
 BTN_SEND = "Отправить"
 BTN_DONE = "Готово"
+BTN_ANSWER = "Ответить"
 
 """Person."""
 BTN_FULL_NAME = "Ф.И.О."
@@ -65,6 +66,8 @@ MSG_YOUR_HELP_OPTION = (
 """Question"""
 MSG_THEME = "Введите тему вопроса"
 MSG_QUESTION = "Задайте ваш вопрос"
+MSG_QUESTION_SENT = "Ваш вопрос отправлен."
+MSG_QUESTION_ERROR_SENT = "Ошибка отправки вопроса."
 
 
 """LOG MESSAGES."""

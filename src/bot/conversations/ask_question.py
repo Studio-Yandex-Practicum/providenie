@@ -2,10 +2,9 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
 from bot import constants as const
-from bot import states
-from bot import templates
-# from bot.conversations.menu import start
-# from core.email import bot_send_email_to_curator
+from bot import services as service
+from bot import states, templates
+from bot.conversations.menu import start
 
 
 async def ask_question(
@@ -94,9 +93,7 @@ async def show_question(
     if not data:
         text = const.MSG_NO_DATA
     else:
-        text = templates.MSG_QUESTION_DATA.format(
-            full_name, theme, question
-        )
+        text = templates.MSG_QUESTION_DATA.format(full_name, theme, question)
     buttons = [
         [
             InlineKeyboardButton(
@@ -115,11 +112,11 @@ async def show_question(
     if state:
         await update.callback_query.answer()
         await update.callback_query.edit_message_text(
-            parse_mode='html', text=text, reply_markup=keyboard
+            parse_mode="html", text=text, reply_markup=keyboard
         )
     else:
         await update.message.reply_text(
-            parse_mode='html', text=text, reply_markup=keyboard
+            parse_mode="html", text=text, reply_markup=keyboard
         )
     user_data[states.START_OVER] = False
     return states.SHOWING_QUESTION
@@ -165,9 +162,7 @@ async def select_question_field(
     return states.QUESTION_FEATURE
 
 
-async def ask_data(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> str:
+async def ask_data(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Ввод нового значения, при редактировании данных."""
     context.user_data[states.CURRENT_FEATURE] = update.callback_query.data
     text = const.MSG_ENTER_NEW_VALUE
@@ -176,9 +171,7 @@ async def ask_data(
     return states.TYPING_QUESTION
 
 
-async def save_data(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> str:
+async def save_data(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Сохранение нового значения, при редактировании данных."""
     user_data = context.user_data
     message = update.message.text
@@ -198,6 +191,44 @@ async def end_editing(
 
 async def send_question(
     update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> int:
+) -> None:
     """Отправка вопроса куратору."""
-    pass
+    user_data = context.user_data
+    data = user_data.get(states.FEATURES)
+    full_name = data.get(states.NAME, "-")
+    theme = data.get(states.THEME, "-")
+    question = data.get(states.QUESTION, "-")
+    current_user_id = update.effective_chat.id
+    text = templates.MSG_QUESTION_TO_CURATOR.format(full_name, theme, question)
+    user_url = f"tg://user?id={current_user_id}"
+    button = InlineKeyboardButton(text=const.BTN_ANSWER, url=user_url)
+    reply_markup = InlineKeyboardMarkup.from_button(button)
+    sent = await service.send_message_to_curator(
+        context=context,
+        message=text,
+        reply_markup=reply_markup,
+        parse_mode="html",
+    )
+    if sent:
+        return_text = const.MSG_QUESTION_SENT
+    else:
+        return_text = const.MSG_QUESTION_ERROR_SENT
+
+    button = InlineKeyboardButton(
+        text=const.BTN_BACK, callback_data=str(states.SENT)
+    )
+    reply_markup = InlineKeyboardMarkup.from_button(button)
+    await update.callback_query.answer()
+    await update.callback_query.edit_message_text(
+        text=return_text, reply_markup=reply_markup
+    )
+    return states.QUESTION_SENT
+
+
+async def end_sending(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> int:
+    """Возвращение в главное меню после отправки сообщения."""
+    context.user_data[states.START_OVER] = True
+    await start(update, context)
+    return states.STOPPING

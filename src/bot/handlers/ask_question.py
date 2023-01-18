@@ -7,8 +7,8 @@ from telegram.ext import (
 )
 
 from bot import states
-from bot.conversations import menu
 from bot.conversations import ask_question as question
+from bot.conversations import menu
 
 
 edit_question_conv = ConversationHandler(
@@ -31,18 +31,13 @@ edit_question_conv = ConversationHandler(
             ),
         ],
         states.TYPING_QUESTION: [
-            MessageHandler(
-                filters.TEXT & ~filters.COMMAND, question.save_data
-            )
+            MessageHandler(filters.TEXT & ~filters.COMMAND, question.save_data)
         ],
-        # states.VOLUNTEER_SENT: [
-        #     CallbackQueryHandler(
-        #         volunteer.end_editing, pattern="^" + str(states.END) + "$"
-        #     ),
-        #     CallbackQueryHandler(
-        #         volunteer.end_sending, pattern="^" + str(states.SENT) + "$"
-        #     ),
-        # ],
+        states.QUESTION_SENT: [
+            CallbackQueryHandler(
+                question.end_sending, pattern="^" + str(states.SENT) + "$"
+            ),
+        ],
     },
     fallbacks=[
         CallbackQueryHandler(
