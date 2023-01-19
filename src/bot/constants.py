@@ -78,6 +78,9 @@ MSG_QUESTION_ERROR_SENT = "Ошибка отправки вопроса."
 """Donation"""
 MSG_DONATION = "Отчёты и пожертвование"
 
+"""About"""
+MSG_ABOUT = "Здесь будет текст о фонде..."
+
 
 """LOG MESSAGES."""
 
