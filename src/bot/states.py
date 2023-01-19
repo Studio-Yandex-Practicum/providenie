@@ -1,5 +1,4 @@
 from telegram.ext import ConversationHandler
-from .constans.fund_app_constans import GO_MAIN_MENU
 
 
 """Константы ConversationHandler"""
@@ -11,7 +10,7 @@ from .constans.fund_app_constans import GO_MAIN_MENU
     TALK,
     DONATION,
     EVENTS,
-    QUESTION,
+    ASK_QUESTION,
     ABOUT,
 ) = map(chr, range(9))
 
@@ -46,9 +45,20 @@ from .constans.fund_app_constans import GO_MAIN_MENU
     PHONE,
     EMAIL,
     MESSAGE,
-) = map(chr, range(100, 110))
+    THEME,
+) = map(chr, range(100, 111))
 
 END = ConversationHandler.END
 
-GO_MAIN_MENU = GO_MAIN_MENU
-
+(
+    ASKING_QUESTION,
+    QUESTION,
+    ADDING_THEME,
+    ADDING_QUESTION,
+    EDIT_QUESTION,
+    SEND_QUESTION,
+    SHOWING_QUESTION,
+    QUESTION_FEATURE,
+    TYPING_QUESTION,
+    QUESTION_SENT,
+) = map(chr, range(200, 210))
