@@ -10,9 +10,11 @@ BTN_EDIT = "Редактировать"
 BTN_SEND = "Отправить"
 BTN_DONE = "Готово"
 BTN_MENU = "В главное меню"
+BTN_ANSWER = "Ответить"
 
 """Person."""
 BTN_FULL_NAME = "Ф.И.О."
+BTN_NAME = "Ваше имя"
 BTN_BIRTHDAY = "Дата рождения"
 BTN_CITY = "Город"
 BTN_PHONE = "Телефон"
@@ -40,13 +42,20 @@ BTN_TG_CHANNEL = "Новостной канал в ТГ"
 BTN_TG_BOT = "Приглашение в чат бот"
 
 """DONATION"""
+"""Question"""
+BTN_THEME = "Тема вопроса"
+BTN_QUESTION = "Ваш вопрос"
+
+"""Donation"""
 BTN_REPORTS = "Годовые отчёты"
 BTN_DONATION = "Пожертвование"
+
 
 """BOT MESSAGES."""
 
 """General."""
 MSG_FULL_NAME = "Фамилия, Имя, Отчество?"
+MSG_NAME = "Как к вам обращаться?"
 MSG_BIRTHDAY = "Дата рождения?"
 MSG_CITY = "Город проживания?"
 MSG_PHONE = "Номер телефона?"
@@ -78,7 +87,16 @@ MSG_TG_CHANNEL = "https://t.me/providenie_fond"
 MSG_TG_BOT = "TODO"
 
 """DONATION"""
+"""Question"""
+MSG_QUESTION_NEED_INFORMATION = "Далее необходимо заполнить поля для вопроса:"
+MSG_THEME = "Введите тему вопроса"
+MSG_QUESTION = "Задайте ваш вопрос"
+MSG_QUESTION_SENT = "Ваш вопрос отправлен."
+MSG_QUESTION_ERROR_SENT = "Ошибка отправки вопроса."
+
+"""Donation"""
 MSG_DONATION = "Отчёты и пожертвование"
+
 
 """LOG MESSAGES."""
 
