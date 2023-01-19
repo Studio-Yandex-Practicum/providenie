@@ -1,4 +1,5 @@
 from telegram.ext import ConversationHandler
+from .constans.fund_app_constans import GO_MAIN_MENU
 
 
 """Константы ConversationHandler"""
@@ -62,3 +63,5 @@ END = ConversationHandler.END
     TYPING_QUESTION,
     QUESTION_SENT,
 ) = map(chr, range(200, 210))
+
+GO_MAIN_MENU = GO_MAIN_MENU

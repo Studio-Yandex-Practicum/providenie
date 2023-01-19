@@ -7,6 +7,7 @@ from telegram.ext import (
 from bot import states
 from bot.conversations import menu
 from bot.handlers.ask_question import ask_question_conv
+from bot.handlers.join_to_fond import conv_handler_join_to_fond
 from bot.handlers.volunteer import add_volunteer_conv
 
 
@@ -14,6 +15,7 @@ selection_handlers = [
     CallbackQueryHandler(
         menu.select_chat, pattern="^" + str(states.CHATS) + "$"
     ),
+    conv_handler_join_to_fond,
     CallbackQueryHandler(
         menu.request, pattern="^" + str(states.REQUEST) + "$"
     ),
@@ -33,6 +35,10 @@ selection_handlers = [
     ),
     CallbackQueryHandler(
         menu.start, pattern="^" + str(states.START_OVER) + "$"
+    ),
+    CallbackQueryHandler(
+        menu.start,
+        pattern="^" + str(states.GO_MAIN_MENU) + "$"
     ),
     CallbackQueryHandler(menu.end, pattern="^" + str(states.END) + "$"),
     CallbackQueryHandler(menu.end, pattern="^" + str(states.SENT) + "$"),
