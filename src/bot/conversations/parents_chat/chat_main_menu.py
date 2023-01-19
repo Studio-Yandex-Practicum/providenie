@@ -89,7 +89,7 @@ async def select_chat(
     return states.SELECTING_CHAT
 
 
-async def chat_end(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+async def chat_end(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Завершение вложенного разговора."""
     await select_chat(update, context)
     return states.CHAT_END

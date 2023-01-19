@@ -47,13 +47,13 @@ async def chat_send_email(
                     <b>ФИО ребенка:</b> {chat_child_name}<br/>
                     <b>Дата рождения:</b> {chat_child_birthday}<br/>
                     <b>Место рождения:</b> {chat_child_place_birthday}<br/>
-                    <b>Срок беременности при рождении:</b> {chat_child_term}
+                    <b>Срок беременности при рождении:</b> {chat_child_term}<br/>
                     <b>Вес при рождении:</b> {chat_child_weight}<br/>
                     <b>Рост при рождении:</b> {chat_child_height}<br/>
                     <b>Дигнозы:</b> {chat_child_diagnose}<br/>
                     <b>Операции ребенка:</b> {chat_child_operation}<br/>
                     <b>Дата обращения:</b> {chat_date_address}<br/>
-                    <b>Как узнали о фонде:</b> {chat_about_fond}
+                    <b>Как узнали о фонде:</b> {chat_about_fond}<br/>
                 </p>
             </body>
         </html>

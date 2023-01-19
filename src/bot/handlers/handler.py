@@ -34,6 +34,7 @@ selection_handlers = [
     ),
     CallbackQueryHandler(menu.end, pattern="^" + str(states.END) + "$"),
     CallbackQueryHandler(menu.end, pattern="^" + str(states.SENT) + "$"),
+    CallbackQueryHandler(menu.end, pattern="^" + str(states.CHAT_SEND) + "$"),
 ]
 
 conv_handler = ConversationHandler(
