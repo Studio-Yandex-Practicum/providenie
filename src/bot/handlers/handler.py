@@ -31,11 +31,15 @@ selection_handlers = [
     ),
     CallbackQueryHandler(
         menu.start,
-        pattern="^" + str(states.GO_MAIN_MENU) + "$"
+        pattern="^" + str(states.START_OVER) + "$"
     ),
     CallbackQueryHandler(
-        menu.ask_question,
+        menu.about,
         pattern="^" + str(states.ABOUT) + "$"
+    ),
+    CallbackQueryHandler(
+        menu.start,
+        pattern="^" + str(states.GO_MAIN_MENU) + "$"
     ),
     CallbackQueryHandler(menu.end, pattern="^" + str(states.END) + "$"),
     CallbackQueryHandler(menu.end, pattern="^" + str(states.SENT) + "$"),

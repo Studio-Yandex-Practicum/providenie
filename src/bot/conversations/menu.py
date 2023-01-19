@@ -92,28 +92,30 @@ async def ask_question(update: Update, _) -> str:
     return states.SELECTING_ACTION
 
 
-# async def request(update: Update, _) -> str:
-#     """Функция перехода в 'Вступить в фонд.'"""
-#     await update.callback_query.answer()
-#     await update.callback_query.edit_message_text(
-#         text=fund_const.MSG_PRESS_ANY_BUTTON
-#     )
-#     buttons = [
-#         [
-#             InlineKeyboardButton(
-#                 text="Продолжить",
-#                 callback_data=str(fund_const.GO_TO_JOIN_FOND)  # КОНСТАНТА
-#             ),
-#         ],
-#     ]
+async def request(update: Update, _) -> str:
+    await update.callback_query.answer()
+    text = "request"
+    await update.callback_query.edit_message_text(text=text)
+    return states.SELECTING_ACTION
 
-#     keyboard = InlineKeyboardMarkup(buttons)
 
-#     await update.callback_query.edit_message_text(
-#         text=fund_const.MSG_PRESS_NEXT_BUTTON,
-#         reply_markup=keyboard
-#     )
-#     return fund_const.START_JOIN_TO_FOND
+async def about(update: Update, _) -> str:
+    await update.callback_query.answer()
+    text = "Информация о фонде"
+    button = [
+        [
+            InlineKeyboardButton(
+                text="Возврат в главное меню",
+                callback_data=str(states.START_OVER),
+            )
+        ]
+    ]
+    keyboard = InlineKeyboardMarkup(button)
+    await update.callback_query.edit_message_text(
+        text=text,
+        reply_markup=keyboard
+    )
+    return states.SELECTING_ACTION
 
 
 async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -127,8 +129,7 @@ async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
 
 async def stop_nested(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE
+    update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Завершение работы по команде /stop из вложенного разговора."""
     await update.message.reply_text(
@@ -155,7 +156,7 @@ async def end_second_level(
 
 
 async def select_chat(update: Update, _) -> str:
-    """Эту функцию надо перенести.
+    """Эту функцию надо будет перенести.
     В файл conversations/parents_chat.py.
     """
     await update.callback_query.answer()
