@@ -7,7 +7,7 @@ from telegram.ext import (
 from bot import states
 from bot.conversations import menu
 from bot.handlers.volunteer import add_volunteer_conv
-
+from bot.handlers.ask_question import ask_question_conv
 from .join_to_fond import conv_handler_join_to_fond
 
 
@@ -27,19 +27,10 @@ selection_handlers = [
         menu.get_events, pattern="^" + str(states.EVENTS) + "$"
     ),
     CallbackQueryHandler(
-        menu.ask_question, pattern="^" + str(states.QUESTION) + "$"
+        menu.about, pattern="^" + str(states.ABOUT) + "$"
     ),
     CallbackQueryHandler(
-        menu.start,
-        pattern="^" + str(states.START_OVER) + "$"
-    ),
-    CallbackQueryHandler(
-        menu.about,
-        pattern="^" + str(states.ABOUT) + "$"
-    ),
-    CallbackQueryHandler(
-        menu.start,
-        pattern="^" + str(states.GO_MAIN_MENU) + "$"
+        menu.start, pattern="^" + str(states.START_OVER) + "$"
     ),
     CallbackQueryHandler(menu.end, pattern="^" + str(states.END) + "$"),
     CallbackQueryHandler(menu.end, pattern="^" + str(states.SENT) + "$"),
