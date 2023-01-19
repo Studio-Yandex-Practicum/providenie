@@ -35,7 +35,7 @@ edit_question_conv = ConversationHandler(
         ],
         states.QUESTION_SENT: [
             CallbackQueryHandler(
-                question.end_sending, pattern="^" + str(states.SENT) + "$"
+                menu.end_sending, pattern="^" + str(states.SENT) + "$"
             ),
         ],
     },

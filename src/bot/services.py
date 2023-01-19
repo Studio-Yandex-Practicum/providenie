@@ -46,7 +46,6 @@ async def send_message_to_curator(
         return True
     except Forbidden:
         logging.error(const.LOG_BOT_BLOCKED_BY_USER)
-        # return False
     except TelegramError as error:
         logging.error(error)
     return False

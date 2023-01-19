@@ -4,7 +4,6 @@ from telegram.ext import ContextTypes
 from bot import constants as const
 from bot import services as service
 from bot import states, templates
-from bot.conversations.menu import start
 
 
 async def ask_question(
@@ -13,7 +12,7 @@ async def ask_question(
     """Возможность задать вопрос."""
     user_data = context.user_data
     user_data[states.START_OVER] = False
-    text = "Далее необходимо заполнить поля для вопроса:"
+    text = const.MSG_QUESTION_NEED_INFORMATION
     buttons = [
         [
             InlineKeyboardButton(
@@ -223,12 +222,3 @@ async def send_question(
         text=return_text, reply_markup=reply_markup
     )
     return states.QUESTION_SENT
-
-
-async def end_sending(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> int:
-    """Возвращение в главное меню после отправки сообщения."""
-    context.user_data[states.START_OVER] = True
-    await start(update, context)
-    return states.STOPPING

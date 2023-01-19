@@ -69,6 +69,7 @@ MSG_YOUR_HELP_OPTION = (
 )
 
 """Question"""
+MSG_QUESTION_NEED_INFORMATION = "Далее необходимо заполнить поля для вопроса:"
 MSG_THEME = "Введите тему вопроса"
 MSG_QUESTION = "Задайте ваш вопрос"
 MSG_QUESTION_SENT = "Ваш вопрос отправлен."
