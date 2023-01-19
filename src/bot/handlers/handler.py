@@ -6,17 +6,18 @@ from telegram.ext import (
 
 from bot import states
 from bot.conversations import menu
-from bot.handlers.volunteer import add_volunteer_conv
 from bot.handlers.ask_question import ask_question_conv
-from .join_to_fond import conv_handler_join_to_fond
+from bot.handlers.volunteer import add_volunteer_conv
 
 
 selection_handlers = [
-    add_volunteer_conv,
-    conv_handler_join_to_fond,
     CallbackQueryHandler(
         menu.select_chat, pattern="^" + str(states.CHATS) + "$"
     ),
+    CallbackQueryHandler(
+        menu.request, pattern="^" + str(states.REQUEST) + "$"
+    ),
+    add_volunteer_conv,
     CallbackQueryHandler(
         menu.talk_friends, pattern="^" + str(states.TALK) + "$"
     ),
@@ -26,6 +27,7 @@ selection_handlers = [
     CallbackQueryHandler(
         menu.get_events, pattern="^" + str(states.EVENTS) + "$"
     ),
+    ask_question_conv,
     CallbackQueryHandler(
         menu.about, pattern="^" + str(states.ABOUT) + "$"
     ),
