@@ -185,7 +185,9 @@ chat_handlers = [
             "^" + str(states.CHAT_PROBLEMS) + "$|^" + str(states.CHAT_REHABILITATION) + "$|"
             "^" + str(states.CHAT_TELEGRAM) + "$"
         ),
-    )
+    ),
+    CallbackQueryHandler(
+            chat_end, pattern="^" + str(states.CHAT_END) + "$")
 ]
 
 chat_conv = ConversationHandler(
