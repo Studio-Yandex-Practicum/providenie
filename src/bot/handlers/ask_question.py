@@ -17,11 +17,11 @@ edit_question_conv = ConversationHandler(
     entry_points=[
         CallbackQueryHandler(
             question.select_question_field,
-            pattern="^" + str(key.EDIT_QUESTION) + "$",
+            pattern="^" + key.EDIT_QUESTION + "$",
         ),
         CallbackQueryHandler(
             question.send_question,
-            pattern="^" + str(key.SEND_QUESTION) + "$",
+            pattern="^" + key.SEND_QUESTION + "$",
         ),
     ],
     states={
@@ -36,7 +36,7 @@ edit_question_conv = ConversationHandler(
         ],
         state.QUESTION_SENT: [
             CallbackQueryHandler(
-                menu.end_sending, pattern="^" + str(key.SENT) + "$"
+                menu.end_sending, pattern="^" + key.SENT + "$"
             ),
         ],
     },
@@ -45,7 +45,7 @@ edit_question_conv = ConversationHandler(
             question.end_editing, pattern="^" + str(key.END) + "$"
         ),
         CallbackQueryHandler(
-            menu.end_sending, pattern="^" + str(key.SENT) + "$"
+            menu.end_sending, pattern="^" + key.SENT + "$"
         ),
         CommandHandler("stop", menu.stop_nested),
     ],
@@ -61,14 +61,14 @@ ask_question_conv = ConversationHandler(
     entry_points=[
         CallbackQueryHandler(
             question.ask_question,
-            pattern="^" + str(key.ASK_QUESTION) + "$",
+            pattern="^" + key.ASK_QUESTION + "$",
         )
     ],
     states={
         state.ASKING_QUESTION: [
             CallbackQueryHandler(
                 question.asking_question,
-                pattern="^" + str(key.QUESTION) + "$",
+                pattern="^" + key.QUESTION + "$",
             )
         ],
         state.ADDING_NAME: [

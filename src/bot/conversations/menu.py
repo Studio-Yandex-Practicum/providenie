@@ -13,43 +13,43 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [
             InlineKeyboardButton(
                 text=const.BTN_TO_PARENTS_CHAT,
-                callback_data=str(key.CHATS),
+                callback_data=key.CHATS,
             )
         ],
         [
             InlineKeyboardButton(
-                text=const.BTN_TO_FUND, callback_data=str(key.REQUEST)
+                text=const.BTN_TO_FUND, callback_data=key.REQUEST
             )
         ],
         [
             InlineKeyboardButton(
                 text=const.BTN_TO_VOLUNTEER,
-                callback_data=str(key.ADD_VOLUNTEER),
+                callback_data=key.ADD_VOLUNTEER,
             ),
         ],
         [
             InlineKeyboardButton(
                 text=const.BTN_TO_TELL_ABOUT_FUND,
-                callback_data=str(key.TALK),
+                callback_data=key.TALK,
             )
         ],
         [
             InlineKeyboardButton(
-                text=const.BTN_TO_DONATION, callback_data=str(key.DONATION)
+                text=const.BTN_TO_DONATION, callback_data=key.DONATION
             )
         ],
         [
             InlineKeyboardButton(
-                text=const.BTN_TO_OUR_EVENTS, callback_data=str(key.EVENTS)
+                text=const.BTN_TO_OUR_EVENTS, callback_data=key.EVENTS
             ),
             InlineKeyboardButton(
                 text=const.BTN_TO_ASK_A_QUESTION,
-                callback_data=str(key.ASK_QUESTION),
+                callback_data=key.ASK_QUESTION,
             ),
         ],
         [
             InlineKeyboardButton(
-                text=const.BTN_TO_ABOUT_FUND, callback_data=str(key.ABOUT)
+                text=const.BTN_TO_ABOUT_FUND, callback_data=key.ABOUT
             ),
         ],
     ]

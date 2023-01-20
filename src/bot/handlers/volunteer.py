@@ -17,11 +17,11 @@ edit_volunteer_conv = ConversationHandler(
     entry_points=[
         CallbackQueryHandler(
             volunteer.select_volunteer_field,
-            pattern="^" + str(key.EDIT_VOLUNTEER) + "$",
+            pattern="^" + key.EDIT_VOLUNTEER + "$",
         ),
         CallbackQueryHandler(
             volunteer.send_email,
-            pattern="^" + str(key.SEND_VOLUNTEER) + "$",
+            pattern="^" + key.SEND_VOLUNTEER + "$",
         ),
     ],
     states={
@@ -41,7 +41,7 @@ edit_volunteer_conv = ConversationHandler(
                 volunteer.end_editing, pattern="^" + str(key.END) + "$"
             ),
             CallbackQueryHandler(
-                volunteer.end_sending, pattern="^" + str(key.SENT) + "$"
+                volunteer.end_sending, pattern="^" + key.SENT + "$"
             ),
         ],
     },
@@ -50,7 +50,7 @@ edit_volunteer_conv = ConversationHandler(
             volunteer.end_editing, pattern="^" + str(key.END) + "$"
         ),
         CallbackQueryHandler(
-            volunteer.end_sending, pattern="^" + str(key.SENT) + "$"
+            volunteer.end_sending, pattern="^" + key.SENT + "$"
         ),
         CommandHandler("stop", menu.stop_nested),
     ],
@@ -66,14 +66,14 @@ add_volunteer_conv = ConversationHandler(
     entry_points=[
         CallbackQueryHandler(
             volunteer.add_volunteer,
-            pattern="^" + str(key.ADD_VOLUNTEER) + "$",
+            pattern="^" + key.ADD_VOLUNTEER + "$",
         )
     ],
     states={
         state.ADDING_VOLUNTEER: [
             CallbackQueryHandler(
                 volunteer.adding_volunteer,
-                pattern="^" + str(key.VOLUNTEER) + "$",
+                pattern="^" + key.VOLUNTEER + "$",
             )
         ],
         state.ADDING_NAME: [

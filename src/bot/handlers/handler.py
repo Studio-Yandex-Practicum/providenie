@@ -13,25 +13,25 @@ from bot.handlers.volunteer import add_volunteer_conv
 
 selection_handlers = [
     CallbackQueryHandler(
-        menu.select_chat, pattern="^" + str(key.CHATS) + "$"
+        menu.select_chat, pattern="^" + key.CHATS + "$"
     ),
     CallbackQueryHandler(
-        menu.request, pattern="^" + str(key.REQUEST) + "$"
+        menu.request, pattern="^" + key.REQUEST + "$"
     ),
     add_volunteer_conv,
     CallbackQueryHandler(
-        menu.talk_friends, pattern="^" + str(key.TALK) + "$"
+        menu.talk_friends, pattern="^" + key.TALK + "$"
     ),
     CallbackQueryHandler(
-        menu.give_donation, pattern="^" + str(key.DONATION) + "$"
+        menu.give_donation, pattern="^" + key.DONATION + "$"
     ),
     CallbackQueryHandler(
-        menu.get_events, pattern="^" + str(key.EVENTS) + "$"
+        menu.get_events, pattern="^" + key.EVENTS + "$"
     ),
     ask_question_conv,
-    CallbackQueryHandler(menu.about, pattern="^" + str(key.ABOUT) + "$"),
+    CallbackQueryHandler(menu.about, pattern="^" + key.ABOUT + "$"),
     CallbackQueryHandler(menu.end, pattern="^" + str(key.END) + "$"),
-    CallbackQueryHandler(menu.end, pattern="^" + str(key.SENT) + "$"),
+    CallbackQueryHandler(menu.end, pattern="^" + key.SENT + "$"),
 ]
 
 conv_handler = ConversationHandler(

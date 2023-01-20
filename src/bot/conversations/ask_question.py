@@ -18,7 +18,7 @@ async def ask_question(
     buttons = [
         [
             InlineKeyboardButton(
-                text=const.BTN_BEGIN, callback_data=str(key.QUESTION)
+                text=const.BTN_BEGIN, callback_data=key.QUESTION
             ),
             InlineKeyboardButton(
                 text=const.BTN_BACK, callback_data=str(key.END)
@@ -98,10 +98,10 @@ async def show_question(
     buttons = [
         [
             InlineKeyboardButton(
-                text=const.BTN_EDIT, callback_data=str(key.EDIT_QUESTION)
+                text=const.BTN_EDIT, callback_data=key.EDIT_QUESTION
             ),
             InlineKeyboardButton(
-                text=const.BTN_SEND, callback_data=str(key.SEND_QUESTION)
+                text=const.BTN_SEND, callback_data=key.SEND_QUESTION
             ),
             InlineKeyboardButton(
                 text=const.BTN_BACK, callback_data=str(key.END)
@@ -129,17 +129,17 @@ async def select_question_field(
     buttons = [
         [
             InlineKeyboardButton(
-                text=const.BTN_NAME, callback_data=str(key.NAME)
+                text=const.BTN_NAME, callback_data=key.NAME
             ),
         ],
         [
             InlineKeyboardButton(
-                text=const.BTN_THEME, callback_data=str(key.THEME)
+                text=const.BTN_THEME, callback_data=key.THEME
             ),
         ],
         [
             InlineKeyboardButton(
-                text=const.BTN_QUESTION, callback_data=str(key.QUESTION)
+                text=const.BTN_QUESTION, callback_data=key.QUESTION
             ),
         ],
         [
@@ -214,7 +214,7 @@ async def send_question(
         return_text = const.MSG_QUESTION_ERROR_SENT
 
     button = InlineKeyboardButton(
-        text=const.BTN_BACK, callback_data=str(key.SENT)
+        text=const.BTN_BACK, callback_data=key.SENT
     )
     reply_markup = InlineKeyboardMarkup.from_button(button)
     await update.callback_query.answer()

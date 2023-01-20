@@ -19,7 +19,7 @@ async def add_volunteer(
     buttons = [
         [
             InlineKeyboardButton(
-                text=const.BTN_BEGIN, callback_data=str(key.VOLUNTEER)
+                text=const.BTN_BEGIN, callback_data=key.VOLUNTEER
             ),
             InlineKeyboardButton(
                 text=const.BTN_BACK, callback_data=str(key.END)
@@ -152,10 +152,10 @@ async def show_volunteer(
     buttons = [
         [
             InlineKeyboardButton(
-                text=const.BTN_EDIT, callback_data=str(key.EDIT_VOLUNTEER)
+                text=const.BTN_EDIT, callback_data=key.EDIT_VOLUNTEER
             ),
             InlineKeyboardButton(
-                text=const.BTN_SEND, callback_data=str(key.SEND_VOLUNTEER)
+                text=const.BTN_SEND, callback_data=key.SEND_VOLUNTEER
             ),
             InlineKeyboardButton(
                 text=const.BTN_BACK, callback_data=str(key.END)
@@ -183,27 +183,27 @@ async def select_volunteer_field(
     buttons = [
         [
             InlineKeyboardButton(
-                text=const.BTN_FULL_NAME, callback_data=str(key.NAME)
+                text=const.BTN_FULL_NAME, callback_data=key.NAME
             ),
             InlineKeyboardButton(
-                text=const.BTN_BIRTHDAY, callback_data=str(key.BIRTHDAY)
+                text=const.BTN_BIRTHDAY, callback_data=key.BIRTHDAY
             ),
         ],
         [
             InlineKeyboardButton(
-                text=const.BTN_CITY, callback_data=str(key.CITY)
+                text=const.BTN_CITY, callback_data=key.CITY
             ),
             InlineKeyboardButton(
-                text=const.BTN_PHONE, callback_data=str(key.PHONE)
+                text=const.BTN_PHONE, callback_data=key.PHONE
             ),
             InlineKeyboardButton(
-                text=const.BTN_EMAIL, callback_data=str(key.EMAIL)
+                text=const.BTN_EMAIL, callback_data=key.EMAIL
             ),
         ],
         [
             InlineKeyboardButton(
                 text=const.BTN_YOUR_HELP_OPTION,
-                callback_data=str(key.MESSAGE),
+                callback_data=key.MESSAGE,
             ),
             InlineKeyboardButton(
                 text=const.BTN_DONE, callback_data=str(key.END)
@@ -287,7 +287,7 @@ async def send_email(
     else:
         return_text = const.MSG_SENDING_ERROR
     button = InlineKeyboardButton(
-        text=const.BTN_BACK, callback_data=str(key.SENT)
+        text=const.BTN_BACK, callback_data=key.SENT
     )
     keyboard = InlineKeyboardMarkup.from_button(button)
     await update.callback_query.answer()
