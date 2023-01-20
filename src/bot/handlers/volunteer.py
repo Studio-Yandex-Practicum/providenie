@@ -6,7 +6,8 @@ from telegram.ext import (
     filters,
 )
 
-from bot import states
+from bot import keys as key
+from bot import states as state
 from bot.conversations import menu
 from bot.conversations import volunteer_application as volunteer
 
@@ -16,47 +17,47 @@ edit_volunteer_conv = ConversationHandler(
     entry_points=[
         CallbackQueryHandler(
             volunteer.select_volunteer_field,
-            pattern="^" + str(states.EDIT_VOLUNTEER) + "$",
+            pattern="^" + str(key.EDIT_VOLUNTEER) + "$",
         ),
         CallbackQueryHandler(
             volunteer.send_email,
-            pattern="^" + str(states.SEND_VOLUNTEER) + "$",
+            pattern="^" + str(key.SEND_VOLUNTEER) + "$",
         ),
     ],
     states={
-        states.VOLUNTEER_FEATURE: [
+        state.VOLUNTEER_FEATURE: [
             CallbackQueryHandler(
                 volunteer.ask_volunteer,
-                pattern="^(?!" + str(states.END) + ").*$",
+                pattern="^(?!" + str(key.END) + ").*$",
             ),
         ],
-        states.TYPING_VOLUNTEER: [
+        state.TYPING_VOLUNTEER: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND, volunteer.save_volunteer_input
             )
         ],
-        states.VOLUNTEER_SENT: [
+        state.VOLUNTEER_SENT: [
             CallbackQueryHandler(
-                volunteer.end_editing, pattern="^" + str(states.END) + "$"
+                volunteer.end_editing, pattern="^" + str(key.END) + "$"
             ),
             CallbackQueryHandler(
-                volunteer.end_sending, pattern="^" + str(states.SENT) + "$"
+                volunteer.end_sending, pattern="^" + str(key.SENT) + "$"
             ),
         ],
     },
     fallbacks=[
         CallbackQueryHandler(
-            volunteer.end_editing, pattern="^" + str(states.END) + "$"
+            volunteer.end_editing, pattern="^" + str(key.END) + "$"
         ),
         CallbackQueryHandler(
-            volunteer.end_sending, pattern="^" + str(states.SENT) + "$"
+            volunteer.end_sending, pattern="^" + str(key.SENT) + "$"
         ),
         CommandHandler("stop", menu.stop_nested),
     ],
     map_to_parent={
-        states.END: states.SHOWING_VOLUNTEER,
-        states.SENT: states.STOPPING,
-        states.STOPPING: states.END,
+        key.END: state.SHOWING_VOLUNTEER,
+        key.SENT: state.STOPPING,
+        state.STOPPING: key.END,
     },
 )
 
@@ -65,57 +66,57 @@ add_volunteer_conv = ConversationHandler(
     entry_points=[
         CallbackQueryHandler(
             volunteer.add_volunteer,
-            pattern="^" + str(states.ADD_VOLUNTEER) + "$",
+            pattern="^" + str(key.ADD_VOLUNTEER) + "$",
         )
     ],
     states={
-        states.ADDING_VOLUNTEER: [
+        state.ADDING_VOLUNTEER: [
             CallbackQueryHandler(
                 volunteer.adding_volunteer,
-                pattern="^" + str(states.VOLUNTEER) + "$",
+                pattern="^" + str(key.VOLUNTEER) + "$",
             )
         ],
-        states.ADDING_NAME: [
+        state.ADDING_NAME: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND, volunteer.adding_name
             )
         ],
-        states.ADDING_BIRTHDAY: [
+        state.ADDING_BIRTHDAY: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND, volunteer.adding_birthday
             )
         ],
-        states.ADDING_CITY: [
+        state.ADDING_CITY: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND, volunteer.adding_city
             )
         ],
-        states.ADDING_PHONE: [
+        state.ADDING_PHONE: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND, volunteer.adding_phone
             )
         ],
-        states.ADDING_EMAIL: [
+        state.ADDING_EMAIL: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND, volunteer.adding_email
             )
         ],
-        states.ADDING_MESSAGE: [
+        state.ADDING_MESSAGE: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND, volunteer.adding_message
             ),
             CommandHandler("skip", volunteer.skip_adding_message),
         ],
-        states.SHOWING_VOLUNTEER: [edit_volunteer_conv],
+        state.SHOWING_VOLUNTEER: [edit_volunteer_conv],
     },
     fallbacks=[
         CallbackQueryHandler(
-            menu.end_second_level, pattern="^" + str(states.END) + "$"
+            menu.end_second_level, pattern="^" + str(key.END) + "$"
         ),
         CommandHandler("stop", menu.stop_nested),
     ],
     map_to_parent={
-        states.END: states.SELECTING_ACTION,
-        states.STOPPING: states.STOPPING,
+        key.END: state.SELECTING_ACTION,
+        state.STOPPING: state.STOPPING,
     },
 )

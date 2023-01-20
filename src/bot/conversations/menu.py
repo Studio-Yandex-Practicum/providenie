@@ -2,7 +2,8 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
 from bot import constants as const
-from bot import states
+from bot import keys as key
+from bot import states as state
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -12,49 +13,49 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [
             InlineKeyboardButton(
                 text=const.BTN_TO_PARENTS_CHAT,
-                callback_data=str(states.CHATS),
+                callback_data=str(key.CHATS),
             )
         ],
         [
             InlineKeyboardButton(
-                text=const.BTN_TO_FUND, callback_data=str(states.REQUEST)
+                text=const.BTN_TO_FUND, callback_data=str(key.REQUEST)
             )
         ],
         [
             InlineKeyboardButton(
                 text=const.BTN_TO_VOLUNTEER,
-                callback_data=str(states.ADD_VOLUNTEER),
+                callback_data=str(key.ADD_VOLUNTEER),
             ),
         ],
         [
             InlineKeyboardButton(
                 text=const.BTN_TO_TELL_ABOUT_FUND,
-                callback_data=str(states.TALK),
+                callback_data=str(key.TALK),
             )
         ],
         [
             InlineKeyboardButton(
-                text=const.BTN_TO_DONATION, callback_data=str(states.DONATION)
+                text=const.BTN_TO_DONATION, callback_data=str(key.DONATION)
             )
         ],
         [
             InlineKeyboardButton(
-                text=const.BTN_TO_OUR_EVENTS, callback_data=str(states.EVENTS)
+                text=const.BTN_TO_OUR_EVENTS, callback_data=str(key.EVENTS)
             ),
             InlineKeyboardButton(
                 text=const.BTN_TO_ASK_A_QUESTION,
-                callback_data=str(states.ASK_QUESTION),
+                callback_data=str(key.ASK_QUESTION),
             ),
         ],
         [
             InlineKeyboardButton(
-                text=const.BTN_TO_ABOUT_FUND, callback_data=str(states.ABOUT)
+                text=const.BTN_TO_ABOUT_FUND, callback_data=str(key.ABOUT)
             ),
         ],
     ]
     keyboard = InlineKeyboardMarkup(buttons)
 
-    if context.user_data.get(states.START_OVER):
+    if context.user_data.get(key.START_OVER):
         await update.callback_query.answer()
         await update.callback_query.edit_message_text(
             text=text, reply_markup=keyboard
@@ -62,15 +63,15 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await update.message.reply_text(text=text, reply_markup=keyboard)
 
-    context.user_data[states.START_OVER] = False
-    return states.SELECTING_ACTION
+    context.user_data[key.START_OVER] = False
+    return state.SELECTING_ACTION
 
 
 async def talk_friends(update: Update, _) -> str:
     await update.callback_query.answer()
     text = "talk_friends"
     await update.callback_query.edit_message_text(text=text)
-    return states.SELECTING_ACTION
+    return state.SELECTING_ACTION
 
 
 async def give_donation(update: Update, _) -> str:
@@ -86,7 +87,7 @@ async def give_donation(update: Update, _) -> str:
         ],
         [
             InlineKeyboardButton(
-                text=const.BTN_BACK, callback_data=str(states.END)
+                text=const.BTN_BACK, callback_data=str(key.END)
             )
         ],
     ]
@@ -95,21 +96,21 @@ async def give_donation(update: Update, _) -> str:
     await update.callback_query.edit_message_text(
         text=text, reply_markup=keyboard
     )
-    return states.SELECTING_ACTION
+    return state.SELECTING_ACTION
 
 
 async def get_events(update: Update, _) -> str:
     await update.callback_query.answer()
     text = "get_events"
     await update.callback_query.edit_message_text(text=text)
-    return states.SELECTING_ACTION
+    return state.SELECTING_ACTION
 
 
 async def request(update: Update, _) -> str:
     await update.callback_query.answer()
     text = "request"
     await update.callback_query.edit_message_text(text=text)
-    return states.SELECTING_ACTION
+    return state.SELECTING_ACTION
 
 
 async def about(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
@@ -118,8 +119,7 @@ async def about(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     button = [
         [
             InlineKeyboardButton(
-                text=const.BTN_BACK,
-                callback_data=str(states.END),
+                text=const.BTN_BACK, callback_data=str(key.END),
             )
         ]
     ]
@@ -127,48 +127,48 @@ async def about(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     await update.callback_query.edit_message_text(
         text=text, reply_markup=keyboard
     )
-    context.user_data[states.START_OVER] = True
-    return states.ENDING
+    context.user_data[key.START_OVER] = True
+    return state.ENDING
 
 
 async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Завершение работы по команде /stop."""
-    context.user_data[states.START_OVER] = False
+    context.user_data[key.START_OVER] = False
     await update.message.reply_text(const.MSG_GOODBYE)
-    return states.END
+    return key.END
 
 
 async def stop_nested(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Завершение работы по команде /stop из вложенного разговора."""
-    context.user_data[states.START_OVER] = False
+    context.user_data[key.START_OVER] = False
     await update.message.reply_text(const.MSG_GOODBYE)
-    return states.STOPPING
+    return state.STOPPING
 
 
 async def end(update: Update, _) -> int:
     """Завершение разговора."""
     await update.callback_query.answer()
-    return states.END
+    return key.END
 
 
 async def end_second_level(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
     """Завершение вложенного разговора."""
-    context.user_data[states.START_OVER] = True
+    context.user_data[key.START_OVER] = True
     await start(update, context)
-    return states.END
+    return key.END
 
 
 async def end_sending(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
     """Возвращение в главное меню после отправки данных."""
-    context.user_data[states.START_OVER] = True
+    context.user_data[key.START_OVER] = True
     await start(update, context)
-    return states.STOPPING
+    return state.STOPPING
 
 
 async def select_chat(update: Update, _) -> str:
@@ -178,4 +178,4 @@ async def select_chat(update: Update, _) -> str:
     await update.callback_query.answer()
     text = "select_chat"
     await update.callback_query.edit_message_text(text=text)
-    return states.SELECTING_ACTION
+    return state.SELECTING_ACTION
