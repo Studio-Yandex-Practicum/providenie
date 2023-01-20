@@ -47,7 +47,7 @@ chat_edit_conv = ConversationHandler(
                 pattern="^" + str(states.END) + "$",
             ),
             CallbackQueryHandler(
-                chat_end_sending, pattern="^" + str(states.CHAT_SEND) + "$"
+                chat_end_sending, pattern="^" + str(states.SENT) + "$"
             ),
         ],
     },
@@ -57,13 +57,13 @@ chat_edit_conv = ConversationHandler(
             pattern="^" + str(states.END) + "$",
         ),
         CallbackQueryHandler(
-            chat_end_sending, pattern="^" + str(states.CHAT_SEND) + "$"
+            chat_end_sending, pattern="^" + str(states.SENT) + "$"
         ),
         CommandHandler("stop", menu.stop_nested),
     ],
     map_to_parent={
         states.END: states.CHAT_SHOWING,
-        states.CHAT_SEND: states.STOPPING,
+        states.SENT: states.STOPPING,
         states.STOPPING: states.END,
     },
 )
@@ -94,7 +94,7 @@ chat_get_conv = ConversationHandler(
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 chat_get_data.chat_getting_parents_phone,
-            )
+            ),
         ],
         states.CHAT_GETTING_CHILD_NAME: [
             MessageHandler(
@@ -144,12 +144,6 @@ chat_get_conv = ConversationHandler(
                 chat_get_data.chat_getting_child_operation,
             )
         ],
-        states.CHAT_GETTING_DATE_ADDRESS: [
-            MessageHandler(
-                filters.TEXT & ~filters.COMMAND,
-                chat_get_data.chat_getting_date_address,
-            )
-        ],
         states.CHAT_GETTING_ABOUT_FOND: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
@@ -162,12 +156,12 @@ chat_get_conv = ConversationHandler(
         CallbackQueryHandler(
             menu.end_second_level, pattern="^" + str(states.END) + "$"
         ),
-        CallbackQueryHandler(chat_end, pattern="^" + str(states.CHAT_END) + "$"
+        CallbackQueryHandler(select_chat, pattern="^" + str(states.CHATS) + "$"
         ),
         CommandHandler("stop", menu.stop_nested),
     ],
     map_to_parent={
-        states.CHAT_END: states.SELECTING_CHAT,
+        states.CHATS: states.SELECTING_CHAT,
         states.END: states.END,
         states.STOPPING: states.STOPPING,
     },
@@ -186,8 +180,6 @@ chat_handlers = [
             "^" + str(states.CHAT_TELEGRAM) + "$"
         ),
     ),
-    CallbackQueryHandler(
-            chat_end, pattern="^" + str(states.CHAT_END) + "$")
 ]
 
 chat_conv = ConversationHandler(
