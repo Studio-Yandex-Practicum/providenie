@@ -39,22 +39,22 @@ async def application_to_the_fond(
     buttons = [
         [
             InlineKeyboardButton(
-                text="Смотри на мир",
-                callback_data=str(constans.LOOK_WORLD_PROGRAMM)
+                text=constans.PROGRAM_FOND["0"][0],
+                callback_data=str(constans.LOOK_WORLD_PROGRAM)
             ),
             InlineKeyboardButton(
-                text="Реабилитация",
-                callback_data=str(constans.REABILITATION_PROGRAMM)
+                text=constans.PROGRAM_FOND["1"][0],
+                callback_data=str(constans.REABILITATION_PROGRAM)
             ),
         ],
         [
             InlineKeyboardButton(
-                text="Психологическая помощь",
-                callback_data=str(constans.PSIHO_PROGRAMM)
+                text=constans.PROGRAM_FOND["2"][0],
+                callback_data=str(constans.PSIHO_PROGRAM)
             ),
             InlineKeyboardButton(
-                text="Добрые уроки",
-                callback_data=str(constans.KIND_ARMS_PROGRAMM)
+                text=constans.PROGRAM_FOND["3"][0],
+                callback_data=str(constans.KIND_LESSONS_PROGRAM)
             ),
         ],
         [
@@ -81,10 +81,10 @@ async def application_to_the_fond(
         )
         FLAGS_OBJ.changing_first_start(False)
 
-    return constans.CHOICE_PROGRAMM
+    return constans.JOIN_PROGRAM
 
 
-async def join_or_not_to_programm(
+async def join_or_not_to_program(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """
@@ -93,29 +93,29 @@ async def join_or_not_to_programm(
     """
     query = update.callback_query
     await query.answer()
-    message_about_fond_and_documations = ''
+    message_about_fond_and_documents = ''
 
     if not FLAGS_OBJ.edit_mode_first_flag:
         data = update.callback_query.data
-        if data in constans.PROGRAMM_FOND:
-            message_about_fond_and_documations = (
-                f"{constans.PROGRAMM_FOND[data][0]}\n" +
-                f"{constans.PROGRAMM_FOND[data][1]}\n" +
-                f"{constans.PROGRAMM_FOND[data][2]}\n"
+        if data in constans.PROGRAM_FOND:
+            message_about_fond_and_documents = (
+                f"{constans.PROGRAM_FOND[data][0]}\n" +
+                f"{constans.PROGRAM_FOND[data][1]}\n" +
+                f"{constans.PROGRAM_FOND[data][2]}\n"
             )
             context.user_data[
                 "Программа фонда"
-            ] = constans.PROGRAMM_FOND[data][0]
+            ] = constans.PROGRAM_FOND[data][0]
         else:
             context.user_data[
                 "Программа фонда"
             ] = constans.ANSWERS_DICT["bad_answer"]
 
     else:
-        dates_about_fond = constans.PROGRAMM_FOND[
+        dates_about_fond = constans.PROGRAM_FOND[
             constans.ALLIAS_DICT[context.user_data["Программа фонда"]]
         ]
-        message_about_fond_and_documations = (
+        message_about_fond_and_documents = (
             f"{dates_about_fond[0]}\n" +
             f"{dates_about_fond[1]}\n" +
             f"{dates_about_fond[2]}\n"
@@ -126,29 +126,29 @@ async def join_or_not_to_programm(
     buttons = [
         [
             InlineKeyboardButton(
-                text="Вступить",
+                text=constans.BUTTONS_TEXT["join"],
                 callback_data=str(constans.JOIN_BUTTON)
             ),
             InlineKeyboardButton(
-                text="Назад",
+                text=constans.BUTTONS_TEXT["back"],
                 callback_data=str(END)
             ),
         ],
         [
             InlineKeyboardButton(
-                text="Главное меню",
+                text=constans.BUTTONS_TEXT["main_menu"],
                 callback_data=str(constans.MAIN_MENU)
             ),
         ],
     ]
     keyboard = InlineKeyboardMarkup(buttons)
     await query.edit_message_text(
-        text=message_about_fond_and_documations +
+        text=message_about_fond_and_documents +
         constans.MSG_SECOND_MENU,
         reply_markup=keyboard,
     )
 
-    return constans.JOIN_TO_PROGRAMM
+    return constans.JOIN_PROGRAM
 
 
 async def go_second_level(
@@ -185,8 +185,13 @@ async def asking_fio_mother(
         FLAGS_OBJ.changing_edit_mode_first(False)
         FLAGS_OBJ.changing_edit_mode_second(True)
         return constans.FIO_MOTHER
-
-    await update.message.reply_text(constans.QUESTIONS_DICT["fio_mother"])
+    
+    query = update.callback_query
+    await query.answer()
+    await query.edit_message_text(
+            constans.QUESTIONS_DICT["fio_mother"]
+        )
+    #await update.message.reply_text(constans.QUESTIONS_DICT["fio_mother"])
 
     return constans.FIO_MOTHER
 
@@ -231,7 +236,7 @@ async def asking_phone_mother(
             reply_markup=constans.MARKUP_NEXT,
         )
 
-        return constans.SHOW_EDIT_INFORMATIONS
+        return constans.SHOW_EDIT_INFORMATION
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["phone_number"]
@@ -279,7 +284,7 @@ async def asking_email_mother(
             reply_markup=constans.MARKUP_NEXT,
         )
 
-        return constans.SHOW_EDIT_INFORMATIONS
+        return constans.SHOW_EDIT_INFORMATION
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["email"]
@@ -329,7 +334,7 @@ async def asking_fio_child(
             constans.MSG_PRESS_NEXT_BUTTON,
             reply_markup=constans.MARKUP_NEXT,
         )
-        return constans.SHOW_EDIT_INFORMATIONS
+        return constans.SHOW_EDIT_INFORMATION
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["fio_child"]
@@ -338,7 +343,7 @@ async def asking_fio_child(
     return constans.FIO_CHILD
 
 
-async def asking_how_many_people_in_famaly(
+async def asking_how_many_people_in_family(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Получение количества членов семьи."""
@@ -377,7 +382,7 @@ async def asking_how_many_people_in_famaly(
             constans.MSG_PRESS_NEXT_BUTTON,
             reply_markup=constans.MARKUP_NEXT,
         )
-        return constans.SHOW_EDIT_INFORMATIONS
+        return constans.SHOW_EDIT_INFORMATION
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["how_many_people"]
@@ -427,7 +432,7 @@ async def asking_city(
             constans.MSG_PRESS_NEXT_BUTTON,
             reply_markup=constans.MARKUP_NEXT,
         )
-        return constans.SHOW_EDIT_INFORMATIONS
+        return constans.SHOW_EDIT_INFORMATION
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["city"]
@@ -475,7 +480,7 @@ async def asking_address(
             constans.MSG_PRESS_NEXT_BUTTON,
             reply_markup=constans.MARKUP_NEXT,
         )
-        return constans.SHOW_EDIT_INFORMATIONS
+        return constans.SHOW_EDIT_INFORMATION
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["address"]
@@ -514,7 +519,7 @@ async def asking_child_birthday(
             constans.MSG_PRESS_NEXT_BUTTON,
             reply_markup=constans.MARKUP_NEXT,
         )
-        return constans.SHOW_EDIT_INFORMATIONS
+        return constans.SHOW_EDIT_INFORMATION
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["date_birth"]
@@ -556,7 +561,7 @@ async def asking_place_birthday(
             constans.MSG_PRESS_NEXT_BUTTON,
             reply_markup=constans.MARKUP_NEXT,
         )
-        return constans.SHOW_EDIT_INFORMATIONS
+        return constans.SHOW_EDIT_INFORMATION
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["place_birth"]
@@ -597,7 +602,7 @@ async def asking_spacing(
             constans.MSG_PRESS_NEXT_BUTTON,
             reply_markup=constans.MARKUP_NEXT,
         )
-        return constans.SHOW_EDIT_INFORMATIONS
+        return constans.SHOW_EDIT_INFORMATION
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["spacing"]
@@ -645,7 +650,7 @@ async def asking_child_weight(
             constans.MSG_PRESS_NEXT_BUTTON,
             reply_markup=constans.MARKUP_NEXT,
         )
-        return constans.SHOW_EDIT_INFORMATIONS
+        return constans.SHOW_EDIT_INFORMATION
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["weight"]
@@ -693,7 +698,7 @@ async def asking_child_height(
             constans.MSG_PRESS_NEXT_BUTTON,
             reply_markup=constans.MARKUP_NEXT,
         )
-        return constans.SHOW_EDIT_INFORMATIONS
+        return constans.SHOW_EDIT_INFORMATION
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["height"]
@@ -741,7 +746,7 @@ async def asking_child_diagnosis(
             constans.MSG_PRESS_NEXT_BUTTON,
             reply_markup=constans.MARKUP_NEXT,
         )
-        return constans.SHOW_EDIT_INFORMATIONS
+        return constans.SHOW_EDIT_INFORMATION
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["diagnosis"]
@@ -753,7 +758,7 @@ async def asking_child_diagnosis(
 async def asking_date_of_application(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
-    """Получение обращения в фонд."""
+    """Получение даты обращения в фонд."""
     if FLAGS_OBJ.bad_request:
         await update.message.reply_text(
             constans.QUESTIONS_DICT["date_aplication"]
@@ -789,7 +794,7 @@ async def asking_date_of_application(
             constans.MSG_PRESS_NEXT_BUTTON,
             reply_markup=constans.MARKUP_NEXT,
         )
-        return constans.SHOW_EDIT_INFORMATIONS
+        return constans.SHOW_EDIT_INFORMATION
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["date_aplication"]
@@ -812,7 +817,7 @@ async def asking_how_find_us(
         )
         FLAGS_OBJ.changing_edit_mode_first(False)
         FLAGS_OBJ.changing_edit_mode_second(True)
-        return constans.HOW_FIND_US
+        return constans.HOW_FOUND
 
     date_of_application = update.message.text
 
@@ -832,13 +837,13 @@ async def asking_how_find_us(
             constans.MSG_PRESS_NEXT_BUTTON,
             reply_markup=constans.MARKUP_NEXT,
         )
-        return constans.SHOW_EDIT_INFORMATIONS
+        return constans.SHOW_EDIT_INFORMATION
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["how_find_fond"]
     )
 
-    return constans.HOW_FIND_US
+    return constans.HOW_FOUND
 
 
 async def asking_which_fond_now(
@@ -869,7 +874,7 @@ async def asking_which_fond_now(
             constans.MSG_PRESS_NEXT_BUTTON,
             reply_markup=constans.MARKUP_NEXT,
         )
-        return constans.SHOW_EDIT_INFORMATIONS
+        return constans.SHOW_EDIT_INFORMATION
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["fond_now"]
@@ -903,7 +908,7 @@ async def asking_which_fonds_halped(
             constans.MSG_PRESS_NEXT_BUTTON,
             reply_markup=constans.MARKUP_NEXT,
         )
-        return constans.SHOW_EDIT_INFORMATIONS
+        return constans.SHOW_EDIT_INFORMATION
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["which_fond"]
@@ -927,7 +932,7 @@ async def show_user_information(
             constans.MSG_PRESS_NEXT_BUTTON,
             reply_markup=constans.MARKUP_NEXT,
         )
-        return constans.SHOW_EDIT_INFORMATIONS
+        return constans.SHOW_EDIT_INFORMATION
 
     for key, data in context.user_data.items():
         if key != 'd':
@@ -971,17 +976,17 @@ async def send_or_change_data(
     buttons = [
         [
             InlineKeyboardButton(
-                text="Подтвердить и отправить",
+                text=constans.BUTTONS_TEXT["confirm_and_send"],
                 callback_data=str(constans.CONFIRM_AND_SEND)
             ),
         ],
         [
             InlineKeyboardButton(
-                text="Изменить данные",
+                text=constans.BUTTONS_TEXT["change_data"],
                 callback_data=str(constans.CHANGE_DATA)
             ),
             InlineKeyboardButton(
-                text="Назад",
+                text=constans.BUTTONS_TEXT["back"],
                 callback_data=str(constans.END_SECOND_LEVEL)),
         ],
     ]
@@ -992,7 +997,8 @@ async def send_or_change_data(
         text=constans.MSG_THIRD_MENU,
         reply_markup=keyboard)
 
-    return constans.SEND_CHANGE_END
+    # return constans.SEND_CHANGE_END
+    return constans.EDIT_USER_DATА
 
 
 async def send_message_to_curator(
@@ -1034,14 +1040,14 @@ async def send_message_to_curator(
     documents = "Вам сообщит куратор."
 
     if context.user_data["Программа фонда"] in constans.ALLIAS_DICT:
-        documents = constans.PROGRAMM_FOND[
+        documents = constans.PROGRAM_FOND[
             constans.ALLIAS_DICT[context.user_data["Программа фонда"]]
         ][2]
 
     button = [
         [
             InlineKeyboardButton(
-                text="Назад в меню",
+                text=constans.BUTTONS_TEXT["back_to_menu"],
                 callback_data=str(END)),
         ],
     ]
@@ -1054,7 +1060,8 @@ async def send_message_to_curator(
         reply_markup=keyboard
     )
 
-    return constans.MESSAGE_SENT_SUCCESSFULLY
+    # return constans.MESSAGE_SENT_SUCCESSFULLY
+    return constans.END_FIRST_LEVEL
 
 
 async def change_data(
@@ -1069,81 +1076,81 @@ async def change_data(
     buttons = [
         [
             InlineKeyboardButton(
-                text="ФИО мамы",
+                text=constans.BUTTONS_TEXT["fio_mother"],
                 callback_data=str(constans.FIO_MOTHER)
             ),
             InlineKeyboardButton(
-                text="Телефон",
+                text=constans.BUTTONS_TEXT["phone_number"],
                 callback_data=str(constans.PHONE)
             ),
             InlineKeyboardButton(
-                text="Email",
+                text=constans.BUTTONS_TEXT["email"],
                 callback_data=str(constans.EMAIL)
             ),
         ],
         [
             InlineKeyboardButton(
-                text="ФИО ребёнка",
+                text=constans.BUTTONS_TEXT["fio_child"],
                 callback_data=str(constans.FIO_CHILD)
             ),
             InlineKeyboardButton(
-                text="Количество членов семьи",
+                text=constans.BUTTONS_TEXT["how_many_people"],
                 callback_data=str(constans.HOW_MANY_PEOPLE)
             ),
             InlineKeyboardButton(
-                text="Город",
+                text=constans.BUTTONS_TEXT["city"],
                 callback_data=str(constans.CITY)
             ),
         ],
         [
             InlineKeyboardButton(
-                text="Адрес",
+                text=constans.BUTTONS_TEXT["address"],
                 callback_data=str(constans.ADDRESS)
             ),
             InlineKeyboardButton(
-                text="Дата рождения ребёнка",
+                text=constans.BUTTONS_TEXT["date_birth"],
                 callback_data=str(constans.DATE_BIRTH)
             ),
             InlineKeyboardButton(
-                text="Место рождения ребёнка",
+                text=constans.BUTTONS_TEXT["place_birth"],
                 callback_data=str(constans.PLACE_BIRTH)
             ),
         ],
         [
             InlineKeyboardButton(
-                text="Срок рождения",
+                text=constans.BUTTONS_TEXT["spacing"],
                 callback_data=str(constans.SPACING)
             ),
             InlineKeyboardButton(
-                text="Вес",
+                text=constans.BUTTONS_TEXT["weight"],
                 callback_data=str(constans.WEIGHT)
             ),
             InlineKeyboardButton(
-                text="Рост",
+                text=constans.BUTTONS_TEXT["height"],
                 callback_data=str(constans.HEIGHT)
             ),
         ],
         [
             InlineKeyboardButton(
-                text="Диагнозы",
+                text=constans.BUTTONS_TEXT["diagnosis"],
                 callback_data=str(constans.DIAGNOSIS)
             ),
             InlineKeyboardButton(
-                text="Дата обращения",
+                text=constans.BUTTONS_TEXT["date_aplication"],
                 callback_data=str(constans.DATE_OF_APPLICATION)
             ),
             InlineKeyboardButton(
-                text="Как узнали о нас",
-                callback_data=str(constans.HOW_FIND_US)
+                text=constans.BUTTONS_TEXT["how_find_fond"],
+                callback_data=str(constans.HOW_FOUND)
             ),
         ],
         [
             InlineKeyboardButton(
-                text="В каком фонде сейчас",
+                text=constans.BUTTONS_TEXT["which_fond"],
                 callback_data=str(constans.WHICH_FOND)
             ),
             InlineKeyboardButton(
-                text="Какие фонды помогали",
+                text=constans.BUTTONS_TEXT["fond_now"],
                 callback_data=str(constans.WHICH_FOND_WAS_PREVIOUSLY),
             ),
         ],
@@ -1156,7 +1163,7 @@ async def change_data(
 
     await query.edit_message_text(text=message, reply_markup=keyboard)
 
-    return constans.EDIT_USER_DATES
+    return constans.EDIT_USER_DATА
 
 
 async def end(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -1185,7 +1192,7 @@ async def end_second_menu(
     buttons = [
         [
             InlineKeyboardButton(
-                text="Продолжить",
+                text=constans.BUTTONS_TEXT["resume"],
                 callback_data=str(constans.SAY_YES)
             ),
         ],
@@ -1197,7 +1204,8 @@ async def end_second_menu(
         reply_markup=keyboard
     )
 
-    return constans.QUESTION_THIRD_MENU
+    # return constans.QUESTION_THIRD_MENU
+    return constans.END_FIRST_LEVEL
 
 
 async def return_main_menu(
@@ -1211,24 +1219,26 @@ async def return_main_menu(
     # Очистка словаря пользователя
     clean_dictionary(context=context.user_data)
 
-    buttons = [
-        [
-            InlineKeyboardButton(
-                text="Продолжить",
-                callback_data=str(constans.GO_MAIN_MENU)
-            ),
-        ],
-    ]
-    keyboard = InlineKeyboardMarkup(buttons)
+    # buttons = [
+    #     [
+    #         InlineKeyboardButton(
+    #             text=constans.BUTTONS_TEXT["resume"],
+    #             #callback_data=str(constans.GO_MAIN_MENU)
+    #             callback_data=str(states.START_OVER)
+    #         ),
+    #     ],
+    # ]
+    # keyboard = InlineKeyboardMarkup(buttons)
 
-    await query.edit_message_text(
-        text=constans.MSG_PRESS_NEXT_BUTTON,
-        reply_markup=keyboard
-    )
+    # await query.edit_message_text(
+    #     text=constans.MSG_PRESS_NEXT_BUTTON,
+    #     # reply_markup=keyboard
+    # )
     context.user_data[states.START_OVER] = True
     FLAGS_OBJ.changing_first_start(True)
 
     return constans.END_MAIN_MENU
+    # return await start(update, context)
 
 
 async def stop_nested(

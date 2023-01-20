@@ -3,8 +3,8 @@ from telegram import ReplyKeyboardMarkup
 
 
 (
-    LOOK_WORLD_PROGRAMM, REABILITATION_PROGRAMM,
-    PSIHO_PROGRAMM, KIND_ARMS_PROGRAMM
+    LOOK_WORLD_PROGRAM, REABILITATION_PROGRAM,
+    PSIHO_PROGRAM, KIND_LESSONS_PROGRAM
 ) = range(4)
 
 (
@@ -22,14 +22,14 @@ from telegram import ReplyKeyboardMarkup
     HEIGHT,
     DIAGNOSIS,
     DATE_OF_APPLICATION,
-    HOW_FIND_US,
+    HOW_FOUND,
     WHICH_FOND,
     WHICH_FOND_WAS_PREVIOUSLY,
     START_OVER,
 ) = range(4, 22)
 
 
-CHOICE_PROGRAMM, JOIN_TO_PROGRAMM = range(22, 24)
+CHOICE_PROGRAM, JOIN_PROGRAM = range(22, 24)
 (
     JOIN_BUTTON,
     BAD_ANSWER_SECOND_LEVEL,
@@ -41,7 +41,7 @@ CHOICE_PROGRAMM, JOIN_TO_PROGRAMM = range(22, 24)
     MESSAGE_SENT_SUCCESSFULLY,
     END_FIRST_LEVEL,
     EDIT_MODE,
-    SHOW_EDIT_INFORMATIONS,
+    SHOW_EDIT_INFORMATION,
     SAY_YES,
     SAY_NO,
     QUESTION_THIRD_MENU,
@@ -51,7 +51,7 @@ CHOICE_PROGRAMM, JOIN_TO_PROGRAMM = range(22, 24)
     GO_SECOND_LEVEL,
 ) = range(24, 42)
 
-EDIT_PHONE, EDIT_USER_DATES, PLACE_BIRTH = range(42, 45)
+EDIT_PHONE, EDIT_USER_DATА, PLACE_BIRTH = range(42, 45)
 
 (
     START_JOIN_TO_FOND,
@@ -117,7 +117,7 @@ ANSWERS_DICT = {
 
 QUESTIONS_DICT = {
     "fio_mother": "Введите ФИО мамы.",
-    "phone_number": "Введите телефон.(Начиная с 8)",
+    "phone_number": "Введите телефон.",
     "email": "Введите ваш email.",
     "fio_child": "Введите ФИО ребёнка.",
     "how_many_people": "Введите количество членов семьи. (числом)",
@@ -137,6 +137,34 @@ QUESTIONS_DICT = {
     "fond_now": """Состоите ли вы в данный момент в каком-либо фонде,
         если да, то напишите название фонда?""",
 }
+
+BUTTONS_TEXT = {
+    "fio_mother": "ФИО мамы.",
+    "phone_number": "Телефон.",
+    "email": "Email.",
+    "fio_child": "ФИО ребёнка.",
+    "how_many_people": "Количество членов семьи",
+    "city": "Город",
+    "address": "Адрес",
+    "date_birth": "Дата рождения ребёнка",
+    "place_birth": "Место рождения ребёнка",
+    "spacing": "Срок рождения",
+    "weight": "Вес",
+    "height": "Рост",
+    "diagnosis": "Диагнозы",
+    "date_aplication": "Дата обращения",
+    "how_find_fond": "Как узнали о нас",
+    "which_fond": "В каком фонде сейчас",
+    "fond_now": "Какие фонды помогали",
+    "resume": "Продолжить",
+    "confirm_and_send": "Подтвердить и отправить",
+    "change_data": "Изменить данные",
+    "back": "Назад",
+    "back_to_menu": "Назад в меню",
+    "join": "Вступить",
+    "main_menu": "Главное меню",
+}
+
 
 MESSAGE_SUCCESSFUL_DEPARTURE_TO_CURATOR = """
     Ваши данные успешно отправлены куратору.
@@ -163,10 +191,10 @@ REABILITATION_DESCRIPTION = "Описание программы 'Реабили
 PSYCHOLOGICAL_HELP_DESCRIPTION = """
     Описание программы 'Психологическая помощь'.
 """
-KIND_HANDS_DESCRIPTION = "Описание программы 'Добрые уроки'."
+KIND_LESSONS_DESCRIPTION = "Описание программы 'Добрые уроки'."
 
 
-PROGRAMM_FOND = {
+PROGRAM_FOND = {
     "0": (
         "Смотри на мир",
         LOOK_AT_WORLD_DESCRIPTION,
@@ -184,7 +212,7 @@ PROGRAMM_FOND = {
     ),
     "3": (
         "Добрые уроки",
-        KIND_HANDS_DESCRIPTION,
+        KIND_LESSONS_DESCRIPTION,
         REQUIRED_DOCUMENTS
     ),
 }
@@ -215,10 +243,10 @@ KEYBOARD_FIX_VALUE = [
 ]
 
 MSG_PRESS_NEXT_BUTTON = """
-    Нажмите, пожалуйста, продолжить.
+    Нажмите продолжить.
 """
 MSG_PRESS_FIX_VALUE = """
-    Нажмите, пожалуйста, исправить.
+    Нажмите исправить.
 """
 MSG_PRESS_ANY_BUTTON = "Отправьте, пожалуйста, мне любое сообщение."
 
