@@ -10,7 +10,7 @@ from bot import states
 from bot.conversations import menu
 from bot.conversations.parents_chat import chat_edit_data, chat_get_data
 from bot.conversations.parents_chat.chat_entry import enter_chat
-from bot.conversations.parents_chat.chat_main_menu import select_chat, chat_end
+from bot.conversations.parents_chat.chat_main_menu import select_chat
 from bot.conversations.parents_chat.chat_send_email import (
     chat_end_sending,
     chat_send_email,
