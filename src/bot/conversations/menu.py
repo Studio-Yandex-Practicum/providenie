@@ -112,14 +112,14 @@ async def request(update: Update, _) -> str:
     return states.SELECTING_ACTION
 
 
-async def about(update: Update, _) -> str:
+async def about(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     await update.callback_query.answer()
-    text = "Информация о фонде"
+    text = const.MSG_ABOUT
     button = [
         [
             InlineKeyboardButton(
-                text="Возврат в главное меню",
-                callback_data=str(states.START_OVER),
+                text=const.BTN_BACK,
+                callback_data=str(states.END),
             )
         ]
     ]
@@ -127,7 +127,8 @@ async def about(update: Update, _) -> str:
     await update.callback_query.edit_message_text(
         text=text, reply_markup=keyboard
     )
-    return states.SELECTING_ACTION
+    context.user_data[states.START_OVER] = True
+    return states.ENDING
 
 
 async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:

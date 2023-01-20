@@ -12,7 +12,8 @@ from telegram.ext import ConversationHandler
     EVENTS,
     ASK_QUESTION,
     ABOUT,
-) = map(chr, range(9))
+    ENDING,
+) = map(chr, range(10))
 
 (
     VOLUNTEER,

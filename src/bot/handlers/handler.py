@@ -28,9 +28,7 @@ selection_handlers = [
         menu.get_events, pattern="^" + str(states.EVENTS) + "$"
     ),
     ask_question_conv,
-    CallbackQueryHandler(
-        menu.about, pattern="^" + str(states.ABOUT) + "$"
-    ),
+    CallbackQueryHandler(menu.about, pattern="^" + str(states.ABOUT) + "$"),
     CallbackQueryHandler(
         menu.start, pattern="^" + str(states.START_OVER) + "$"
     ),
@@ -45,6 +43,11 @@ conv_handler = ConversationHandler(
     states={
         states.SELECTING_ACTION: selection_handlers,
         states.STOPPING: [CommandHandler("start", menu.start)],
+        states.ENDING: [
+            CallbackQueryHandler(
+                menu.start, pattern="^" + str(states.END) + "$"
+            )
+        ],
     },
     fallbacks=[CommandHandler("stop", menu.stop)],
 )
