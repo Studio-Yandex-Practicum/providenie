@@ -16,9 +16,9 @@ HTML_TEMPLATE_JOIN_FOND = Template(
             <p><b>Членов семьи:</b> $how_many_people</p>
             <p><b>Город:</b> $city</p>
             <p><b>Адрес:</b> $adress</p>
-            <p><b>Дата рождения ребёнка:</b> $child_date_birth</p>
+            <p><b>Дата рождения ребёнка:</b> $child_birthday</p>
             <p><b>Место рождения ребёнка:</b> $place_birth</p>
-            <p><b>Срок рождения:</b> $spacing</p>
+            <p><b>Срок рождения:</b> $birth_date</p>
             <p><b>Вес ребёнка:</b> $weight</p>
             <p><b>Рост ребёнка:</b> $height</p>
             <p><b>Диагнозы:</b> $dizgnozes</p>

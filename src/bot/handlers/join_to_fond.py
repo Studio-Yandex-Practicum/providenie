@@ -55,15 +55,15 @@ selection_handlers_second_level = [
     ),
     CallbackQueryHandler(
         fund.asking_child_birthday,
-        pattern="^" + str(constans.DATE_BIRTH) + "$"
+        pattern="^" + str(constans.BIRTHDAY) + "$"
     ),
     CallbackQueryHandler(
         fund.asking_place_birthday,
         pattern="^" + str(constans.PLACE_BIRTH) + "$"
     ),
     CallbackQueryHandler(
-        fund.asking_spacing,
-        pattern="^" + str(constans.SPACING) + "$"
+        fund.asking_birth_date,
+        pattern="^" + str(constans.BIRTH_DATE) + "$"
     ),
     CallbackQueryHandler(
         fund.asking_child_weight,
@@ -159,7 +159,7 @@ dates_about_parent_and_child = ConversationHandler(
                 fund.asking_child_birthday
             )
         ],
-        constans.DATE_BIRTH: [
+        constans.BIRTHDAY: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 fund.asking_place_birthday
@@ -168,10 +168,10 @@ dates_about_parent_and_child = ConversationHandler(
         constans.PLACE_BIRTH: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
-                fund.asking_spacing
+                fund.asking_birth_date
             )
         ],
-        constans.SPACING: [
+        constans.BIRTH_DATE: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 fund.asking_child_weight

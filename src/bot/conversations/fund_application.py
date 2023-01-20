@@ -151,17 +151,17 @@ async def join_or_not_to_program(
     return constans.JOIN_PROGRAM
 
 
-async def go_second_level(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE
-) -> str:
-    """Переход на второй уровень."""
-    query = update.callback_query
-    await query.edit_message_text(
-        text=constans.MSG_PRESS_ANY_BUTTON,
-    )
+# async def go_second_level(
+#     update: Update,
+#     context: ContextTypes.DEFAULT_TYPE
+# ) -> str:
+#     """Переход на второй уровень."""
+#     query = update.callback_query
+#     await query.edit_message_text(
+#         text=constans.MSG_PRESS_ANY_BUTTON,
+#     )
 
-    return constans.GO_SECOND_LEVEL
+#     return constans.GO_SECOND_LEVEL
 
 
 async def asking_fio_mother(
@@ -495,20 +495,20 @@ async def asking_child_birthday(
     """Получение дня рождения ребенка."""
     if FLAGS_OBJ.bad_request:
         await update.message.reply_text(
-            constans.QUESTIONS_DICT["date_birth"]
+            constans.QUESTIONS_DICT["birthday"]
         )
         FLAGS_OBJ.changing_bad_request(False)
-        return constans.DATE_BIRTH
+        return constans.BIRTHDAY
 
     if FLAGS_OBJ.edit_mode_first_flag:
         query = update.callback_query
         await query.answer()
         await query.edit_message_text(
-            constans.QUESTIONS_DICT["date_birth"]
+            constans.QUESTIONS_DICT["birthday"]
         )
         FLAGS_OBJ.changing_edit_mode_first(False)
         FLAGS_OBJ.changing_edit_mode_second(True)
-        return constans.DATE_BIRTH
+        return constans.BIRTHDAY
 
     address = update.message.text
 
@@ -522,10 +522,10 @@ async def asking_child_birthday(
         return constans.SHOW_EDIT_INFORMATION
 
     await update.message.reply_text(
-        constans.QUESTIONS_DICT["date_birth"]
+        constans.QUESTIONS_DICT["birthday"]
     )
 
-    return constans.DATE_BIRTH
+    return constans.BIRTHDAY
 
 
 async def asking_place_birthday(
@@ -543,17 +543,17 @@ async def asking_place_birthday(
         FLAGS_OBJ.changing_edit_mode_second(True)
         return constans.PLACE_BIRTH
 
-    child_birthsday = update.message.text
+    child_birthday = update.message.text
 
-    if not validators.checking_date_birth(child_birthsday):
+    if not validators.checking_date_birth(child_birthday):
         await update.message.reply_text(
-            text=constans.ANSWERS_DICT["bad_date_birth"],
+            text=constans.ANSWERS_DICT["bad_birthday"],
             reply_markup=constans.MARKUP_FIX
         )
         FLAGS_OBJ.changing_bad_request(True)
         return constans.ADDRESS
 
-    context.user_data["Дата рождения ребёнка"] = child_birthsday
+    context.user_data["Дата рождения ребёнка"] = child_birthday
 
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
@@ -570,27 +570,27 @@ async def asking_place_birthday(
     return constans.PLACE_BIRTH
 
 
-async def asking_spacing(
+async def asking_birth_date(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Получение срока рождения ребёнка."""
     if FLAGS_OBJ.bad_request:
         await update.message.reply_text(
-            constans.QUESTIONS_DICT["spacing"]
+            constans.QUESTIONS_DICT["birth_date"]
         )
         FLAGS_OBJ.changing_bad_request(False)
-        return constans.SPACING
+        return constans.BIRTH_DATE
 
     if FLAGS_OBJ.edit_mode_first_flag:
         query = update.callback_query
         await query.answer()
         await query.edit_message_text(
-            constans.QUESTIONS_DICT["spacing"]
+            constans.QUESTIONS_DICT["birth_date"]
         )
         FLAGS_OBJ.changing_edit_mode_first(False)
         FLAGS_OBJ.changing_edit_mode_second(True)
-        return constans.SPACING
+        return constans.BIRTH_DATE
 
     place_birth = update.message.text
 
@@ -605,10 +605,10 @@ async def asking_spacing(
         return constans.SHOW_EDIT_INFORMATION
 
     await update.message.reply_text(
-        constans.QUESTIONS_DICT["spacing"]
+        constans.QUESTIONS_DICT["birth_date"]
     )
 
-    return constans.SPACING
+    return constans.BIRTH_DATE
 
 
 async def asking_child_weight(
@@ -632,17 +632,17 @@ async def asking_child_weight(
         FLAGS_OBJ.changing_edit_mode_second(True)
         return constans.WEIGHT
 
-    spacing = update.message.text
+    birth_date = update.message.text
 
-    if not validators.checking_number_people_in_family(spacing):
+    if not validators.checking_number_people_in_family(birth_date):
         await update.message.reply_text(
-            text=constans.ANSWERS_DICT["bad_spacing"],
+            text=constans.ANSWERS_DICT["bad_birth_date"],
             reply_markup=constans.MARKUP_FIX
         )
         FLAGS_OBJ.changing_bad_request(True)
         return constans.PLACE_BIRTH
 
-    context.user_data["Срок рождения ребёнка"] = spacing
+    context.user_data["Срок рождения ребёнка"] = birth_date
 
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
@@ -688,7 +688,7 @@ async def asking_child_height(
             reply_markup=constans.MARKUP_FIX
         )
         FLAGS_OBJ.changing_bad_request(True)
-        return constans.SPACING
+        return constans.BIRTH_DATE
 
     context.user_data["Вес"] = child_weight
 
@@ -928,22 +928,25 @@ async def show_user_information(
 
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
-        await update.message.reply_text(
-            constans.MSG_PRESS_NEXT_BUTTON,
-            reply_markup=constans.MARKUP_NEXT,
-        )
-        return constans.SHOW_EDIT_INFORMATION
+        # await update.message.reply_text(
+        #     constans.MSG_PRESS_NEXT_BUTTON,
+        #     reply_markup=constans.MARKUP_NEXT,
+        # )
+        # return constans.SHOW_EDIT_INFORMATION
+        return await send_or_change_data(update, context)
 
     for key, data in context.user_data.items():
         if key != 'd':
             await update.message.reply_text(f"{key}: {data}")
 
-    await update.message.reply_text(
-        constans.MSG_PRESS_NEXT_BUTTON,
-        reply_markup=constans.MARKUP_NEXT,
-    )
 
-    return constans.SHOW_INFORMATION
+    return await send_or_change_data(update, context)
+    # await update.message.reply_text(
+    #     constans.MSG_PRESS_NEXT_BUTTON,
+    #     reply_markup=constans.MARKUP_NEXT,
+    # )
+
+    # return constans.SHOW_INFORMATION
 
 
 async def show_user_edit_information(
@@ -956,12 +959,13 @@ async def show_user_edit_information(
         if key != 'd':
             await update.message.reply_text(f"{key}: {data}")
 
-    await update.message.reply_text(
-        constans.MSG_PRESS_NEXT_BUTTON,
-        reply_markup=constans.MARKUP_NEXT,
-    )
+    # await update.message.reply_text(
+    #     constans.MSG_PRESS_NEXT_BUTTON,
+    #     reply_markup=constans.MARKUP_NEXT,
+    # )
 
-    return constans.SHOW_INFORMATION
+    return await send_or_change_data(update, context)
+    #return constans.SHOW_INFORMATION
 
 
 async def send_or_change_data(
@@ -1018,9 +1022,9 @@ async def send_message_to_curator(
             how_many_people=context.user_data["Сколько членов семьи"],
             city=context.user_data["Город"],
             adress=context.user_data["Адрес"],
-            child_date_birth=context.user_data["Дата рождения ребёнка"],
+            child_birthday=context.user_data["Дата рождения ребёнка"],
             place_birth=context.user_data["Место рождения ребёнка"],
-            spacing=context.user_data["Срок рождения ребёнка"],
+            birth_date=context.user_data["Срок рождения ребёнка"],
             weight=context.user_data["Вес"],
             height=context.user_data["Рост"],
             dizgnozes=context.user_data["Диагнозы"],
@@ -1108,8 +1112,8 @@ async def change_data(
                 callback_data=str(constans.ADDRESS)
             ),
             InlineKeyboardButton(
-                text=constans.BUTTONS_TEXT["date_birth"],
-                callback_data=str(constans.DATE_BIRTH)
+                text=constans.BUTTONS_TEXT["birthday"],
+                callback_data=str(constans.BIRTHDAY)
             ),
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["place_birth"],
@@ -1118,8 +1122,8 @@ async def change_data(
         ],
         [
             InlineKeyboardButton(
-                text=constans.BUTTONS_TEXT["spacing"],
-                callback_data=str(constans.SPACING)
+                text=constans.BUTTONS_TEXT["birth_day"],
+                callback_data=str(constans.BIRTH_DATE)
             ),
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["weight"],
@@ -1219,26 +1223,11 @@ async def return_main_menu(
     # Очистка словаря пользователя
     clean_dictionary(context=context.user_data)
 
-    # buttons = [
-    #     [
-    #         InlineKeyboardButton(
-    #             text=constans.BUTTONS_TEXT["resume"],
-    #             #callback_data=str(constans.GO_MAIN_MENU)
-    #             callback_data=str(states.START_OVER)
-    #         ),
-    #     ],
-    # ]
-    # keyboard = InlineKeyboardMarkup(buttons)
-
-    # await query.edit_message_text(
-    #     text=constans.MSG_PRESS_NEXT_BUTTON,
-    #     # reply_markup=keyboard
-    # )
     context.user_data[states.START_OVER] = True
     FLAGS_OBJ.changing_first_start(True)
 
+    await start(update, context)
     return constans.END_MAIN_MENU
-    # return await start(update, context)
 
 
 async def stop_nested(
