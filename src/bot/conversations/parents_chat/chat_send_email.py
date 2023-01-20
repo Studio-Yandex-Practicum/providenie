@@ -1,3 +1,5 @@
+from datetime import date
+
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
@@ -22,7 +24,7 @@ async def chat_send_email(
 
     user_data = context.user_data
     data = user_data.get(states.CHAT_FEATURES)
-    current_chat = data.get(states.CURRENT_CHAT, "-")
+    current_chat = user_data.get(states.CURRENT_CHAT, "-")
     chat_parents_name = data.get(states.CHAT_PARENTS_NAME, "-")
     chat_parents_phone = data.get(states.CHAT_PARENTS_PHONE, "-")
     chat_child_name = data.get(states.CHAT_CHILD_NAME, "-")
@@ -33,32 +35,45 @@ async def chat_send_email(
     chat_child_height = data.get(states.CHAT_CHILD_HEIGHT, "-")
     chat_child_diagnose = data.get(states.CHAT_CHILD_DIAGNOSE, "-")
     chat_child_operation = data.get(states.CHAT_CHILD_OPERATION, "-")
-    chat_date_address = data.get(states.CHAT_DATE_ADDRESS, "-")
     chat_about_fond = data.get(states.CHAT_ABOUT_FOND, "-")
-    subject = "Вступление в чат"
-    html = f"""
-        <html>
-            <body>
-                <h1>{subject}</h1>
-                <p>
-                    <b>Чат для вступления</b> {current_chat}<br/>
-                    <b>ФИО родителя(опекуна):</b> {chat_parents_name}<br/>
-                    <b>Телефон родителя(опекуна):</b> {chat_parents_phone}<br/>
-                    <b>ФИО ребенка:</b> {chat_child_name}<br/>
-                    <b>Дата рождения:</b> {chat_child_birthday}<br/>
-                    <b>Место рождения:</b> {chat_child_place_birthday}<br/>
-                    <b>Срок беременности при рождении:</b> {chat_child_term}<br/>
-                    <b>Вес при рождении:</b> {chat_child_weight}<br/>
-                    <b>Рост при рождении:</b> {chat_child_height}<br/>
-                    <b>Дигнозы:</b> {chat_child_diagnose}<br/>
-                    <b>Операции ребенка:</b> {chat_child_operation}<br/>
-                    <b>Дата обращения:</b> {chat_date_address}<br/>
-                    <b>Как узнали о фонде:</b> {chat_about_fond}<br/>
-                </p>
-            </body>
-        </html>
-    """
-
+    subject = f"Вступление в чат {current_chat}"
+    if user_data[states.CURRENT_CHAT] == "Мамы ангелов":
+        html = f"""
+                <html>
+                    <body>
+                        <h1>{subject}</h1>
+                        <p>
+                            <b>Чат для вступления</b> {current_chat}<br/>
+                            <b>ФИО родителя(опекуна):</b> {chat_parents_name}<br/>
+                            <b>Телефон родителя(опекуна):</b> {chat_parents_phone}<br/>
+                            <b>Дата обращения:</b> {date.today()}<br/>
+                        </p>
+                     </body>
+                </html>
+                """
+    else:
+        html = f"""
+            <html>
+                <body>
+                    <h1>{subject}</h1>
+                    <p>
+                        <b>Чат для вступления</b> {current_chat}<br/>
+                        <b>ФИО родителя(опекуна):</b> {chat_parents_name}<br/>
+                        <b>Телефон родителя(опекуна):</b> {chat_parents_phone}<br/>
+                        <b>ФИО ребенка:</b> {chat_child_name}<br/>
+                        <b>Дата рождения:</b> {chat_child_birthday}<br/>
+                        <b>Место рождения:</b> {chat_child_place_birthday}<br/>
+                        <b>Срок беременности при рождении:</b> {chat_child_term}<br/>
+                        <b>Вес при рождении:</b> {chat_child_weight}<br/>
+                        <b>Рост при рождении:</b> {chat_child_height}<br/>
+                        <b>Дигнозы:</b> {chat_child_diagnose}<br/>
+                        <b>Операции ребенка:</b> {chat_child_operation}<br/>
+                        <b>Дата обращения:</b> {date.today()}<br/>
+                        <b>Как узнали о фонде:</b> {chat_about_fond}<br/>
+                    </p>
+                </body>
+            </html>
+        """
     func = bot_send_email_to_curator(subject, html)
     if func:
         return_text = (
@@ -67,9 +82,7 @@ async def chat_send_email(
         )
     else:
         return_text = "Ошибка отправки email куратору!"
-    button = InlineKeyboardButton(
-        text="Назад", callback_data=str(states.CHAT_SEND)
-    )
+    button = InlineKeyboardButton(text="Назад", callback_data=str(states.SENT))
     keyboard = InlineKeyboardMarkup.from_button(button)
     await update.callback_query.answer()
     await update.callback_query.edit_message_text(

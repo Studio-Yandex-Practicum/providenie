@@ -12,7 +12,7 @@ async def entering_chat(
     user_data = context.user_data
     user_data[states.CHAT_FEATURES] = {states.LEVEL: states.ENTRY_CHAT}
     user_data[states.CHAT_CURRENT_FEATURE] = states.CHAT_PARENTS_NAME
-    text = "Фамилия, имя, отчество родителя(опекуна)?"
+    text = "Фамилия, имя, отчество мамы(или папы)?"
     await update.callback_query.answer()
     await update.callback_query.edit_message_text(text=text)
     return states.CHAT_GETTING_PARENTS_NAME
@@ -28,7 +28,7 @@ async def chat_getting_parents_name(
         user_data[states.CHAT_CURRENT_FEATURE]
     ] = message
     user_data[states.CHAT_CURRENT_FEATURE] = states.CHAT_PARENTS_PHONE
-    text = "Ваш номер телефона?"
+    text = "Номер телефона мамы (или папы)?"
     await update.message.reply_text(text=text)
     return states.CHAT_GETTING_PARENTS_PHONE
 
@@ -36,12 +36,18 @@ async def chat_getting_parents_name(
 async def chat_getting_parents_phone(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
-    """Сохраняем номер телефона, получаем фамилию ребенка"""
+    """Сохраняем номер телефона, получаем фамилию ребенка
+    Если выбран чат "Мамы ангелов",
+     переходим в режим отображения полученной информации"""
     user_data = context.user_data
     message = update.message.text
     user_data[states.CHAT_FEATURES][
         user_data[states.CHAT_CURRENT_FEATURE]
     ] = message
+
+    if user_data[states.CURRENT_CHAT] == "Мамы ангелов":
+        return await chat_show_data(update, context)
+
     user_data[states.CHAT_CURRENT_FEATURE] = states.CHAT_CHILD_NAME
     text = "Фамилия, имя, отчество ребенка?"
     await update.message.reply_text(text=text)
@@ -51,7 +57,8 @@ async def chat_getting_parents_phone(
 async def chat_getting_child_name(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
-    """Сохраняем фамилию ребенка, получаем дату рождения"""
+    """Сохраняем фамилию ребенка,
+    получаем дату рождения"""
     user_data = context.user_data
     message = update.message.text
     user_data[states.CHAT_FEATURES][
@@ -66,7 +73,8 @@ async def chat_getting_child_name(
 async def chat_getting_child_birthday(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
-    """Сохраняем дату рождения ребенка, получаем место рождения ребенка"""
+    """Сохраняем дату рождения ребенка,
+    получаем место рождения ребенка"""
     user_data = context.user_data
     message = update.message.text
     user_data[states.CHAT_FEATURES][
@@ -81,7 +89,8 @@ async def chat_getting_child_birthday(
 async def chat_getting_child_place_birthday(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
-    """Сохраняем место рождения ребенка, получаем срок беременности рождения ребенка"""
+    """Сохраняем место рождения ребенка,
+    получаем срок беременности при рождении ребенка"""
     user_data = context.user_data
     message = update.message.text
     user_data[states.CHAT_FEATURES][
@@ -96,7 +105,8 @@ async def chat_getting_child_place_birthday(
 async def chat_getting_child_term(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
-    """Сохраняем срок беременности рождения ребенка, получаем вес ребенка при рождении"""
+    """Сохраняем срок беременности рождения ребенка,
+    получаем вес ребенка при рождении"""
     user_data = context.user_data
     message = update.message.text
     user_data[states.CHAT_FEATURES][
@@ -156,22 +166,8 @@ async def chat_getting_child_diagnose(
 async def chat_getting_child_operation(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
-    """Сохраняем данные об операциях, получаем дату обращения в фонд"""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[states.CHAT_FEATURES][
-        user_data[states.CHAT_CURRENT_FEATURE]
-    ] = message
-    user_data[states.CHAT_CURRENT_FEATURE] = states.CHAT_DATE_ADDRESS
-    text = "Дата обращения"
-    await update.message.reply_text(text=text)
-    return states.CHAT_GETTING_DATE_ADDRESS
-
-
-async def chat_getting_date_address(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> str:
-    """Сохраняем дату обращения, получаем информацию о том, как узнали о фонде"""
+    """Сохраняем данные об операциях,
+    получаем информацию о том, как узнали о фонде"""
     user_data = context.user_data
     message = update.message.text
     user_data[states.CHAT_FEATURES][
@@ -186,7 +182,7 @@ async def chat_getting_date_address(
 async def chat_getting_about_fond(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
-    """Сохраняем информаци о том, как узнали о фонде,
+    """Сохраняем информацию о том, как узнали о фонде,
     переходим в режим отображения полученной информации"""
     user_data = context.user_data
     message = update.message.text

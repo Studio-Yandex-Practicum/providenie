@@ -66,7 +66,7 @@ chat_description = {
         "name": "Мамы ангелов",
         "description": (
             "Чат для родителей, которые столкнулись со смертью ребенка. "
-            "Для вступления в чат Вам необходимо предоставить информацию для куратора."
+            "Для вступления в чат Вам необходимо предоставить свое имя и телефон."
         ),
     },
     states.CHAT_RETINOPATIA_4_5: {
@@ -110,10 +110,7 @@ async def enter_chat(
     user_data = context.user_data
     user_data[states.CURRENT_CHAT] = chat
     text = f'{chat_description[chat]["description"]}'
-    user_data[states.CHAT_FEATURES] = {states.LEVEL: states.ENTRY_CHAT}
-    user_data[states.CHAT_FEATURES][
-        user_data[states.CURRENT_CHAT]
-    ] = chat_description[chat]["name"]
+    user_data[states.CURRENT_CHAT] = chat_description[chat]["name"]
 
     buttons = [
         [
@@ -123,8 +120,8 @@ async def enter_chat(
         ],
         [
             InlineKeyboardButton(
-                text="Вернуться в список чатов",
-                callback_data=str(states.CHAT_END),
+                text="Назад",
+                callback_data=str(states.CHATS),
             )
         ],
         [

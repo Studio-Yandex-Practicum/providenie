@@ -9,79 +9,100 @@ async def chat_select_field(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Вывод меню редактирования введённых ранее данных."""
-
-    buttons = [
-        [
-            InlineKeyboardButton(
-                text="ФИО родителя(опекуна).",
-                callback_data=str(states.CHAT_PARENTS_NAME),
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                text="Телефон родителя",
-                callback_data=str(states.CHAT_PARENTS_PHONE),
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                text="ФИО ребенка", callback_data=str(states.CHAT_CHILD_NAME)
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                text="Дата рождения ребенка",
-                callback_data=str(states.CHAT_CHILD_BIRTHDAY),
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                text="Место рождения ребенка",
-                callback_data=str(states.CHAT_CHILD_PLACE_BIRTHDAY),
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                text="Срок беременности при рождении ребенка",
-                callback_data=str(states.CHAT_CHILD_TERM),
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                text="Вес ребенка при рождении",
-                callback_data=str(states.CHAT_CHILD_WEIGHT),
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                text="Рост ребенка при рождении",
-                callback_data=str(states.CHAT_CHILD_HEIGHT),
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                text="Диагнозы", callback_data=str(states.CHAT_CHILD_DIAGNOSE)
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                text="Операции", callback_data=str(states.CHAT_CHILD_OPERATION)
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                text="Дата обращения",
-                callback_data=str(states.CHAT_DATE_ADDRESS),
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                text="Как узнали о фонде",
-                callback_data=str(states.CHAT_ABOUT_FOND),
-            )
-        ],
-        [InlineKeyboardButton(text="Готово", callback_data=str(states.END))],
-    ]
+    if context.user_data[states.CURRENT_CHAT] == "Мамы ангелов":
+        buttons = [
+            [
+                InlineKeyboardButton(
+                    text="ФИО мамы(папы)",
+                    callback_data=str(states.CHAT_PARENTS_NAME),
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text="Телефон мамы(папы)",
+                    callback_data=str(states.CHAT_PARENTS_PHONE),
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text="Готово", callback_data=str(states.END)
+                )
+            ],
+        ]
+    else:
+        buttons = [
+            [
+                InlineKeyboardButton(
+                    text="ФИО родителя(опекуна)",
+                    callback_data=str(states.CHAT_PARENTS_NAME),
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text="Телефон родителя",
+                    callback_data=str(states.CHAT_PARENTS_PHONE),
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text="ФИО ребенка",
+                    callback_data=str(states.CHAT_CHILD_NAME),
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text="Дата рождения ребенка",
+                    callback_data=str(states.CHAT_CHILD_BIRTHDAY),
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text="Место рождения ребенка",
+                    callback_data=str(states.CHAT_CHILD_PLACE_BIRTHDAY),
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text="Срок беременности при рождении",
+                    callback_data=str(states.CHAT_CHILD_TERM),
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text="Вес ребенка при рождении",
+                    callback_data=str(states.CHAT_CHILD_WEIGHT),
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text="Рост ребенка при рождении",
+                    callback_data=str(states.CHAT_CHILD_HEIGHT),
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text="Диагнозы",
+                    callback_data=str(states.CHAT_CHILD_DIAGNOSE),
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text="Операции",
+                    callback_data=str(states.CHAT_CHILD_OPERATION),
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text="Как узнали о фонде",
+                    callback_data=str(states.CHAT_ABOUT_FOND),
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    text="Готово", callback_data=str(states.END)
+                )
+            ],
+        ]
     keyboard = InlineKeyboardMarkup(buttons)
     state = context.user_data.get(states.START_OVER)
     text = "Выберите для редактирования:"

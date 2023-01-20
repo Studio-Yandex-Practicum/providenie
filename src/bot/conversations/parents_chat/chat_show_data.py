@@ -1,3 +1,5 @@
+from datetime import date
+
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
@@ -12,9 +14,15 @@ async def chat_show_data(
     data = user_data.get(states.CHAT_FEATURES)
     if not data:
         text = "\nДанных нет.\n"
+    elif user_data[states.CURRENT_CHAT] == "Мамы ангелов":
+        text = (
+            f'*Имя мамы(папы):*\n  _{data.get(states.CHAT_PARENTS_NAME, "-")}_\n'
+            f'*Номер телефона мамы(папы):*\n  _{data.get(states.CHAT_PARENTS_PHONE, "-")}_\n'
+            f"*Дата обращения:*\n  _{date.today()}_\n"
+        )
     else:
         text = (
-            f'*Чат для вступления:*\n  _{data.get(states.CURRENT_CHAT, "-")}_\n'
+            f'*Чат для вступления:*\n  _{user_data.get(states.CURRENT_CHAT, "-")}_\n'
             f'*ФИО родителя (опекуна):*\n  _{data.get(states.CHAT_PARENTS_NAME, "-")}_\n'
             f'*Номер телефона родителя(опекуна):*\n  _{data.get(states.CHAT_PARENTS_PHONE, "-")}_\n'
             f'*ФИО ребенка:*\n  _{data.get(states.CHAT_CHILD_NAME, "-")}_\n'
@@ -25,7 +33,7 @@ async def chat_show_data(
             f'*Рост при рождении:*\n  _{data.get(states.CHAT_CHILD_HEIGHT, "-")}_\n'
             f'*Диагнозы:*\n  _{data.get(states.CHAT_CHILD_DIAGNOSE, "-")}_\n'
             f'*Операции:*\n  _{data.get(states.CHAT_CHILD_OPERATION, "-")}_\n'
-            f'*Дата обращения:*\n  _{data.get(states.CHAT_DATE_ADDRESS, "-")}_\n'
+            f"*Дата обращения:*\n  _{date.today()}_\n"
             f'*Как узнали о фонде:*\n  _{data.get(states.CHAT_ABOUT_FOND, "-")}_\n'
         )
 
