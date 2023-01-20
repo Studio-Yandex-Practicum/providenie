@@ -35,13 +35,14 @@ from telegram.ext import ConversationHandler
 (STOPPING,) = map(chr, range(30, 31))
 
 (
+    SOCIAL_LINKS,
     WEBSITE,
     VK,
     INSTAGRAM,
     FACEBOOK,
     TG_CHANNEL,
     TG_BOT,
-) = map(chr, range(50, 56))
+) = map(chr, range(50, 57))
 
 (
     START_OVER,

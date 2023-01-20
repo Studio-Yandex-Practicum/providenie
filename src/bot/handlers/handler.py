@@ -7,6 +7,7 @@ from telegram.ext import (
 from bot import states
 from bot.conversations import menu
 from bot.handlers.ask_question import ask_question_conv
+from bot.handlers.tell_about_fund import tell_about_fund_conv
 from bot.handlers.volunteer import add_volunteer_conv
 
 
@@ -18,10 +19,7 @@ selection_handlers = [
         menu.request, pattern="^" + str(states.REQUEST) + "$"
     ),
     add_volunteer_conv,
-    CallbackQueryHandler(
-        menu.tell_friends_about_fund,
-        pattern="^" + str(states.TELL_ABOUT_FUND) + "$",
-    ),
+    tell_about_fund_conv,
     CallbackQueryHandler(
         menu.give_donation, pattern="^" + str(states.DONATION) + "$"
     ),
@@ -35,29 +33,6 @@ selection_handlers = [
     ),
     CallbackQueryHandler(menu.end, pattern="^" + str(states.END) + "$"),
     CallbackQueryHandler(menu.end, pattern="^" + str(states.SENT) + "$"),
-    CallbackQueryHandler(
-        menu.social_link,
-        pattern=(
-            "^"
-            + str(states.WEBSITE)
-            + "$|^"
-            + "^"
-            + str(states.VK)
-            + "$|^"
-            + "^"
-            + str(states.INSTAGRAM)
-            + "$|^"
-            + "^"
-            + str(states.FACEBOOK)
-            + "$|^"
-            + "^"
-            + str(states.TG_CHANNEL)
-            + "$|^"
-            + "^"
-            + str(states.TG_BOT)
-            + "$"
-        ),
-    ),
 ]
 
 conv_handler = ConversationHandler(

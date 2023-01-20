@@ -102,7 +102,7 @@ async def tell_friends_about_fund(update: Update, _) -> str:
         ],
         [
             InlineKeyboardButton(
-                text=const.BTN_BACK, callback_data=str(states.START_OVER)
+                text=const.BTN_BACK, callback_data=str(states.END)
             )
         ],
     ]
@@ -112,7 +112,7 @@ async def tell_friends_about_fund(update: Update, _) -> str:
     await update.callback_query.edit_message_text(
         text=text, reply_markup=keyboard
     )
-    return states.SELECTING_ACTION
+    return states.SOCIAL_LINKS
 
 
 async def social_link(update: Update, _) -> str:
@@ -129,7 +129,7 @@ async def social_link(update: Update, _) -> str:
     buttons = [
         [
             InlineKeyboardButton(
-                text=const.BTN_MENU, callback_data=str(states.START_OVER)
+                text=const.BTN_MENU, callback_data=str(states.END)
             )
         ],
         [
@@ -145,7 +145,7 @@ async def social_link(update: Update, _) -> str:
 
     await query.answer()
     await query.edit_message_text(text=text, reply_markup=keyboard)
-    return states.SELECTING_ACTION
+    return states.SOCIAL_LINKS
 
 
 async def give_donation(update: Update, _) -> str:
