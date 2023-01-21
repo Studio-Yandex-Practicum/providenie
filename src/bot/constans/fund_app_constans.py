@@ -2,68 +2,6 @@
 from telegram import ReplyKeyboardMarkup
 
 
-(
-    LOOK_WORLD_PROGRAM, REABILITATION_PROGRAM,
-    PSIHO_PROGRAM, KIND_LESSONS_PROGRAM
-) = range(4)
-
-(
-    FIO_MOTHER,
-    PHONE,
-    EMAIL,
-    FIO_CHILD,
-    HOW_MANY_PEOPLE,
-    CITY,
-    ADDRESS,
-    BIRTHDAY,
-    LOCAL_OF_BIRTH,
-    BIRTH_DATE,
-    WEIGHT,
-    HEIGHT,
-    DIAGNOSIS,
-    DATE_OF_APPLICATION,
-    HOW_FOUND,
-    WHICH_FOND,
-    WHICH_FOND_WAS_PREVIOUSLY,
-    START_OVER,
-) = range(4, 22)
-
-
-CHOICE_PROGRAM, JOIN_PROGRAM = range(22, 24)
-(
-    JOIN_BUTTON,
-    BAD_ANSWER_SECOND_LEVEL,
-    SHOW_INFORMATION,
-    CONFIRM_AND_SEND,
-    END_SECOND_LEVEL,
-    SEND_CHANGE_END,
-    CHANGE_DATA,
-    MESSAGE_SENT_SUCCESSFULLY,
-    END_FIRST_LEVEL,
-    EDIT_MODE,
-    SHOW_EDIT_INFORMATION,
-    SAY_YES,
-    SAY_NO,
-    QUESTION_THIRD_MENU,
-    BAD_FIO_MOTHER,
-    BAD_VALUES,
-    RETURN_MOTHER_FIO,
-    GO_SECOND_LEVEL,
-) = range(24, 42)
-
-EDIT_PHONE, EDIT_USER_DATА, PLACE_BIRTH = range(42, 45)
-
-(
-    START_JOIN_TO_FOND,
-    END_MAIN_MENU,
-    RETURN_FROM_JOIN_TO_FOND,
-    GO_MAIN_MENU,
-    MAIN_MENU,
-    GO_TO_JOIN_FOND,
-    START_QUATIONS,
-) = range(45, 52)
-
-
 # Различные ответы, вопросы, описание и документы
 ANSWERS_DICT = {
     "bad_answer": """
@@ -123,9 +61,9 @@ QUESTIONS_DICT = {
     "how_many_people": "Введите количество членов семьи. (числом)",
     "city": "Введите город проживания.",
     "address": "Введите адрес проживания.",
-    "birthday": "Введите дату рождения ребёнка. (ДД.ММ.ГГГГ)",
+    "birthday": "Введите дату рождения ребёнка. (Д.М.ГГГГ)",
     "place_birth": "Введите место рождения ребёнка.",
-    "bad_birth_date": "Введите срок на котором родился ребёнок. (Неделя, числом)",
+    "birth_date": "Введите срок на котором родился ребёнок. (Неделя, числом)",
     "weight": "Введите вес ребёнка. (Числом)",
     "height": "Введите рост ребёнка. (Числом)",
     "diagnosis": """
@@ -267,7 +205,7 @@ MSG_THIRD_MENU = """
 REGEX_EMAIL = (
     r"^([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+$"
 )
-REGEX_DATE_BIRTH = r"^[0-9]{2}\.[0-9]{2}\.[0-9]{4}$"
+REGEX_DATE_BIRTH = r"^[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}$"
 
 # Клавиатуры с кнопками
 MARKUP_NEXT = ReplyKeyboardMarkup(

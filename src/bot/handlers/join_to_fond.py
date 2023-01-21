@@ -6,7 +6,8 @@ from telegram.ext import (
     filters
 )
 
-from bot.constans import fund_app_constans as constans
+from bot.constans import fund_app_callbacks as fund_callbacks
+from bot.constans import fund_app_states as fund_states
 from bot import states
 from ..conversations import fund_application as fund
 
@@ -15,87 +16,83 @@ from ..conversations import fund_application as fund
 selection_handlers_second_level = [
     CallbackQueryHandler(
         fund.send_message_to_curator,
-        pattern="^" + str(constans.CONFIRM_AND_SEND) + "$"
+        pattern="^" + str(fund_callbacks.CONFIRM_AND_SEND) + "$"
     ),
     CallbackQueryHandler(
         fund.change_data,
-        pattern="^" + str(constans.CHANGE_DATA) + "$"
+        pattern="^" + str(fund_callbacks.CHANGE_DATA) + "$"
     ),
     CallbackQueryHandler(
         fund.end_second_menu,
-        pattern="^" + str(constans.END_SECOND_LEVEL) + "$"
+        pattern="^" + str(fund_callbacks.END_SECOND_LEVEL) + "$"
     ),
     CallbackQueryHandler(
         fund.asking_fio_mother,
-        pattern="^" + str(constans.FIO_MOTHER) + "$"
+        pattern="^" + str(fund_callbacks.EDIT_FIO_MOTHER) + "$"
     ),
     CallbackQueryHandler(
         fund.asking_phone_mother,
-        pattern="^" + str(constans.PHONE) + "$"
+        pattern="^" + str(fund_callbacks.EDIT_PHONE) + "$"
     ),
     CallbackQueryHandler(
         fund.asking_email_mother,
-        pattern="^" + str(constans.EMAIL) + "$"
+        pattern="^" + str(fund_callbacks.EDIT_EMAIL) + "$"
     ),
     CallbackQueryHandler(
         fund.asking_fio_child,
-        pattern="^" + str(constans.FIO_CHILD) + "$"
+        pattern="^" + str(fund_callbacks.EDIT_FIO_CHILD) + "$"
     ),
     CallbackQueryHandler(
         fund.asking_how_many_people_in_family,
-        pattern="^" + str(constans.HOW_MANY_PEOPLE) + "$"
+        pattern="^" + str(fund_callbacks.EDIT_HOW_MANY_PEOPLE) + "$"
     ),
     CallbackQueryHandler(
         fund.asking_city,
-        pattern="^" + str(constans.CITY) + "$"
+        pattern="^" + str(fund_callbacks.EDIT_CITY) + "$"
     ),
     CallbackQueryHandler(
         fund.asking_address,
-        pattern="^" + str(constans.ADDRESS) + "$"
+        pattern="^" + str(fund_callbacks.EDIT_ADDRESS) + "$"
     ),
     CallbackQueryHandler(
         fund.asking_child_birthday,
-        pattern="^" + str(constans.BIRTHDAY) + "$"
+        pattern="^" + str(fund_callbacks.EDIT_BIRTHDAY) + "$"
     ),
     CallbackQueryHandler(
         fund.asking_place_birthday,
-        pattern="^" + str(constans.PLACE_BIRTH) + "$"
+        pattern="^" + str(fund_callbacks.EDIT_PLACE_BIRTH) + "$"
     ),
     CallbackQueryHandler(
         fund.asking_birth_date,
-        pattern="^" + str(constans.BIRTH_DATE) + "$"
+        pattern="^" + str(fund_callbacks.EDIT_BIRTH_DATE) + "$"
     ),
     CallbackQueryHandler(
         fund.asking_child_weight,
-        pattern="^" + str(constans.WEIGHT) + "$"
+        pattern="^" + str(fund_callbacks.EDIT_WEIGHT) + "$"
     ),
     CallbackQueryHandler(
         fund.asking_child_height,
-        pattern="^" + str(constans.HEIGHT) + "$"
+        pattern="^" + str(fund_callbacks.EDIT_HEIGHT) + "$"
     ),
     CallbackQueryHandler(
         fund.asking_child_diagnosis,
-        pattern="^" + str(constans.DIAGNOSIS) + "$"
-    ),
-    CallbackQueryHandler(
-        fund.asking_date_of_application,
-        pattern="^" + str(constans.DATE_OF_APPLICATION) + "$"
+        pattern="^" + str(fund_callbacks.EDIT_DIAGNOSIS) + "$"
     ),
     CallbackQueryHandler(
         fund.asking_how_find_us,
-        pattern="^" + str(constans.HOW_FOUND) + "$"
+        pattern="^" + str(fund_callbacks.EDIT_HOW_FOUND) + "$"
     ),
     CallbackQueryHandler(
         fund.asking_city,
-        pattern="^" + str(constans.CITY) + "$"
+        pattern="^" + str(fund_callbacks.EDIT_CITY) + "$"
     ),
     CallbackQueryHandler(
         fund.asking_which_fond_now,
-        pattern="^" + str(constans.WHICH_FOND) + "$"
+        pattern="^" + str(fund_callbacks.EDIT_WHICH_FOND) + "$"
     ),
     CallbackQueryHandler(
         fund.asking_which_fonds_halped,
-        pattern="^" + str(constans.WHICH_FOND_WAS_PREVIOUSLY) + "$"
+        pattern="^" + str(fund_callbacks.EDIT_WHICH_FOND_WAS_PREVIOUSLY) + "$"
     ),
 ]
 
@@ -103,149 +100,120 @@ dates_about_parent_and_child = ConversationHandler(
     entry_points=[
         CallbackQueryHandler(
             fund.asking_fio_mother,
-            pattern="^" + str(constans.JOIN_BUTTON) + "$"
+            pattern="^" + str(fund_callbacks.JOIN_BUTTON) + "$"
         ),
-        # MessageHandler(
-        #     filters.TEXT & ~filters.COMMAND,
-        #     fund.asking_fio_mother
-        # )
     ],
     states={
-        constans.RETURN_MOTHER_FIO: [
+        fund_states.RETURN_MOTHER_FIO: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 fund.asking_fio_mother
             )
         ],
-        constans.FIO_MOTHER: [
+        fund_states.FIO_MOTHER: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 fund.asking_phone_mother
             )
         ],
-        constans.PHONE: [
+        fund_states.PHONE: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 fund.asking_email_mother
             )
         ],
-        constans.EMAIL: [
+        fund_states.EMAIL: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 fund.asking_fio_child
             )
         ],
-        constans.FIO_CHILD: [
+        fund_states.FIO_CHILD: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 fund.asking_how_many_people_in_family
             )
         ],
-        constans.HOW_MANY_PEOPLE: [
+        fund_states.HOW_MANY_PEOPLE: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 fund.asking_city
             )
         ],
-        constans.CITY: [
+        fund_states.CITY: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 fund.asking_address
             )
         ],
-        constans.ADDRESS: [
+        fund_states.ADDRESS: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 fund.asking_child_birthday
             )
         ],
-        constans.BIRTHDAY: [
+        fund_states.BIRTHDAY: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 fund.asking_place_birthday
             )
         ],
-        constans.PLACE_BIRTH: [
+        fund_states.PLACE_BIRTH: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 fund.asking_birth_date
             )
         ],
-        constans.BIRTH_DATE: [
+        fund_states.BIRTH_DATE: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 fund.asking_child_weight
             )
         ],
-        constans.WEIGHT: [
+        fund_states.WEIGHT: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 fund.asking_child_height
             )
         ],
-        constans.HEIGHT: [
+        fund_states.HEIGHT: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 fund.asking_child_diagnosis
             )
         ],
-        constans.DIAGNOSIS: [
+        fund_states.DIAGNOSIS: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 fund.asking_date_of_application
             )
         ],
-        constans.DATE_OF_APPLICATION: [
-            MessageHandler(
-                filters.TEXT & ~filters.COMMAND,
-                fund.asking_how_find_us
-            )
-        ],
-        constans.HOW_FOUND: [
+        fund_states.HOW_FOUND: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 fund.asking_which_fond_now
             )
         ],
-        constans.WHICH_FOND: [
+        fund_states.WHICH_FOND: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 fund.asking_which_fonds_halped
             )
         ],
-        constans.WHICH_FOND_WAS_PREVIOUSLY: [
+        fund_states.WHICH_FOND_WAS_PREVIOUSLY: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 fund.show_user_information
             )
         ],
-        constans.SHOW_INFORMATION: [
-            MessageHandler(
-                filters.TEXT & ~filters.COMMAND,
-                fund.send_or_change_data
-            )
-        ],
-        constans.SHOW_EDIT_INFORMATION: [
-            MessageHandler(
-                filters.TEXT & ~filters.COMMAND,
-                fund.show_user_edit_information
-            )
-        ],
-        # constans.SEND_CHANGE_END: selection_handlers_second_level,
-        # constans.BAD_ANSWER_SECOND_LEVEL: selection_handlers_second_level,
-        constans.EDIT_USER_DATА: selection_handlers_second_level,
+        fund_states.EDIT_USER_DATА: selection_handlers_second_level,
     },
 
     fallbacks=[CommandHandler("stop", fund.stop_nested)],
 
     # Возврат на первый уровень
     map_to_parent={
-        constans.END_FIRST_LEVEL: constans.JOIN_PROGRAM,
-        # constans.MESSAGE_SENT_SUCCESSFULLY: constans.JOIN_TO_PROGRAMM,
-        # constans.QUESTION_THIRD_MENU: constans.JOIN_TO_PROGRAMM,
-        # constans.BAD_FIO_MOTHER: constans.BAD_VALUES,
-        # constans.BAD_FIO_MOTHER: constans.JOIN_TO_PROGRAMM,
-        # constans.RETURN_MOTHER_FIO: constans.GO_SECOND_LEVEL,
+        fund_states.END_FIRST_LEVEL: fund_states.JOIN_PROGRAM,
         states.STOPPING: states.STOPPING
     },
 )
@@ -255,32 +223,24 @@ dates_about_parent_and_child = ConversationHandler(
 selection_handlers = [
     CallbackQueryHandler(
         fund.join_or_not_to_program,
-        pattern="^" + str(constans.LOOK_WORLD_PROGRAM) + "$"
+        pattern="^" + str(fund_callbacks.LOOK_WORLD_PROGRAM) + "$"
     ),
     CallbackQueryHandler(
         fund.join_or_not_to_program,
-        pattern="^" + str(constans.REABILITATION_PROGRAM) + "$"
+        pattern="^" + str(fund_callbacks.REABILITATION_PROGRAM) + "$"
     ),
     CallbackQueryHandler(
         fund.join_or_not_to_program,
-        pattern="^" + str(constans.PSIHO_PROGRAM) + "$"
+        pattern="^" + str(fund_callbacks.PSIHO_PROGRAM) + "$"
     ),
     CallbackQueryHandler(
         fund.join_or_not_to_program,
-        pattern="^" + str(constans.KIND_LESSONS_PROGRAM) + "$"
-    ),
-    CallbackQueryHandler(
-        fund.join_or_not_to_program,
-        pattern="^" + str(constans.SAY_YES) + "$"
+        pattern="^" + str(fund_callbacks.KIND_LESSONS_PROGRAM) + "$"
     ),
     dates_about_parent_and_child,
-    # CallbackQueryHandler(
-    #     fund.go_second_level,
-    #     pattern="^" + str(constans.JOIN_BUTTON) + "$"
-    # ),
     CallbackQueryHandler(
         fund.return_main_menu,
-        pattern="^" + str(constans.MAIN_MENU) + "$"
+        pattern="^" + str(fund_callbacks.MAIN_MENU) + "$"
     ),
     CallbackQueryHandler(
         fund.end,
@@ -298,16 +258,14 @@ conv_handler_join_to_fond = ConversationHandler(
         ),
     ],
     states={
-        # constans.CHOICE_PROGRAMM: selection_handlers,
-        constans.JOIN_PROGRAM: selection_handlers,
-        # constans.BAD_VALUES: selection_handlers,
-        constans.GO_SECOND_LEVEL: [dates_about_parent_and_child]
+        fund_states.JOIN_PROGRAM: selection_handlers,
+        fund_states.GO_SECOND_LEVEL: [dates_about_parent_and_child]
     },
 
     fallbacks=[CommandHandler("stop", fund.stop_nested)],
 
     map_to_parent={
-        constans.END_MAIN_MENU: states.SELECTING_ACTION,
+        fund_states.END_MAIN_MENU: states.SELECTING_ACTION,
         states.STOPPING: states.STOPPING,
     },
 )

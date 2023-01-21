@@ -16,9 +16,6 @@ selection_handlers = [
         menu.select_chat, pattern="^" + str(states.CHATS) + "$"
     ),
     conv_handler_join_to_fond,
-    # CallbackQueryHandler(
-    #     menu.request, pattern="^" + str(states.REQUEST) + "$"
-    # ),
     add_volunteer_conv,
     CallbackQueryHandler(
         menu.talk_friends, pattern="^" + str(states.TALK) + "$"
@@ -35,10 +32,6 @@ selection_handlers = [
     ),
     CallbackQueryHandler(
         menu.start, pattern="^" + str(states.START_OVER) + "$"
-    ),
-    CallbackQueryHandler(
-        menu.start,
-        pattern="^" + str(states.GO_MAIN_MENU) + "$"
     ),
     CallbackQueryHandler(menu.end, pattern="^" + str(states.END) + "$"),
     CallbackQueryHandler(menu.end, pattern="^" + str(states.SENT) + "$"),

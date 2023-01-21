@@ -1,4 +1,6 @@
 # Логика "Заявка на вступление в фонд" без хендлеров
+from datetime import date
+
 from telegram import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
@@ -9,6 +11,8 @@ from telegram.ext import ContextTypes, ConversationHandler
 from bot import states
 
 from ..constans import fund_app_constans as constans
+from ..constans import fund_app_callbacks as fund_callbacks
+from ..constans import fund_app_states as fund_states
 from core.email import bot_send_email_to_curator
 from core.logger import logger
 from ..flags.flag import Flags
@@ -40,27 +44,27 @@ async def application_to_the_fond(
         [
             InlineKeyboardButton(
                 text=constans.PROGRAM_FOND["0"][0],
-                callback_data=str(constans.LOOK_WORLD_PROGRAM)
+                callback_data=str(fund_callbacks.LOOK_WORLD_PROGRAM)
             ),
             InlineKeyboardButton(
                 text=constans.PROGRAM_FOND["1"][0],
-                callback_data=str(constans.REABILITATION_PROGRAM)
+                callback_data=str(fund_callbacks.REABILITATION_PROGRAM)
             ),
         ],
         [
             InlineKeyboardButton(
                 text=constans.PROGRAM_FOND["2"][0],
-                callback_data=str(constans.PSIHO_PROGRAM)
+                callback_data=str(fund_callbacks.PSIHO_PROGRAM)
             ),
             InlineKeyboardButton(
                 text=constans.PROGRAM_FOND["3"][0],
-                callback_data=str(constans.KIND_LESSONS_PROGRAM)
+                callback_data=str(fund_callbacks.KIND_LESSONS_PROGRAM)
             ),
         ],
         [
             InlineKeyboardButton(
                 text="Главное меню",
-                callback_data=str(constans.MAIN_MENU)),
+                callback_data=str(fund_callbacks.MAIN_MENU)),
         ],
     ]
 
@@ -81,7 +85,7 @@ async def application_to_the_fond(
         )
         FLAGS_OBJ.changing_first_start(False)
 
-    return constans.JOIN_PROGRAM
+    return fund_states.JOIN_PROGRAM
 
 
 async def join_or_not_to_program(
@@ -127,7 +131,7 @@ async def join_or_not_to_program(
         [
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["join"],
-                callback_data=str(constans.JOIN_BUTTON)
+                callback_data=str(fund_callbacks.JOIN_BUTTON)
             ),
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["back"],
@@ -137,7 +141,7 @@ async def join_or_not_to_program(
         [
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["main_menu"],
-                callback_data=str(constans.MAIN_MENU)
+                callback_data=str(fund_callbacks.MAIN_MENU)
             ),
         ],
     ]
@@ -148,20 +152,7 @@ async def join_or_not_to_program(
         reply_markup=keyboard,
     )
 
-    return constans.JOIN_PROGRAM
-
-
-# async def go_second_level(
-#     update: Update,
-#     context: ContextTypes.DEFAULT_TYPE
-# ) -> str:
-#     """Переход на второй уровень."""
-#     query = update.callback_query
-#     await query.edit_message_text(
-#         text=constans.MSG_PRESS_ANY_BUTTON,
-#     )
-
-#     return constans.GO_SECOND_LEVEL
+    return fund_states.JOIN_PROGRAM
 
 
 async def asking_fio_mother(
@@ -174,7 +165,7 @@ async def asking_fio_mother(
             constans.QUESTIONS_DICT["fio_mother"]
         )
         FLAGS_OBJ.changing_bad_request(False)
-        return constans.FIO_MOTHER
+        return fund_states.FIO_MOTHER
 
     if FLAGS_OBJ.edit_mode_first_flag:
         query = update.callback_query
@@ -184,16 +175,15 @@ async def asking_fio_mother(
         )
         FLAGS_OBJ.changing_edit_mode_first(False)
         FLAGS_OBJ.changing_edit_mode_second(True)
-        return constans.FIO_MOTHER
-    
+        return fund_states.FIO_MOTHER
+
     query = update.callback_query
     await query.answer()
     await query.edit_message_text(
-            constans.QUESTIONS_DICT["fio_mother"]
-        )
-    #await update.message.reply_text(constans.QUESTIONS_DICT["fio_mother"])
+        constans.QUESTIONS_DICT["fio_mother"]
+    )
 
-    return constans.FIO_MOTHER
+    return fund_states.FIO_MOTHER
 
 
 async def asking_phone_mother(
@@ -205,7 +195,7 @@ async def asking_phone_mother(
             constans.QUESTIONS_DICT["phone_number"]
         )
         FLAGS_OBJ.changing_bad_request(False)
-        return constans.PHONE
+        return fund_states.PHONE
 
     if FLAGS_OBJ.edit_mode_first_flag:
         query = update.callback_query
@@ -215,7 +205,7 @@ async def asking_phone_mother(
         )
         FLAGS_OBJ.changing_edit_mode_first(False)
         FLAGS_OBJ.changing_edit_mode_second(True)
-        return constans.PHONE
+        return fund_states.PHONE
 
     fio = update.message.text
 
@@ -226,23 +216,18 @@ async def asking_phone_mother(
         )
         FLAGS_OBJ.changing_bad_request(True)
 
-        return constans.RETURN_MOTHER_FIO
+        return fund_states.RETURN_MOTHER_FIO
 
     context.user_data["ФИО мамы"] = fio.title()
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
-        await update.message.reply_text(
-            constans.MSG_PRESS_NEXT_BUTTON,
-            reply_markup=constans.MARKUP_NEXT,
-        )
-
-        return constans.SHOW_EDIT_INFORMATION
+        return await show_user_edit_information(update, context)
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["phone_number"]
     )
 
-    return constans.PHONE
+    return fund_states.PHONE
 
 
 async def asking_email_mother(
@@ -254,7 +239,7 @@ async def asking_email_mother(
             constans.QUESTIONS_DICT["email"]
         )
         FLAGS_OBJ.changing_bad_request(False)
-        return constans.EMAIL
+        return fund_states.EMAIL
 
     if FLAGS_OBJ.edit_mode_first_flag:
         query = update.callback_query
@@ -264,7 +249,7 @@ async def asking_email_mother(
         )
         FLAGS_OBJ.changing_edit_mode_first(False)
         FLAGS_OBJ.changing_edit_mode_second(True)
-        return constans.EMAIL
+        return fund_states.EMAIL
 
     phone_number = update.message.text
 
@@ -274,23 +259,18 @@ async def asking_email_mother(
             reply_markup=constans.MARKUP_FIX
         )
         FLAGS_OBJ.changing_bad_request(True)
-        return constans.FIO_MOTHER
+        return fund_states.FIO_MOTHER
 
     context.user_data["Телефон"] = phone_number
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
-        await update.message.reply_text(
-            constans.MSG_PRESS_NEXT_BUTTON,
-            reply_markup=constans.MARKUP_NEXT,
-        )
-
-        return constans.SHOW_EDIT_INFORMATION
+        return await show_user_edit_information(update, context)
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["email"]
     )
 
-    return constans.EMAIL
+    return fund_states.EMAIL
 
 
 async def asking_fio_child(
@@ -304,7 +284,7 @@ async def asking_fio_child(
         )
         FLAGS_OBJ.changing_bad_request(False)
 
-        return constans.FIO_CHILD
+        return fund_states.FIO_CHILD
 
     if FLAGS_OBJ.edit_mode_first_flag:
         query = update.callback_query
@@ -314,7 +294,7 @@ async def asking_fio_child(
         )
         FLAGS_OBJ.changing_edit_mode_first(False)
         FLAGS_OBJ.changing_edit_mode_second(True)
-        return constans.FIO_CHILD
+        return fund_states.FIO_CHILD
 
     email_mother = update.message.text
     if not validators.checking_email(email_mother):
@@ -324,23 +304,19 @@ async def asking_fio_child(
         )
         FLAGS_OBJ.changing_bad_request(True)
 
-        return constans.PHONE
+        return fund_states.PHONE
 
     context.user_data["Email"] = email_mother
 
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
-        await update.message.reply_text(
-            constans.MSG_PRESS_NEXT_BUTTON,
-            reply_markup=constans.MARKUP_NEXT,
-        )
-        return constans.SHOW_EDIT_INFORMATION
+        return await show_user_edit_information(update, context)
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["fio_child"]
     )
 
-    return constans.FIO_CHILD
+    return fund_states.FIO_CHILD
 
 
 async def asking_how_many_people_in_family(
@@ -352,7 +328,7 @@ async def asking_how_many_people_in_family(
             constans.QUESTIONS_DICT["how_many_people"]
         )
         FLAGS_OBJ.changing_bad_request(False)
-        return constans.HOW_MANY_PEOPLE
+        return fund_states.HOW_MANY_PEOPLE
 
     if FLAGS_OBJ.edit_mode_first_flag:
         query = update.callback_query
@@ -362,7 +338,7 @@ async def asking_how_many_people_in_family(
         )
         FLAGS_OBJ.changing_edit_mode_first(False)
         FLAGS_OBJ.changing_edit_mode_second(True)
-        return constans.HOW_MANY_PEOPLE
+        return fund_states.HOW_MANY_PEOPLE
 
     fio_child = update.message.text
 
@@ -372,23 +348,19 @@ async def asking_how_many_people_in_family(
             reply_markup=constans.MARKUP_FIX
         )
         FLAGS_OBJ.changing_bad_request(True)
-        return constans.EMAIL
+        return fund_states.EMAIL
 
     context.user_data["ФИО ребёнка"] = fio_child.title()
 
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
-        await update.message.reply_text(
-            constans.MSG_PRESS_NEXT_BUTTON,
-            reply_markup=constans.MARKUP_NEXT,
-        )
-        return constans.SHOW_EDIT_INFORMATION
+        return await show_user_edit_information(update, context)
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["how_many_people"]
     )
 
-    return constans.HOW_MANY_PEOPLE
+    return fund_states.HOW_MANY_PEOPLE
 
 
 async def asking_city(
@@ -401,7 +373,7 @@ async def asking_city(
             constans.QUESTIONS_DICT["city"]
         )
         FLAGS_OBJ.changing_bad_request(False)
-        return constans.CITY
+        return fund_states.CITY
 
     if FLAGS_OBJ.edit_mode_first_flag:
         query = update.callback_query
@@ -411,7 +383,7 @@ async def asking_city(
         )
         FLAGS_OBJ.changing_edit_mode_first(False)
         FLAGS_OBJ.changing_edit_mode_second(True)
-        return constans.CITY
+        return fund_states.CITY
 
     how_many_piople = update.message.text
 
@@ -423,22 +395,18 @@ async def asking_city(
             reply_markup=constans.MARKUP_FIX
         )
         FLAGS_OBJ.changing_bad_request(True)
-        return constans.FIO_CHILD
+        return fund_states.FIO_CHILD
 
     context.user_data["Сколько членов семьи"] = how_many_piople
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
-        await update.message.reply_text(
-            constans.MSG_PRESS_NEXT_BUTTON,
-            reply_markup=constans.MARKUP_NEXT,
-        )
-        return constans.SHOW_EDIT_INFORMATION
+        return await show_user_edit_information(update, context)
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["city"]
     )
 
-    return constans.CITY
+    return fund_states.CITY
 
 
 async def asking_address(
@@ -451,7 +419,7 @@ async def asking_address(
             constans.QUESTIONS_DICT["address"]
         )
         FLAGS_OBJ.changing_bad_request(False)
-        return constans.ADDRESS
+        return fund_states.ADDRESS
 
     if FLAGS_OBJ.edit_mode_first_flag:
         query = update.callback_query
@@ -461,7 +429,7 @@ async def asking_address(
         )
         FLAGS_OBJ.changing_edit_mode_first(False)
         FLAGS_OBJ.changing_edit_mode_second(True)
-        return constans.ADDRESS
+        return fund_states.ADDRESS
 
     city = update.message.text
 
@@ -471,22 +439,18 @@ async def asking_address(
             reply_markup=constans.MARKUP_FIX
         )
         FLAGS_OBJ.changing_bad_request(True)
-        return constans.HOW_MANY_PEOPLE
+        return fund_states.HOW_MANY_PEOPLE
 
     context.user_data["Город"] = city.title()
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
-        await update.message.reply_text(
-            constans.MSG_PRESS_NEXT_BUTTON,
-            reply_markup=constans.MARKUP_NEXT,
-        )
-        return constans.SHOW_EDIT_INFORMATION
+        return await show_user_edit_information(update, context)
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["address"]
     )
 
-    return constans.ADDRESS
+    return fund_states.ADDRESS
 
 
 async def asking_child_birthday(
@@ -498,7 +462,7 @@ async def asking_child_birthday(
             constans.QUESTIONS_DICT["birthday"]
         )
         FLAGS_OBJ.changing_bad_request(False)
-        return constans.BIRTHDAY
+        return fund_states.BIRTHDAY
 
     if FLAGS_OBJ.edit_mode_first_flag:
         query = update.callback_query
@@ -508,24 +472,20 @@ async def asking_child_birthday(
         )
         FLAGS_OBJ.changing_edit_mode_first(False)
         FLAGS_OBJ.changing_edit_mode_second(True)
-        return constans.BIRTHDAY
+        return fund_states.BIRTHDAY
 
     address = update.message.text
 
     context.user_data["Адрес"] = address.title()
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
-        await update.message.reply_text(
-            constans.MSG_PRESS_NEXT_BUTTON,
-            reply_markup=constans.MARKUP_NEXT,
-        )
-        return constans.SHOW_EDIT_INFORMATION
+        return await show_user_edit_information(update, context)
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["birthday"]
     )
 
-    return constans.BIRTHDAY
+    return fund_states.BIRTHDAY
 
 
 async def asking_place_birthday(
@@ -541,7 +501,7 @@ async def asking_place_birthday(
         )
         FLAGS_OBJ.changing_edit_mode_first(False)
         FLAGS_OBJ.changing_edit_mode_second(True)
-        return constans.PLACE_BIRTH
+        return fund_states.PLACE_BIRTH
 
     child_birthday = update.message.text
 
@@ -551,23 +511,19 @@ async def asking_place_birthday(
             reply_markup=constans.MARKUP_FIX
         )
         FLAGS_OBJ.changing_bad_request(True)
-        return constans.ADDRESS
+        return fund_states.ADDRESS
 
     context.user_data["Дата рождения ребёнка"] = child_birthday
 
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
-        await update.message.reply_text(
-            constans.MSG_PRESS_NEXT_BUTTON,
-            reply_markup=constans.MARKUP_NEXT,
-        )
-        return constans.SHOW_EDIT_INFORMATION
+        return await show_user_edit_information(update, context)
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["place_birth"]
     )
 
-    return constans.PLACE_BIRTH
+    return fund_states.PLACE_BIRTH
 
 
 async def asking_birth_date(
@@ -580,7 +536,7 @@ async def asking_birth_date(
             constans.QUESTIONS_DICT["birth_date"]
         )
         FLAGS_OBJ.changing_bad_request(False)
-        return constans.BIRTH_DATE
+        return fund_states.BIRTH_DATE
 
     if FLAGS_OBJ.edit_mode_first_flag:
         query = update.callback_query
@@ -590,7 +546,7 @@ async def asking_birth_date(
         )
         FLAGS_OBJ.changing_edit_mode_first(False)
         FLAGS_OBJ.changing_edit_mode_second(True)
-        return constans.BIRTH_DATE
+        return fund_states.BIRTH_DATE
 
     place_birth = update.message.text
 
@@ -598,17 +554,13 @@ async def asking_birth_date(
 
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
-        await update.message.reply_text(
-            constans.MSG_PRESS_NEXT_BUTTON,
-            reply_markup=constans.MARKUP_NEXT,
-        )
-        return constans.SHOW_EDIT_INFORMATION
+        return await show_user_edit_information(update, context)
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["birth_date"]
     )
 
-    return constans.BIRTH_DATE
+    return fund_states.BIRTH_DATE
 
 
 async def asking_child_weight(
@@ -620,7 +572,7 @@ async def asking_child_weight(
             constans.QUESTIONS_DICT["weight"]
         )
         FLAGS_OBJ.changing_bad_request(False)
-        return constans.WEIGHT
+        return fund_states.WEIGHT
 
     if FLAGS_OBJ.edit_mode_first_flag:
         query = update.callback_query
@@ -630,7 +582,7 @@ async def asking_child_weight(
         )
         FLAGS_OBJ.changing_edit_mode_first(False)
         FLAGS_OBJ.changing_edit_mode_second(True)
-        return constans.WEIGHT
+        return fund_states.WEIGHT
 
     birth_date = update.message.text
 
@@ -640,23 +592,19 @@ async def asking_child_weight(
             reply_markup=constans.MARKUP_FIX
         )
         FLAGS_OBJ.changing_bad_request(True)
-        return constans.PLACE_BIRTH
+        return fund_states.PLACE_BIRTH
 
     context.user_data["Срок рождения ребёнка"] = birth_date
 
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
-        await update.message.reply_text(
-            constans.MSG_PRESS_NEXT_BUTTON,
-            reply_markup=constans.MARKUP_NEXT,
-        )
-        return constans.SHOW_EDIT_INFORMATION
+        return await show_user_edit_information(update, context)
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["weight"]
     )
 
-    return constans.WEIGHT
+    return fund_states.WEIGHT
 
 
 async def asking_child_height(
@@ -668,7 +616,7 @@ async def asking_child_height(
             constans.QUESTIONS_DICT["height"]
         )
         FLAGS_OBJ.changing_bad_request(False)
-        return constans.HEIGHT
+        return fund_states.HEIGHT
 
     if FLAGS_OBJ.edit_mode_first_flag:
         query = update.callback_query
@@ -678,7 +626,7 @@ async def asking_child_height(
         )
         FLAGS_OBJ.changing_edit_mode_first(False)
         FLAGS_OBJ.changing_edit_mode_second(True)
-        return constans.HEIGHT
+        return fund_states.HEIGHT
 
     child_weight = update.message.text
 
@@ -688,23 +636,19 @@ async def asking_child_height(
             reply_markup=constans.MARKUP_FIX
         )
         FLAGS_OBJ.changing_bad_request(True)
-        return constans.BIRTH_DATE
+        return fund_states.BIRTH_DATE
 
     context.user_data["Вес"] = child_weight
 
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
-        await update.message.reply_text(
-            constans.MSG_PRESS_NEXT_BUTTON,
-            reply_markup=constans.MARKUP_NEXT,
-        )
-        return constans.SHOW_EDIT_INFORMATION
+        return await show_user_edit_information(update, context)
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["height"]
     )
 
-    return constans.HEIGHT
+    return fund_states.HEIGHT
 
 
 async def asking_child_diagnosis(
@@ -716,7 +660,7 @@ async def asking_child_diagnosis(
             constans.QUESTIONS_DICT["diagnosis"]
         )
         FLAGS_OBJ.changing_bad_request(False)
-        return constans.DIAGNOSIS
+        return fund_states.DIAGNOSIS
 
     if FLAGS_OBJ.edit_mode_first_flag:
         query = update.callback_query
@@ -726,7 +670,7 @@ async def asking_child_diagnosis(
         )
         FLAGS_OBJ.changing_edit_mode_first(False)
         FLAGS_OBJ.changing_edit_mode_second(True)
-        return constans.DIAGNOSIS
+        return fund_states.DIAGNOSIS
 
     child_height = update.message.text
 
@@ -736,46 +680,25 @@ async def asking_child_diagnosis(
             reply_markup=constans.MARKUP_FIX
         )
         FLAGS_OBJ.changing_bad_request(True)
-        return constans.WEIGHT
+        return fund_states.WEIGHT
 
     context.user_data["Рост"] = child_height
 
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
-        await update.message.reply_text(
-            constans.MSG_PRESS_NEXT_BUTTON,
-            reply_markup=constans.MARKUP_NEXT,
-        )
-        return constans.SHOW_EDIT_INFORMATION
+        return await show_user_edit_information(update, context)
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["diagnosis"]
     )
 
-    return constans.DIAGNOSIS
+    return fund_states.DIAGNOSIS
 
 
 async def asking_date_of_application(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Получение даты обращения в фонд."""
-    if FLAGS_OBJ.bad_request:
-        await update.message.reply_text(
-            constans.QUESTIONS_DICT["date_aplication"]
-        )
-        FLAGS_OBJ.changing_bad_request(False)
-        return constans.DATE_OF_APPLICATION
-
-    if FLAGS_OBJ.edit_mode_first_flag:
-        query = update.callback_query
-        await query.answer()
-        await query.edit_message_text(
-            constans.QUESTIONS_DICT["date_aplication"]
-        )
-        FLAGS_OBJ.changing_edit_mode_first(False)
-        FLAGS_OBJ.changing_edit_mode_second(True)
-        return constans.DATE_OF_APPLICATION
-
     diagnosis = update.message.text
 
     if not validators.checking_not_digits(diagnosis):
@@ -784,23 +707,15 @@ async def asking_date_of_application(
             reply_markup=constans.MARKUP_FIX
         )
         FLAGS_OBJ.changing_bad_request(True)
-        return constans.HEIGHT
+        return fund_states.HEIGHT
 
     context.user_data["Диагнозы"] = diagnosis.title()
 
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
-        await update.message.reply_text(
-            constans.MSG_PRESS_NEXT_BUTTON,
-            reply_markup=constans.MARKUP_NEXT,
-        )
-        return constans.SHOW_EDIT_INFORMATION
+        return await show_user_edit_information(update, context)
 
-    await update.message.reply_text(
-        constans.QUESTIONS_DICT["date_aplication"]
-    )
-
-    return constans.DATE_OF_APPLICATION
+    return await asking_how_find_us(update, context)
 
 
 async def asking_how_find_us(
@@ -817,33 +732,22 @@ async def asking_how_find_us(
         )
         FLAGS_OBJ.changing_edit_mode_first(False)
         FLAGS_OBJ.changing_edit_mode_second(True)
-        return constans.HOW_FOUND
+        return fund_states.HOW_FOUND
 
-    date_of_application = update.message.text
-
-    if not validators.checking_date_birth(date_of_application):
-        await update.message.reply_text(
-            text=constans.ANSWERS_DICT["bad_date_application"],
-            reply_markup=constans.MARKUP_FIX
-        )
-        FLAGS_OBJ.changing_bad_request(True)
-        return constans.DIAGNOSIS
+    date_now = date.today()
+    date_of_application = f"{date_now.day}.{date_now.month}.{date_now.year}"
 
     context.user_data["Дата обращения"] = date_of_application
 
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
-        await update.message.reply_text(
-            constans.MSG_PRESS_NEXT_BUTTON,
-            reply_markup=constans.MARKUP_NEXT,
-        )
-        return constans.SHOW_EDIT_INFORMATION
+        return await show_user_edit_information(update, context)
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["how_find_fond"]
     )
 
-    return constans.HOW_FOUND
+    return fund_states.HOW_FOUND
 
 
 async def asking_which_fond_now(
@@ -862,7 +766,7 @@ async def asking_which_fond_now(
         )
         FLAGS_OBJ.changing_edit_mode_first(False)
         FLAGS_OBJ.changing_edit_mode_second(True)
-        return constans.WHICH_FOND
+        return fund_states.WHICH_FOND
 
     how_find_us = update.message.text
 
@@ -870,17 +774,13 @@ async def asking_which_fond_now(
 
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
-        await update.message.reply_text(
-            constans.MSG_PRESS_NEXT_BUTTON,
-            reply_markup=constans.MARKUP_NEXT,
-        )
-        return constans.SHOW_EDIT_INFORMATION
+        return await show_user_edit_information(update, context)
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["fond_now"]
     )
 
-    return constans.WHICH_FOND
+    return fund_states.WHICH_FOND
 
 
 async def asking_which_fonds_halped(
@@ -896,7 +796,7 @@ async def asking_which_fonds_halped(
         )
         FLAGS_OBJ.changing_edit_mode_first(False)
         FLAGS_OBJ.changing_edit_mode_second(True)
-        return constans.WHICH_FOND_WAS_PREVIOUSLY
+        return fund_states.WHICH_FOND_WAS_PREVIOUSLY
 
     which_fond_now = update.message.text
 
@@ -904,17 +804,13 @@ async def asking_which_fonds_halped(
 
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
-        await update.message.reply_text(
-            constans.MSG_PRESS_NEXT_BUTTON,
-            reply_markup=constans.MARKUP_NEXT,
-        )
-        return constans.SHOW_EDIT_INFORMATION
+        return await show_user_edit_information(update, context)
 
     await update.message.reply_text(
         constans.QUESTIONS_DICT["which_fond"]
     )
 
-    return constans.WHICH_FOND_WAS_PREVIOUSLY
+    return fund_states.WHICH_FOND_WAS_PREVIOUSLY
 
 
 async def show_user_information(
@@ -928,25 +824,13 @@ async def show_user_information(
 
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
-        # await update.message.reply_text(
-        #     constans.MSG_PRESS_NEXT_BUTTON,
-        #     reply_markup=constans.MARKUP_NEXT,
-        # )
-        # return constans.SHOW_EDIT_INFORMATION
-        return await send_or_change_data(update, context)
+        return await show_user_edit_information(update, context)
 
     for key, data in context.user_data.items():
         if key != 'd':
             await update.message.reply_text(f"{key}: {data}")
 
-
     return await send_or_change_data(update, context)
-    # await update.message.reply_text(
-    #     constans.MSG_PRESS_NEXT_BUTTON,
-    #     reply_markup=constans.MARKUP_NEXT,
-    # )
-
-    # return constans.SHOW_INFORMATION
 
 
 async def show_user_edit_information(
@@ -959,13 +843,7 @@ async def show_user_edit_information(
         if key != 'd':
             await update.message.reply_text(f"{key}: {data}")
 
-    # await update.message.reply_text(
-    #     constans.MSG_PRESS_NEXT_BUTTON,
-    #     reply_markup=constans.MARKUP_NEXT,
-    # )
-
     return await send_or_change_data(update, context)
-    #return constans.SHOW_INFORMATION
 
 
 async def send_or_change_data(
@@ -981,17 +859,17 @@ async def send_or_change_data(
         [
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["confirm_and_send"],
-                callback_data=str(constans.CONFIRM_AND_SEND)
+                callback_data=str(fund_callbacks.CONFIRM_AND_SEND)
             ),
         ],
         [
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["change_data"],
-                callback_data=str(constans.CHANGE_DATA)
+                callback_data=str(fund_callbacks.CHANGE_DATA)
             ),
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["back"],
-                callback_data=str(constans.END_SECOND_LEVEL)),
+                callback_data=str(fund_callbacks.END_SECOND_LEVEL)),
         ],
     ]
 
@@ -1002,7 +880,7 @@ async def send_or_change_data(
         reply_markup=keyboard)
 
     # return constans.SEND_CHANGE_END
-    return constans.EDIT_USER_DATА
+    return fund_states.EDIT_USER_DATА
 
 
 async def send_message_to_curator(
@@ -1064,8 +942,7 @@ async def send_message_to_curator(
         reply_markup=keyboard
     )
 
-    # return constans.MESSAGE_SENT_SUCCESSFULLY
-    return constans.END_FIRST_LEVEL
+    return fund_states.END_FIRST_LEVEL
 
 
 async def change_data(
@@ -1081,81 +958,77 @@ async def change_data(
         [
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["fio_mother"],
-                callback_data=str(constans.FIO_MOTHER)
+                callback_data=str(fund_callbacks.EDIT_FIO_MOTHER)
             ),
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["phone_number"],
-                callback_data=str(constans.PHONE)
+                callback_data=str(fund_callbacks.EDIT_PHONE)
             ),
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["email"],
-                callback_data=str(constans.EMAIL)
+                callback_data=str(fund_callbacks.EDIT_EMAIL)
             ),
         ],
         [
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["fio_child"],
-                callback_data=str(constans.FIO_CHILD)
+                callback_data=str(fund_callbacks.EDIT_FIO_CHILD)
             ),
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["how_many_people"],
-                callback_data=str(constans.HOW_MANY_PEOPLE)
+                callback_data=str(fund_callbacks.EDIT_HOW_MANY_PEOPLE)
             ),
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["city"],
-                callback_data=str(constans.CITY)
+                callback_data=str(fund_callbacks.EDIT_CITY)
             ),
         ],
         [
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["address"],
-                callback_data=str(constans.ADDRESS)
+                callback_data=str(fund_callbacks.EDIT_ADDRESS)
             ),
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["birthday"],
-                callback_data=str(constans.BIRTHDAY)
+                callback_data=str(fund_callbacks.EDIT_BIRTHDAY)
             ),
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["place_birth"],
-                callback_data=str(constans.PLACE_BIRTH)
+                callback_data=str(fund_callbacks.EDIT_PLACE_BIRTH)
             ),
         ],
         [
             InlineKeyboardButton(
-                text=constans.BUTTONS_TEXT["birth_day"],
-                callback_data=str(constans.BIRTH_DATE)
+                text=constans.BUTTONS_TEXT["birth_date"],
+                callback_data=str(fund_callbacks.EDIT_BIRTH_DATE)
             ),
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["weight"],
-                callback_data=str(constans.WEIGHT)
+                callback_data=str(fund_callbacks.EDIT_WEIGHT)
             ),
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["height"],
-                callback_data=str(constans.HEIGHT)
+                callback_data=str(fund_callbacks.EDIT_HEIGHT)
             ),
         ],
         [
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["diagnosis"],
-                callback_data=str(constans.DIAGNOSIS)
-            ),
-            InlineKeyboardButton(
-                text=constans.BUTTONS_TEXT["date_aplication"],
-                callback_data=str(constans.DATE_OF_APPLICATION)
+                callback_data=str(fund_callbacks.EDIT_DIAGNOSIS)
             ),
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["how_find_fond"],
-                callback_data=str(constans.HOW_FOUND)
+                callback_data=str(fund_callbacks.EDIT_HOW_FOUND)
+            ),
+            InlineKeyboardButton(
+                text=constans.BUTTONS_TEXT["which_fond"],
+                callback_data=str(fund_callbacks.EDIT_WHICH_FOND)
             ),
         ],
         [
             InlineKeyboardButton(
-                text=constans.BUTTONS_TEXT["which_fond"],
-                callback_data=str(constans.WHICH_FOND)
-            ),
-            InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["fond_now"],
-                callback_data=str(constans.WHICH_FOND_WAS_PREVIOUSLY),
+                callback_data=str(fund_callbacks.EDIT_WHICH_FOND_WAS_PREVIOUSLY),
             ),
         ],
     ]
@@ -1167,7 +1040,7 @@ async def change_data(
 
     await query.edit_message_text(text=message, reply_markup=keyboard)
 
-    return constans.EDIT_USER_DATА
+    return fund_states.EDIT_USER_DATА
 
 
 async def end(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
@@ -1175,7 +1048,6 @@ async def end(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     await update.callback_query.answer()
     clean_dictionary(context=context.user_data)
     await application_to_the_fond(update, context)
-
 
 
 async def end_second_menu(
@@ -1193,23 +1065,8 @@ async def end_second_menu(
     # Нужно для корректировки вывода в join_or_not_to_programm
     FLAGS_OBJ.changing_edit_mode_first(True)
 
-    buttons = [
-        [
-            InlineKeyboardButton(
-                text=constans.BUTTONS_TEXT["resume"],
-                callback_data=str(constans.SAY_YES)
-            ),
-        ],
-    ]
-    keyboard = InlineKeyboardMarkup(buttons)
-
-    await query.edit_message_text(
-        text=constans.MSG_PRESS_NEXT_BUTTON,
-        reply_markup=keyboard
-    )
-
-    # return constans.QUESTION_THIRD_MENU
-    return constans.END_FIRST_LEVEL
+    await join_or_not_to_program(update, context)
+    return fund_states.END_FIRST_LEVEL
 
 
 async def return_main_menu(
@@ -1227,7 +1084,7 @@ async def return_main_menu(
     FLAGS_OBJ.changing_first_start(True)
 
     await start(update, context)
-    return constans.END_MAIN_MENU
+    return fund_states.END_MAIN_MENU
 
 
 async def stop_nested(

@@ -19,6 +19,8 @@ def checking_not_digits(data: str) -> bool:
 
 def checking_not_phone_number(data: str) -> bool:
     """Проверка телефонного номера."""
+    if data[0] == '+':
+        data = data[1:]
     if data.isdigit() and len(data) == 11:
         return True
     return False
