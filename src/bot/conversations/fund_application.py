@@ -887,7 +887,6 @@ async def send_or_change_data(
         text=constans.MSG_THIRD_MENU,
         reply_markup=keyboard)
 
-    # return constans.SEND_CHANGE_END
     return fund_states.EDIT_USER_DATА
 
 
