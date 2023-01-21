@@ -4,36 +4,34 @@ from telegram.ext import (
     ConversationHandler,
 )
 
-from bot import states
 from bot.conversations import menu
+from bot import keys as key
+from bot import states as state
 from bot.handlers.ask_question import ask_question_conv
 from bot.handlers.volunteer import add_volunteer_conv
 
 
 selection_handlers = [
     CallbackQueryHandler(
-        menu.select_chat, pattern="^" + str(states.CHATS) + "$"
+        menu.select_chat, pattern="^" + key.CHATS + "$"
     ),
     CallbackQueryHandler(
-        menu.request, pattern="^" + str(states.REQUEST) + "$"
+        menu.request, pattern="^" + key.REQUEST + "$"
     ),
     add_volunteer_conv,
     CallbackQueryHandler(
-        menu.talk_friends, pattern="^" + str(states.TALK) + "$"
+        menu.talk_friends, pattern="^" + key.TALK + "$"
     ),
     CallbackQueryHandler(
-        menu.give_donation, pattern="^" + str(states.DONATION) + "$"
+        menu.give_donation, pattern="^" + key.DONATION + "$"
     ),
     CallbackQueryHandler(
-        menu.get_events, pattern="^" + str(states.EVENTS) + "$"
+        menu.get_events, pattern="^" + key.EVENTS + "$"
     ),
     ask_question_conv,
-    CallbackQueryHandler(menu.about, pattern="^" + str(states.ABOUT) + "$"),
-    CallbackQueryHandler(
-        menu.start, pattern="^" + str(states.START_OVER) + "$"
-    ),
-    CallbackQueryHandler(menu.end, pattern="^" + str(states.END) + "$"),
-    CallbackQueryHandler(menu.end, pattern="^" + str(states.SENT) + "$"),
+    CallbackQueryHandler(menu.about, pattern="^" + key.ABOUT + "$"),
+    CallbackQueryHandler(menu.end, pattern="^" + str(key.END) + "$"),
+    CallbackQueryHandler(menu.end, pattern="^" + key.SENT + "$"),
 ]
 
 conv_handler = ConversationHandler(
@@ -41,11 +39,11 @@ conv_handler = ConversationHandler(
     allow_reentry=True,
     entry_points=[CommandHandler("start", menu.start)],
     states={
-        states.SELECTING_ACTION: selection_handlers,
-        states.STOPPING: [CommandHandler("start", menu.start)],
-        states.ENDING: [
+        state.SELECTING_ACTION: selection_handlers,
+        state.STOPPING: [CommandHandler("start", menu.start)],
+        state.ENDING: [
             CallbackQueryHandler(
-                menu.start, pattern="^" + str(states.END) + "$"
+                menu.start, pattern="^" + str(key.END) + "$"
             )
         ],
     },
