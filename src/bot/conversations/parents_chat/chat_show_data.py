@@ -3,7 +3,9 @@ from datetime import date
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
-from bot import states
+from bot import constants as const
+from bot import keys as key
+from bot import states, templates
 
 
 async def chat_show_data(
@@ -11,58 +13,61 @@ async def chat_show_data(
 ) -> str:
     """Отображение всех введённых данных для вступления в чат"""
     user_data = context.user_data
-    data = user_data.get(states.CHAT_FEATURES)
+    data = user_data.get(key.CHAT_FEATURES)
+    chat_data = dict(
+        current_chat=user_data.get(key.CURRENT_CHAT, "-"),
+        chat_parents_name=data.get(key.CHAT_PARENTS_NAME, "-"),
+        chat_parents_phone=data.get(key.CHAT_PARENTS_PHONE, "-"),
+        chat_child_name=data.get(key.CHAT_CHILD_NAME, "-"),
+        chat_child_birthday=data.get(key.CHAT_CHILD_BIRTHDAY, "-"),
+        chat_child_place_birthday=data.get(key.CHAT_CHILD_PLACE_BIRTHDAY, "-"),
+        chat_child_term=data.get(key.CHAT_CHILD_TERM, "-"),
+        chat_child_weight=data.get(key.CHAT_CHILD_WEIGHT, "-"),
+        chat_child_height=data.get(key.CHAT_CHILD_HEIGHT, "-"),
+        chat_child_diagnose=data.get(key.CHAT_CHILD_DIAGNOSE, "-"),
+        chat_child_operation=data.get(key.CHAT_CHILD_OPERATION, "-"),
+        chat_about_fond=data.get(key.CHAT_ABOUT_FOND, "-"),
+        date_address=date.today(),
+    )
     if not data:
-        text = "\nДанных нет.\n"
-    elif user_data[states.CURRENT_CHAT] == "Мамы ангелов":
-        text = (
-            f'*Имя мамы(папы):*\n  _{data.get(states.CHAT_PARENTS_NAME, "-")}_\n'
-            f'*Номер телефона мамы(папы):*\n  _{data.get(states.CHAT_PARENTS_PHONE, "-")}_\n'
-            f"*Дата обращения:*\n  _{date.today()}_\n"
+        text = const.MSG_NO_DATA
+    elif user_data[key.CURRENT_CHAT] == "Мамы ангелов":
+        text = templates.MSG_CHAT_ANGELS_DATA.format(
+            chat_data["chat_parents_name"], chat_data["chat_parents_phone"]
         )
+    elif user_data[key.CURRENT_CHAT] == "Бабушки торопыжек":
+        text = templates.MSG_CHAT_GRANDMOTHERS_DATA.format(*chat_data.values())
     else:
-        text = (
-            f'*Чат для вступления:*\n  _{user_data.get(states.CURRENT_CHAT, "-")}_\n'
-            f'*ФИО родителя (опекуна):*\n  _{data.get(states.CHAT_PARENTS_NAME, "-")}_\n'
-            f'*Номер телефона родителя(опекуна):*\n  _{data.get(states.CHAT_PARENTS_PHONE, "-")}_\n'
-            f'*ФИО ребенка:*\n  _{data.get(states.CHAT_CHILD_NAME, "-")}_\n'
-            f'*Дата рождения ребенка:*\n  _{data.get(states.CHAT_CHILD_BIRTHDAY, "-")}_\n'
-            f'*Место рождения ребенка:*\n  _{data.get(states.CHAT_CHILD_PLACE_BIRTHDAY, "-")}_\n'
-            f'*Срок беременности при рождении ребенка:*\n  _{data.get(states.CHAT_CHILD_TERM, "-")}_\n'
-            f'*Вес при рождении:*\n  _{data.get(states.CHAT_CHILD_WEIGHT, "-")}_\n'
-            f'*Рост при рождении:*\n  _{data.get(states.CHAT_CHILD_HEIGHT, "-")}_\n'
-            f'*Диагнозы:*\n  _{data.get(states.CHAT_CHILD_DIAGNOSE, "-")}_\n'
-            f'*Операции:*\n  _{data.get(states.CHAT_CHILD_OPERATION, "-")}_\n'
-            f"*Дата обращения:*\n  _{date.today()}_\n"
-            f'*Как узнали о фонде:*\n  _{data.get(states.CHAT_ABOUT_FOND, "-")}_\n'
-        )
+        text = templates.MSG_CHAT_DATA.format(*chat_data.values())
 
     buttons = [
         [
             InlineKeyboardButton(
-                text="Редактировать", callback_data=str(states.CHAT_DATA_EDIT)
+                text="Редактировать", callback_data=states.CHAT_DATA_EDIT
             )
         ],
         [
             InlineKeyboardButton(
-                text="Отправить", callback_data=str(states.CHAT_SEND)
+                text="Отправить", callback_data=states.CHAT_SEND
             )
         ],
         [
             InlineKeyboardButton(
-                text="Главное меню", callback_data=str(states.END)
+                text="Главное меню", callback_data=str(key.END)
             )
         ],
     ]
 
     keyboard = InlineKeyboardMarkup(buttons)
-    state = context.user_data.get(states.START_OVER)
+    state = context.user_data.get(key.START_OVER)
     if state:
         await update.callback_query.answer()
         await update.callback_query.edit_message_text(
-            text=text, reply_markup=keyboard, parse_mode="Markdown"
+            text=text, reply_markup=keyboard, parse_mode="html"
         )
     else:
-        await update.message.reply_markdown(text=text, reply_markup=keyboard)
-    user_data[states.START_OVER] = False
+        await update.message.reply_text(
+            text=text, reply_markup=keyboard, parse_mode="html"
+        )
+    user_data[key.START_OVER] = False
     return states.CHAT_SHOWING

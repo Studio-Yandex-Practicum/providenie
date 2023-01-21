@@ -6,7 +6,8 @@ from telegram.ext import (
     filters,
 )
 
-from bot import states
+from bot import keys as key
+from bot import states as state
 from bot.conversations import menu
 from bot.conversations.parents_chat import chat_edit_data, chat_get_data
 from bot.conversations.parents_chat.chat_entry import enter_chat
@@ -22,49 +23,47 @@ chat_edit_conv = ConversationHandler(
     entry_points=[
         CallbackQueryHandler(
             chat_edit_data.chat_select_field,
-            pattern="^" + str(states.CHAT_DATA_EDIT) + "$",
+            pattern="^" + state.CHAT_DATA_EDIT + "$",
         ),
         CallbackQueryHandler(
             chat_send_email,
-            pattern="^" + str(states.CHAT_SEND) + "$",
+            pattern="^" + state.CHAT_SEND + "$",
         ),
     ],
     states={
-        states.CHAT_FEATURE: [
+        state.CHAT_FEATURE: [
             CallbackQueryHandler(
                 chat_edit_data.chat_edit_data,
-                pattern="^(?!" + str(states.END) + ").*$",
+                pattern="^(?!" + str(key.END) + ").*$",
             ),
         ],
-        states.CHAT_TYPING: [
+        state.CHAT_TYPING: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND, chat_edit_data.chat_save_input
             )
         ],
-        states.CHAT_SEND: [
+        state.CHAT_SEND: [
             CallbackQueryHandler(
                 chat_edit_data.chat_end_editing,
-                pattern="^" + str(states.END) + "$",
+                pattern="^" + str(key.END) + "$",
             ),
             CallbackQueryHandler(
-                chat_end_sending, pattern="^" + str(states.SENT) + "$"
+                chat_end_sending, pattern="^" + key.SENT + "$"
             ),
         ],
     },
     fallbacks=[
         CallbackQueryHandler(
             chat_edit_data.chat_end_editing,
-            pattern="^" + str(states.END) + "$",
+            pattern="^" + str(key.END) + "$",
         ),
-        CallbackQueryHandler(
-            chat_end_sending, pattern="^" + str(states.SENT) + "$"
-        ),
+        CallbackQueryHandler(chat_end_sending, pattern="^" + key.SENT + "$"),
         CommandHandler("stop", menu.stop_nested),
     ],
     map_to_parent={
-        states.END: states.CHAT_SHOWING,
-        states.SENT: states.STOPPING,
-        states.STOPPING: states.END,
+        key.END: state.CHAT_SHOWING,
+        key.SENT: state.STOPPING,
+        state.STOPPING: key.END,
     },
 )
 
@@ -74,96 +73,95 @@ chat_get_conv = ConversationHandler(
     entry_points=[
         CallbackQueryHandler(
             chat_get_data.entering_chat,
-            pattern="^" + str(states.ENTRY_CHAT) + "$",
+            pattern="^" + key.ENTRY_CHAT + "$",
         )
     ],
     states={
-        states.ENTERING_CHAT: [
+        state.ENTERING_CHAT: [
             CallbackQueryHandler(
                 enter_chat,
-                pattern="^" + str(states.ENTRY_CHAT) + "$",
+                pattern="^" + key.ENTRY_CHAT + "$",
             )
         ],
-        states.CHAT_GETTING_PARENTS_NAME: [
+        state.CHAT_GETTING_PARENTS_NAME: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 chat_get_data.chat_getting_parents_name,
             )
         ],
-        states.CHAT_GETTING_PARENTS_PHONE: [
+        state.CHAT_GETTING_PARENTS_PHONE: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 chat_get_data.chat_getting_parents_phone,
             ),
         ],
-        states.CHAT_GETTING_CHILD_NAME: [
+        state.CHAT_GETTING_CHILD_NAME: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 chat_get_data.chat_getting_child_name,
             )
         ],
-        states.CHAT_GETTING_CHILD_BIRTHDAY: [
+        state.CHAT_GETTING_CHILD_BIRTHDAY: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 chat_get_data.chat_getting_child_birthday,
             )
         ],
-        states.CHAT_GETTING_CHILD_PLACE_BIRTHDAY: [
+        state.CHAT_GETTING_CHILD_PLACE_BIRTHDAY: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 chat_get_data.chat_getting_child_place_birthday,
             )
         ],
-        states.CHAT_GETTING_CHILD_TERM: [
+        state.CHAT_GETTING_CHILD_TERM: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 chat_get_data.chat_getting_child_term,
             )
         ],
-        states.CHAT_GETTING_CHILD_WEIGHT: [
+        state.CHAT_GETTING_CHILD_WEIGHT: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 chat_get_data.chat_getting_child_weight,
             )
         ],
-        states.CHAT_GETTING_CHILD_HEIGHT: [
+        state.CHAT_GETTING_CHILD_HEIGHT: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 chat_get_data.chat_getting_child_height,
             )
         ],
-        states.CHAT_GETTING_CHILD_DIAGNOSE: [
+        state.CHAT_GETTING_CHILD_DIAGNOSE: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 chat_get_data.chat_getting_child_diagnose,
             )
         ],
-        states.CHAT_GETTING_CHILD_OPERATION: [
+        state.CHAT_GETTING_CHILD_OPERATION: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 chat_get_data.chat_getting_child_operation,
             )
         ],
-        states.CHAT_GETTING_ABOUT_FOND: [
+        state.CHAT_GETTING_ABOUT_FOND: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 chat_get_data.chat_getting_about_fond,
             )
         ],
-        states.CHAT_SHOWING: [chat_edit_conv],
+        state.CHAT_SHOWING: [chat_edit_conv],
     },
     fallbacks=[
         CallbackQueryHandler(
-            menu.end_second_level, pattern="^" + str(states.END) + "$"
+            menu.end_second_level, pattern="^" + str(key.END) + "$"
         ),
-        CallbackQueryHandler(select_chat, pattern="^" + str(states.CHATS) + "$"
-        ),
+        CallbackQueryHandler(select_chat, pattern="^" + key.CHATS + "$"),
         CommandHandler("stop", menu.stop_nested),
     ],
     map_to_parent={
-        states.CHATS: states.SELECTING_CHAT,
-        states.END: states.END,
-        states.STOPPING: states.STOPPING,
+        key.CHATS: state.SELECTING_CHAT,
+        key.END: key.END,
+        state.STOPPING: state.STOPPING,
     },
 )
 
@@ -172,12 +170,17 @@ chat_handlers = [
     CallbackQueryHandler(
         enter_chat,
         pattern=(
-            "^" + str(states.CHAT_BABY) + "$|^" + str(states.CHAT_CHILD) + "$|"
-            "^" + str(states.CHAT_RETINOPATIA) + "$|^" + str(states.CHAT_SHUNTATA) + "$|"
-            "^" + str(states.CHAT_GRANDMOTHERS) + "$|^" + str(states.CHAT_CRY) + "$|"
-            "^" + str(states.CHAT_ANGELS) + "$|^" + str(states.CHAT_RETINOPATIA_4_5) + "$|"
-            "^" + str(states.CHAT_PROBLEMS) + "$|^" + str(states.CHAT_REHABILITATION) + "$|"
-            "^" + str(states.CHAT_TELEGRAM) + "$"
+            "^" + key.CHAT_BABY + "$|"
+            "^" + key.CHAT_CHILD + "$|"
+            "^" + key.CHAT_RETINOPATIA + "$|"
+            "^" + key.CHAT_SHUNTATA + "$|"
+            "^" + key.CHAT_GRANDMOTHERS + "$|"
+            "^" + key.CHAT_CRY + "$|"
+            "^" + key.CHAT_ANGELS + "$|"
+            "^" + key.CHAT_RETINOPATIA_4_5 + "$|"
+            "^" + key.CHAT_PROBLEMS + "$|"
+            "^" + key.CHAT_REHABILITATION + "$|"
+            "^" + key.CHAT_TELEGRAM + "$"
         ),
     ),
 ]
@@ -185,22 +188,20 @@ chat_handlers = [
 chat_conv = ConversationHandler(
     allow_reentry=True,
     entry_points=[
-        CallbackQueryHandler(
-            select_chat, pattern="^" + str(states.CHATS) + "$"
-        )
+        CallbackQueryHandler(select_chat, pattern="^" + str(key.CHATS) + "$")
     ],
     states={
-        states.SELECTING_CHAT: chat_handlers,
-        states.ENTERING_CHAT: [chat_get_conv],
+        state.SELECTING_CHAT: chat_handlers,
+        state.ENTERING_CHAT: [chat_get_conv],
     },
     fallbacks=[
         CallbackQueryHandler(
-            menu.end_second_level, pattern="^" + str(states.END) + "$"
+            menu.end_second_level, pattern="^" + str(key.END) + "$"
         ),
         CommandHandler("stop", menu.stop_nested),
     ],
     map_to_parent={
-        states.END: states.SELECTING_ACTION,
-        states.STOPPING: states.STOPPING,
+        key.END: state.SELECTING_ACTION,
+        state.STOPPING: state.STOPPING,
     },
 )
