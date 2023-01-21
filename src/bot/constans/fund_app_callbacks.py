@@ -1,10 +1,25 @@
-(
-    LOOK_WORLD_PROGRAM, REABILITATION_PROGRAM,
-    PSIHO_PROGRAM, KIND_LESSONS_PROGRAM, JOIN_BUTTON,
-    MAIN_MENU, CONFIRM_AND_SEND, CHANGE_DATA,
-    END_SECOND_LEVEL, EDIT_FIO_MOTHER, EDIT_PHONE, EDIT_EMAIL,
-    EDIT_FIO_CHILD, EDIT_HOW_MANY_PEOPLE, EDIT_CITY,
-    EDIT_ADDRESS, EDIT_BIRTHDAY, EDIT_PLACE_BIRTH,
-    EDIT_BIRTH_DATE, EDIT_WEIGHT, EDIT_HEIGHT, EDIT_DIAGNOSIS,
-    EDIT_HOW_FOUND, EDIT_WHICH_FOND, EDIT_WHICH_FOND_WAS_PREVIOUSLY,
-) = range(0, 25)
+LOOK_WORLD_PROGRAM = "Смотри на мир"
+REABILITATION_PROGRAM = "Реабилитация"
+PSIHO_PROGRAM = "Психологическая помощь"
+KIND_LESSONS_PROGRAM = "Добрые уроки"
+JOIN_BUTTON = "Вступить"
+MAIN_MENU = "Главное меню"
+CONFIRM_AND_SEND = "Подтвердить и отправить"
+CHANGE_DATA = "Изменение данных"
+END_SECOND_LEVEL = "Назад на второй уровень"
+FIO_MOTHER = "ФИО мамы"
+PHONE = "Телефон"
+EMAIL = "Email"
+FIO_CHILD = "ФИО ребёнка"
+HOW_MANY_PEOPLE = "Количество членов семьи"
+CITY = "Город"
+ADDRESS = "Адрес"
+BIRTHDAY = "Дата рождения ребёнка"
+PLACE_BIRTH = "Место рождения ребёнка"
+BIRTH_DATE = "Срок рождения"
+WEIGHT = "Вес"
+HEIGHT = "Рост"
+DIAGNOSIS = "Диагнозы"
+HOW_FOUND = "Как узнали о нас"
+WHICH_FUND = "В каком фонде сейчас"
+WHICH_FUND_WAS_PREVIOUSLY = "Какие фонды помогали"

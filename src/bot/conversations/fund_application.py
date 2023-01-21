@@ -17,7 +17,7 @@ from core.email import bot_send_email_to_curator
 from core.logger import logger
 from ..flags.flag import Flags
 from .menu import start
-from ..templates import HTML_TEMPLATE_JOIN_FOND
+from ..templates import HTML_TEMPLATE_JOIN_FUND
 from ..validators import fund_app_validators as validators
 
 
@@ -35,7 +35,7 @@ def clean_dictionary(context, save_values=[None]) -> None:
 
 
 # Здесь начинаются обработчики кнопок и ответов на вопросы
-async def application_to_the_fond(
+async def application_to_the_fund(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Вывод кнопок программ фонда."""
@@ -43,28 +43,36 @@ async def application_to_the_fond(
     buttons = [
         [
             InlineKeyboardButton(
-                text=constans.PROGRAM_FOND["0"][0],
-                callback_data=str(fund_callbacks.LOOK_WORLD_PROGRAM)
+                text=constans.PROGRAM_FUND[
+                    fund_callbacks.LOOK_WORLD_PROGRAM
+                ][0],
+                callback_data=fund_callbacks.LOOK_WORLD_PROGRAM
             ),
             InlineKeyboardButton(
-                text=constans.PROGRAM_FOND["1"][0],
-                callback_data=str(fund_callbacks.REABILITATION_PROGRAM)
+                text=constans.PROGRAM_FUND[
+                    fund_callbacks.REABILITATION_PROGRAM
+                ][0],
+                callback_data=fund_callbacks.REABILITATION_PROGRAM
             ),
         ],
         [
             InlineKeyboardButton(
-                text=constans.PROGRAM_FOND["2"][0],
-                callback_data=str(fund_callbacks.PSIHO_PROGRAM)
+                text=constans.PROGRAM_FUND[
+                    fund_callbacks.PSIHO_PROGRAM
+                ][0],
+                callback_data=fund_callbacks.PSIHO_PROGRAM
             ),
             InlineKeyboardButton(
-                text=constans.PROGRAM_FOND["3"][0],
-                callback_data=str(fund_callbacks.KIND_LESSONS_PROGRAM)
+                text=constans.PROGRAM_FUND[
+                    fund_callbacks.KIND_LESSONS_PROGRAM
+                ][0],
+                callback_data=fund_callbacks.KIND_LESSONS_PROGRAM
             ),
         ],
         [
             InlineKeyboardButton(
                 text="Главное меню",
-                callback_data=str(fund_callbacks.MAIN_MENU)),
+                callback_data=fund_callbacks.MAIN_MENU),
         ],
     ]
 
@@ -97,32 +105,32 @@ async def join_or_not_to_program(
     """
     query = update.callback_query
     await query.answer()
-    message_about_fond_and_documents = ''
+    message_about_fund_and_documents = ''
 
     if not FLAGS_OBJ.edit_mode_first_flag:
         data = update.callback_query.data
-        if data in constans.PROGRAM_FOND:
-            message_about_fond_and_documents = (
-                f"{constans.PROGRAM_FOND[data][0]}\n" +
-                f"{constans.PROGRAM_FOND[data][1]}\n" +
-                f"{constans.PROGRAM_FOND[data][2]}\n"
+        if data in constans.PROGRAM_FUND:
+            message_about_fund_and_documents = (
+                f"{constans.PROGRAM_FUND[data][0]}\n" +
+                f"{constans.PROGRAM_FUND[data][1]}\n" +
+                f"{constans.PROGRAM_FUND[data][2]}\n"
             )
             context.user_data[
                 "Программа фонда"
-            ] = constans.PROGRAM_FOND[data][0]
+            ] = constans.PROGRAM_FUND[data][0]
         else:
             context.user_data[
                 "Программа фонда"
             ] = constans.ANSWERS_DICT["bad_answer"]
 
     else:
-        dates_about_fond = constans.PROGRAM_FOND[
-            constans.ALLIAS_DICT[context.user_data["Программа фонда"]]
+        dates_about_fund = constans.PROGRAM_FUND[
+            context.user_data["Программа фонда"]
         ]
-        message_about_fond_and_documents = (
-            f"{dates_about_fond[0]}\n" +
-            f"{dates_about_fond[1]}\n" +
-            f"{dates_about_fond[2]}\n"
+        message_about_fund_and_documents = (
+            f"{dates_about_fund[0]}\n" +
+            f"{dates_about_fund[1]}\n" +
+            f"{dates_about_fund[2]}\n"
         )
 
         FLAGS_OBJ.changing_edit_mode_first(False)
@@ -131,7 +139,7 @@ async def join_or_not_to_program(
         [
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["join"],
-                callback_data=str(fund_callbacks.JOIN_BUTTON)
+                callback_data=fund_callbacks.JOIN_BUTTON
             ),
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["back"],
@@ -141,13 +149,13 @@ async def join_or_not_to_program(
         [
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["main_menu"],
-                callback_data=str(fund_callbacks.MAIN_MENU)
+                callback_data=fund_callbacks.MAIN_MENU
             ),
         ],
     ]
     keyboard = InlineKeyboardMarkup(buttons)
     await query.edit_message_text(
-        text=message_about_fond_and_documents +
+        text=message_about_fund_and_documents +
         constans.MSG_SECOND_MENU,
         reply_markup=keyboard,
     )
@@ -253,7 +261,7 @@ async def asking_email_mother(
 
     phone_number = update.message.text
 
-    if not validators.checking_not_phone_number(phone_number):
+    if not validators.checking_phone_number(phone_number):
         await update.message.reply_text(
             text=constans.ANSWERS_DICT["bad_phone_number"],
             reply_markup=constans.MARKUP_FIX
@@ -385,19 +393,19 @@ async def asking_city(
         FLAGS_OBJ.changing_edit_mode_second(True)
         return fund_states.CITY
 
-    how_many_piople = update.message.text
+    how_many_people = update.message.text
 
-    if not validators.checking_number_people_in_family(
-        how_many_piople
+    if not validators.checking_count_people_in_family(
+        how_many_people
     ):
         await update.message.reply_text(
-            text=constans.ANSWERS_DICT["bad_people_in_famaly"],
+            text=constans.ANSWERS_DICT["bad_people_in_family"],
             reply_markup=constans.MARKUP_FIX
         )
         FLAGS_OBJ.changing_bad_request(True)
         return fund_states.FIO_CHILD
 
-    context.user_data["Сколько членов семьи"] = how_many_piople
+    context.user_data["Сколько членов семьи"] = how_many_people
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
         return await show_user_edit_information(update, context)
@@ -505,7 +513,7 @@ async def asking_place_birthday(
 
     child_birthday = update.message.text
 
-    if not validators.checking_date_birth(child_birthday):
+    if not validators.checking_birthday(child_birthday):
         await update.message.reply_text(
             text=constans.ANSWERS_DICT["bad_birthday"],
             reply_markup=constans.MARKUP_FIX
@@ -586,7 +594,7 @@ async def asking_child_weight(
 
     birth_date = update.message.text
 
-    if not validators.checking_number_people_in_family(birth_date):
+    if not validators.checking_count_people_in_family(birth_date):
         await update.message.reply_text(
             text=constans.ANSWERS_DICT["bad_birth_date"],
             reply_markup=constans.MARKUP_FIX
@@ -715,10 +723,10 @@ async def asking_date_of_application(
         FLAGS_OBJ.changing_edit_mode_second(False)
         return await show_user_edit_information(update, context)
 
-    return await asking_how_find_us(update, context)
+    return await asking_how_found_us(update, context)
 
 
-async def asking_how_find_us(
+async def asking_how_found_us(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE
 ) -> str:
@@ -728,7 +736,7 @@ async def asking_how_find_us(
         query = update.callback_query
         await query.answer()
         await query.edit_message_text(
-            constans.QUESTIONS_DICT["how_find_fond"]
+            constans.QUESTIONS_DICT["how_found_fund"]
         )
         FLAGS_OBJ.changing_edit_mode_first(False)
         FLAGS_OBJ.changing_edit_mode_second(True)
@@ -744,13 +752,13 @@ async def asking_how_find_us(
         return await show_user_edit_information(update, context)
 
     await update.message.reply_text(
-        constans.QUESTIONS_DICT["how_find_fond"]
+        constans.QUESTIONS_DICT["how_found_fund"]
     )
 
     return fund_states.HOW_FOUND
 
 
-async def asking_which_fond_now(
+async def asking_which_fund_now(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """
@@ -762,28 +770,28 @@ async def asking_which_fond_now(
         query = update.callback_query
         await query.answer()
         await query.edit_message_text(
-            constans.QUESTIONS_DICT["fond_now"]
+            constans.QUESTIONS_DICT["fund_now"]
         )
         FLAGS_OBJ.changing_edit_mode_first(False)
         FLAGS_OBJ.changing_edit_mode_second(True)
-        return fund_states.WHICH_FOND
+        return fund_states.WHICH_FUND
 
-    how_find_us = update.message.text
+    how_found_us = update.message.text
 
-    context.user_data["Как узнали о нас"] = how_find_us.title()
+    context.user_data["Как узнали о нас"] = how_found_us.title()
 
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
         return await show_user_edit_information(update, context)
 
     await update.message.reply_text(
-        constans.QUESTIONS_DICT["fond_now"]
+        constans.QUESTIONS_DICT["fund_now"]
     )
 
-    return fund_states.WHICH_FOND
+    return fund_states.WHICH_FUND
 
 
-async def asking_which_fonds_halped(
+async def asking_which_funds_helped(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Получение информации о том, какие фонды помогали раньше."""
@@ -792,25 +800,25 @@ async def asking_which_fonds_halped(
         query = update.callback_query
         await query.answer()
         await query.edit_message_text(
-            constans.QUESTIONS_DICT["which_fond"]
+            constans.QUESTIONS_DICT["which_fund"]
         )
         FLAGS_OBJ.changing_edit_mode_first(False)
         FLAGS_OBJ.changing_edit_mode_second(True)
-        return fund_states.WHICH_FOND_WAS_PREVIOUSLY
+        return fund_states.WHICH_FUND_WAS_PREVIOUSLY
 
-    which_fond_now = update.message.text
+    which_fund_now = update.message.text
 
-    context.user_data["В фонде сейчас"] = which_fond_now.title()
+    context.user_data["В фонде сейчас"] = which_fund_now.title()
 
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
         return await show_user_edit_information(update, context)
 
     await update.message.reply_text(
-        constans.QUESTIONS_DICT["which_fond"]
+        constans.QUESTIONS_DICT["which_fund"]
     )
 
-    return fund_states.WHICH_FOND_WAS_PREVIOUSLY
+    return fund_states.WHICH_FUND_WAS_PREVIOUSLY
 
 
 async def show_user_information(
@@ -818,9 +826,9 @@ async def show_user_information(
 ) -> str:
     """Отображение пользователю пролученной информации."""
 
-    which_fonds_halped = update.message.text
+    which_funds_halped = update.message.text
 
-    context.user_data["Фонды помогали"] = which_fonds_halped.title()
+    context.user_data["Фонды помогали"] = which_funds_halped.title()
 
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
@@ -859,17 +867,17 @@ async def send_or_change_data(
         [
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["confirm_and_send"],
-                callback_data=str(fund_callbacks.CONFIRM_AND_SEND)
+                callback_data=fund_callbacks.CONFIRM_AND_SEND
             ),
         ],
         [
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["change_data"],
-                callback_data=str(fund_callbacks.CHANGE_DATA)
+                callback_data=fund_callbacks.CHANGE_DATA
             ),
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["back"],
-                callback_data=str(fund_callbacks.END_SECOND_LEVEL)),
+                callback_data=fund_callbacks.END_SECOND_LEVEL),
         ],
     ]
 
@@ -891,7 +899,7 @@ async def send_message_to_curator(
     query = update.callback_query
     await query.answer()
     try:
-        html_from_user = HTML_TEMPLATE_JOIN_FOND.substitute(
+        html_from_user = HTML_TEMPLATE_JOIN_FUND.substitute(
             mother_fio=context.user_data["ФИО мамы"],
             programm=context.user_data["Программа фонда"],
             mother_phone=context.user_data["Телефон"],
@@ -908,22 +916,22 @@ async def send_message_to_curator(
             dizgnozes=context.user_data["Диагнозы"],
             date_aplication=context.user_data["Дата обращения"],
             how_about_us=context.user_data["Как узнали о нас"],
-            fond_now=context.user_data["В фонде сейчас"],
-            fond_early=context.user_data["Фонды помогали"],
+            fund_now=context.user_data["В фонде сейчас"],
+            fund_early=context.user_data["Фонды помогали"],
         )
 
         bot_send_email_to_curator(constans.SUBJECT, html_from_user)
     except Exception as ex:
         logger.error(ex)
-        html_from_user = HTML_TEMPLATE_JOIN_FOND.substitute(error=ex)
+        html_from_user = HTML_TEMPLATE_JOIN_FUND.substitute(error=ex)
         bot_send_email_to_curator(constans.SUBJECT_ERROR, html_from_user)
         logger.info("Ошибка отправлена куратору!")
 
     documents = "Вам сообщит куратор."
 
-    if context.user_data["Программа фонда"] in constans.ALLIAS_DICT:
-        documents = constans.PROGRAM_FOND[
-            constans.ALLIAS_DICT[context.user_data["Программа фонда"]]
+    if context.user_data["Программа фонда"] in constans.PROGRAM_FUND:
+        documents = constans.PROGRAM_FUND[
+            context.user_data["Программа фонда"]
         ][2]
 
     button = [
@@ -958,77 +966,77 @@ async def change_data(
         [
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["fio_mother"],
-                callback_data=str(fund_callbacks.EDIT_FIO_MOTHER)
+                callback_data=fund_callbacks.FIO_MOTHER
             ),
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["phone_number"],
-                callback_data=str(fund_callbacks.EDIT_PHONE)
+                callback_data=fund_callbacks.PHONE
             ),
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["email"],
-                callback_data=str(fund_callbacks.EDIT_EMAIL)
+                callback_data=fund_callbacks.EMAIL
             ),
         ],
         [
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["fio_child"],
-                callback_data=str(fund_callbacks.EDIT_FIO_CHILD)
+                callback_data=fund_callbacks.FIO_CHILD
             ),
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["how_many_people"],
-                callback_data=str(fund_callbacks.EDIT_HOW_MANY_PEOPLE)
+                callback_data=fund_callbacks.HOW_MANY_PEOPLE
             ),
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["city"],
-                callback_data=str(fund_callbacks.EDIT_CITY)
+                callback_data=fund_callbacks.CITY
             ),
         ],
         [
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["address"],
-                callback_data=str(fund_callbacks.EDIT_ADDRESS)
+                callback_data=fund_callbacks.ADDRESS
             ),
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["birthday"],
-                callback_data=str(fund_callbacks.EDIT_BIRTHDAY)
+                callback_data=fund_callbacks.BIRTHDAY
             ),
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["place_birth"],
-                callback_data=str(fund_callbacks.EDIT_PLACE_BIRTH)
+                callback_data=fund_callbacks.PLACE_BIRTH
             ),
         ],
         [
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["birth_date"],
-                callback_data=str(fund_callbacks.EDIT_BIRTH_DATE)
+                callback_data=fund_callbacks.BIRTH_DATE
             ),
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["weight"],
-                callback_data=str(fund_callbacks.EDIT_WEIGHT)
+                callback_data=fund_callbacks.WEIGHT
             ),
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["height"],
-                callback_data=str(fund_callbacks.EDIT_HEIGHT)
+                callback_data=fund_callbacks.HEIGHT
             ),
         ],
         [
             InlineKeyboardButton(
                 text=constans.BUTTONS_TEXT["diagnosis"],
-                callback_data=str(fund_callbacks.EDIT_DIAGNOSIS)
+                callback_data=fund_callbacks.DIAGNOSIS
             ),
             InlineKeyboardButton(
-                text=constans.BUTTONS_TEXT["how_find_fond"],
-                callback_data=str(fund_callbacks.EDIT_HOW_FOUND)
+                text=constans.BUTTONS_TEXT["how_found_fund"],
+                callback_data=fund_callbacks.HOW_FOUND
             ),
             InlineKeyboardButton(
-                text=constans.BUTTONS_TEXT["which_fond"],
-                callback_data=str(fund_callbacks.EDIT_WHICH_FOND)
+                text=constans.BUTTONS_TEXT["which_fund"],
+                callback_data=fund_callbacks.WHICH_FUND
             ),
         ],
         [
             InlineKeyboardButton(
-                text=constans.BUTTONS_TEXT["fond_now"],
-                callback_data=str(fund_callbacks.EDIT_WHICH_FOND_WAS_PREVIOUSLY),
+                text=constans.BUTTONS_TEXT["fund_now"],
+                callback_data=fund_callbacks.WHICH_FUND_WAS_PREVIOUSLY,
             ),
         ],
     ]
@@ -1047,7 +1055,7 @@ async def end(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Возврат в меню выбора программ."""
     await update.callback_query.answer()
     clean_dictionary(context=context.user_data)
-    await application_to_the_fond(update, context)
+    await application_to_the_fund(update, context)
 
 
 async def end_second_menu(

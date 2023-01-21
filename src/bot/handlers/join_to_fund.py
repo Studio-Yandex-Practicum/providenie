@@ -16,83 +16,83 @@ from ..conversations import fund_application as fund
 selection_handlers_second_level = [
     CallbackQueryHandler(
         fund.send_message_to_curator,
-        pattern="^" + str(fund_callbacks.CONFIRM_AND_SEND) + "$"
+        pattern="^" + fund_callbacks.CONFIRM_AND_SEND + "$"
     ),
     CallbackQueryHandler(
         fund.change_data,
-        pattern="^" + str(fund_callbacks.CHANGE_DATA) + "$"
+        pattern="^" + fund_callbacks.CHANGE_DATA + "$"
     ),
     CallbackQueryHandler(
         fund.end_second_menu,
-        pattern="^" + str(fund_callbacks.END_SECOND_LEVEL) + "$"
+        pattern="^" + fund_callbacks.END_SECOND_LEVEL + "$"
     ),
     CallbackQueryHandler(
         fund.asking_fio_mother,
-        pattern="^" + str(fund_callbacks.EDIT_FIO_MOTHER) + "$"
+        pattern="^" + fund_callbacks.FIO_MOTHER + "$"
     ),
     CallbackQueryHandler(
         fund.asking_phone_mother,
-        pattern="^" + str(fund_callbacks.EDIT_PHONE) + "$"
+        pattern="^" + fund_callbacks.PHONE + "$"
     ),
     CallbackQueryHandler(
         fund.asking_email_mother,
-        pattern="^" + str(fund_callbacks.EDIT_EMAIL) + "$"
+        pattern="^" + fund_callbacks.EMAIL + "$"
     ),
     CallbackQueryHandler(
         fund.asking_fio_child,
-        pattern="^" + str(fund_callbacks.EDIT_FIO_CHILD) + "$"
+        pattern="^" + fund_callbacks.FIO_CHILD + "$"
     ),
     CallbackQueryHandler(
         fund.asking_how_many_people_in_family,
-        pattern="^" + str(fund_callbacks.EDIT_HOW_MANY_PEOPLE) + "$"
+        pattern="^" + fund_callbacks.HOW_MANY_PEOPLE + "$"
     ),
     CallbackQueryHandler(
         fund.asking_city,
-        pattern="^" + str(fund_callbacks.EDIT_CITY) + "$"
+        pattern="^" + fund_callbacks.CITY + "$"
     ),
     CallbackQueryHandler(
         fund.asking_address,
-        pattern="^" + str(fund_callbacks.EDIT_ADDRESS) + "$"
+        pattern="^" + fund_callbacks.ADDRESS + "$"
     ),
     CallbackQueryHandler(
         fund.asking_child_birthday,
-        pattern="^" + str(fund_callbacks.EDIT_BIRTHDAY) + "$"
+        pattern="^" + fund_callbacks.BIRTHDAY + "$"
     ),
     CallbackQueryHandler(
         fund.asking_place_birthday,
-        pattern="^" + str(fund_callbacks.EDIT_PLACE_BIRTH) + "$"
+        pattern="^" + fund_callbacks.PLACE_BIRTH + "$"
     ),
     CallbackQueryHandler(
         fund.asking_birth_date,
-        pattern="^" + str(fund_callbacks.EDIT_BIRTH_DATE) + "$"
+        pattern="^" + fund_callbacks.BIRTH_DATE + "$"
     ),
     CallbackQueryHandler(
         fund.asking_child_weight,
-        pattern="^" + str(fund_callbacks.EDIT_WEIGHT) + "$"
+        pattern="^" + fund_callbacks.WEIGHT + "$"
     ),
     CallbackQueryHandler(
         fund.asking_child_height,
-        pattern="^" + str(fund_callbacks.EDIT_HEIGHT) + "$"
+        pattern="^" + fund_callbacks.HEIGHT + "$"
     ),
     CallbackQueryHandler(
         fund.asking_child_diagnosis,
-        pattern="^" + str(fund_callbacks.EDIT_DIAGNOSIS) + "$"
+        pattern="^" + fund_callbacks.DIAGNOSIS + "$"
     ),
     CallbackQueryHandler(
-        fund.asking_how_find_us,
-        pattern="^" + str(fund_callbacks.EDIT_HOW_FOUND) + "$"
+        fund.asking_how_found_us,
+        pattern="^" + fund_callbacks.HOW_FOUND + "$"
     ),
     CallbackQueryHandler(
         fund.asking_city,
-        pattern="^" + str(fund_callbacks.EDIT_CITY) + "$"
+        pattern="^" + fund_callbacks.CITY + "$"
     ),
     CallbackQueryHandler(
-        fund.asking_which_fond_now,
-        pattern="^" + str(fund_callbacks.EDIT_WHICH_FOND) + "$"
+        fund.asking_which_fund_now,
+        pattern="^" + fund_callbacks.WHICH_FUND + "$"
     ),
     CallbackQueryHandler(
-        fund.asking_which_fonds_halped,
-        pattern="^" + str(fund_callbacks.EDIT_WHICH_FOND_WAS_PREVIOUSLY) + "$"
+        fund.asking_which_funds_helped,
+        pattern="^" + fund_callbacks.WHICH_FUND_WAS_PREVIOUSLY + "$"
     ),
 ]
 
@@ -100,7 +100,7 @@ dates_about_parent_and_child = ConversationHandler(
     entry_points=[
         CallbackQueryHandler(
             fund.asking_fio_mother,
-            pattern="^" + str(fund_callbacks.JOIN_BUTTON) + "$"
+            pattern="^" + fund_callbacks.JOIN_BUTTON + "$"
         ),
     ],
     states={
@@ -191,16 +191,16 @@ dates_about_parent_and_child = ConversationHandler(
         fund_states.HOW_FOUND: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
-                fund.asking_which_fond_now
+                fund.asking_which_fund_now
             )
         ],
-        fund_states.WHICH_FOND: [
+        fund_states.WHICH_FUND: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
-                fund.asking_which_fonds_halped
+                fund.asking_which_funds_helped
             )
         ],
-        fund_states.WHICH_FOND_WAS_PREVIOUSLY: [
+        fund_states.WHICH_FUND_WAS_PREVIOUSLY: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
                 fund.show_user_information
@@ -223,24 +223,24 @@ dates_about_parent_and_child = ConversationHandler(
 selection_handlers = [
     CallbackQueryHandler(
         fund.join_or_not_to_program,
-        pattern="^" + str(fund_callbacks.LOOK_WORLD_PROGRAM) + "$"
+        pattern="^" + fund_callbacks.LOOK_WORLD_PROGRAM + "$"
     ),
     CallbackQueryHandler(
         fund.join_or_not_to_program,
-        pattern="^" + str(fund_callbacks.REABILITATION_PROGRAM) + "$"
+        pattern="^" + fund_callbacks.REABILITATION_PROGRAM + "$"
     ),
     CallbackQueryHandler(
         fund.join_or_not_to_program,
-        pattern="^" + str(fund_callbacks.PSIHO_PROGRAM) + "$"
+        pattern="^" + fund_callbacks.PSIHO_PROGRAM + "$"
     ),
     CallbackQueryHandler(
         fund.join_or_not_to_program,
-        pattern="^" + str(fund_callbacks.KIND_LESSONS_PROGRAM) + "$"
+        pattern="^" + fund_callbacks.KIND_LESSONS_PROGRAM + "$"
     ),
     dates_about_parent_and_child,
     CallbackQueryHandler(
         fund.return_main_menu,
-        pattern="^" + str(fund_callbacks.MAIN_MENU) + "$"
+        pattern="^" + fund_callbacks.MAIN_MENU + "$"
     ),
     CallbackQueryHandler(
         fund.end,
@@ -249,11 +249,11 @@ selection_handlers = [
 ]
 
 
-conv_handler_join_to_fond = ConversationHandler(
-    name="conv_handler_join_to_fond",
+conv_handler_join_to_fund = ConversationHandler(
+    name="conv_handler_join_to_fund",
     entry_points=[
         CallbackQueryHandler(
-            fund.application_to_the_fond,
+            fund.application_to_the_fund,
             pattern="^" + str(states.REQUEST) + "$"
         ),
     ],

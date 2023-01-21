@@ -2,7 +2,7 @@
 from string import Template
 
 
-HTML_TEMPLATE_JOIN_FOND = Template(
+HTML_TEMPLATE_JOIN_FUND = Template(
     """
     <html>
         <body>
@@ -24,8 +24,8 @@ HTML_TEMPLATE_JOIN_FOND = Template(
             <p><b>Диагнозы:</b> $dizgnozes</p>
             <p><b>Дата обращения:</b> $date_aplication</p>
             <p><b>Как узнали о нас:</b> $how_about_us</p>
-            <p><b>В каких фондах оформлены:</b> $fond_now</p>
-            <p><b>Какие фонды помогали ранее:</b> $fond_early</p>
+            <p><b>В каких фондах оформлены:</b> $fund_now</p>
+            <p><b>Какие фонды помогали ранее:</b> $fund_early</p>
         </body>
     </html>"""
 )

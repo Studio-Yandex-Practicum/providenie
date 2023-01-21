@@ -17,7 +17,7 @@ def checking_not_digits(data: str) -> bool:
     return False
 
 
-def checking_not_phone_number(data: str) -> bool:
+def checking_phone_number(data: str) -> bool:
     """Проверка телефонного номера."""
     if data[0] == '+':
         data = data[1:]
@@ -31,22 +31,22 @@ def checking_email(data: str) -> bool:
     return bool(re.match(constans.REGEX_EMAIL, data))
 
 
-def checking_number_people_in_family(data: str) -> bool:
+def checking_count_people_in_family(data: str) -> bool:
     """
     Проверка на число.
-    Для колличества членов в семье
+    Для колличества членов в семье.
     """
     if data.isdigit() and int(data) > 0 and int(data) <= 52:
         return True
     return False
 
 
-def checking_date_birth(data: str) -> bool:
+def checking_birthday(data: str) -> bool:
     """Проверка правильности ввода даты рождения."""
     flag = True
     date_now = date.today()
 
-    if bool(re.match(constans.REGEX_DATE_BIRTH, data)):
+    if bool(re.match(constans.REGEX_BIRTHDAY, data)):
         date_split_list = data.split(".")
         if (
             int(date_split_list[0]) < 1 or
@@ -61,6 +61,12 @@ def checking_date_birth(data: str) -> bool:
         if (
             int(date_split_list[2]) < 1950 or
             int(date_split_list[2]) > date_now.year
+        ):
+            flag = False
+        if (
+            int(date_split_list[2]) == date_now.year and
+            int(date_split_list[1]) >= date_now.month and
+            int(date_split_list[0]) > date_now.day
         ):
             flag = False
     else:

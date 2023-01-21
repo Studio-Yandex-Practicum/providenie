@@ -1,6 +1,8 @@
 # Константы этапов разговора
 from telegram import ReplyKeyboardMarkup
 
+from . import fund_app_callbacks as callback
+
 
 # Различные ответы, вопросы, описание и документы
 ANSWERS_DICT = {
@@ -19,7 +21,7 @@ ANSWERS_DICT = {
     "bad_child_fio": """
         Неверно введено ФИО ребёнка, пожалуйста, нажмите исправить.
     """,
-    "bad_people_in_famaly": """
+    "bad_people_in_family": """
         Неверно введено количество членов семьи,
         пожалуйста, нажмите исправить.
     """,
@@ -69,18 +71,18 @@ QUESTIONS_DICT = {
     "diagnosis": """
         Введите диагнозы ребёнка.
         (Через запятую, при наличии нескольких)""",
-    "date_aplication": "Введите дату обращения в Фонд. (ДД.ММ.ГГГГ)",
-    "how_find_fond": "Откуда вы узнали о нашем фонде?",
-    "which_fond": "Вам помогали фонды раньше? Если да, то какие?",
-    "fond_now": """Состоите ли вы в данный момент в каком-либо фонде,
+    "how_found_fund": "Откуда вы узнали о нашем фонде?",
+    "which_fund": "Вам помогали фонды раньше? Если да, то какие?",
+    "fund_now": """
+        Состоите ли вы в данный момент в каком-либо фонде,
         если да, то напишите название фонда?""",
 }
 
 BUTTONS_TEXT = {
-    "fio_mother": "ФИО мамы.",
-    "phone_number": "Телефон.",
-    "email": "Email.",
-    "fio_child": "ФИО ребёнка.",
+    "fio_mother": "ФИО мамы",
+    "phone_number": "Телефон",
+    "email": "Email",
+    "fio_child": "ФИО ребёнка",
     "how_many_people": "Количество членов семьи",
     "city": "Город",
     "address": "Адрес",
@@ -90,10 +92,9 @@ BUTTONS_TEXT = {
     "weight": "Вес",
     "height": "Рост",
     "diagnosis": "Диагнозы",
-    "date_aplication": "Дата обращения",
-    "how_find_fond": "Как узнали о нас",
-    "which_fond": "В каком фонде сейчас",
-    "fond_now": "Какие фонды помогали",
+    "how_found_fund": "Как узнали о нас",
+    "which_fund": "В каком фонде сейчас",
+    "fund_now": "Какие фонды помогали",
     "resume": "Продолжить",
     "confirm_and_send": "Подтвердить и отправить",
     "change_data": "Изменить данные",
@@ -107,7 +108,7 @@ BUTTONS_TEXT = {
 MESSAGE_SUCCESSFUL_DEPARTURE_TO_CURATOR = """
     Ваши данные успешно отправлены куратору.
     Ожидайте сообщения от куратора.
-    Так же нужно будет подготовить документы:\n
+    Так же нужно будет подготовить документы.\n
 """
 
 
@@ -123,7 +124,7 @@ REQUIRED_DOCUMENTS = """
     или ссылка на то, что необходимо приобрести\n
 """
 
-
+# Здесь описания программ фонда
 LOOK_AT_WORLD_DESCRIPTION = "Описание программы 'Смотри на мир'."
 REABILITATION_DESCRIPTION = "Описание программы 'Реабилитация'."
 PSYCHOLOGICAL_HELP_DESCRIPTION = """
@@ -132,61 +133,41 @@ PSYCHOLOGICAL_HELP_DESCRIPTION = """
 KIND_LESSONS_DESCRIPTION = "Описание программы 'Добрые уроки'."
 
 
-PROGRAM_FOND = {
-    "0": (
+PROGRAM_FUND = {
+    callback.LOOK_WORLD_PROGRAM: (
         "Смотри на мир",
         LOOK_AT_WORLD_DESCRIPTION,
         REQUIRED_DOCUMENTS
     ),
-    "1": (
+    callback.REABILITATION_PROGRAM: (
         "Реабилитация",
         REABILITATION_DESCRIPTION,
         REQUIRED_DOCUMENTS
     ),
-    "2": (
+    callback.PSIHO_PROGRAM: (
         "Психологическая помощь",
         PSYCHOLOGICAL_HELP_DESCRIPTION,
         REQUIRED_DOCUMENTS,
     ),
-    "3": (
+    callback.KIND_LESSONS_PROGRAM: (
         "Добрые уроки",
         KIND_LESSONS_DESCRIPTION,
         REQUIRED_DOCUMENTS
     ),
 }
 
-
-# Для перевода ответа кнопок выбора программы в читаемый вид
-ALLIAS_DICT = {
-    "Смотри на мир": "0",
-    "Реабилитация": "1",
-    "Психологическая помощь": "2",
-    "Добрые уроки": "3",
-}
-
 # Спец символы для if в проверках адреса, диагноза
 SPEC_SYM = ".,-"
 
-
-# Клавиатуры
-KEYBOARD_NEXT_BUTTON = [
-    [
-        "Продолжить",
-    ]
-]
 KEYBOARD_FIX_VALUE = [
     [
         "Исправить",
     ]
 ]
 
-MSG_PRESS_NEXT_BUTTON = """
-    Нажмите продолжить.
-"""
 MSG_PRESS_FIX_VALUE = """
     Нажмите исправить.
 """
-MSG_PRESS_ANY_BUTTON = "Отправьте, пожалуйста, мне любое сообщение."
 
 MSG_FIRST_MENU = """
     Выберите программу фонда или же
@@ -198,19 +179,16 @@ MSG_SECOND_MENU = """
 MSG_THIRD_MENU = """
     Вы можете Отправить данные куратору,
     отредактировать их или же вернуться к выбору программ,
-    но при этом ваши данне не будут сохранены.
+    но при этом ваши данные не будут сохранены.
 """
 
 # Регулярки
 REGEX_EMAIL = (
     r"^([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+$"
 )
-REGEX_DATE_BIRTH = r"^[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}$"
+REGEX_BIRTHDAY = r"^[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}$"
 
 # Клавиатуры с кнопками
-MARKUP_NEXT = ReplyKeyboardMarkup(
-    KEYBOARD_NEXT_BUTTON, one_time_keyboard=True, resize_keyboard=True
-)
 MARKUP_FIX = ReplyKeyboardMarkup(
     KEYBOARD_FIX_VALUE, one_time_keyboard=True, resize_keyboard=True
 )
