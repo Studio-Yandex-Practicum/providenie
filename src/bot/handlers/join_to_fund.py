@@ -8,7 +8,7 @@ from telegram.ext import (
 
 from bot.constans import fund_app_callbacks as fund_callbacks
 from bot.constans import fund_app_states as fund_states
-from bot import states
+from bot import keys, states
 from ..conversations import fund_application as fund
 
 
@@ -254,7 +254,7 @@ conv_handler_join_to_fund = ConversationHandler(
     entry_points=[
         CallbackQueryHandler(
             fund.application_to_the_fund,
-            pattern="^" + str(states.REQUEST) + "$"
+            pattern="^" + str(keys.REQUEST) + "$"
         ),
     ],
     states={

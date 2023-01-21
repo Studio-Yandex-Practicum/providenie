@@ -8,7 +8,7 @@ from telegram import (
 )
 from telegram.ext import ContextTypes, ConversationHandler
 
-from bot import states
+from bot import keys, states
 
 from ..constans import fund_app_constans as constans
 from ..constans import fund_app_callbacks as fund_callbacks
@@ -835,7 +835,7 @@ async def show_user_information(
         return await show_user_edit_information(update, context)
 
     for key, data in context.user_data.items():
-        if key != 'd':
+        if key != 'START_OVER':
             await update.message.reply_text(f"{key}: {data}")
 
     return await send_or_change_data(update, context)
@@ -848,7 +848,7 @@ async def show_user_edit_information(
     информации после редактирования."""
 
     for key, data in context.user_data.items():
-        if key != 'd':
+        if key != 'START_OVER':
             await update.message.reply_text(f"{key}: {data}")
 
     return await send_or_change_data(update, context)
@@ -1087,7 +1087,7 @@ async def return_main_menu(
     # Очистка словаря пользователя
     clean_dictionary(context=context.user_data)
 
-    context.user_data[states.START_OVER] = True
+    context.user_data[keys.START_OVER] = True
     FLAGS_OBJ.changing_first_start(True)
 
     await start(update, context)
