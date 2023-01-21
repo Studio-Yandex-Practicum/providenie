@@ -1,10 +1,12 @@
+import logging
+
 from telegram import InlineKeyboardMarkup, Update
 from telegram.error import Forbidden, TelegramError
-from telegram.ext import ApplicationBuilder
+from telegram.ext import ApplicationBuilder, ContextTypes
 
+from bot import constants as const
 from bot.handlers.handler import conv_handler
-from core.logger import logger
-from core.settings import TELEGRAM_TOKEN
+from core.settings import TELEGRAM_CURATOR, TELEGRAM_TOKEN
 
 
 def start_bot():
@@ -22,6 +24,28 @@ async def reply_message(
         message = update.message
         await message.reply_markdown_v2(text=text, reply_markup=reply_markup)
     except Forbidden:
-        logger.error("Бот заблокирован пользователем")
+        logging.error(const.LOG_BOT_BLOCKED_BY_USER)
     except TelegramError:
-        logger.error("Ошибка при ответе на сообщение")
+        logging.error(const.LOG_ERROR_IN_RESPONSE)
+
+
+async def send_message_to_curator(
+    context: ContextTypes.DEFAULT_TYPE,
+    message: str,
+    reply_markup: InlineKeyboardMarkup = None,
+    parse_mode: str = None,
+) -> bool:
+    """Отправляем сообщение куратору в Telegram."""
+    try:
+        await context.bot.send_message(
+            chat_id=TELEGRAM_CURATOR,
+            text=message,
+            reply_markup=reply_markup,
+            parse_mode=parse_mode,
+        )
+        return True
+    except Forbidden:
+        logging.error(const.LOG_BOT_BLOCKED_BY_USER)
+    except TelegramError as error:
+        logging.error(error)
+    return False

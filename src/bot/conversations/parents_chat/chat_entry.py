@@ -1,11 +1,11 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
-from bot import states
+from bot import keys, states
 
 
 chat_description = {
-    states.CHAT_BABY: {
+    keys.CHAT_BABY: {
         "name": "Чат для родителей детей, рожде‌нных раньше срока (до 1,5 лет)",
         "description": (
             "В группе для родителей детей, рожде‌нных раньше срока,"
@@ -15,7 +15,7 @@ chat_description = {
             "Для вступления в чат Вам необходимо предоставить информацию для куратора."
         ),
     },
-    states.CHAT_CHILD: {
+    keys.CHAT_CHILD: {
         "name": "Чат для родителей детей, рожде‌нных раньше срока (старше 1,5 лет)",
         "description": (
             "В группе для родителей детей, рожде‌нных раньше срока,"
@@ -25,21 +25,21 @@ chat_description = {
             "Для вступления в чат Вам необходимо предоставить информацию для куратора."
         ),
     },
-    states.CHAT_RETINOPATIA: {
+    keys.CHAT_RETINOPATIA: {
         "name": "Чат для родителей детей с ретинопатией",
         "description": (
             "Группа для родителей деток с ретинопатией. "
             "Для вступления в чат Вам необходимо предоставить информацию для куратора."
         ),
     },
-    states.CHAT_SHUNTATA: {
+    keys.CHAT_SHUNTATA: {
         "name": "Шунтята",
         "description": (
             "Группа для родителей деток с шунтами. "
             "Для вступления в чат Вам необходимо предоставить информацию для куратора."
         ),
     },
-    states.CHAT_GRANDMOTHERS: {
+    keys.CHAT_GRANDMOTHERS: {
         "name": "Бабушки торопыжек",
         "description": (
             "Группа для бабушек "
@@ -51,7 +51,7 @@ chat_description = {
             "Для вступления в чат Вам необходимо предоставить информацию для куратора."
         ),
     },
-    states.CHAT_CRY: {
+    keys.CHAT_CRY: {
         "name": "Отвести душу и поплакать",
         "description": (
             "Иногда очень хочется пожаловаться и поплакать. "
@@ -62,21 +62,21 @@ chat_description = {
             "Для вступления в чат Вам необходимо предоставить информацию для куратора."
         ),
     },
-    states.CHAT_ANGELS: {
+    keys.CHAT_ANGELS: {
         "name": "Мамы ангелов",
         "description": (
             "Чат для родителей, которые столкнулись со смертью ребенка. "
             "Для вступления в чат Вам необходимо предоставить свое имя и телефон."
         ),
     },
-    states.CHAT_RETINOPATIA_4_5: {
+    keys.CHAT_RETINOPATIA_4_5: {
         "name": "Ретинопатия недоношенных 4-5 стадии",
         "description": (
             "Чат для родителей детей с ретинопатией недоношенных 4-5 стадии. "
             "Для вступления в чат Вам необходимо предоставить информацию для куратора."
         ),
     },
-    states.CHAT_PROBLEMS: {
+    keys.CHAT_PROBLEMS: {
         "name": "Дети с офтальмологическими проблемами",
         "description": (
             "Чат для родителей детей с различными "
@@ -84,14 +84,14 @@ chat_description = {
             "Для вступления в чат Вам необходимо предоставить информацию для куратора."
         ),
     },
-    states.CHAT_REHABILITATION: {
+    keys.CHAT_REHABILITATION: {
         "name": "Реабилитация зрения",
         "description": (
             "Чат для родителей детей, нуждающихся в реабилитации зрения. "
             "Для вступления в чат Вам необходимо предоставить информацию для куратора."
         ),
     },
-    states.CHAT_TELEGRAM: {
+    keys.CHAT_TELEGRAM: {
         "name": "Семьи торопыжек",
         "description": (
             "Группа поддержки в Телеграмм "
@@ -108,9 +108,9 @@ async def enter_chat(
     await update.callback_query.answer()
     chat = update.callback_query.data
     user_data = context.user_data
-    user_data[states.CURRENT_CHAT] = chat
+    user_data[keys.CURRENT_CHAT] = chat
     text = f'{chat_description[chat]["description"]}'
-    user_data[states.CURRENT_CHAT] = chat_description[chat]["name"]
+    user_data[keys.CURRENT_CHAT] = chat_description[chat]["name"]
 
     buttons = [
         [
@@ -126,7 +126,7 @@ async def enter_chat(
         ],
         [
             InlineKeyboardButton(
-                text="Вернуться в главное меню", callback_data=str(states.END)
+                text="Вернуться в главное меню", callback_data=str(keys.END)
             )
         ],
     ]
