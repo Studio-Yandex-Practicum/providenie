@@ -119,7 +119,8 @@ async def about(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     button = [
         [
             InlineKeyboardButton(
-                text=const.BTN_BACK, callback_data=str(key.END),
+                text=const.BTN_BACK,
+                callback_data=str(key.END),
             )
         ]
     ]
