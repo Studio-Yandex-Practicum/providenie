@@ -16,8 +16,8 @@
     4.1. [Запуск проекта локально](#run-local)
 
     4.2. [Запуск в Docker](#run-docker)
-    5.
-    6.3. [GitHub Actions](#GitHub-Actions)
+
+    4.3. [GitHub Actions](#GitHub-Actions)
 
 
 <br><br>
