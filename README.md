@@ -17,8 +17,7 @@
 
     4.2. [Запуск в Docker](#run-docker)
 
-    4.3. [GitHub Actions](#GitHub-Actions)
-
+    4.3. [GitHub Actions](#git-actions)
 
 <br><br>
 
@@ -248,7 +247,7 @@ docker-compose up -d --build
 
 </details>
 
-## 4.3. GitHub Actions деплой на удаленный сервер <a id="GitHub-Actions"></a>
+## 4.3. GitHub Actions деплой на удаленный сервер <a id="git-actions"></a>
 <details>
  <summary>
  Запуск проекта на сервере в docker-контейнере
