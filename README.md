@@ -16,8 +16,8 @@
     4.1. [Запуск проекта локально](#run-local)
 
     4.2. [Запуск в Docker](#run-docker)
-
-    4.3. [GitHub Actions](#GitHub-Actions)
+    5.
+    6.3. [GitHub Actions](#GitHub-Actions)
 
 
 <br><br>
@@ -255,6 +255,7 @@ docker-compose up -d --build
  </summary>
 <br>
 Workflow:
+
   * `tests` - проверка кода на соответствие стандарту PEP8;
   * `deploy` - автоматический деплой проекта на боевой сервер;
   
