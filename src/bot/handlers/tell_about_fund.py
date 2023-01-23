@@ -4,7 +4,7 @@ from telegram.ext import (
     ConversationHandler,
 )
 
-from bot import states
+from bot import keys, states
 from bot.conversations import menu
 
 
@@ -14,7 +14,7 @@ tell_about_fund_conv = ConversationHandler(
     entry_points=[
         CallbackQueryHandler(
             menu.tell_friends_about_fund,
-            pattern="^" + str(states.TELL_ABOUT_FUND) + "$",
+            pattern="^" + str(keys.TELL_ABOUT_FUND) + "$",
         )
     ],
     states={
@@ -25,12 +25,12 @@ tell_about_fund_conv = ConversationHandler(
                     "^"
                     + "$|^".join(
                         [
-                            states.WEBSITE,
-                            states.VK,
-                            states.INSTAGRAM,
-                            states.FACEBOOK,
-                            states.TG_CHANNEL,
-                            states.TG_BOT,
+                            keys.WEBSITE,
+                            keys.VK,
+                            keys.INSTAGRAM,
+                            keys.FACEBOOK,
+                            keys.TG_CHANNEL,
+                            keys.TG_BOT,
                         ]
                     )
                     + "$"
@@ -40,7 +40,7 @@ tell_about_fund_conv = ConversationHandler(
     },
     fallbacks=[
         CallbackQueryHandler(
-            menu.end_second_level, pattern="^" + str(states.END) + "$"
+            menu.end_second_level, pattern="^" + str(keys.END) + "$"
         ),
         CommandHandler("stop", menu.stop),
     ],
