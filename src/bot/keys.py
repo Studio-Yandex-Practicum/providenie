@@ -44,3 +44,17 @@ INSTAGRAM = "INSTAGRAM"
 FACEBOOK = "FACEBOOK"
 TG_CHANNEL = "TG_CHANNEL"
 TG_BOT = "TG_BOT"
+SOCIAL_LINKS_PATTERN = (
+    "^"
+    + "$|^".join(
+        [
+            WEBSITE,
+            VK,
+            INSTAGRAM,
+            FACEBOOK,
+            TG_CHANNEL,
+            TG_BOT,
+        ]
+    )
+    + "$"
+)

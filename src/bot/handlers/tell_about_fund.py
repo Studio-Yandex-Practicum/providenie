@@ -14,27 +14,13 @@ tell_about_fund_conv = ConversationHandler(
     entry_points=[
         CallbackQueryHandler(
             menu.tell_friends_about_fund,
-            pattern="^" + str(keys.TELL_ABOUT_FUND) + "$",
+            pattern="^" + keys.TELL_ABOUT_FUND + "$",
         )
     ],
     states={
         states.SOCIAL_LINKS: [
             CallbackQueryHandler(
-                menu.social_link,
-                pattern=(
-                    "^"
-                    + "$|^".join(
-                        [
-                            keys.WEBSITE,
-                            keys.VK,
-                            keys.INSTAGRAM,
-                            keys.FACEBOOK,
-                            keys.TG_CHANNEL,
-                            keys.TG_BOT,
-                        ]
-                    )
-                    + "$"
-                ),
+                menu.social_link, pattern=keys.SOCIAL_LINKS_PATTERN
             )
         ]
     },
