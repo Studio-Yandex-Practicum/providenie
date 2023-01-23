@@ -38,7 +38,7 @@ BTN_WEBSITE = "Интернет сайт"
 BTN_VK = "VK"
 BTN_INSTAGRAM = "Instagram"
 BTN_FACEBOOK = "Facebook"
-BTN_TG_CHANNEL = "Новостной канал в ТГ"
+BTN_TG_CHANNEL = "Новостной канал в Телеграм"
 BTN_TG_BOT = "Приглашение в чат бот"
 
 """DONATION"""
