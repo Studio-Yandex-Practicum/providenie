@@ -38,23 +38,9 @@ EDIT_QUESTION = "EDIT_QUESTION"
 SEND_QUESTION = "SEND_QUESTION"
 
 """Tell about fund."""
-WEBSITE = "WEBSITE"
-VK = "VK"
-INSTAGRAM = "INSTAGRAM"
-FACEBOOK = "FACEBOOK"
-TG_CHANNEL = "TG_CHANNEL"
-TG_BOT = "TG_BOT"
-SOCIAL_LINKS_PATTERN = (
-    "^"
-    + "$|^".join(
-        [
-            WEBSITE,
-            VK,
-            INSTAGRAM,
-            FACEBOOK,
-            TG_CHANNEL,
-            TG_BOT,
-        ]
-    )
-    + "$"
-)
+WEBSITE = "TELL_ABOUT_WEBSITE"
+VK = "TELL_ABOUT_VK"
+INSTAGRAM = "TELL_ABOUT_INSTAGRAM"
+FACEBOOK = "TELL_ABOUT_FACEBOOK"
+TG_CHANNEL = "TELL_ABOUT_TG_CHANNEL"
+TG_BOT = "TELL_ABOUT_TG_BOT"

@@ -19,9 +19,7 @@ tell_about_fund_conv = ConversationHandler(
     ],
     states={
         states.SOCIAL_LINKS: [
-            CallbackQueryHandler(
-                menu.social_link, pattern=keys.SOCIAL_LINKS_PATTERN
-            )
+            CallbackQueryHandler(menu.social_link, pattern=r"^TELL_ABOUT_\S*$")
         ]
     },
     fallbacks=[
