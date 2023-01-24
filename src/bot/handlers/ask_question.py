@@ -44,9 +44,7 @@ edit_question_conv = ConversationHandler(
         CallbackQueryHandler(
             question.end_editing, pattern="^" + str(key.END) + "$"
         ),
-        CallbackQueryHandler(
-            menu.end_sending, pattern="^" + key.SENT + "$"
-        ),
+        CallbackQueryHandler(menu.end_sending, pattern="^" + key.SENT + "$"),
         CommandHandler("stop", menu.stop_nested),
     ],
     map_to_parent={
