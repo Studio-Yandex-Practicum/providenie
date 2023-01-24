@@ -42,7 +42,7 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_USERNAME  }}/providenie
             sudo docker-compose stop
             sudo docker-compose rm providenie
-            rm -f .env
+            sudo rm -f .env
             touch .env
             echo TELEGRAM_TOKEN="${{ secrets.TELEGRAM_TOKEN }}" >> .env
             echo EMAIL_BOT=${{ secrets.EMAIL_BOT }} >> .env
