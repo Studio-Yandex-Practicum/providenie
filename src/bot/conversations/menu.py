@@ -30,7 +30,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [
             InlineKeyboardButton(
                 text=const.BTN_TO_TELL_ABOUT_FUND,
-                callback_data=key.TALK,
+                callback_data=key.TELL_ABOUT_FUND,
             )
         ],
         [
@@ -67,11 +67,82 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return state.SELECTING_ACTION
 
 
-async def talk_friends(update: Update, _) -> str:
+async def tell_friends_about_fund(update: Update, _) -> str:
+    """Функция, отображающая меню со ссылками на страницы фонда."""
+    text = "Выберите интересующую вас соцсеть/страницу"
+    buttons = [
+        [
+            InlineKeyboardButton(
+                text=const.BTN_WEBSITE, callback_data=str(key.WEBSITE)
+            )
+        ],
+        [InlineKeyboardButton(text=const.BTN_VK, callback_data=str(key.VK))],
+        [
+            InlineKeyboardButton(
+                text=const.BTN_INSTAGRAM, callback_data=str(key.INSTAGRAM)
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text=const.BTN_FACEBOOK, callback_data=str(key.FACEBOOK)
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text=const.BTN_TG_CHANNEL, callback_data=str(key.TG_CHANNEL)
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text=const.BTN_TG_BOT, callback_data=str(key.TG_BOT)
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text=const.BTN_BACK, callback_data=str(key.END)
+            )
+        ],
+    ]
+    keyboard = InlineKeyboardMarkup(buttons)
+
     await update.callback_query.answer()
-    text = "talk_friends"
-    await update.callback_query.edit_message_text(text=text)
-    return state.SELECTING_ACTION
+    await update.callback_query.edit_message_text(
+        text=text, reply_markup=keyboard
+    )
+    return state.SOCIAL_LINKS
+
+
+async def social_link(update: Update, _) -> str:
+    """Функция, отображающая ссылку выбранной соцсети."""
+    social_link_dict = {
+        key.WEBSITE: const.MSG_WEBSITE,
+        key.VK: const.MSG_VK,
+        key.INSTAGRAM: const.MSG_INSTAGRAM,
+        key.FACEBOOK: const.MSG_FACEBOOK,
+        key.TG_CHANNEL: const.MSG_TG_CHANNEL,
+        key.TG_BOT: const.MSG_TG_BOT,
+    }
+
+    buttons = [
+        [
+            InlineKeyboardButton(
+                text=const.BTN_MENU, callback_data=str(key.END)
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text=const.BTN_BACK, callback_data=str(key.TELL_ABOUT_FUND)
+            )
+        ],
+    ]
+    keyboard = InlineKeyboardMarkup(buttons)
+
+    query = update.callback_query
+    text = social_link_dict[query.data]
+
+    await query.answer()
+    await query.edit_message_text(text=text, reply_markup=keyboard)
+    return state.SOCIAL_LINKS
 
 
 async def give_donation(update: Update, _) -> str:
