@@ -166,24 +166,7 @@ chat_get_conv = ConversationHandler(
 )
 
 
-chat_handlers = [
-    CallbackQueryHandler(
-        enter_chat,
-        pattern=(
-            "^" + key.CHAT_BABY + "$|"
-            "^" + key.CHAT_CHILD + "$|"
-            "^" + key.CHAT_RETINOPATIA + "$|"
-            "^" + key.CHAT_SHUNTATA + "$|"
-            "^" + key.CHAT_GRANDMOTHERS + "$|"
-            "^" + key.CHAT_CRY + "$|"
-            "^" + key.CHAT_ANGELS + "$|"
-            "^" + key.CHAT_RETINOPATIA_4_5 + "$|"
-            "^" + key.CHAT_PROBLEMS + "$|"
-            "^" + key.CHAT_REHABILITATION + "$|"
-            "^" + key.CHAT_TELEGRAM + "$"
-        ),
-    ),
-]
+chat_handlers = [CallbackQueryHandler(enter_chat, pattern="^CHAT_SELECT_\S*$")]
 
 chat_conv = ConversationHandler(
     allow_reentry=True,
