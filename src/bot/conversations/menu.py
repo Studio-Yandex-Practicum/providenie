@@ -170,13 +170,3 @@ async def end_sending(
     context.user_data[key.START_OVER] = True
     await start(update, context)
     return state.STOPPING
-
-
-async def select_chat(update: Update, _) -> str:
-    """Эту функцию надо будет перенести.
-    В файл conversations/parents_chat.py.
-    """
-    await update.callback_query.answer()
-    text = "select_chat"
-    await update.callback_query.edit_message_text(text=text)
-    return state.SELECTING_ACTION

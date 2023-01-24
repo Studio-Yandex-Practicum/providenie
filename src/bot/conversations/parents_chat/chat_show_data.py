@@ -43,17 +43,17 @@ async def chat_show_data(
     buttons = [
         [
             InlineKeyboardButton(
-                text="Редактировать", callback_data=states.CHAT_DATA_EDIT
+                text=const.BTN_EDIT, callback_data=states.CHAT_DATA_EDIT
             )
         ],
         [
             InlineKeyboardButton(
-                text="Отправить", callback_data=states.CHAT_SEND
+                text=const.BTN_SEND, callback_data=states.CHAT_SEND
             )
         ],
         [
             InlineKeyboardButton(
-                text="Главное меню", callback_data=str(key.END)
+                text=const.BIN_MAIN_MENU, callback_data=str(key.END)
             )
         ],
     ]

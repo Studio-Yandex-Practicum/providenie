@@ -1,6 +1,7 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
+from bot import constants as const
 from bot import keys as key
 from bot import states as state
 
@@ -116,18 +117,18 @@ async def enter_chat(
     buttons = [
         [
             InlineKeyboardButton(
-                text="Вступить в чат", callback_data=key.ENTRY_CHAT
+                text=const.MSG_CHAT_ENTER, callback_data=key.ENTRY_CHAT
             )
         ],
         [
             InlineKeyboardButton(
-                text="Назад",
+                text=const.BTN_BACK,
                 callback_data=key.CHATS,
             )
         ],
         [
             InlineKeyboardButton(
-                text="Вернуться в главное меню", callback_data=str(key.END)
+                text=const.BIN_MAIN_MENU, callback_data=str(key.END)
             )
         ],
     ]

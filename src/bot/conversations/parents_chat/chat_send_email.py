@@ -57,7 +57,9 @@ async def chat_send_email(
         return_text += "\n<контакты куратора-волонтёра для связи>"
     else:
         return_text = const.MSG_SENDING_ERROR
-    button = InlineKeyboardButton(text="Назад", callback_data=str(key.SENT))
+    button = InlineKeyboardButton(
+        text=const.BTN_BACK, callback_data=str(key.SENT)
+    )
     keyboard = InlineKeyboardMarkup.from_button(button)
     await update.callback_query.answer()
     await update.callback_query.edit_message_text(

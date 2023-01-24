@@ -2,6 +2,7 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from .chat_show_data import chat_show_data
+from bot import constants as const
 from bot import keys as key
 from bot import states as state
 
@@ -14,9 +15,9 @@ async def entering_chat(
     user_data[key.CHAT_FEATURES] = {key.LEVEL: key.ENTRY_CHAT}
     user_data[key.CHAT_CURRENT_FEATURE] = key.CHAT_PARENTS_NAME
     if user_data[key.CURRENT_CHAT] == "Бабушки торопыжек":
-        text = "Фамилия, имя, отчество бабушки (или дедушки)?"
+        text = const.MSG_CHAT_GRANDMOTHERS_NAME
     else:
-        text = "Фамилия, имя, отчество мамы (или папы)?"
+        text = const.MSG_CHAT_PARENTS_NAME
     await update.callback_query.answer()
     await update.callback_query.edit_message_text(text=text)
     return state.CHAT_GETTING_PARENTS_NAME
@@ -31,9 +32,9 @@ async def chat_getting_parents_name(
     user_data[key.CHAT_FEATURES][user_data[key.CHAT_CURRENT_FEATURE]] = message
     user_data[key.CHAT_CURRENT_FEATURE] = key.CHAT_PARENTS_PHONE
     if user_data[key.CURRENT_CHAT] == "Бабушки торопыжек":
-        text = "Номер телефона бабушки (или дедушки)?"
+        text = const.MSG_CHAT_GRANDMOTHERS_PHONE
     else:
-        text = "Номер телефона мамы (или папы)?"
+        text = const.MSG_CHAT_PARENTS_PHONE
     await update.message.reply_text(text=text)
     return state.CHAT_GETTING_PARENTS_PHONE
 
@@ -53,9 +54,9 @@ async def chat_getting_parents_phone(
 
     user_data[key.CHAT_CURRENT_FEATURE] = key.CHAT_CHILD_NAME
     if user_data[key.CURRENT_CHAT] == "Бабушки торопыжек":
-        text = "Фамилия, имя, отчество внука (внучки)?"
+        text = const.MSG_CHAT_GRANDMOTHERS_GRANDCHILD
     else:
-        text = "Фамилия, имя, отчество ребенка?"
+        text = const.MSG_CHAT_CHILD_NAME
     await update.message.reply_text(text=text)
     return state.CHAT_GETTING_CHILD_NAME
 
@@ -69,7 +70,7 @@ async def chat_getting_child_name(
     message = update.message.text
     user_data[key.CHAT_FEATURES][user_data[key.CHAT_CURRENT_FEATURE]] = message
     user_data[key.CHAT_CURRENT_FEATURE] = key.CHAT_CHILD_BIRTHDAY
-    text = "Дата рождения ребенка?"
+    text = const.MSG_CHAT_CHILD_BIRTHDAY
     await update.message.reply_text(text=text)
     return state.CHAT_GETTING_CHILD_BIRTHDAY
 
@@ -83,7 +84,7 @@ async def chat_getting_child_birthday(
     message = update.message.text
     user_data[key.CHAT_FEATURES][user_data[key.CHAT_CURRENT_FEATURE]] = message
     user_data[key.CHAT_CURRENT_FEATURE] = key.CHAT_CHILD_PLACE_BIRTHDAY
-    text = "Место рождения ребенка?"
+    text = const.MSG_CHAT_CHILD_PLACE_BIRTHDAY
     await update.message.reply_text(text=text)
     return state.CHAT_GETTING_CHILD_PLACE_BIRTHDAY
 
@@ -97,7 +98,7 @@ async def chat_getting_child_place_birthday(
     message = update.message.text
     user_data[key.CHAT_FEATURES][user_data[key.CHAT_CURRENT_FEATURE]] = message
     user_data[key.CHAT_CURRENT_FEATURE] = key.CHAT_CHILD_TERM
-    text = "Срок беременности при рождении ребенка?"
+    text = const.MSG_CHAT_CHILD_TERM
     await update.message.reply_text(text=text)
     return state.CHAT_GETTING_CHILD_TERM
 
@@ -111,7 +112,7 @@ async def chat_getting_child_term(
     message = update.message.text
     user_data[key.CHAT_FEATURES][user_data[key.CHAT_CURRENT_FEATURE]] = message
     user_data[key.CHAT_CURRENT_FEATURE] = key.CHAT_CHILD_WEIGHT
-    text = "Вес ребенка при рождении?"
+    text = const.MSG_CHAT_CHILD_WEIGHT
     await update.message.reply_text(text=text)
     return state.CHAT_GETTING_CHILD_WEIGHT
 
@@ -124,7 +125,7 @@ async def chat_getting_child_weight(
     message = update.message.text
     user_data[key.CHAT_FEATURES][user_data[key.CHAT_CURRENT_FEATURE]] = message
     user_data[key.CHAT_CURRENT_FEATURE] = key.CHAT_CHILD_HEIGHT
-    text = "Рост ребенка при рождении?"
+    text = const.MSG_CHAT_CHILD_HEIGHT
     await update.message.reply_text(text=text)
     return state.CHAT_GETTING_CHILD_HEIGHT
 
@@ -137,7 +138,7 @@ async def chat_getting_child_height(
     message = update.message.text
     user_data[key.CHAT_FEATURES][user_data[key.CHAT_CURRENT_FEATURE]] = message
     user_data[key.CHAT_CURRENT_FEATURE] = key.CHAT_CHILD_DIAGNOSE
-    text = "Диагнозы у ребенка?"
+    text = const.MSG_CHAT_CHILD_DIAGNOSE
     await update.message.reply_text(text=text)
     return state.CHAT_GETTING_CHILD_DIAGNOSE
 
@@ -150,7 +151,7 @@ async def chat_getting_child_diagnose(
     message = update.message.text
     user_data[key.CHAT_FEATURES][user_data[key.CHAT_CURRENT_FEATURE]] = message
     user_data[key.CHAT_CURRENT_FEATURE] = key.CHAT_CHILD_OPERATION
-    text = "Были ли проведены операции? Дата и место операций?"
+    text = const.MSG_CHAT_CHILD_OPERATION
     await update.message.reply_text(text=text)
     return state.CHAT_GETTING_CHILD_OPERATION
 
@@ -164,7 +165,7 @@ async def chat_getting_child_operation(
     message = update.message.text
     user_data[key.CHAT_FEATURES][user_data[key.CHAT_CURRENT_FEATURE]] = message
     user_data[key.CHAT_CURRENT_FEATURE] = key.CHAT_ABOUT_FOND
-    text = "Как Вы узнали о фонде?"
+    text = const.MSG_CHAT_ABOUT_FOND
     await update.message.reply_text(text=text)
     return state.CHAT_GETTING_ABOUT_FOND
 
