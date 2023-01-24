@@ -129,7 +129,6 @@ async def about(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
         text=text, reply_markup=keyboard
     )
     context.user_data[key.START_OVER] = True
-
     return state.ENDING
 
 
@@ -137,7 +136,6 @@ async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Завершение работы по команде /stop."""
     context.user_data[key.START_OVER] = False
     await update.message.reply_text(const.MSG_GOODBYE)
-
     return key.END
 
 
@@ -147,14 +145,12 @@ async def stop_nested(
     """Завершение работы по команде /stop из вложенного разговора."""
     context.user_data[key.START_OVER] = False
     await update.message.reply_text(const.MSG_GOODBYE)
-
     return state.STOPPING
 
 
 async def end(update: Update, _) -> int:
     """Завершение разговора."""
     await update.callback_query.answer()
-
     return key.END
 
 
@@ -164,7 +160,6 @@ async def end_second_level(
     """Завершение вложенного разговора."""
     context.user_data[key.START_OVER] = True
     await start(update, context)
-
     return key.END
 
 
@@ -175,3 +170,13 @@ async def end_sending(
     context.user_data[key.START_OVER] = True
     await start(update, context)
     return state.STOPPING
+
+
+async def select_chat(update: Update, _) -> str:
+    """Эту функцию надо будет перенести.
+    В файл conversations/parents_chat.py.
+    """
+    await update.callback_query.answer()
+    text = "select_chat"
+    await update.callback_query.edit_message_text(text=text)
+    return state.SELECTING_ACTION
