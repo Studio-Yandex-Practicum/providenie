@@ -820,7 +820,6 @@ async def show_user_information(
         return await show_user_edit_information(update, context)
 
     for key, data in context.user_data.items():
-        # if key != 'START_OVER':
         if key not in constans.SECRET_KEY:
             await update.message.reply_text(f"{key}: {data}")
 
@@ -834,7 +833,6 @@ async def show_user_edit_information(
     информации после редактирования."""
 
     for key, data in context.user_data.items():
-        #if key != 'START_OVER':
         if key not in constans.SECRET_KEY:
             await update.message.reply_text(f"{key}: {data}")
 
@@ -919,11 +917,7 @@ async def send_message_to_curator(
 
     documents = "Вам сообщит куратор."
 
-    # if context.user_data["Программа фонда"] in constans.PROGRAM_FUND:
     if context.user_data["Programm"] in constans.PROGRAM_FUND:
-        # documents = constans.PROGRAM_FUND[
-        #     context.user_data["Программа фонда"]
-        # ][2]
         documents = constans.PROGRAM_FUND[
             context.user_data["Programm"]
         ][2]
@@ -1061,7 +1055,7 @@ async def end_second_menu(
 
     await query.answer()
     # Очистка словаря пользователя с сохранением выбранной программы
-    save_values = ["Programm"]
+    save_values = ["Programm", "Программа фонда"]
     clean_dictionary(context=context.user_data, save_values=save_values)
 
     # Нужно для корректировки вывода в join_or_not_to_programm
