@@ -185,7 +185,7 @@ dates_about_parent_and_child = ConversationHandler(
         fund_states.DIAGNOSIS: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
-                fund.asking_date_of_application
+                fund.asking_how_found_us
             )
         ],
         fund_states.HOW_FOUND: [

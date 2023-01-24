@@ -27,7 +27,7 @@ FLAGS_OBJ = Flags()
 
 
 # Подпрограммы
-def clean_dictionary(context, save_values=[None]) -> None:
+def clean_dictionary(context: dict, save_values=[None]) -> None:
     """Очистка словаря."""
     for key in context:
         if key not in save_values:
@@ -123,9 +123,11 @@ async def join_or_not_to_program(
                 "Программа фонда"
             ] = constans.ANSWERS_DICT["bad_answer"]
 
+        context.user_data["Programm"] = data
+
     else:
         dates_about_fund = constans.PROGRAM_FUND[
-            context.user_data["Программа фонда"]
+            context.user_data["Programm"]
         ]
         message_about_fund_and_documents = (
             f"{dates_about_fund[0]}\n" +
@@ -703,29 +705,6 @@ async def asking_child_diagnosis(
     return fund_states.DIAGNOSIS
 
 
-async def asking_date_of_application(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> str:
-    """Получение даты обращения в фонд."""
-    diagnosis = update.message.text
-
-    if not validators.checking_not_digits(diagnosis):
-        await update.message.reply_text(
-            text=constans.ANSWERS_DICT["bad_diagnosis"],
-            reply_markup=constans.MARKUP_FIX
-        )
-        FLAGS_OBJ.changing_bad_request(True)
-        return fund_states.HEIGHT
-
-    context.user_data["Диагнозы"] = diagnosis.title()
-
-    if FLAGS_OBJ.edit_mode_second_flag:
-        FLAGS_OBJ.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
-
-    return await asking_how_found_us(update, context)
-
-
 async def asking_how_found_us(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE
@@ -742,10 +721,16 @@ async def asking_how_found_us(
         FLAGS_OBJ.changing_edit_mode_second(True)
         return fund_states.HOW_FOUND
 
-    date_now = date.today()
-    date_of_application = f"{date_now.day}.{date_now.month}.{date_now.year}"
+    diagnosis = update.message.text
+    if not validators.checking_not_digits(diagnosis):
+        await update.message.reply_text(
+            text=constans.ANSWERS_DICT["bad_diagnosis"],
+            reply_markup=constans.MARKUP_FIX
+        )
+        FLAGS_OBJ.changing_bad_request(True)
+        return fund_states.HEIGHT
 
-    context.user_data["Дата обращения"] = date_of_application
+    context.user_data["Диагнозы"] = diagnosis.title()
 
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
@@ -826,16 +811,17 @@ async def show_user_information(
 ) -> str:
     """Отображение пользователю пролученной информации."""
 
-    which_funds_halped = update.message.text
+    which_funds_helped = update.message.text
 
-    context.user_data["Фонды помогали"] = which_funds_halped.title()
+    context.user_data["Фонды помогали"] = which_funds_helped.title()
 
     if FLAGS_OBJ.edit_mode_second_flag:
         FLAGS_OBJ.changing_edit_mode_second(False)
         return await show_user_edit_information(update, context)
 
     for key, data in context.user_data.items():
-        if key != 'START_OVER':
+        # if key != 'START_OVER':
+        if key not in constans.SECRET_KEY:
             await update.message.reply_text(f"{key}: {data}")
 
     return await send_or_change_data(update, context)
@@ -848,7 +834,8 @@ async def show_user_edit_information(
     информации после редактирования."""
 
     for key, data in context.user_data.items():
-        if key != 'START_OVER':
+        #if key != 'START_OVER':
+        if key not in constans.SECRET_KEY:
             await update.message.reply_text(f"{key}: {data}")
 
     return await send_or_change_data(update, context)
@@ -897,6 +884,10 @@ async def send_message_to_curator(
     Пока без фотографии/сканов."""
     query = update.callback_query
     await query.answer()
+    date_now = date.today()
+    date_of_application = f"{date_now.day}.{date_now.month}.{date_now.year}"
+    context.user_data["Дата обращения"] = date_of_application
+
     try:
         html_from_user = HTML_TEMPLATE_JOIN_FUND.substitute(
             mother_fio=context.user_data["ФИО мамы"],
@@ -928,9 +919,13 @@ async def send_message_to_curator(
 
     documents = "Вам сообщит куратор."
 
-    if context.user_data["Программа фонда"] in constans.PROGRAM_FUND:
+    # if context.user_data["Программа фонда"] in constans.PROGRAM_FUND:
+    if context.user_data["Programm"] in constans.PROGRAM_FUND:
+        # documents = constans.PROGRAM_FUND[
+        #     context.user_data["Программа фонда"]
+        # ][2]
         documents = constans.PROGRAM_FUND[
-            context.user_data["Программа фонда"]
+            context.user_data["Programm"]
         ][2]
 
     button = [
@@ -1065,8 +1060,8 @@ async def end_second_menu(
     query = update.callback_query
 
     await query.answer()
-    # Очистка словаря пользователя
-    save_values = ["Программа фонда"]
+    # Очистка словаря пользователя с сохранением выбранной программы
+    save_values = ["Programm"]
     clean_dictionary(context=context.user_data, save_values=save_values)
 
     # Нужно для корректировки вывода в join_or_not_to_programm

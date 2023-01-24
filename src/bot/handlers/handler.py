@@ -17,9 +17,6 @@ selection_handlers = [
         menu.select_chat, pattern="^" + key.CHATS + "$"
     ),
     conv_handler_join_to_fund,
-    CallbackQueryHandler(
-        menu.request, pattern="^" + key.REQUEST + "$"
-    ),
     add_volunteer_conv,
     CallbackQueryHandler(
         menu.talk_friends, pattern="^" + key.TALK + "$"
