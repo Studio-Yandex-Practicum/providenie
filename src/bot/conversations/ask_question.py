@@ -3,8 +3,8 @@ from telegram.ext import ContextTypes
 
 from bot import constants as const
 from bot import keys as key
-from bot import states as state
 from bot import services as service
+from bot import states as state
 from bot import templates
 
 
@@ -128,9 +128,7 @@ async def select_question_field(
     """Вывод меню редактирования введённых ранее данных."""
     buttons = [
         [
-            InlineKeyboardButton(
-                text=const.BTN_NAME, callback_data=key.NAME
-            ),
+            InlineKeyboardButton(text=const.BTN_NAME, callback_data=key.NAME),
         ],
         [
             InlineKeyboardButton(
@@ -213,9 +211,7 @@ async def send_question(
     else:
         return_text = const.MSG_QUESTION_ERROR_SENT
 
-    button = InlineKeyboardButton(
-        text=const.BTN_BACK, callback_data=key.SENT
-    )
+    button = InlineKeyboardButton(text=const.BTN_BACK, callback_data=key.SENT)
     reply_markup = InlineKeyboardMarkup.from_button(button)
     await update.callback_query.answer()
     await update.callback_query.edit_message_text(
