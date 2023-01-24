@@ -10,12 +10,10 @@ from bot.conversations import menu
 from bot.handlers.ask_question import ask_question_conv
 from bot.handlers.tell_about_fund import tell_about_fund_conv
 from bot.handlers.volunteer import add_volunteer_conv
-from bot.handlers.join_to_fund import conv_handler_join_to_fund
 
 
 selection_handlers = [
     CallbackQueryHandler(menu.select_chat, pattern="^" + key.CHATS + "$"),
-    conv_handler_join_to_fund,
     CallbackQueryHandler(menu.request, pattern="^" + key.REQUEST + "$"),
     add_volunteer_conv,
     tell_about_fund_conv,
