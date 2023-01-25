@@ -17,6 +17,7 @@
 
     4.2. [Запуск в Docker](#run-docker)
 
+    4.3. [GitHub Actions](#git-actions)
 
 <br><br>
 
@@ -242,6 +243,43 @@ python src/run_webhook_api.py
 
 ```
 docker-compose up -d --build
+```
+
+</details>
+
+## 4.3. GitHub Actions деплой на удаленный сервер <a id="git-actions"></a>
+<details>
+ <summary>
+ Запуск проекта на сервере в docker-контейнере
+ </summary>
+<br>
+Workflow:
+
+  * `tests` - проверка кода на соответствие стандарту PEP8;
+  * `deploy` - автоматический деплой проекта на боевой сервер;
+
+Подготовьте сервер:
+1. Войдите на свой удаленный сервер в облаке.
+2. Установите `docker`:
+```
+sudo apt install docker.io
+```
+3. Установите docker-compose, с этим вам поможет официальная [документация](https://docs.docker.com/compose/install/).
+4. В репозитории на Гитхабе добавьте данные в `Settings -> Secrets -> Actions -> New repository secret`:
+```
+DOCKER_USERNAME - ваш username на dockerhub
+DOCKER_PASSWORD - ваш пароль на dockerhub
+
+USER - имя пользователя для подключения к серверу
+HOST - IP-адрес вашего сервера
+SSH_KEY - скопируйте приватный ключ с компьютера, имеющего доступ к боевому серверу (cat ~/.ssh/id_rsa)
+PASSPHRASE - если при создании ssh-ключа вы использовали фразу-пароль, то сохраните её в эту переменную
+
+TELEGRAM_TOKEN=5274023561:AAH3lUgvoGvLN51wtMze_ZGrTO0RRHGTuJM
+EMAIL_BOT=bot_mail@mail.ru
+EMAIL_BOT_PASSWORD=EmailPassword
+EMAIL_CURATOR=curator_mail@mail.ru
+LOG_LEVEL=INFO
 ```
 
 </details>

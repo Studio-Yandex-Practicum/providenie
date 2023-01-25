@@ -137,12 +137,12 @@ PROGRAM_FUND = {
     callback.LOOK_WORLD_PROGRAM: (
         "Смотри на мир",
         LOOK_AT_WORLD_DESCRIPTION,
-        REQUIRED_DOCUMENTS
+        REQUIRED_DOCUMENTS,
     ),
     callback.REABILITATION_PROGRAM: (
         "Реабилитация",
         REABILITATION_DESCRIPTION,
-        REQUIRED_DOCUMENTS
+        REQUIRED_DOCUMENTS,
     ),
     callback.PSIHO_PROGRAM: (
         "Психологическая помощь",
@@ -152,7 +152,7 @@ PROGRAM_FUND = {
     callback.KIND_LESSONS_PROGRAM: (
         "Добрые уроки",
         KIND_LESSONS_DESCRIPTION,
-        REQUIRED_DOCUMENTS
+        REQUIRED_DOCUMENTS,
     ),
 }
 
@@ -172,7 +172,7 @@ MSG_PRESS_FIX_VALUE = """
 
 # Текстовые выводы при смене уровня
 MSG_FIRST_MENU = """
-    Выбрать программу фонда или 
+    Выбрать программу фонда или
     вернуться обратно в главное меню.
 """
 MSG_SECOND_MENU = """
