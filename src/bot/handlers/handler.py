@@ -8,13 +8,14 @@ from bot import keys as key
 from bot import states as state
 from bot.conversations import menu
 from bot.handlers.ask_question import ask_question_conv
+from bot.handlers.chat_handler import chat_conv
 from bot.handlers.join_to_fund import conv_handler_join_to_fund
 from bot.handlers.tell_about_fund import tell_about_fund_conv
 from bot.handlers.volunteer import add_volunteer_conv
 
 
 selection_handlers = [
-    CallbackQueryHandler(menu.select_chat, pattern="^" + key.CHATS + "$"),
+    chat_conv,
     conv_handler_join_to_fund,
     add_volunteer_conv,
     CallbackQueryHandler(menu.give_donation, pattern="^" + key.DONATION + "$"),
