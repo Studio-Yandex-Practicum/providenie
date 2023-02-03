@@ -177,13 +177,6 @@ async def get_events(update: Update, _) -> str:
     return state.SELECTING_ACTION
 
 
-async def request(update: Update, _) -> str:
-    await update.callback_query.answer()
-    text = "request"
-    await update.callback_query.edit_message_text(text=text)
-    return state.SELECTING_ACTION
-
-
 async def about(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     await update.callback_query.answer()
     text = const.MSG_ABOUT
