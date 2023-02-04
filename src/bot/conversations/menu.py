@@ -146,6 +146,7 @@ async def social_link(update: Update, _) -> str:
 
 
 async def give_donation(update: Update, _) -> str:
+    """Функция, отображающая ссылки на меню отчетов о пожертвованиях"""
     text = const.MSG_DONATION
     buttons = [
         [
