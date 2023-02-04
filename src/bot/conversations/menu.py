@@ -8,7 +8,7 @@ from bot import states as state
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Кнопка старт. Вывод главного меню."""
-    text = "<Тут будет актуальная новость из жизни фонда.>"
+    text = const.TXT_MEIN_MENU
     buttons = [
         [
             InlineKeyboardButton(
