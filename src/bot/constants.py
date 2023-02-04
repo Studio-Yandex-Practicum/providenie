@@ -72,6 +72,16 @@ MSG_CHOOSE_TO_EDIT = "Выберите для редактирования:"
 MSG_ENTER_NEW_VALUE = "Введите новое значение:"
 MSG_NO_DATA = "Нет данных."
 
+"""MENU"""
+MSG_START = "<Тут будет актуальная новость из жизни фонда.>"
+
+"""TELL_ABOUT"""
+MSG_TELL_ABOUT = "Выберите интересующую вас соцсеть/страницу"
+
+
+"""EVENTS"""
+MSG_EVENTS = "get_events"
+
 """Volunteer."""
 MSG_NEED_INFORMATION = "Далее необходимо предоставить информацию для куратора"
 MSG_YOUR_HELP_OPTION = (

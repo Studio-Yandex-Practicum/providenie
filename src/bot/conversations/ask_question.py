@@ -14,7 +14,6 @@ async def ask_question(
     """Возможность задать вопрос."""
     user_data = context.user_data
     user_data[key.START_OVER] = False
-    text = const.MSG_QUESTION_NEED_INFORMATION
     buttons = [
         [
             InlineKeyboardButton(
@@ -28,7 +27,7 @@ async def ask_question(
     keyboard = InlineKeyboardMarkup(buttons)
     await update.callback_query.answer()
     await update.callback_query.edit_message_text(
-        text=text, reply_markup=keyboard
+        text=const.MSG_QUESTION_NEED_INFORMATION, reply_markup=keyboard
     )
     return state.ASKING_QUESTION
 
@@ -40,9 +39,8 @@ async def asking_question(
     user_data = context.user_data
     user_data[key.FEATURES] = {key.LEVEL: key.QUESTION}
     user_data[key.CURRENT_FEATURE] = key.NAME
-    text = const.MSG_NAME
     await update.callback_query.answer()
-    await update.callback_query.edit_message_text(text=text)
+    await update.callback_query.edit_message_text(text=const.MSG_NAME)
     return state.ADDING_NAME
 
 
@@ -54,8 +52,7 @@ async def adding_name(
     message = update.message.text
     user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
     user_data[key.CURRENT_FEATURE] = key.THEME
-    text = const.MSG_THEME
-    await update.message.reply_text(text=text)
+    await update.message.reply_text(text=const.MSG_THEME)
     return state.ADDING_THEME
 
 
@@ -67,8 +64,7 @@ async def adding_theme(
     message = update.message.text
     user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
     user_data[key.CURRENT_FEATURE] = key.QUESTION
-    text = const.MSG_QUESTION
-    await update.message.reply_text(text=text)
+    await update.message.reply_text(text=const.MSG_QUESTION)
     return state.ADDING_QUESTION
 
 
@@ -147,14 +143,15 @@ async def select_question_field(
         ],
     ]
     keyboard = InlineKeyboardMarkup(buttons)
-    text = const.MSG_CHOOSE_TO_EDIT
     if not context.user_data.get(key.START_OVER):
         await update.callback_query.answer()
         await update.callback_query.edit_message_text(
-            text=text, reply_markup=keyboard
+            text=const.MSG_CHOOSE_TO_EDIT, reply_markup=keyboard
         )
     else:
-        await update.message.reply_text(text=text, reply_markup=keyboard)
+        await update.message.reply_text(
+            text=const.MSG_CHOOSE_TO_EDIT, reply_markup=keyboard
+        )
     context.user_data[key.START_OVER] = True
     return state.QUESTION_FEATURE
 
@@ -162,9 +159,10 @@ async def select_question_field(
 async def ask_data(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Ввод нового значения, при редактировании данных."""
     context.user_data[key.CURRENT_FEATURE] = update.callback_query.data
-    text = const.MSG_ENTER_NEW_VALUE
     await update.callback_query.answer()
-    await update.callback_query.edit_message_text(text=text)
+    await update.callback_query.edit_message_text(
+        text=const.MSG_ENTER_NEW_VALUE
+    )
     return state.TYPING_QUESTION
 
 
@@ -196,10 +194,12 @@ async def send_question(
     theme = data.get(key.THEME, "-")
     question = data.get(key.QUESTION, "-")
     current_user_id = update.effective_chat.id
-    text = templates.MSG_QUESTION_TO_CURATOR.format(full_name, theme, question)
     user_url = f"tg://user?id={current_user_id}"
     button = InlineKeyboardButton(text=const.BTN_ANSWER, url=user_url)
+
+    text = templates.MSG_QUESTION_TO_CURATOR.format(full_name, theme, question)
     reply_markup = InlineKeyboardMarkup.from_button(button)
+
     sent = await service.send_message_to_curator(
         context=context,
         message=text,

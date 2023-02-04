@@ -8,7 +8,6 @@ from bot import states as state
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Кнопка старт. Вывод главного меню."""
-    text = "<Тут будет актуальная новость из жизни фонда.>"
     buttons = [
         [
             InlineKeyboardButton(
@@ -58,10 +57,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if context.user_data.get(key.START_OVER):
         await update.callback_query.answer()
         await update.callback_query.edit_message_text(
-            text=text, reply_markup=keyboard
+            text=const.MSG_START, reply_markup=keyboard
         )
     else:
-        await update.message.reply_text(text=text, reply_markup=keyboard)
+        await update.message.reply_text(
+            text=const.MSG_START, reply_markup=keyboard
+        )
 
     context.user_data[key.START_OVER] = False
     return state.SELECTING_ACTION
@@ -69,7 +70,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def tell_friends_about_fund(update: Update, _) -> str:
     """Функция, отображающая меню со ссылками на страницы фонда."""
-    text = "Выберите интересующую вас соцсеть/страницу"
     buttons = [
         [
             InlineKeyboardButton(
@@ -107,7 +107,7 @@ async def tell_friends_about_fund(update: Update, _) -> str:
 
     await update.callback_query.answer()
     await update.callback_query.edit_message_text(
-        text=text, reply_markup=keyboard
+        text=const.MSG_TELL_ABOUT, reply_markup=keyboard
     )
     return state.SOCIAL_LINKS
 
@@ -138,15 +138,15 @@ async def social_link(update: Update, _) -> str:
     keyboard = InlineKeyboardMarkup(buttons)
 
     query = update.callback_query
-    text = social_link_dict[query.data]
 
     await query.answer()
-    await query.edit_message_text(text=text, reply_markup=keyboard)
+    await query.edit_message_text(
+        text=social_link_dict[query.data], reply_markup=keyboard
+    )
     return state.SOCIAL_LINKS
 
 
 async def give_donation(update: Update, _) -> str:
-    text = const.MSG_DONATION
     buttons = [
         [
             InlineKeyboardButton(
@@ -165,21 +165,19 @@ async def give_donation(update: Update, _) -> str:
     keyboard = InlineKeyboardMarkup(buttons)
     await update.callback_query.answer()
     await update.callback_query.edit_message_text(
-        text=text, reply_markup=keyboard
+        text=const.MSG_DONATION, reply_markup=keyboard
     )
     return state.SELECTING_ACTION
 
 
 async def get_events(update: Update, _) -> str:
     await update.callback_query.answer()
-    text = "get_events"
-    await update.callback_query.edit_message_text(text=text)
+    await update.callback_query.edit_message_text(text=const.MSG_EVENTS)
     return state.SELECTING_ACTION
 
 
 async def about(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     await update.callback_query.answer()
-    text = const.MSG_ABOUT
     button = [
         [
             InlineKeyboardButton(
@@ -190,7 +188,7 @@ async def about(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     ]
     keyboard = InlineKeyboardMarkup(button)
     await update.callback_query.edit_message_text(
-        text=text, reply_markup=keyboard
+        text=const.MSG_ABOUT, reply_markup=keyboard
     )
     context.user_data[key.START_OVER] = True
     return state.ENDING
