@@ -26,7 +26,6 @@ selection_handlers = [
         menu.end_second_level, pattern="^" + str(key.END) + "$"
     ),
     CallbackQueryHandler(menu.about, pattern="^" + key.ABOUT + "$"),
-    CallbackQueryHandler(menu.end, pattern="^" + str(key.END) + "$"),
     CallbackQueryHandler(menu.end, pattern="^" + key.SENT + "$"),
 ]
 

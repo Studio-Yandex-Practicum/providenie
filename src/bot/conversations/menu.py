@@ -145,7 +145,9 @@ async def social_link(update: Update, _) -> str:
     return state.SOCIAL_LINKS
 
 
-async def give_donation(update: Update, _) -> str:
+async def give_donation(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> str:
     """Функция, отображающая ссылки на меню отчетов о пожертвованиях"""
     text = const.MSG_DONATION
     buttons = [
@@ -159,7 +161,7 @@ async def give_donation(update: Update, _) -> str:
         ],
         [
             InlineKeyboardButton(
-                text=const.BTN_BACK, callback_data=str(key.END)
+                text=const.BTN_MENU, callback_data=str(key.END)
             )
         ],
     ]
@@ -168,7 +170,8 @@ async def give_donation(update: Update, _) -> str:
     await update.callback_query.edit_message_text(
         text=text, reply_markup=keyboard
     )
-    return state.SELECTING_ACTION
+    context.user_data[key.START_OVER] = True
+    return state.ENDING
 
 
 async def get_events(update: Update, _) -> str:
