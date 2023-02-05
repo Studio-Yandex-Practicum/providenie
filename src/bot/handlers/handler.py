@@ -22,10 +22,8 @@ selection_handlers = [
     CallbackQueryHandler(menu.get_events, pattern="^" + key.EVENTS + "$"),
     ask_question_conv,
     tell_about_fund_conv,
-    CallbackQueryHandler(
-        menu.end_second_level, pattern="^" + str(key.END) + "$"
-    ),
     CallbackQueryHandler(menu.about, pattern="^" + key.ABOUT + "$"),
+    CallbackQueryHandler(menu.end, pattern="^" + str(key.END) + "$"),
     CallbackQueryHandler(menu.end, pattern="^" + key.SENT + "$"),
 ]
 
