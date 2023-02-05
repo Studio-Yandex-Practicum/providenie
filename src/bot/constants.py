@@ -150,3 +150,11 @@ MSG_CHAT_EDIT_CHILD_HEIGHT = "Рост"
 MSG_CHAT_EDIT_CHILD_DIAGNOSE = "Диагнозы"
 MSG_CHAT_EDIT_CHILD_OPERATION = "Операции"
 MSG_CHAT_EDIT_ABOUT_FOND = "Как узнали о фонде"
+
+"""BOT TEXT INFO."""
+
+TXT_MEIN_MENU = (
+    "Фонд помогает всем детям с нарушениями зрения"
+    " независимо от места рождения и поддерживает"
+    " семьи, где растут дети с инвалидностью."
+)
