@@ -49,7 +49,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         ],
         [
             InlineKeyboardButton(
-                text=const.BTN_TO_ABOUT_FUND, callback_data=key.ABOUT
+                text=const.BTN_TO_ABOUT_FUND, callback_data=key.ABOUT_FUND
             ),
         ],
     ]
@@ -181,23 +181,37 @@ async def get_events(update: Update, _) -> str:
     return state.SELECTING_ACTION
 
 
-async def about(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
-    await update.callback_query.answer()
-    text = const.MSG_ABOUT
-    button = [
+async def about(update: Update, _) -> str:
+    """Функция, отображающая информации о фонде"""
+    social_dict = {
+        key.WHO_ARE_WE: const.MSG_WHO_ARE_WE,
+        key.PROBLEM_SOLVING: const.MSG_PROBLEM_SOLVING,
+        key.WHAT_PROBLEM_SOLVING: const.MSG_WHAT_PROBLEM_SOLVING,
+        key.LIFE_CHANGE: const.MSG_LIFE_CHANGE,
+        key.WHAT_IS_DONE: const.MSG_WHAT_IS_DONE,
+        key.DONATION_NEED: const.MSG_DONATION_NEED,
+        key.ABOUT_SUCCESS: key.ABOUT_SUCCESS,
+    }
+    buttons = [
         [
             InlineKeyboardButton(
-                text=const.BTN_BACK,
-                callback_data=str(key.END),
+                text=const.BTN_MENU, callback_data=str(key.END)
             )
-        ]
+        ],
+        [
+            InlineKeyboardButton(
+                text=const.BTN_BACK, callback_data=str(key.ABOUT_FUND)
+            )
+        ],
     ]
-    keyboard = InlineKeyboardMarkup(button)
-    await update.callback_query.edit_message_text(
-        text=text, reply_markup=keyboard
-    )
-    context.user_data[key.START_OVER] = True
-    return state.ENDING
+    keyboard = InlineKeyboardMarkup(buttons)
+
+    query = update.callback_query
+    text = social_dict[query.data]
+
+    await query.answer()
+    await query.edit_message_text(text=text, reply_markup=keyboard)
+    return state.ABOUT_INFO
 
 
 async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
