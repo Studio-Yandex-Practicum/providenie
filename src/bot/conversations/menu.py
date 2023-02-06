@@ -184,12 +184,12 @@ async def get_events(update: Update, _) -> str:
 async def about(update: Update, _) -> str:
     """Функция, отображающая информации о фонде"""
     social_dict = {
-        key.WHO_ARE_WE: const.MSG_WHO_ARE_WE,
-        key.PROBLEM_SOLVING: const.MSG_PROBLEM_SOLVING,
-        key.WHAT_PROBLEM_SOLVING: const.MSG_WHAT_PROBLEM_SOLVING,
-        key.LIFE_CHANGE: const.MSG_LIFE_CHANGE,
-        key.WHAT_IS_DONE: const.MSG_WHAT_IS_DONE,
-        key.DONATION_NEED: const.MSG_DONATION_NEED,
+        key.WHO_ARE_WE: const.URL_WHO_ARE_WE,
+        key.PROBLEM_SOLVING: const.URL_PROBLEM_SOLVING,
+        key.WHAT_PROBLEM_SOLVING: const.URL_WHAT_PROBLEM_SOLVING,
+        key.LIFE_CHANGE: const.URL_LIFE_CHANGE,
+        key.WHAT_IS_DONE: const.URL_WHAT_IS_DONE,
+        key.DONATION_NEED: const.URL_DONATION_NEED,
         key.ABOUT_SUCCESS: key.ABOUT_SUCCESS,
     }
     buttons = [
