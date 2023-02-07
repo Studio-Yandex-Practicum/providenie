@@ -7,45 +7,42 @@ from bot import states as state
 
 async def select_about_found(update: Update, _) -> str:
     """Вывод меню информации о фонде."""
-    text = const.MSG_ABOUT
     buttons = [
         [
             InlineKeyboardButton(
-                text=const.BTN_WHO_ARE_WE, callback_data=str(key.WHO_ARE_WE)
+                text=const.BTN_WHO_ARE_WE, callback_data=key.WHO_ARE_WE
             )
         ],
         [
             InlineKeyboardButton(
                 text=const.BTN_PROBLEM_SOLVING,
-                callback_data=str(key.PROBLEM_SOLVING),
+                callback_data=key.PROBLEM_SOLVING,
             )
         ],
         [
             InlineKeyboardButton(
                 text=const.BTN_WHAT_PROBLEM_SOLVING,
-                callback_data=str(key.WHAT_PROBLEM_SOLVING),
+                callback_data=key.WHAT_PROBLEM_SOLVING,
             )
         ],
         [
             InlineKeyboardButton(
-                text=const.BTN_LIFE_CHANGE, callback_data=str(key.LIFE_CHANGE)
+                text=const.BTN_LIFE_CHANGE, callback_data=key.LIFE_CHANGE
             )
         ],
         [
             InlineKeyboardButton(
-                text=const.BTN_WHAT_IS_DONE,
-                callback_data=str(key.WHAT_IS_DONE),
+                text=const.BTN_WHAT_IS_DONE, callback_data=key.WHAT_IS_DONE
             )
         ],
         [
             InlineKeyboardButton(
-                text=const.BTN_DONATION_NEED,
-                callback_data=str(key.DONATION_NEED),
+                text=const.BTN_DONATION_NEED, callback_data=key.DONATION_NEED
             )
         ],
         [
             InlineKeyboardButton(
-                text=const.BTN_SUCCESS, callback_data=str(key.ABOUT_SUCCESS)
+                text=const.BTN_SUCCESS, callback_data=key.ABOUT_SUCCESS
             )
         ],
         [
@@ -58,14 +55,13 @@ async def select_about_found(update: Update, _) -> str:
 
     await update.callback_query.answer()
     await update.callback_query.edit_message_text(
-        text=text, reply_markup=keyboard
+        text=const.MSG_ABOUT, reply_markup=keyboard
     )
     return state.ABOUT_INFO
 
 
 async def select_success_found(update: Update, _) -> str:
     """Вывод меню ссылок на видео успехаов фонда."""
-    text = "Видео успехов фонда"
     buttons = [
         [
             InlineKeyboardButton(
@@ -99,7 +95,7 @@ async def select_success_found(update: Update, _) -> str:
         ],
         [
             InlineKeyboardButton(
-                text=const.BTN_BACK, callback_data=str(key.ABOUT_FUND)
+                text=const.BTN_BACK, callback_data=key.ABOUT_FUND
             )
         ],
     ]
@@ -107,6 +103,6 @@ async def select_success_found(update: Update, _) -> str:
 
     await update.callback_query.answer()
     await update.callback_query.edit_message_text(
-        text=text, reply_markup=keyboard
+        text=const.MSG_ABOUT_SUCCESS, reply_markup=keyboard
     )
     return state.ABOUT_INFO

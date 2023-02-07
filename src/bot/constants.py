@@ -115,6 +115,7 @@ MSG_DONATION = "Отчёты и пожертвование"
 
 """About"""
 MSG_ABOUT = "Информация о фонде"
+MSG_ABOUT_SUCCESS = "Видео успехов фонда"
 
 """LOG MESSAGES."""
 

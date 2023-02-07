@@ -7,7 +7,7 @@ from telegram.ext import (
 from bot import keys as key
 from bot import states as state
 from bot.conversations import menu
-from bot.handlers.about_fuond import about_fund_conv
+from bot.handlers.about_fund import about_fund_conv
 from bot.handlers.ask_question import ask_question_conv
 from bot.handlers.chat_handler import chat_conv
 from bot.handlers.join_to_fund import conv_handler_join_to_fund
