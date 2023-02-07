@@ -15,7 +15,6 @@ async def add_volunteer(
     """Путь вступления в ряды волонтёров."""
     user_data = context.user_data
     user_data[key.START_OVER] = False
-    text = const.MSG_NEED_INFORMATION
     buttons = [
         [
             InlineKeyboardButton(
@@ -29,7 +28,7 @@ async def add_volunteer(
     keyboard = InlineKeyboardMarkup(buttons)
     await update.callback_query.answer()
     await update.callback_query.edit_message_text(
-        text=text, reply_markup=keyboard
+        text=const.MSG_NEED_INFORMATION, reply_markup=keyboard
     )
     return state.ADDING_VOLUNTEER
 
@@ -41,9 +40,8 @@ async def adding_volunteer(
     user_data = context.user_data
     user_data[key.FEATURES] = {key.LEVEL: key.VOLUNTEER}
     user_data[key.CURRENT_FEATURE] = key.NAME
-    text = const.MSG_FULL_NAME
     await update.callback_query.answer()
-    await update.callback_query.edit_message_text(text=text)
+    await update.callback_query.edit_message_text(text=const.MSG_FULL_NAME)
     return state.ADDING_NAME
 
 
@@ -55,8 +53,7 @@ async def adding_name(
     message = update.message.text
     user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
     user_data[key.CURRENT_FEATURE] = key.BIRTHDAY
-    text = const.MSG_BIRTHDAY
-    await update.message.reply_text(text=text)
+    await update.message.reply_text(text=const.MSG_BIRTHDAY)
     return state.ADDING_BIRTHDAY
 
 
@@ -68,8 +65,7 @@ async def adding_birthday(
     message = update.message.text
     user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
     user_data[key.CURRENT_FEATURE] = key.CITY
-    text = const.MSG_CITY
-    await update.message.reply_text(text=text)
+    await update.message.reply_text(text=const.MSG_CITY)
     return state.ADDING_CITY
 
 
@@ -81,8 +77,7 @@ async def adding_city(
     message = update.message.text
     user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
     user_data[key.CURRENT_FEATURE] = key.PHONE
-    text = const.MSG_PHONE
-    await update.message.reply_text(text=text)
+    await update.message.reply_text(text=const.MSG_PHONE)
     return state.ADDING_PHONE
 
 
@@ -94,8 +89,7 @@ async def adding_phone(
     message = update.message.text
     user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
     user_data[key.CURRENT_FEATURE] = key.EMAIL
-    text = const.MSG_EMAIL
-    await update.message.reply_text(text=text)
+    await update.message.reply_text(text=const.MSG_EMAIL)
     return state.ADDING_EMAIL
 
 
@@ -107,8 +101,7 @@ async def adding_email(
     message = update.message.text
     user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
     user_data[key.CURRENT_FEATURE] = key.MESSAGE
-    text = const.MSG_YOUR_HELP_OPTION
-    await update.message.reply_text(text=text)
+    await update.message.reply_text(text=const.MSG_YOUR_HELP_OPTION)
     return state.ADDING_MESSAGE
 
 
@@ -226,9 +219,10 @@ async def ask_volunteer(
 ) -> str:
     """Ввод нового значения, при редактировании данных."""
     context.user_data[key.CURRENT_FEATURE] = update.callback_query.data
-    text = const.MSG_ENTER_NEW_VALUE
     await update.callback_query.answer()
-    await update.callback_query.edit_message_text(text=text)
+    await update.callback_query.edit_message_text(
+        text=const.MSG_ENTER_NEW_VALUE
+    )
     return state.TYPING_VOLUNTEER
 
 
