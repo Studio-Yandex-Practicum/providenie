@@ -28,6 +28,8 @@ QUESTION_SENT = "QUESTION_SENT"
 
 """Tell about fund."""
 SOCIAL_LINKS = "SOCIAL_LINKS"
+ABOUT_INFO = "ABOUT_INFO"
+ABOUT_SUCCESS = "SUCCESS"
 
 
 """Chats' states"""

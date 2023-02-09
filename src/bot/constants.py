@@ -51,6 +51,22 @@ BTN_QUESTION = "Ваш вопрос"
 BTN_REPORTS = "Годовые отчёты"
 BTN_DONATION = "Пожертвование"
 
+"""ABOUT"""
+BTN_WHO_ARE_WE = "Кто мы?"
+BTN_PROBLEM_SOLVING = "Какую социальную проблему мы решаем?"
+BTN_WHAT_PROBLEM_SOLVING = "Как мы её решаем?"
+BTN_LIFE_CHANGE = "Как мы меняем жизнь людей?"
+BTN_WHAT_IS_DONE = "Что мы уже сделали?"
+BTN_DONATION_NEED = "Зачем нужны пожертвования?"
+BTN_SUCCESS = "История успеха"
+
+"""Video"""
+BTN_SUCCESS_VIDEO1 = "Лучик добра"
+BTN_SUCCESS_VIDEO2 = "Фотосессия к 8 марта в г.Электросталь"
+BTN_SUCCESS_VIDEO3 = "Сбор на операцию для маленькой Хаёт завершен!"
+BTN_SUCCESS_VIDEO4 = "Праздник в честь 3-летия Фонда Провидение"
+BTN_SUCCESS_VIDEO5 = "С Днем Защиты детей"
+
 
 """BOT MESSAGES."""
 
@@ -73,7 +89,11 @@ MSG_ENTER_NEW_VALUE = "Введите новое значение:"
 MSG_NO_DATA = "Нет данных."
 
 """MENU"""
-MSG_START = "<Тут будет актуальная новость из жизни фонда.>"
+MSG_START = (
+    "Фонд помогает всем детям с нарушениями зрения"
+    " независимо от места рождения и поддерживает семьи,"
+    " где растут дети с инвалидностью."
+)
 
 """TELL_ABOUT"""
 MSG_TELL_ABOUT = "Выберите интересующую вас соцсеть/страницу"
@@ -109,7 +129,8 @@ MSG_QUESTION_ERROR_SENT = "Ошибка отправки вопроса."
 MSG_DONATION = "Отчёты и пожертвование"
 
 """About"""
-MSG_ABOUT = "Здесь будет текст о фонде..."
+MSG_ABOUT = "Информация о фонде"
+MSG_ABOUT_SUCCESS = "Видео успехов фонда"
 
 
 """LOG MESSAGES."""
@@ -129,6 +150,27 @@ URL_DONATION = (
     "https://fond-providenie.ru/help-chidren/sdelat-pozhertovanie"
     "/sdelat-pozhertvovanie-s-bankovskoj-karty/"
 )
+
+"""ABOUT"""
+URL_WHO_ARE_WE = "https://telegra.ph/Kto-my-02-06"
+URL_PROBLEM_SOLVING = (
+    "https://telegra.ph/Kakuyu-socialnuyu-problemu-my-reshaem-02-06"
+)
+URL_WHAT_PROBLEM_SOLVING = "https://telegra.ph/Kak-my-eyo-reshaem-02-06"
+URL_LIFE_CHANGE = "https://telegra.ph/Kak-my-menyaem-zhizn-lyudej-02-06"
+URL_WHAT_IS_DONE = (
+    "https://telegra.ph/"
+    "CHto-uzhe-sdelano-Kto-obrashchaetsya-za-pomoshchyu-02-06"
+)
+URL_DONATION_NEED = "https://telegra.ph/Zachem-nuzhny-pozhertvovaniya-02-06"
+
+
+"""ABOUT_SUCCESS"""
+URL_VIDEO_1 = "https://youtu.be/n-hByd_oiIo"
+URL_VIDEO_2 = "https://youtu.be/NG4QUO-hvCk"
+URL_VIDEO_3 = "https://youtu.be/cAQayg_ZNok"
+URL_VIDEO_4 = "https://youtu.be/26mYPRE4BQo"
+URL_VIDEO_5 = "https://youtu.be/CINnVYp6hQI"
 
 """Chats"""
 """Get_data"""
