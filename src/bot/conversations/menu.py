@@ -4,6 +4,7 @@ from telegram.ext import ContextTypes
 from bot import constants as const
 from bot import keys as key
 from bot import states as state
+from bot.flags.flag import Flags
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -53,6 +54,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         ],
     ]
     keyboard = InlineKeyboardMarkup(buttons)
+
+    if not context.user_data.get(key.FLAGS):
+        context.user_data[key.FLAGS] = Flags()
 
     if context.user_data.get(key.START_OVER):
         await update.callback_query.answer()
