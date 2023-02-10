@@ -5,7 +5,7 @@ on:
     branches: [feature/ci_cd]
 
 jobs:
-  upload:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Uploading project files to remote server
@@ -18,7 +18,7 @@ jobs:
           source: .
           target: /home/${{ secrets.USER }}/providenie
 
-      - name: Building Docker image on remote server
+      - name: Building Docker image on remote server and deploy
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -28,15 +28,6 @@ jobs:
           script: |
             cd /home/${{ secrets.USER }}/providenie
             sudo docker build -t providenie:latest .
-
-      - name: Executing remote ssh commands to deploy
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.SSH_KEY }}
-          passphrase: ${{ secrets.PASSPHRASE }}
-          script: |
             sudo docker-compose stop
             sudo docker-compose rm providenie
             sudo docker-compose up -d --build providenie
