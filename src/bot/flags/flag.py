@@ -12,8 +12,6 @@ class Flags:
     edit_mode_second_flag = False
     first_start = True
     bad_request = False
-    first_start_menu = True
-    first_start_volonteer = False
 
     def changing_edit_mode_first(self, edit_mode: bool):
         """Смена флага edit_mode_first_flag."""
@@ -45,20 +43,4 @@ class Flags:
             Flags.bad_request = bad_request
         else:
             msg = f"Неверный тип флага {bad_request}!"
-            logger.error(msg)
-
-    def changing_first_start_menu(self, first_start_menu: bool):
-        """Смена флага first_start_menu."""
-        if isinstance(first_start_menu, bool):
-            Flags.first_start_menu = first_start_menu
-        else:
-            msg = f"Неверный тип флага {first_start_menu}!"
-            logger.error(msg)
-
-    def changing_first_start_volonteer(self, first_start_volonteer: bool):
-        """Смена флага first_start_volonteer."""
-        if isinstance(first_start_volonteer, bool):
-            Flags.first_start_volonteer = first_start_volonteer
-        else:
-            msg = f"Неверный тип флага {first_start_volonteer}!"
             logger.error(msg)
