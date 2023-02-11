@@ -1,19 +1,31 @@
 import logging
+from logging.handlers import TimedRotatingFileHandler
 
 from .settings import BASE_DIR, LOG_LEVEL
 
 
-logs_folder = BASE_DIR / ".data/logs"
-logs_folder.mkdir(parents=True, exist_ok=True)
-filename = "bot.log"
-final_dir = logs_folder / filename
+LOGS_FOLDER = BASE_DIR / ".data/logs"
+LOGS_FOLDER.mkdir(parents=True, exist_ok=True)
 
-logging.basicConfig(
-    level=LOG_LEVEL,
-    filename=final_dir,
-    filemode="w",
-    format="%(asctime)s - %(levelname)s - %(message)s",
+FILENAME = "bot.log"
+LOG_PATH = LOGS_FOLDER / FILENAME
+
+INTERVAL = 1
+INTERVAL_TYPE = "D"
+BACKUP_COUNT = 60
+
+FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
+
+handler = TimedRotatingFileHandler(
+    LOG_PATH,
+    when=INTERVAL_TYPE,
+    interval=INTERVAL,
+    backupCount=BACKUP_COUNT
 )
-
+handler.setFormatter(
+    logging.Formatter(FORMAT)
+)
+handler.setLevel(LOG_LEVEL)
 
 logger = logging.getLogger(__name__)
+logger.addHandler(handler)
