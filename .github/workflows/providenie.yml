@@ -8,6 +8,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@master
       - name: Uploading project files to remote server
         uses: appleboy/scp-action@master
         with:
