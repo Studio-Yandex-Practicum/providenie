@@ -1,3 +1,4 @@
+from typing import Optional
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
@@ -45,15 +46,21 @@ async def adding_volunteer(
     return state.ADDING_NAME
 
 
+async def save_feature(update: Update, context: ContextTypes.DEFAULT_TYPE, next_feature: Optional[str] = None, reply_text: Optional[str] = None):
+    user_data = context.user_data
+    message = update.message.text
+    user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
+    if next_feature:
+        user_data[key.CURRENT_FEATURE] = next_feature
+    if reply_text:
+        await update.message.reply_text(text=reply_text)
+
+
 async def adding_name(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем ФИО, спрашиваем дату рождения."""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
-    user_data[key.CURRENT_FEATURE] = key.BIRTHDAY
-    await update.message.reply_text(text=const.MSG_BIRTHDAY)
+    await save_feature(update, context, key.BIRTHDAY, const.MSG_BIRTHDAY)
     return state.ADDING_BIRTHDAY
 
 
@@ -61,11 +68,7 @@ async def adding_birthday(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем дату рождения, спрашиваем город проживания."""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
-    user_data[key.CURRENT_FEATURE] = key.CITY
-    await update.message.reply_text(text=const.MSG_CITY)
+    await save_feature(update, context, key.CITY, const.MSG_CITY)
     return state.ADDING_CITY
 
 
@@ -73,11 +76,7 @@ async def adding_city(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем город проживания, спрашиваем номер телефона."""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
-    user_data[key.CURRENT_FEATURE] = key.PHONE
-    await update.message.reply_text(text=const.MSG_PHONE)
+    await save_feature(update, context, key.PHONE, const.MSG_PHONE)
     return state.ADDING_PHONE
 
 
@@ -85,11 +84,7 @@ async def adding_phone(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем номер телефона, спрашиваем email."""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
-    user_data[key.CURRENT_FEATURE] = key.EMAIL
-    await update.message.reply_text(text=const.MSG_EMAIL)
+    await save_feature(update, context, key.EMAIL, const.MSG_EMAIL)
     return state.ADDING_EMAIL
 
 
@@ -97,11 +92,7 @@ async def adding_email(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем email, спрашиваем вариант помощи."""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
-    user_data[key.CURRENT_FEATURE] = key.MESSAGE
-    await update.message.reply_text(text=const.MSG_YOUR_HELP_OPTION)
+    await save_feature(update, context, key.MESSAGE, const.MSG_YOUR_HELP_OPTION)
     return state.ADDING_MESSAGE
 
 
@@ -109,9 +100,7 @@ async def adding_message(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем вариант помощи."""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
+    await save_feature(update, context)
     return await show_volunteer(update, context)
 
 
@@ -230,10 +219,8 @@ async def save_volunteer_input(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохранение нового значения, при редактировании данных."""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
-    user_data[key.START_OVER] = True
+    await save_feature(update, context)
+    context.user_data[key.START_OVER] = True
     return await select_volunteer_field(update, context)
 
 
