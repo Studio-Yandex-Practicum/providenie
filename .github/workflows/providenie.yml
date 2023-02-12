@@ -13,17 +13,17 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
-          password: ${{ secrets.SSH_KEY }}
+          key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.PORT }}
           source: .
-          target: /home/${{ secrets.USER }}/providenie
+          target: ~/providenie
 
       - name: Building Docker image on remote server and deploy
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
-          password: ${{ secrets.SSH_KEY }}
+          key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.PORT }}
           script: |
             cd /home/${{ secrets.USER }}/providenie
