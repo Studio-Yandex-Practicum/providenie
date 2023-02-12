@@ -13,7 +13,7 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
-          key: ${{ secrets.SSH_KEY }}
+          password: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.PORT }}
           source: .
           target: /home/${{ secrets.USER }}/providenie
@@ -23,7 +23,7 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
-          key: ${{ secrets.SSH_KEY }}
+          password: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.PORT }}
           script: |
             cd /home/${{ secrets.USER }}/providenie
