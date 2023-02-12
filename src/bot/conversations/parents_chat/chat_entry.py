@@ -2,6 +2,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
 from bot import constants as const
+from bot import dictionaries as dict
 from bot import keys as key
 from bot import states as state
 
@@ -13,8 +14,8 @@ async def enter_chat(
     chat = update.callback_query.data
     user_data = context.user_data
     user_data[key.CURRENT_CHAT] = chat
-    text = f'{const.CHAT_DESCRIPTION[chat]["description"]}'
-    user_data[key.CURRENT_CHAT] = const.CHAT_DESCRIPTION[chat]["name"]
+    text = f'{dict.CHAT_DESCRIPTION[chat]["description"]}'
+    user_data[key.CURRENT_CHAT] = dict.CHAT_DESCRIPTION[chat]["name"]
 
     buttons = [
         [

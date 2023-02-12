@@ -2,18 +2,16 @@
 from datetime import date
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
-from telegram.ext import ContextTypes, ConversationHandler
+from telegram.ext import ContextTypes
 
 from ..flags.flag import Flags
 from ..templates import HTML_TEMPLATE_JOIN_FUND
 from ..validators import fund_app_validators as validators
 from .menu import start
-from bot import constants, keys, states
+from bot import constants, dictionaries, keys, states, templates
 from core.email import bot_send_email_to_curator
 from core.logger import logger
 
-
-END = ConversationHandler.END
 
 FLAGS_OBJ = Flags()
 
@@ -35,21 +33,21 @@ async def application_to_the_fund(
     buttons = [
         [
             InlineKeyboardButton(
-                text=constants.PROGRAM_FUND[keys.LOOK_WORLD_PROGRAM][0],
+                text=dictionaries.PROGRAM_FUND[keys.LOOK_WORLD_PROGRAM][0],
                 callback_data=keys.LOOK_WORLD_PROGRAM,
             ),
             InlineKeyboardButton(
-                text=constants.PROGRAM_FUND[keys.REABILITATION_PROGRAM][0],
+                text=dictionaries.PROGRAM_FUND[keys.REABILITATION_PROGRAM][0],
                 callback_data=keys.REABILITATION_PROGRAM,
             ),
         ],
         [
             InlineKeyboardButton(
-                text=constants.PROGRAM_FUND[keys.PSIHO_PROGRAM][0],
+                text=dictionaries.PROGRAM_FUND[keys.PSIHO_PROGRAM][0],
                 callback_data=keys.PSIHO_PROGRAM,
             ),
             InlineKeyboardButton(
-                text=constants.PROGRAM_FUND[keys.KIND_LESSONS_PROGRAM][0],
+                text=dictionaries.PROGRAM_FUND[keys.KIND_LESSONS_PROGRAM][0],
                 callback_data=keys.KIND_LESSONS_PROGRAM,
             ),
         ],
@@ -91,13 +89,13 @@ async def join_or_not_to_program(
 
     if not FLAGS_OBJ.edit_mode_first_flag:
         data = update.callback_query.data
-        if data in constants.PROGRAM_FUND:
+        if data in dictionaries.PROGRAM_FUND:
             message_about_fund_and_documents = (
-                f"{constants.PROGRAM_FUND[data][0]}\n"
-                + f"{constants.PROGRAM_FUND[data][1]}\n"
-                + f"{constants.PROGRAM_FUND[data][2]}\n"
+                f"{dictionaries.PROGRAM_FUND[data][0]}\n"
+                + f"{dictionaries.PROGRAM_FUND[data][1]}\n"
+                + f"{dictionaries.PROGRAM_FUND[data][2]}\n"
             )
-            context.user_data["Программа фонда"] = constants.PROGRAM_FUND[
+            context.user_data["Программа фонда"] = dictionaries.PROGRAM_FUND[
                 data
             ][0]
         else:
@@ -108,7 +106,7 @@ async def join_or_not_to_program(
         context.user_data["Programm"] = data
 
     else:
-        dates_about_fund = constants.PROGRAM_FUND[
+        dates_about_fund = dictionaries.PROGRAM_FUND[
             context.user_data["Programm"]
         ]
         message_about_fund_and_documents = (
@@ -126,7 +124,8 @@ async def join_or_not_to_program(
                 callback_data=keys.JOIN_BUTTON,
             ),
             InlineKeyboardButton(
-                text=constants.BUTTONS_TEXT["back"], callback_data=str(END)
+                text=constants.BUTTONS_TEXT["back"],
+                callback_data=str(keys.END),
             ),
         ],
         [
@@ -199,7 +198,7 @@ async def asking_phone_mother(
     if not validators.checking_not_digits(fio):
         await update.message.reply_text(
             text=constants.ANSWERS_DICT["bad_fio_mother"],
-            reply_markup=constants.MARKUP_FIX,
+            reply_markup=templates.MARKUP_FIX,
         )
         FLAGS_OBJ.changing_bad_request(True)
 
@@ -239,7 +238,7 @@ async def asking_email_mother(
     if not validators.checking_phone_number(phone_number):
         await update.message.reply_text(
             text=constants.ANSWERS_DICT["bad_phone_number"],
-            reply_markup=constants.MARKUP_FIX,
+            reply_markup=templates.MARKUP_FIX,
         )
         FLAGS_OBJ.changing_bad_request(True)
         return states.FIO_MOTHER
@@ -280,7 +279,7 @@ async def asking_fio_child(
     if not validators.checking_email(email_mother):
         await update.message.reply_text(
             text=constants.ANSWERS_DICT["bad_email"],
-            reply_markup=constants.MARKUP_FIX,
+            reply_markup=templates.MARKUP_FIX,
         )
         FLAGS_OBJ.changing_bad_request(True)
 
@@ -323,7 +322,7 @@ async def asking_how_many_people_in_family(
     if not validators.checking_not_digits(fio_child):
         await update.message.reply_text(
             text=constants.ANSWERS_DICT["bad_child_fio"],
-            reply_markup=constants.MARKUP_FIX,
+            reply_markup=templates.MARKUP_FIX,
         )
         FLAGS_OBJ.changing_bad_request(True)
         return states.EMAIL
@@ -363,7 +362,7 @@ async def asking_city(
     if not validators.checking_count_people_in_family(how_many_people):
         await update.message.reply_text(
             text=constants.ANSWERS_DICT["bad_people_in_family"],
-            reply_markup=constants.MARKUP_FIX,
+            reply_markup=templates.MARKUP_FIX,
         )
         FLAGS_OBJ.changing_bad_request(True)
         return states.FIO_CHILD
@@ -402,7 +401,7 @@ async def asking_address(
     if not validators.checking_not_digits(city):
         await update.message.reply_text(
             text=constants.ANSWERS_DICT["bad_city"],
-            reply_markup=constants.MARKUP_FIX,
+            reply_markup=templates.MARKUP_FIX,
         )
         FLAGS_OBJ.changing_bad_request(True)
         return states.HOW_MANY_PEOPLE
@@ -470,7 +469,7 @@ async def asking_place_birthday(
     if not validators.checking_birthday(child_birthday):
         await update.message.reply_text(
             text=constants.ANSWERS_DICT["bad_birthday"],
-            reply_markup=constants.MARKUP_FIX,
+            reply_markup=templates.MARKUP_FIX,
         )
         FLAGS_OBJ.changing_bad_request(True)
         return states.ADDRESS
@@ -548,7 +547,7 @@ async def asking_child_weight(
     if not validators.checking_count_people_in_family(birth_date):
         await update.message.reply_text(
             text=constants.ANSWERS_DICT["bad_birth_date"],
-            reply_markup=constants.MARKUP_FIX,
+            reply_markup=templates.MARKUP_FIX,
         )
         FLAGS_OBJ.changing_bad_request(True)
         return states.PLACE_BIRTH
@@ -588,7 +587,7 @@ async def asking_child_height(
     if not validators.checking_weight_and_height(child_weight):
         await update.message.reply_text(
             text=constants.ANSWERS_DICT["bad_weight"],
-            reply_markup=constants.MARKUP_FIX,
+            reply_markup=templates.MARKUP_FIX,
         )
         FLAGS_OBJ.changing_bad_request(True)
         return states.BIRTH_DATE
@@ -630,7 +629,7 @@ async def asking_child_diagnosis(
     if not validators.checking_weight_and_height(child_height):
         await update.message.reply_text(
             text=constants.ANSWERS_DICT["bad_height"],
-            reply_markup=constants.MARKUP_FIX,
+            reply_markup=templates.MARKUP_FIX,
         )
         FLAGS_OBJ.changing_bad_request(True)
         return states.WEIGHT
@@ -665,7 +664,7 @@ async def asking_how_found_us(
     if not validators.checking_not_digits(diagnosis):
         await update.message.reply_text(
             text=constants.ANSWERS_DICT["bad_diagnosis"],
-            reply_markup=constants.MARKUP_FIX,
+            reply_markup=templates.MARKUP_FIX,
         )
         FLAGS_OBJ.changing_bad_request(True)
         return states.HEIGHT
@@ -863,7 +862,7 @@ async def send_message_to_curator(
         [
             InlineKeyboardButton(
                 text=constants.BUTTONS_TEXT["back_to_menu"],
-                callback_data=str(END),
+                callback_data=str(keys.END),
             ),
         ],
     ]

@@ -202,7 +202,7 @@ selection_handlers = [
     CallbackQueryHandler(
         fund.return_main_menu, pattern="^" + keys.MAIN_MENU + "$"
     ),
-    CallbackQueryHandler(fund.end, pattern="^" + str(fund.END) + "$"),
+    CallbackQueryHandler(fund.end, pattern="^" + str(keys.END) + "$"),
 ]
 
 

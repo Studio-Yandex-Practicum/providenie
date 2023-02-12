@@ -1,6 +1,19 @@
-"""Templates for emails."""
 from string import Template
 
+from telegram import ReplyKeyboardMarkup
+
+from . import constants
+
+
+"""Templates for buttons."""
+
+# Клавиатуры с кнопками
+MARKUP_FIX = ReplyKeyboardMarkup(
+    constants.KEYBOARD_FIX_VALUE, one_time_keyboard=True, resize_keyboard=True
+)
+
+
+"""Templates for emails."""
 
 HTML_TEMPLATE_JOIN_FUND = Template(
     """
