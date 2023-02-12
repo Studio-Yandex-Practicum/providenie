@@ -5,7 +5,7 @@ from telegram.error import Forbidden, TelegramError
 from telegram.ext import ApplicationBuilder, ContextTypes
 
 from bot import constants as const
-from bot.handlers.handler import conv_handler
+from bot.handlers.main_handler import conv_handler
 from core.settings import TELEGRAM_CURATOR, TELEGRAM_TOKEN
 
 
