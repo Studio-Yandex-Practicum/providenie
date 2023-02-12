@@ -49,7 +49,6 @@ async def adding_volunteer(
 async def save_feature(update: Update, context: ContextTypes.DEFAULT_TYPE, next_feature: Optional[str] = None, reply_text: Optional[str] = None):
     user_data = context.user_data
     message = update.message.text
-    print(message, next_feature, reply_text, user_data[key.CURRENT_FEATURE], sep=' | ')
     user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
     if next_feature:
         user_data[key.CURRENT_FEATURE] = next_feature
