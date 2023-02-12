@@ -24,7 +24,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
-          passphrase: ${{ secrets.PASSPHRASE }}
+          port: ${{ secrets.PORT }}
           script: |
             cd /home/${{ secrets.USER }}/providenie
             sudo docker build -t providenie:latest .
