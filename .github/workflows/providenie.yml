@@ -36,4 +36,6 @@ jobs:
             echo EMAIL_BOT_PASSWORD=${{ secrets.EMAIL_BOT_PASSWORD }} >> .env
             echo EMAIL_CURATOR=${{ secrets.EMAIL_CURATOR }} >> .env
             echo LOG_LEVEL=${{ secrets.LOG_LEVEL }} >> .env
-            docker compose up -d --build providenie
+            docker compose --file docker-compose.yaml stop
+            docker compose --file docker-compose.yaml rm bot -f
+            docker compose --file docker-compose.yaml  up -d
