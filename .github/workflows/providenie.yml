@@ -29,8 +29,8 @@ jobs:
           script: |
             cd /home/${{ secrets.USER }}/providenie
             docker build -t providenie:latest .
-            docker-compose stop
-            docker-compose rm providenie
+            docker compose stop
+            docker compose rm providenie
             rm -f .env
             touch .env
             echo TELEGRAM_TOKEN="${{ secrets.TELEGRAM_TOKEN }}" >> .env
@@ -38,4 +38,4 @@ jobs:
             echo EMAIL_BOT_PASSWORD=${{ secrets.EMAIL_BOT_PASSWORD }} >> .env
             echo EMAIL_CURATOR=${{ secrets.EMAIL_CURATOR }} >> .env
             echo LOG_LEVEL=${{ secrets.LOG_LEVEL }} >> .env
-            docker-compose up -d --build providenie
+            docker compose up -d --build providenie
