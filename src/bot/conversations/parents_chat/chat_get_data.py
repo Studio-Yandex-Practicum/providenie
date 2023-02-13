@@ -1,3 +1,5 @@
+from typing import Optional
+
 from telegram import Update
 from telegram.ext import ContextTypes
 
@@ -7,9 +9,7 @@ from bot import keys as key
 from bot import states as state
 
 
-async def entering_chat(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> str:
+async def entering_chat(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Начинаем поочерёдный ввод данных. Спрашиваем ФИО родителя."""
     user_data = context.user_data
     user_data[key.CHAT_FEATURES] = {key.LEVEL: key.ENTRY_CHAT}
@@ -23,19 +23,32 @@ async def entering_chat(
     return state.CHAT_GETTING_PARENTS_NAME
 
 
+async def save_chat_feature(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+    next_feature: Optional[str] = None,
+    reply_text: Optional[str] = None,
+):
+    """Сохраняем данные аттрибута"""
+    user_data = context.user_data
+    message = update.message.text
+    user_data[key.CHAT_FEATURES][user_data[key.CHAT_CURRENT_FEATURE]] = message
+    if next_feature:
+        user_data[key.CHAT_CURRENT_FEATURE] = next_feature
+    if reply_text:
+        await update.message.reply_text(text=reply_text)
+
+
 async def chat_getting_parents_name(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем ФИО, получаем номер телефона родителя"""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.CHAT_FEATURES][user_data[key.CHAT_CURRENT_FEATURE]] = message
-    user_data[key.CHAT_CURRENT_FEATURE] = key.CHAT_PARENTS_PHONE
-    if user_data[key.CURRENT_CHAT] == "Бабушки торопыжек":
+    if context.user_data[key.CURRENT_CHAT] == "Бабушки торопыжек":
         text = const.MSG_CHAT_GRANDMOTHERS_PHONE
     else:
         text = const.MSG_CHAT_PARENTS_PHONE
-    await update.message.reply_text(text=text)
+
+    await save_chat_feature(update, context, key.CHAT_PARENTS_PHONE, text)
     return state.CHAT_GETTING_PARENTS_PHONE
 
 
@@ -46,18 +59,16 @@ async def chat_getting_parents_phone(
     Если выбран чат "Мамы ангелов",
      переходим в режим отображения полученной информации"""
     user_data = context.user_data
-    message = update.message.text
-    user_data[key.CHAT_FEATURES][user_data[key.CHAT_CURRENT_FEATURE]] = message
 
     if user_data[key.CURRENT_CHAT] == "Мамы ангелов":
+        await save_chat_feature(update, context)
         return await chat_show_data(update, context)
 
-    user_data[key.CHAT_CURRENT_FEATURE] = key.CHAT_CHILD_NAME
     if user_data[key.CURRENT_CHAT] == "Бабушки торопыжек":
         text = const.MSG_CHAT_GRANDMOTHERS_GRANDCHILD
     else:
         text = const.MSG_CHAT_CHILD_NAME
-    await update.message.reply_text(text=text)
+    await save_chat_feature(update, context, key.CHAT_CHILD_NAME, text)
     return state.CHAT_GETTING_CHILD_NAME
 
 
@@ -66,12 +77,9 @@ async def chat_getting_child_name(
 ) -> str:
     """Сохраняем фамилию ребенка,
     получаем дату рождения"""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.CHAT_FEATURES][user_data[key.CHAT_CURRENT_FEATURE]] = message
-    user_data[key.CHAT_CURRENT_FEATURE] = key.CHAT_CHILD_BIRTHDAY
-    text = const.MSG_CHAT_CHILD_BIRTHDAY
-    await update.message.reply_text(text=text)
+    await save_chat_feature(
+        update, context, key.CHAT_CHILD_BIRTHDAY, const.MSG_CHAT_CHILD_BIRTHDAY
+    )
     return state.CHAT_GETTING_CHILD_BIRTHDAY
 
 
@@ -80,12 +88,9 @@ async def chat_getting_child_birthday(
 ) -> str:
     """Сохраняем дату рождения ребенка,
     получаем место рождения ребенка"""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.CHAT_FEATURES][user_data[key.CHAT_CURRENT_FEATURE]] = message
-    user_data[key.CHAT_CURRENT_FEATURE] = key.CHAT_CHILD_PLACE_BIRTHDAY
-    text = const.MSG_CHAT_CHILD_PLACE_BIRTHDAY
-    await update.message.reply_text(text=text)
+    await save_chat_feature(
+        update, context, key.CHAT_CHILD_PLACE_BIRTHDAY, const.MSG_CHAT_CHILD_PLACE_BIRTHDAY,
+    )
     return state.CHAT_GETTING_CHILD_PLACE_BIRTHDAY
 
 
@@ -94,12 +99,9 @@ async def chat_getting_child_place_birthday(
 ) -> str:
     """Сохраняем место рождения ребенка,
     получаем срок беременности при рождении ребенка"""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.CHAT_FEATURES][user_data[key.CHAT_CURRENT_FEATURE]] = message
-    user_data[key.CHAT_CURRENT_FEATURE] = key.CHAT_CHILD_TERM
-    text = const.MSG_CHAT_CHILD_TERM
-    await update.message.reply_text(text=text)
+    await save_chat_feature(
+        update, context, key.CHAT_CHILD_TERM, const.MSG_CHAT_CHILD_TERM
+    )
     return state.CHAT_GETTING_CHILD_TERM
 
 
@@ -108,12 +110,9 @@ async def chat_getting_child_term(
 ) -> str:
     """Сохраняем срок беременности рождения ребенка,
     получаем вес ребенка при рождении"""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.CHAT_FEATURES][user_data[key.CHAT_CURRENT_FEATURE]] = message
-    user_data[key.CHAT_CURRENT_FEATURE] = key.CHAT_CHILD_WEIGHT
-    text = const.MSG_CHAT_CHILD_WEIGHT
-    await update.message.reply_text(text=text)
+    await save_chat_feature(
+        update, context, key.CHAT_CHILD_WEIGHT, const.MSG_CHAT_CHILD_WEIGHT
+    )
     return state.CHAT_GETTING_CHILD_WEIGHT
 
 
@@ -121,12 +120,9 @@ async def chat_getting_child_weight(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем вес ребенка, получаем рост ребенка при рождении"""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.CHAT_FEATURES][user_data[key.CHAT_CURRENT_FEATURE]] = message
-    user_data[key.CHAT_CURRENT_FEATURE] = key.CHAT_CHILD_HEIGHT
-    text = const.MSG_CHAT_CHILD_HEIGHT
-    await update.message.reply_text(text=text)
+    await save_chat_feature(
+        update, context, key.CHAT_CHILD_HEIGHT, const.MSG_CHAT_CHILD_HEIGHT
+    )
     return state.CHAT_GETTING_CHILD_HEIGHT
 
 
@@ -134,12 +130,9 @@ async def chat_getting_child_height(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем рост ребенка, получаем данные о диагнозах"""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.CHAT_FEATURES][user_data[key.CHAT_CURRENT_FEATURE]] = message
-    user_data[key.CHAT_CURRENT_FEATURE] = key.CHAT_CHILD_DIAGNOSE
-    text = const.MSG_CHAT_CHILD_DIAGNOSE
-    await update.message.reply_text(text=text)
+    await save_chat_feature(
+        update, context, key.CHAT_CHILD_DIAGNOSE, const.MSG_CHAT_CHILD_DIAGNOSE
+    )
     return state.CHAT_GETTING_CHILD_DIAGNOSE
 
 
@@ -147,12 +140,9 @@ async def chat_getting_child_diagnose(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем диагнозы ребенка, получаем данные об операциях"""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.CHAT_FEATURES][user_data[key.CHAT_CURRENT_FEATURE]] = message
-    user_data[key.CHAT_CURRENT_FEATURE] = key.CHAT_CHILD_OPERATION
-    text = const.MSG_CHAT_CHILD_OPERATION
-    await update.message.reply_text(text=text)
+    await save_chat_feature(
+        update, context, key.CHAT_CHILD_OPERATION, const.MSG_CHAT_CHILD_OPERATION
+    )
     return state.CHAT_GETTING_CHILD_OPERATION
 
 
@@ -161,12 +151,9 @@ async def chat_getting_child_operation(
 ) -> str:
     """Сохраняем данные об операциях,
     получаем информацию о том, как узнали о фонде"""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.CHAT_FEATURES][user_data[key.CHAT_CURRENT_FEATURE]] = message
-    user_data[key.CHAT_CURRENT_FEATURE] = key.CHAT_ABOUT_FOND
-    text = const.MSG_CHAT_ABOUT_FOND
-    await update.message.reply_text(text=text)
+    await save_chat_feature(
+        update, context, key.CHAT_ABOUT_FOND, const.MSG_CHAT_ABOUT_FOND
+    )
     return state.CHAT_GETTING_ABOUT_FOND
 
 
@@ -175,7 +162,5 @@ async def chat_getting_about_fond(
 ) -> str:
     """Сохраняем информацию о том, как узнали о фонде,
     переходим в режим отображения полученной информации"""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.CHAT_FEATURES][user_data[key.CHAT_CURRENT_FEATURE]] = message
+    await save_chat_feature(update, context)
     return await chat_show_data(update, context)
