@@ -29,8 +29,6 @@ jobs:
           script: |
             cd /home/${{ secrets.USER }}/providenie
             docker build -t providenie:latest .
-            docker compose stop
-            docker compose rm providenie
             rm -f .env
             touch .env
             echo TELEGRAM_TOKEN="${{ secrets.TELEGRAM_TOKEN }}" >> .env
