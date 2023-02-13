@@ -48,7 +48,12 @@ async def chat_getting_parents_name(
     else:
         text = const.MSG_CHAT_PARENTS_PHONE
 
-    await save_chat_feature(update, context, key.CHAT_PARENTS_PHONE, text)
+    await save_chat_feature(
+        update,
+        context,
+        next_feature=key.CHAT_PARENTS_PHONE,
+        reply_text=text
+    )
     return state.CHAT_GETTING_PARENTS_PHONE
 
 
@@ -68,7 +73,12 @@ async def chat_getting_parents_phone(
         text = const.MSG_CHAT_GRANDMOTHERS_GRANDCHILD
     else:
         text = const.MSG_CHAT_CHILD_NAME
-    await save_chat_feature(update, context, key.CHAT_CHILD_NAME, text)
+    await save_chat_feature(
+        update,
+        context,
+        next_feature=key.CHAT_CHILD_NAME,
+        reply_text=text
+    )
     return state.CHAT_GETTING_CHILD_NAME
 
 
@@ -78,7 +88,10 @@ async def chat_getting_child_name(
     """Сохраняем фамилию ребенка,
     получаем дату рождения"""
     await save_chat_feature(
-        update, context, key.CHAT_CHILD_BIRTHDAY, const.MSG_CHAT_CHILD_BIRTHDAY
+        update,
+        context,
+        next_feature=key.CHAT_CHILD_BIRTHDAY,
+        reply_text=const.MSG_CHAT_CHILD_BIRTHDAY,
     )
     return state.CHAT_GETTING_CHILD_BIRTHDAY
 
@@ -89,7 +102,10 @@ async def chat_getting_child_birthday(
     """Сохраняем дату рождения ребенка,
     получаем место рождения ребенка"""
     await save_chat_feature(
-        update, context, key.CHAT_CHILD_PLACE_BIRTHDAY, const.MSG_CHAT_CHILD_PLACE_BIRTHDAY,
+        update,
+        context,
+        next_feature=key.CHAT_CHILD_PLACE_BIRTHDAY,
+        reply_text=const.MSG_CHAT_CHILD_PLACE_BIRTHDAY,
     )
     return state.CHAT_GETTING_CHILD_PLACE_BIRTHDAY
 
@@ -100,7 +116,10 @@ async def chat_getting_child_place_birthday(
     """Сохраняем место рождения ребенка,
     получаем срок беременности при рождении ребенка"""
     await save_chat_feature(
-        update, context, key.CHAT_CHILD_TERM, const.MSG_CHAT_CHILD_TERM
+        update,
+        context,
+        next_feature=key.CHAT_CHILD_TERM,
+        reply_text=const.MSG_CHAT_CHILD_TERM,
     )
     return state.CHAT_GETTING_CHILD_TERM
 
@@ -111,7 +130,10 @@ async def chat_getting_child_term(
     """Сохраняем срок беременности рождения ребенка,
     получаем вес ребенка при рождении"""
     await save_chat_feature(
-        update, context, key.CHAT_CHILD_WEIGHT, const.MSG_CHAT_CHILD_WEIGHT
+        update,
+        context,
+        next_feature=key.CHAT_CHILD_WEIGHT,
+        reply_text=const.MSG_CHAT_CHILD_WEIGHT,
     )
     return state.CHAT_GETTING_CHILD_WEIGHT
 
@@ -121,7 +143,10 @@ async def chat_getting_child_weight(
 ) -> str:
     """Сохраняем вес ребенка, получаем рост ребенка при рождении"""
     await save_chat_feature(
-        update, context, key.CHAT_CHILD_HEIGHT, const.MSG_CHAT_CHILD_HEIGHT
+        update,
+        context,
+        next_feature=key.CHAT_CHILD_HEIGHT,
+        reply_text=const.MSG_CHAT_CHILD_HEIGHT,
     )
     return state.CHAT_GETTING_CHILD_HEIGHT
 
@@ -131,7 +156,10 @@ async def chat_getting_child_height(
 ) -> str:
     """Сохраняем рост ребенка, получаем данные о диагнозах"""
     await save_chat_feature(
-        update, context, key.CHAT_CHILD_DIAGNOSE, const.MSG_CHAT_CHILD_DIAGNOSE
+        update,
+        context,
+        next_feature=key.CHAT_CHILD_DIAGNOSE,
+        reply_text=const.MSG_CHAT_CHILD_DIAGNOSE,
     )
     return state.CHAT_GETTING_CHILD_DIAGNOSE
 
@@ -141,7 +169,10 @@ async def chat_getting_child_diagnose(
 ) -> str:
     """Сохраняем диагнозы ребенка, получаем данные об операциях"""
     await save_chat_feature(
-        update, context, key.CHAT_CHILD_OPERATION, const.MSG_CHAT_CHILD_OPERATION
+        update,
+        context,
+        next_feature=key.CHAT_CHILD_OPERATION,
+        reply_text=const.MSG_CHAT_CHILD_OPERATION,
     )
     return state.CHAT_GETTING_CHILD_OPERATION
 
@@ -152,7 +183,10 @@ async def chat_getting_child_operation(
     """Сохраняем данные об операциях,
     получаем информацию о том, как узнали о фонде"""
     await save_chat_feature(
-        update, context, key.CHAT_ABOUT_FOND, const.MSG_CHAT_ABOUT_FOND
+        update,
+        context,
+        next_feature=key.CHAT_ABOUT_FOND,
+        reply_text=const.MSG_CHAT_ABOUT_FOND,
     )
     return state.CHAT_GETTING_ABOUT_FOND
 
