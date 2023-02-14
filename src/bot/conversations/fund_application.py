@@ -1022,8 +1022,8 @@ async def end_second_menu(
 
     await query.answer()
     # Очистка словаря пользователя с сохранением выбранной программы
-    save_values = ["Programm", "Программа фонда"]
-    clean_dictionary(context=context.user_data, save_values=save_values)
+    save_keys = ["Programm", "Программа фонда", keys.FLAGS]
+    clean_dictionary(context.user_data, save_values=save_keys)
 
     # Нужно для корректировки вывода в join_or_not_to_programm
     flags_obj.changing_edit_mode_first(True)
@@ -1042,7 +1042,7 @@ async def return_main_menu(
 
     await query.answer()
     # Очистка словаря пользователя
-    clean_dictionary(context=context.user_data)
+    clean_dictionary(context.user_data, save_values=[keys.FLAGS])
 
     context.user_data[keys.START_OVER] = True
     flags_obj.changing_first_start(True)
@@ -1055,7 +1055,7 @@ async def stop_nested(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Завершение работы по команде /stop из вложенного разговора."""
-    clean_dictionary(context=context.user_data)
+    clean_dictionary(context.user_data, save_values=[keys.FLAGS])
 
     await update.message.reply_text(text=constants.MSG_GOODBYE)
     return states.STOPPING
