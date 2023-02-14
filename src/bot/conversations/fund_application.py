@@ -768,6 +768,7 @@ async def asking_which_funds_helped(
 
 
 async def show_user_information(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Отображение пользователю полученной информации."""
     output_text = ""
     for key, data in context.user_data.items():
         if key not in constants.SECRET_KEY:
@@ -807,7 +808,7 @@ async def show_user_information(update: Update, context: ContextTypes.DEFAULT_TY
 async def complete_data_filling(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
-    """Отображение пользователю полученной информации."""
+    """Завершение заполнения заявки."""
     flags_obj = context.user_data[keys.FLAGS]
 
     which_funds_helped = update.message.text
