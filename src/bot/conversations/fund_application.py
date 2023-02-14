@@ -209,7 +209,7 @@ async def asking_phone_mother(
     context.user_data["ФИО мамы"] = fio.title()
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(
         text=constants.QUESTIONS_DICT["phone_number"]
@@ -250,7 +250,7 @@ async def asking_email_mother(
     context.user_data["Телефон"] = phone_number
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(text=constants.QUESTIONS_DICT["email"])
 
@@ -295,7 +295,7 @@ async def asking_fio_child(
 
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(text=constants.QUESTIONS_DICT["fio_child"])
 
@@ -339,7 +339,7 @@ async def asking_how_many_people_in_family(
 
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(
         text=constants.QUESTIONS_DICT["how_many_people"]
@@ -380,7 +380,7 @@ async def asking_city(
     context.user_data["Сколько членов семьи"] = how_many_people
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(text=constants.QUESTIONS_DICT["city"])
 
@@ -423,7 +423,7 @@ async def asking_address(
     context.user_data["Город"] = city.title()
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(text=constants.QUESTIONS_DICT["address"])
 
@@ -458,7 +458,7 @@ async def asking_child_birthday(
     context.user_data["Адрес"] = address.title()
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(text=constants.QUESTIONS_DICT["birthday"])
 
@@ -495,7 +495,7 @@ async def asking_place_birthday(
 
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(
         text=constants.QUESTIONS_DICT["place_birth"]
@@ -533,7 +533,7 @@ async def asking_birth_date(
 
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(
         text=constants.QUESTIONS_DICT["birth_date"]
@@ -575,7 +575,7 @@ async def asking_child_weight(
 
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(text=constants.QUESTIONS_DICT["weight"])
 
@@ -615,7 +615,7 @@ async def asking_child_height(
 
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(text=constants.QUESTIONS_DICT["height"])
 
@@ -659,7 +659,7 @@ async def asking_child_diagnosis(
 
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(text=constants.QUESTIONS_DICT["diagnosis"])
 
@@ -695,7 +695,7 @@ async def asking_how_found_us(
 
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(
         text=constants.QUESTIONS_DICT["how_found_fund"]
@@ -729,7 +729,7 @@ async def asking_which_fund_now(
 
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(text=constants.QUESTIONS_DICT["fund_now"])
 
@@ -758,7 +758,7 @@ async def asking_which_funds_helped(
 
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(
         text=constants.QUESTIONS_DICT["which_fund"]
@@ -767,48 +767,12 @@ async def asking_which_funds_helped(
     return states.WHICH_FUND_WAS_PREVIOUSLY
 
 
-async def show_user_information(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> str:
-    """Отображение пользователю полученной информации."""
-    flags_obj = context.user_data[keys.FLAGS]
-
-    which_funds_helped = update.message.text
-
-    context.user_data["Фонды помогали"] = which_funds_helped.title()
-
-    if flags_obj.edit_mode_second_flag:
-        flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
-
+async def show_user_information(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    output_text = ""
     for key, data in context.user_data.items():
         if key not in constants.SECRET_KEY:
-            await update.message.reply_text(text=f"{key}: {data}")
-
-    return await send_or_change_data(update, context)
-
-
-async def show_user_edit_information(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> str:
-    """Отображение пользователю обновленной
-    информации после редактирования."""
-
-    for key, data in context.user_data.items():
-        if key not in constants.SECRET_KEY:
-            await update.message.reply_text(text=f"{key}: {data}")
-
-    return await send_or_change_data(update, context)
-
-
-async def send_or_change_data(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> int:
-    """Меню с выбором дальнейших действий:
-    - Отправить данные куратору
-    - Изменить данные
-    - Назад
-    """
+            output_text += f"{key}:\n  <b><i>{data}</i></b>\n"
+    output_text += constants.MSG_THIRD_MENU
 
     buttons = [
         [
@@ -832,10 +796,29 @@ async def send_or_change_data(
     keyboard = InlineKeyboardMarkup(buttons)
 
     await update.message.reply_text(
-        text=constants.MSG_THIRD_MENU, reply_markup=keyboard
+        output_text,
+        reply_markup=keyboard,
+        parse_mode="html"
     )
 
     return states.EDIT_USER_DATА
+
+
+async def complete_data_filling(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> str:
+    """Отображение пользователю полученной информации."""
+    flags_obj = context.user_data[keys.FLAGS]
+
+    which_funds_helped = update.message.text
+
+    context.user_data["Фонды помогали"] = which_funds_helped.title()
+    context.user_data["Дата обращения в фонд"] = date.today()
+
+    if flags_obj.edit_mode_second_flag:
+        flags_obj.changing_edit_mode_second(False)
+
+    return await show_user_information(update, context)
 
 
 async def send_message_to_curator(

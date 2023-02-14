@@ -386,4 +386,4 @@ SUBJECT = "Новая заявка на вступление в Фонд."
 SUBJECT_ERROR = "ПОЛОМКА!"
 
 # Ключи скрытые для вывода
-SECRET_KEY = ["START_OVER", "Programm"]
+SECRET_KEY = ["START_OVER", "Programm", "FLAGS"]
