@@ -248,7 +248,7 @@ async def end_second_level(
     return key.END
 
 
-async def end_sending(
+async def return_to_main_menu_after_sending_value(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
     """Возвращение в главное меню после отправки данных."""

@@ -262,10 +262,10 @@ ANSWERS_DICT = {
 }
 
 QUESTIONS_DICT = {
-    "fio_mother": "Введите ФИО мамы.",
+    "full_name_mother": "Введите ФИО мамы.",
     "phone_number": "Введите телефон.",
     "email": "Введите ваш email.",
-    "fio_child": "Введите ФИО ребёнка.",
+    "full_name_child": "Введите ФИО ребёнка.",
     "how_many_people": "Введите количество членов семьи. (числом)",
     "city": "Введите город проживания.",
     "address": "Введите адрес проживания.",
@@ -285,10 +285,10 @@ QUESTIONS_DICT = {
 }
 
 BUTTONS_TEXT = {
-    "fio_mother": "ФИО мамы",
+    "full_name_mother": "ФИО мамы",
     "phone_number": "Телефон",
     "email": "Email",
-    "fio_child": "ФИО ребёнка",
+    "full_name_child": "ФИО ребёнка",
     "how_many_people": "Количество членов семьи",
     "city": "Город",
     "address": "Адрес",

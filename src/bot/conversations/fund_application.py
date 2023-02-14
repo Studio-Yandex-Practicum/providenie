@@ -6,7 +6,7 @@ from telegram.ext import ContextTypes
 
 from ..templates import HTML_TEMPLATE_JOIN_FUND
 from ..validators import fund_app_validators as validators
-from .menu import start
+from .main_menu import start
 from bot import constants, dictionaries, keys, states, templates
 from core.email import bot_send_email_to_curator
 from core.logger import logger
@@ -21,7 +21,7 @@ def clean_dictionary(context: dict, save_values=[None]) -> None:
 
 
 # Здесь начинаются обработчики кнопок и ответов на вопросы
-async def application_to_the_fund(
+async def start_menu(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Вывод кнопок программ фонда."""
@@ -142,7 +142,7 @@ async def join_or_not_to_program(
     return states.JOIN_PROGRAM
 
 
-async def asking_fio_mother(
+async def ask_full_name_mother(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Получение фамилии мамы."""
@@ -150,7 +150,7 @@ async def asking_fio_mother(
 
     if flags_obj.bad_request:
         await update.message.reply_text(
-            text=constants.QUESTIONS_DICT["fio_mother"]
+            text=constants.QUESTIONS_DICT["full_name_mother"]
         )
         flags_obj.changing_bad_request(False)
         return states.FIO_MOTHER
@@ -159,7 +159,7 @@ async def asking_fio_mother(
         query = update.callback_query
         await query.answer()
         await query.edit_message_text(
-            text=constants.QUESTIONS_DICT["fio_mother"]
+            text=constants.QUESTIONS_DICT["full_name_mother"]
         )
         flags_obj.changing_edit_mode_first(False)
         flags_obj.changing_edit_mode_second(True)
@@ -167,12 +167,14 @@ async def asking_fio_mother(
 
     query = update.callback_query
     await query.answer()
-    await query.edit_message_text(text=constants.QUESTIONS_DICT["fio_mother"])
+    await query.edit_message_text(
+        text=constants.QUESTIONS_DICT["full_name_mother"]
+    )
 
     return states.FIO_MOTHER
 
 
-async def asking_phone_mother(
+async def ask_phone_mother(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Получение телефона мамы."""
@@ -218,7 +220,7 @@ async def asking_phone_mother(
     return states.PHONE
 
 
-async def asking_email_mother(
+async def ask_email_mother(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Получение email мамы."""
@@ -257,7 +259,7 @@ async def asking_email_mother(
     return states.EMAIL
 
 
-async def asking_fio_child(
+async def ask_full_name_child(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Получение ФИО ребёнка."""
@@ -265,7 +267,7 @@ async def asking_fio_child(
 
     if flags_obj.bad_request:
         await update.message.reply_text(
-            text=constants.QUESTIONS_DICT["fio_child"]
+            text=constants.QUESTIONS_DICT["full_name_child"]
         )
         flags_obj.changing_bad_request(False)
 
@@ -275,7 +277,7 @@ async def asking_fio_child(
         query = update.callback_query
         await query.answer()
         await query.edit_message_text(
-            text=constants.QUESTIONS_DICT["fio_child"]
+            text=constants.QUESTIONS_DICT["full_name_child"]
         )
         flags_obj.changing_edit_mode_first(False)
         flags_obj.changing_edit_mode_second(True)
@@ -297,12 +299,14 @@ async def asking_fio_child(
         flags_obj.changing_edit_mode_second(False)
         return await show_user_edit_information(update, context)
 
-    await update.message.reply_text(text=constants.QUESTIONS_DICT["fio_child"])
+    await update.message.reply_text(
+        text=constants.QUESTIONS_DICT["full_name_child"]
+    )
 
     return states.FIO_CHILD
 
 
-async def asking_how_many_people_in_family(
+async def ask_how_many_people_in_family(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Получение количества членов семьи."""
@@ -348,9 +352,7 @@ async def asking_how_many_people_in_family(
     return states.HOW_MANY_PEOPLE
 
 
-async def asking_city(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> str:
+async def ask_city(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Получение города проживания."""
     flags_obj = context.user_data[keys.FLAGS]
 
@@ -387,7 +389,7 @@ async def asking_city(
     return states.CITY
 
 
-async def asking_address(
+async def ask_address(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Получение адреса проживания."""
@@ -403,9 +405,7 @@ async def asking_address(
     if flags_obj.edit_mode_first_flag:
         query = update.callback_query
         await query.answer()
-        await query.edit_message_text(
-            text=constants.QUESTIONS_DICT["address"]
-        )
+        await query.edit_message_text(text=constants.QUESTIONS_DICT["address"])
         flags_obj.changing_edit_mode_first(False)
         flags_obj.changing_edit_mode_second(True)
         return states.ADDRESS
@@ -430,7 +430,7 @@ async def asking_address(
     return states.ADDRESS
 
 
-async def asking_child_birthday(
+async def ask_child_birthday(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Получение дня рождения ребенка."""
@@ -465,7 +465,7 @@ async def asking_child_birthday(
     return states.BIRTHDAY
 
 
-async def asking_place_birthday(
+async def ask_place_birthday(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Получение места рождения ребенка."""
@@ -504,7 +504,7 @@ async def asking_place_birthday(
     return states.PLACE_BIRTH
 
 
-async def asking_birth_date(
+async def ask_birth_date(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Получение срока рождения ребёнка."""
@@ -542,14 +542,16 @@ async def asking_birth_date(
     return states.BIRTH_DATE
 
 
-async def asking_child_weight(
+async def ask_child_weight(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Получение веса ребёнка."""
     flags_obj = context.user_data[keys.FLAGS]
 
     if flags_obj.bad_request:
-        await update.message.reply_text(text=constants.QUESTIONS_DICT["weight"])
+        await update.message.reply_text(
+            text=constants.QUESTIONS_DICT["weight"]
+        )
         flags_obj.changing_bad_request(False)
         return states.WEIGHT
 
@@ -582,14 +584,16 @@ async def asking_child_weight(
     return states.WEIGHT
 
 
-async def asking_child_height(
+async def ask_child_height(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Получение роста ребёнка."""
     flags_obj = context.user_data[keys.FLAGS]
 
     if flags_obj.bad_request:
-        await update.message.reply_text(text=constants.QUESTIONS_DICT["height"])
+        await update.message.reply_text(
+            text=constants.QUESTIONS_DICT["height"]
+        )
         flags_obj.changing_bad_request(False)
         return states.HEIGHT
 
@@ -622,7 +626,7 @@ async def asking_child_height(
     return states.HEIGHT
 
 
-async def asking_child_diagnosis(
+async def ask_child_diagnosis(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Получение диагнозов ребёнка."""
@@ -666,7 +670,7 @@ async def asking_child_diagnosis(
     return states.DIAGNOSIS
 
 
-async def asking_how_found_us(
+async def ask_how_found_us(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Получение информации о том, как нашли фонд."""
@@ -704,7 +708,7 @@ async def asking_how_found_us(
     return states.HOW_FOUND
 
 
-async def asking_which_fund_now(
+async def ask_which_fund_now(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """
@@ -736,7 +740,7 @@ async def asking_which_fund_now(
     return states.WHICH_FUND
 
 
-async def asking_which_funds_helped(
+async def ask_which_funds_helped(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Получение информации о том, какие фонды помогали раньше."""
@@ -838,7 +842,7 @@ async def send_or_change_data(
     return states.EDIT_USER_DATА
 
 
-async def send_message_to_curator(
+async def send_email_to_curator(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
     """Отправка сообщения куратору с данными.
@@ -902,7 +906,7 @@ async def send_message_to_curator(
     return states.END_FIRST_LEVEL
 
 
-async def change_data(
+async def display_menu_editing_entered_value(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
     """Изменение данных пользователя через кнопки."""
@@ -1005,7 +1009,7 @@ async def end(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Возврат в меню выбора программ."""
     await update.callback_query.answer()
     clean_dictionary(context=context.user_data)
-    await application_to_the_fund(update, context)
+    await start_menu(update, context)
 
 
 async def end_second_menu(
@@ -1053,7 +1057,5 @@ async def stop_nested(
     """Завершение работы по команде /stop из вложенного разговора."""
     clean_dictionary(context=context.user_data)
 
-    await update.message.reply_text(
-        text=constants.MSG_GOODBYE
-    )
+    await update.message.reply_text(text=constants.MSG_GOODBYE)
     return states.STOPPING

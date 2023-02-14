@@ -1,4 +1,5 @@
 from typing import Optional
+
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
@@ -6,11 +7,11 @@ from bot import constants as const
 from bot import keys as key
 from bot import states as state
 from bot import templates
-from bot.conversations.menu import start
+from bot.conversations.main_menu import start
 from core.email import bot_send_email_to_curator
 
 
-async def add_volunteer(
+async def start_menu(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Путь вступления в ряды волонтёров."""
@@ -34,7 +35,7 @@ async def add_volunteer(
     return state.ADDING_VOLUNTEER
 
 
-async def adding_volunteer(
+async def ask_full_name(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Начинаем поочерёдный ввод данных. Спрашиваем ФИО."""
@@ -46,7 +47,12 @@ async def adding_volunteer(
     return state.ADDING_NAME
 
 
-async def save_feature(update: Update, context: ContextTypes.DEFAULT_TYPE, next_feature: Optional[str] = None, reply_text: Optional[str] = None):
+async def save_feature(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+    next_feature: Optional[str] = None,
+    reply_text: Optional[str] = None,
+):
     user_data = context.user_data
     message = update.message.text
     user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
@@ -56,7 +62,7 @@ async def save_feature(update: Update, context: ContextTypes.DEFAULT_TYPE, next_
         await update.message.reply_text(text=reply_text)
 
 
-async def adding_name(
+async def ask_birthday(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем ФИО, спрашиваем дату рождения."""
@@ -64,15 +70,13 @@ async def adding_name(
     return state.ADDING_BIRTHDAY
 
 
-async def adding_birthday(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> str:
+async def ask_city(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Сохраняем дату рождения, спрашиваем город проживания."""
     await save_feature(update, context, key.CITY, const.MSG_CITY)
     return state.ADDING_CITY
 
 
-async def adding_city(
+async def ask_phone_number(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем город проживания, спрашиваем номер телефона."""
@@ -80,40 +84,40 @@ async def adding_city(
     return state.ADDING_PHONE
 
 
-async def adding_phone(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> str:
+async def ask_email(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Сохраняем номер телефона, спрашиваем email."""
     await save_feature(update, context, key.EMAIL, const.MSG_EMAIL)
     return state.ADDING_EMAIL
 
 
-async def adding_email(
+async def ask_help_option(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем email, спрашиваем вариант помощи."""
-    await save_feature(update, context, key.MESSAGE, const.MSG_YOUR_HELP_OPTION)
+    await save_feature(
+        update, context, key.MESSAGE, const.MSG_YOUR_HELP_OPTION
+    )
     return state.ADDING_MESSAGE
 
 
-async def adding_message(
+async def save_help_option(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем вариант помощи."""
     await save_feature(update, context)
-    return await show_volunteer(update, context)
+    return await display_all_entered_value(update, context)
 
 
-async def skip_adding_message(
+async def save_empty_help_option(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем пустой вариант помощи."""
     user_data = context.user_data
     user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = ""
-    return await show_volunteer(update, context)
+    return await display_all_entered_value(update, context)
 
 
-async def show_volunteer(
+async def display_all_entered_value(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Отображение всех введённых данных волонтёра."""
@@ -158,7 +162,7 @@ async def show_volunteer(
     return state.SHOWING_VOLUNTEER
 
 
-async def select_volunteer_field(
+async def display_menu_editing_entered_value(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Вывод меню редактирования введённых ранее данных."""
@@ -203,7 +207,7 @@ async def select_volunteer_field(
     return state.VOLUNTEER_FEATURE
 
 
-async def ask_volunteer(
+async def ask_new_value(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Ввод нового значения, при редактировании данных."""
@@ -215,25 +219,25 @@ async def ask_volunteer(
     return state.TYPING_VOLUNTEER
 
 
-async def save_volunteer_input(
+async def save_new_value(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохранение нового значения, при редактировании данных."""
     await save_feature(update, context)
     context.user_data[key.START_OVER] = True
-    return await select_volunteer_field(update, context)
+    return await display_menu_editing_entered_value(update, context)
 
 
-async def end_editing(
+async def display_all_new_entered_value(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
     """Возвращение к просмотру данных после редактирования."""
     context.user_data[key.START_OVER] = True
-    await show_volunteer(update, context)
+    await display_all_entered_value(update, context)
     return key.END
 
 
-async def end_sending(
+async def return_to_main_menu_after_sending_value(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
     """Возвращение в главное меню после отправки письма."""
@@ -242,7 +246,7 @@ async def end_sending(
     return state.STOPPING
 
 
-async def send_email(
+async def send_email_to_curator(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
     """Отправка письма куратору."""

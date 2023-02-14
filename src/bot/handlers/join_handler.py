@@ -13,66 +13,65 @@ from bot import keys, states
 # ВТОРОЙ УРОВЕНЬ Вступить в фонд
 selection_handlers_second_level = [
     CallbackQueryHandler(
-        fund.send_message_to_curator,
+        fund.send_email_to_curator,
         pattern="^" + keys.CONFIRM_AND_SEND + "$",
     ),
     CallbackQueryHandler(
-        fund.change_data, pattern="^" + keys.CHANGE_DATA + "$"
+        fund.display_menu_editing_entered_value,
+        pattern="^" + keys.CHANGE_DATA + "$",
     ),
     CallbackQueryHandler(
         fund.end_second_menu,
         pattern="^" + keys.END_SECOND_LEVEL + "$",
     ),
     CallbackQueryHandler(
-        fund.asking_fio_mother, pattern="^" + keys.FIO_MOTHER + "$"
+        fund.ask_full_name_mother, pattern="^" + keys.FIO_MOTHER + "$"
     ),
     CallbackQueryHandler(
-        fund.asking_phone_mother, pattern="^" + keys.PHONE + "$"
+        fund.ask_phone_mother, pattern="^" + keys.PHONE + "$"
     ),
     CallbackQueryHandler(
-        fund.asking_email_mother, pattern="^" + keys.EMAIL + "$"
+        fund.ask_email_mother, pattern="^" + keys.EMAIL + "$"
     ),
     CallbackQueryHandler(
-        fund.asking_fio_child, pattern="^" + keys.FIO_CHILD + "$"
+        fund.ask_full_name_child, pattern="^" + keys.FIO_CHILD + "$"
     ),
     CallbackQueryHandler(
-        fund.asking_how_many_people_in_family,
+        fund.ask_how_many_people_in_family,
         pattern="^" + keys.HOW_MANY_PEOPLE + "$",
     ),
-    CallbackQueryHandler(fund.asking_city, pattern="^" + keys.CITY + "$"),
+    CallbackQueryHandler(fund.ask_city, pattern="^" + keys.CITY + "$"),
+    CallbackQueryHandler(fund.ask_address, pattern="^" + keys.ADDRESS + "$"),
     CallbackQueryHandler(
-        fund.asking_address, pattern="^" + keys.ADDRESS + "$"
+        fund.ask_child_birthday, pattern="^" + keys.BIRTHDAY + "$"
     ),
     CallbackQueryHandler(
-        fund.asking_child_birthday, pattern="^" + keys.BIRTHDAY + "$"
-    ),
-    CallbackQueryHandler(
-        fund.asking_place_birthday,
+        fund.ask_place_birthday,
         pattern="^" + keys.PLACE_BIRTH + "$",
     ),
     CallbackQueryHandler(
-        fund.asking_birth_date, pattern="^" + keys.BIRTH_DATE + "$"
+        fund.ask_birth_date, pattern="^" + keys.BIRTH_DATE + "$"
     ),
     CallbackQueryHandler(
-        fund.asking_child_weight, pattern="^" + keys.WEIGHT + "$"
+        fund.ask_child_weight, pattern="^" + keys.WEIGHT + "$"
     ),
     CallbackQueryHandler(
-        fund.asking_child_height, pattern="^" + keys.HEIGHT + "$"
+        fund.ask_child_height, pattern="^" + keys.HEIGHT + "$"
     ),
     CallbackQueryHandler(
-        fund.asking_child_diagnosis,
+        fund.ask_child_diagnosis,
         pattern="^" + keys.DIAGNOSIS + "$",
     ),
     CallbackQueryHandler(
-        fund.asking_how_found_us, pattern="^" + keys.HOW_FOUND + "$"
+        fund.ask_how_found_us, pattern="^" + keys.HOW_FOUND + "$"
     ),
-    CallbackQueryHandler(fund.asking_city, pattern="^" + keys.CITY + "$"),
+    CallbackQueryHandler(fund.ask_city, pattern="^" + keys.CITY + "$"),
     CallbackQueryHandler(
-        fund.asking_which_fund_now,
+        fund.ask_which_fund_now,
         pattern="^" + keys.WHICH_FUND + "$",
     ),
     CallbackQueryHandler(
-        fund.asking_which_funds_helped,
+        fund.ask_which_funds_helped,
         pattern="^" + keys.WHICH_FUND_WAS_PREVIOUSLY + "$",
     ),
 ]
@@ -80,88 +79,86 @@ selection_handlers_second_level = [
 dates_about_parent_and_child = ConversationHandler(
     entry_points=[
         CallbackQueryHandler(
-            fund.asking_fio_mother,
+            fund.ask_full_name_mother,
             pattern="^" + keys.JOIN_BUTTON + "$",
         ),
     ],
     states={
         states.RETURN_MOTHER_FIO: [
             MessageHandler(
-                filters.TEXT & ~filters.COMMAND, fund.asking_fio_mother
+                filters.TEXT & ~filters.COMMAND, fund.ask_full_name_mother
             )
         ],
         states.FIO_MOTHER: [
             MessageHandler(
-                filters.TEXT & ~filters.COMMAND, fund.asking_phone_mother
+                filters.TEXT & ~filters.COMMAND, fund.ask_phone_mother
             )
         ],
         states.PHONE: [
             MessageHandler(
-                filters.TEXT & ~filters.COMMAND, fund.asking_email_mother
+                filters.TEXT & ~filters.COMMAND, fund.ask_email_mother
             )
         ],
         states.EMAIL: [
             MessageHandler(
-                filters.TEXT & ~filters.COMMAND, fund.asking_fio_child
+                filters.TEXT & ~filters.COMMAND, fund.ask_full_name_child
             )
         ],
         states.FIO_CHILD: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
-                fund.asking_how_many_people_in_family,
+                fund.ask_how_many_people_in_family,
             )
         ],
         states.HOW_MANY_PEOPLE: [
-            MessageHandler(filters.TEXT & ~filters.COMMAND, fund.asking_city)
+            MessageHandler(filters.TEXT & ~filters.COMMAND, fund.ask_city)
         ],
         states.CITY: [
-            MessageHandler(
-                filters.TEXT & ~filters.COMMAND, fund.asking_address
-            )
+            MessageHandler(filters.TEXT & ~filters.COMMAND, fund.ask_address)
         ],
         states.ADDRESS: [
             MessageHandler(
-                filters.TEXT & ~filters.COMMAND, fund.asking_child_birthday
+                filters.TEXT & ~filters.COMMAND, fund.ask_child_birthday
             )
         ],
         states.BIRTHDAY: [
             MessageHandler(
-                filters.TEXT & ~filters.COMMAND, fund.asking_place_birthday
+                filters.TEXT & ~filters.COMMAND, fund.ask_place_birthday
             )
         ],
         states.PLACE_BIRTH: [
             MessageHandler(
-                filters.TEXT & ~filters.COMMAND, fund.asking_birth_date
+                filters.TEXT & ~filters.COMMAND, fund.ask_birth_date
             )
         ],
         states.BIRTH_DATE: [
             MessageHandler(
-                filters.TEXT & ~filters.COMMAND, fund.asking_child_weight
+                filters.TEXT & ~filters.COMMAND, fund.ask_child_weight
             )
         ],
         states.WEIGHT: [
             MessageHandler(
-                filters.TEXT & ~filters.COMMAND, fund.asking_child_height
+                filters.TEXT & ~filters.COMMAND, fund.ask_child_height
             )
         ],
         states.HEIGHT: [
             MessageHandler(
-                filters.TEXT & ~filters.COMMAND, fund.asking_child_diagnosis
+                filters.TEXT & ~filters.COMMAND, fund.ask_child_diagnosis
             )
         ],
         states.DIAGNOSIS: [
             MessageHandler(
-                filters.TEXT & ~filters.COMMAND, fund.asking_how_found_us
+                filters.TEXT & ~filters.COMMAND, fund.ask_how_found_us
             )
         ],
         states.HOW_FOUND: [
             MessageHandler(
-                filters.TEXT & ~filters.COMMAND, fund.asking_which_fund_now
+                filters.TEXT & ~filters.COMMAND, fund.ask_which_fund_now
             )
         ],
         states.WHICH_FUND: [
             MessageHandler(
-                filters.TEXT & ~filters.COMMAND, fund.asking_which_funds_helped
+                filters.TEXT & ~filters.COMMAND, fund.ask_which_funds_helped
             )
         ],
         states.WHICH_FUND_WAS_PREVIOUSLY: [
@@ -210,7 +207,7 @@ conv_handler_join_to_fund = ConversationHandler(
     name="conv_handler_join_to_fund",
     entry_points=[
         CallbackQueryHandler(
-            fund.application_to_the_fund, pattern="^" + str(keys.REQUEST) + "$"
+            fund.start_menu, pattern="^" + str(keys.REQUEST) + "$"
         ),
     ],
     states={

@@ -7,7 +7,7 @@ from bot import constants as const
 from bot import keys as key
 from bot import states as state
 from bot import templates
-from bot.conversations.menu import start
+from bot.conversations.main_menu import start
 from core.email import bot_send_email_to_curator
 
 
