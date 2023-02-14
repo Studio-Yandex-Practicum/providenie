@@ -1,6 +1,7 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
+from .chat_get_data import save_chat_feature
 from .chat_show_data import chat_show_data
 from bot import constants as const
 from bot import keys as key
@@ -134,10 +135,8 @@ async def chat_save_input(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохранение нового значения при редактировании данных."""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.CHAT_FEATURES][user_data[key.CHAT_CURRENT_FEATURE]] = message
-    user_data[key.START_OVER] = True
+    save_chat_feature(update, context)
+    context.user_data[key.START_OVER] = True
     return await chat_select_field(update, context)
 
 

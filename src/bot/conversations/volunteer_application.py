@@ -1,4 +1,5 @@
 from typing import Optional
+
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
@@ -46,7 +47,13 @@ async def adding_volunteer(
     return state.ADDING_NAME
 
 
-async def save_feature(update: Update, context: ContextTypes.DEFAULT_TYPE, next_feature: Optional[str] = None, reply_text: Optional[str] = None):
+async def save_volunteer_feature(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+    next_feature: Optional[str] = None,
+    reply_text: Optional[str] = None
+):
+    """Сохраняем данные аттрибута волонтера"""
     user_data = context.user_data
     message = update.message.text
     user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
@@ -60,7 +67,7 @@ async def adding_name(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем ФИО, спрашиваем дату рождения."""
-    await save_feature(update, context, key.BIRTHDAY, const.MSG_BIRTHDAY)
+    await save_volunteer_feature(update, context, next_feature=key.BIRTHDAY, reply_text=const.MSG_BIRTHDAY)
     return state.ADDING_BIRTHDAY
 
 
@@ -68,7 +75,7 @@ async def adding_birthday(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем дату рождения, спрашиваем город проживания."""
-    await save_feature(update, context, key.CITY, const.MSG_CITY)
+    await save_volunteer_feature(update, context, next_feature=key.CITY, reply_text=const.MSG_CITY)
     return state.ADDING_CITY
 
 
@@ -76,7 +83,7 @@ async def adding_city(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем город проживания, спрашиваем номер телефона."""
-    await save_feature(update, context, key.PHONE, const.MSG_PHONE)
+    await save_volunteer_feature(update, context, next_feature=key.PHONE, reply_text=const.MSG_PHONE)
     return state.ADDING_PHONE
 
 
@@ -84,7 +91,7 @@ async def adding_phone(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем номер телефона, спрашиваем email."""
-    await save_feature(update, context, key.EMAIL, const.MSG_EMAIL)
+    await save_volunteer_feature(update, context, next_feature=key.EMAIL, reply_text=const.MSG_EMAIL)
     return state.ADDING_EMAIL
 
 
@@ -92,7 +99,7 @@ async def adding_email(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем email, спрашиваем вариант помощи."""
-    await save_feature(update, context, key.MESSAGE, const.MSG_YOUR_HELP_OPTION)
+    await save_volunteer_feature(update, context, next_feature=key.MESSAGE, reply_text=const.MSG_YOUR_HELP_OPTION)
     return state.ADDING_MESSAGE
 
 
@@ -100,7 +107,7 @@ async def adding_message(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем вариант помощи."""
-    await save_feature(update, context)
+    await save_volunteer_feature(update, context)
     return await show_volunteer(update, context)
 
 
@@ -219,7 +226,7 @@ async def save_volunteer_input(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохранение нового значения, при редактировании данных."""
-    await save_feature(update, context)
+    await save_volunteer_feature(update, context)
     context.user_data[key.START_OVER] = True
     return await select_volunteer_field(update, context)
 
