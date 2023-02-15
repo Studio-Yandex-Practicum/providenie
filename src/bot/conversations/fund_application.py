@@ -864,8 +864,8 @@ async def send_message_to_curator(
 
     documents = "Вам сообщит куратор."
 
-    if context.user_data["Programm"] in constants.PROGRAM_FUND:
-        documents = constants.PROGRAM_FUND[context.user_data["Programm"]][2]
+    if context.user_data["Programm"] in dictionaries.PROGRAM_FUND:
+        documents = dictionaries.PROGRAM_FUND[context.user_data["Programm"]][2]
 
     button = [
         [
