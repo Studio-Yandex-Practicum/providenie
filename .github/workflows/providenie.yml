@@ -2,7 +2,7 @@ name: bot-providenie workflow
 
 on:
   push:
-    branches: [feature/ci_cd]
+    branches: [release]
 
 jobs:
   deploy:
