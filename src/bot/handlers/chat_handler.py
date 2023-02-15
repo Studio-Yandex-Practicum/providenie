@@ -146,7 +146,7 @@ chat_get_conv = ConversationHandler(
         state.CHAT_GETTING_ABOUT_FOND: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND,
-                chat_get_data.display_all_entered_value,
+                chat_get_data.display_entered_value,
             )
         ],
         state.CHAT_SHOWING: [chat_edit_conv],

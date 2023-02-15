@@ -21,7 +21,7 @@ def clean_dictionary(context: dict, save_values=[None]) -> None:
 
 
 # Здесь начинаются обработчики кнопок и ответов на вопросы
-async def start_menu(
+async def enter_submenu(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Вывод кнопок программ фонда."""
@@ -211,7 +211,7 @@ async def ask_phone_mother(
     context.user_data["ФИО мамы"] = fio.title()
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(
         text=constants.QUESTIONS_DICT["phone_number"]
@@ -252,7 +252,7 @@ async def ask_email_mother(
     context.user_data["Телефон"] = phone_number
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(text=constants.QUESTIONS_DICT["email"])
 
@@ -297,7 +297,7 @@ async def ask_full_name_child(
 
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(
         text=constants.QUESTIONS_DICT["full_name_child"]
@@ -343,7 +343,7 @@ async def ask_how_many_people_in_family(
 
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(
         text=constants.QUESTIONS_DICT["how_many_people"]
@@ -382,7 +382,7 @@ async def ask_city(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     context.user_data["Сколько членов семьи"] = how_many_people
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(text=constants.QUESTIONS_DICT["city"])
 
@@ -423,7 +423,7 @@ async def ask_address(
     context.user_data["Город"] = city.title()
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(text=constants.QUESTIONS_DICT["address"])
 
@@ -458,7 +458,7 @@ async def ask_child_birthday(
     context.user_data["Адрес"] = address.title()
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(text=constants.QUESTIONS_DICT["birthday"])
 
@@ -495,7 +495,7 @@ async def ask_place_birthday(
 
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(
         text=constants.QUESTIONS_DICT["place_birth"]
@@ -533,7 +533,7 @@ async def ask_birth_date(
 
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(
         text=constants.QUESTIONS_DICT["birth_date"]
@@ -577,7 +577,7 @@ async def ask_child_weight(
 
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(text=constants.QUESTIONS_DICT["weight"])
 
@@ -619,7 +619,7 @@ async def ask_child_height(
 
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(text=constants.QUESTIONS_DICT["height"])
 
@@ -663,7 +663,7 @@ async def ask_child_diagnosis(
 
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(text=constants.QUESTIONS_DICT["diagnosis"])
 
@@ -699,7 +699,7 @@ async def ask_how_found_us(
 
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(
         text=constants.QUESTIONS_DICT["how_found_fund"]
@@ -733,7 +733,7 @@ async def ask_which_fund_now(
 
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(text=constants.QUESTIONS_DICT["fund_now"])
 
@@ -762,7 +762,7 @@ async def ask_which_funds_helped(
 
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
+        return await show_user_information(update, context)
 
     await update.message.reply_text(
         text=constants.QUESTIONS_DICT["which_fund"]
@@ -773,46 +773,13 @@ async def ask_which_funds_helped(
 
 async def show_user_information(
     update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> str:
+):
     """Отображение пользователю полученной информации."""
-    flags_obj = context.user_data[keys.FLAGS]
-
-    which_funds_helped = update.message.text
-
-    context.user_data["Фонды помогали"] = which_funds_helped.title()
-
-    if flags_obj.edit_mode_second_flag:
-        flags_obj.changing_edit_mode_second(False)
-        return await show_user_edit_information(update, context)
-
+    output_text = ""
     for key, data in context.user_data.items():
         if key not in constants.SECRET_KEY:
-            await update.message.reply_text(text=f"{key}: {data}")
-
-    return await send_or_change_data(update, context)
-
-
-async def show_user_edit_information(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> str:
-    """Отображение пользователю обновленной
-    информации после редактирования."""
-
-    for key, data in context.user_data.items():
-        if key not in constants.SECRET_KEY:
-            await update.message.reply_text(text=f"{key}: {data}")
-
-    return await send_or_change_data(update, context)
-
-
-async def send_or_change_data(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> int:
-    """Меню с выбором дальнейших действий:
-    - Отправить данные куратору
-    - Изменить данные
-    - Назад
-    """
+            output_text += f"{key}:\n  <b><i>{data}</i></b>\n"
+    output_text += constants.MSG_THIRD_MENU
 
     buttons = [
         [
@@ -836,13 +803,32 @@ async def send_or_change_data(
     keyboard = InlineKeyboardMarkup(buttons)
 
     await update.message.reply_text(
-        text=constants.MSG_THIRD_MENU, reply_markup=keyboard
+        output_text,
+        reply_markup=keyboard,
+        parse_mode="html"
     )
 
     return states.EDIT_USER_DATА
 
 
-async def send_email_to_curator(
+async def complete_data_filling(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> str:
+    """Завершение заполнения заявки."""
+    flags_obj = context.user_data[keys.FLAGS]
+
+    which_funds_helped = update.message.text
+
+    context.user_data["Фонды помогали"] = which_funds_helped.title()
+    context.user_data["Дата обращения в фонд"] = date.today()
+
+    if flags_obj.edit_mode_second_flag:
+        flags_obj.changing_edit_mode_second(False)
+
+    return await show_user_information(update, context)
+
+
+async def send_values_to_curator(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
     """Отправка сообщения куратору с данными.
@@ -884,8 +870,8 @@ async def send_email_to_curator(
 
     documents = "Вам сообщит куратор."
 
-    if context.user_data["Programm"] in constants.PROGRAM_FUND:
-        documents = constants.PROGRAM_FUND[context.user_data["Programm"]][2]
+    if context.user_data["Programm"] in dictionaries.PROGRAM_FUND:
+        documents = dictionaries.PROGRAM_FUND[context.user_data["Programm"]][2]
 
     button = [
         [
@@ -906,7 +892,7 @@ async def send_email_to_curator(
     return states.END_FIRST_LEVEL
 
 
-async def display_menu_editing_entered_value(
+async def display_editing_menu(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
     """Изменение данных пользователя через кнопки."""
@@ -1009,7 +995,7 @@ async def end(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Возврат в меню выбора программ."""
     await update.callback_query.answer()
     clean_dictionary(context=context.user_data)
-    await start_menu(update, context)
+    await enter_submenu(update, context)
 
 
 async def end_second_menu(

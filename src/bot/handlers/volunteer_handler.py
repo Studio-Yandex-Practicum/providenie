@@ -16,7 +16,7 @@ edit_volunteer_conv = ConversationHandler(
     name="edit_volunteer_conv",
     entry_points=[
         CallbackQueryHandler(
-            volunteer.display_menu_editing_entered_value,
+            volunteer.display_editing_menu,
             pattern="^" + key.EDIT_VOLUNTEER + "$",
         ),
         CallbackQueryHandler(
@@ -42,7 +42,7 @@ edit_volunteer_conv = ConversationHandler(
                 pattern="^" + str(key.END) + "$",
             ),
             CallbackQueryHandler(
-                volunteer.return_to_main_menu_after_sending_value,
+                main_menu.end_sending,
                 pattern="^" + key.SENT + "$",
             ),
         ],
@@ -53,7 +53,7 @@ edit_volunteer_conv = ConversationHandler(
             pattern="^" + str(key.END) + "$",
         ),
         CallbackQueryHandler(
-            volunteer.return_to_main_menu_after_sending_value,
+            main_menu.end_sending,
             pattern="^" + key.SENT + "$",
         ),
         CommandHandler("stop", main_menu.stop_nested),
@@ -69,7 +69,7 @@ add_volunteer_conv = ConversationHandler(
     name="add_volunteer_conv",
     entry_points=[
         CallbackQueryHandler(
-            volunteer.start_menu,
+            volunteer.enter_submenu,
             pattern="^" + key.ADD_VOLUNTEER + "$",
         )
     ],
@@ -107,7 +107,7 @@ add_volunteer_conv = ConversationHandler(
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND, volunteer.save_help_option
             ),
-            CommandHandler("skip", volunteer.save_empty_help_option),
+            CommandHandler("skip", volunteer.skip_adding_message),
         ],
         state.SHOWING_VOLUNTEER: [edit_volunteer_conv],
     },

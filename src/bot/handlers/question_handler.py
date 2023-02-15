@@ -16,11 +16,11 @@ edit_question_conv = ConversationHandler(
     name="edit_question_conv",
     entry_points=[
         CallbackQueryHandler(
-            question.display_menu_editing_entered_value,
+            question.display_editing_menu,
             pattern="^" + key.EDIT_QUESTION + "$",
         ),
         CallbackQueryHandler(
-            question.send_message_to_curator,
+            question.send_values_to_curator,
             pattern="^" + key.SEND_QUESTION + "$",
         ),
     ],
@@ -38,18 +38,18 @@ edit_question_conv = ConversationHandler(
         ],
         state.QUESTION_SENT: [
             CallbackQueryHandler(
-                main_menu.return_to_main_menu_after_sending_value,
+                main_menu.end_sending,
                 pattern="^" + key.SENT + "$",
             ),
         ],
     },
     fallbacks=[
         CallbackQueryHandler(
-            question.display_all_new_entered_value,
+            question.display_edited_values,
             pattern="^" + str(key.END) + "$",
         ),
         CallbackQueryHandler(
-            main_menu.return_to_main_menu_after_sending_value,
+            main_menu.end_sending,
             pattern="^" + key.SENT + "$",
         ),
         CommandHandler("stop", main_menu.stop_nested),
@@ -65,7 +65,7 @@ ask_question_conv = ConversationHandler(
     name="ask_question_conv",
     entry_points=[
         CallbackQueryHandler(
-            question.start_menu,
+            question.enter_submenu,
             pattern="^" + key.ASK_QUESTION + "$",
         )
     ],
@@ -78,7 +78,7 @@ ask_question_conv = ConversationHandler(
         ],
         state.ADDING_NAME: [
             MessageHandler(
-                filters.TEXT & ~filters.COMMAND, question.ask_question_theme
+                filters.TEXT & ~filters.COMMAND, question.ask_question_subject
             )
         ],
         state.ADDING_THEME: [

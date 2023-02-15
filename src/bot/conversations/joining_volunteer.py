@@ -7,11 +7,10 @@ from bot import constants as const
 from bot import keys as key
 from bot import states as state
 from bot import templates
-from bot.conversations.main_menu import start
 from core.email import bot_send_email_to_curator
 
 
-async def start_menu(
+async def enter_submenu(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Путь вступления в ряды волонтёров."""
@@ -105,19 +104,19 @@ async def save_help_option(
 ) -> str:
     """Сохраняем вариант помощи."""
     await save_feature(update, context)
-    return await display_all_entered_value(update, context)
+    return await display_entered_value(update, context)
 
 
-async def save_empty_help_option(
+async def skip_adding_message(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем пустой вариант помощи."""
     user_data = context.user_data
     user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = ""
-    return await display_all_entered_value(update, context)
+    return await display_entered_value(update, context)
 
 
-async def display_all_entered_value(
+async def display_entered_value(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Отображение всех введённых данных волонтёра."""
@@ -162,7 +161,7 @@ async def display_all_entered_value(
     return state.SHOWING_VOLUNTEER
 
 
-async def display_menu_editing_entered_value(
+async def display_editing_menu(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Вывод меню редактирования введённых ранее данных."""
@@ -225,7 +224,7 @@ async def save_new_value(
     """Сохранение нового значения, при редактировании данных."""
     await save_feature(update, context)
     context.user_data[key.START_OVER] = True
-    return await display_menu_editing_entered_value(update, context)
+    return await display_editing_menu(update, context)
 
 
 async def display_all_new_entered_value(
@@ -233,17 +232,8 @@ async def display_all_new_entered_value(
 ) -> int:
     """Возвращение к просмотру данных после редактирования."""
     context.user_data[key.START_OVER] = True
-    await display_all_entered_value(update, context)
+    await display_entered_value(update, context)
     return key.END
-
-
-async def return_to_main_menu_after_sending_value(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> int:
-    """Возвращение в главное меню после отправки письма."""
-    context.user_data[key.START_OVER] = True
-    await start(update, context)
-    return state.STOPPING
 
 
 async def send_email_to_curator(

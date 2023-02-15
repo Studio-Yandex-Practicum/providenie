@@ -13,11 +13,11 @@ from bot import keys, states
 # ВТОРОЙ УРОВЕНЬ Вступить в фонд
 selection_handlers_second_level = [
     CallbackQueryHandler(
-        fund.send_email_to_curator,
+        fund.send_values_to_curator,
         pattern="^" + keys.CONFIRM_AND_SEND + "$",
     ),
     CallbackQueryHandler(
-        fund.display_menu_editing_entered_value,
+        fund.display_editing_menu,
         pattern="^" + keys.CHANGE_DATA + "$",
     ),
     CallbackQueryHandler(
@@ -163,7 +163,7 @@ dates_about_parent_and_child = ConversationHandler(
         ],
         states.WHICH_FUND_WAS_PREVIOUSLY: [
             MessageHandler(
-                filters.TEXT & ~filters.COMMAND, fund.show_user_information
+                filters.TEXT & ~filters.COMMAND, fund.complete_data_filling
             )
         ],
         states.EDIT_USER_DATА: selection_handlers_second_level,
@@ -207,7 +207,7 @@ conv_handler_join_to_fund = ConversationHandler(
     name="conv_handler_join_to_fund",
     entry_points=[
         CallbackQueryHandler(
-            fund.start_menu, pattern="^" + str(keys.REQUEST) + "$"
+            fund.enter_submenu, pattern="^" + str(keys.REQUEST) + "$"
         ),
     ],
     states={

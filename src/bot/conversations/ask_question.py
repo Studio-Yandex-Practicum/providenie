@@ -8,7 +8,7 @@ from bot import states as state
 from bot import templates
 
 
-async def start_menu(
+async def enter_submenu(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Возможность задать вопрос."""
@@ -44,7 +44,7 @@ async def ask_full_name(
     return state.ADDING_NAME
 
 
-async def ask_question_theme(
+async def ask_question_subject(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем имя, спрашиваем тему вопроса."""
@@ -75,10 +75,10 @@ async def save_question_message(
     user_data = context.user_data
     message = update.message.text
     user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
-    return await display_all_entered_value(update, context)
+    return await display_entered_values(update, context)
 
 
-async def display_all_entered_value(
+async def display_entered_values(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Отображение вопроса."""
@@ -118,7 +118,7 @@ async def display_all_entered_value(
     return state.SHOWING_QUESTION
 
 
-async def display_menu_editing_entered_value(
+async def display_editing_menu(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Вывод меню редактирования введённых ранее данных."""
@@ -176,19 +176,19 @@ async def save_new_value(
     message = update.message.text
     user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
     user_data[key.START_OVER] = True
-    return await display_menu_editing_entered_value(update, context)
+    return await display_editing_menu(update, context)
 
 
-async def display_all_new_entered_value(
+async def display_edited_values(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
     """Возвращение к просмотру данных после редактирования."""
     context.user_data[key.START_OVER] = True
-    await display_all_entered_value(update, context)
+    await display_edited_values(update, context)
     return key.END
 
 
-async def send_message_to_curator(
+async def send_values_to_curator(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> None:
     """Отправка вопроса куратору."""

@@ -187,7 +187,7 @@ async def ask_about_fond(
     return state.CHAT_GETTING_ABOUT_FOND
 
 
-async def display_all_entered_value(
+async def display_entered_value(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем информацию о том, как узнали о фонде,
