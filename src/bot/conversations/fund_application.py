@@ -905,7 +905,7 @@ async def display_editing_menu(
     buttons = [
         [
             InlineKeyboardButton(
-                text=constants.BUTTONS_TEXT["fio_mother"],
+                text=constants.BUTTONS_TEXT["full_name_mother"],
                 callback_data=keys.FIO_MOTHER,
             ),
             InlineKeyboardButton(
@@ -919,7 +919,7 @@ async def display_editing_menu(
         ],
         [
             InlineKeyboardButton(
-                text=constants.BUTTONS_TEXT["fio_child"],
+                text=constants.BUTTONS_TEXT["full_name_child"],
                 callback_data=keys.FIO_CHILD,
             ),
             InlineKeyboardButton(

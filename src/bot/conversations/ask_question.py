@@ -184,7 +184,7 @@ async def display_edited_values(
 ) -> int:
     """Возвращение к просмотру данных после редактирования."""
     context.user_data[key.START_OVER] = True
-    await display_edited_values(update, context)
+    await display_entered_values(update, context)
     return key.END
 
 
