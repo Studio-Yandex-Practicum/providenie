@@ -166,7 +166,7 @@ dates_about_parent_and_child = ConversationHandler(
         ],
         states.WHICH_FUND_WAS_PREVIOUSLY: [
             MessageHandler(
-                filters.TEXT & ~filters.COMMAND, fund.show_user_information
+                filters.TEXT & ~filters.COMMAND, fund.complete_data_filling
             )
         ],
         states.EDIT_USER_DATА: selection_handlers_second_level,
