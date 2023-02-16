@@ -5,7 +5,7 @@ from telegram.ext import (
 )
 
 from bot import keys, states
-from bot.conversations import menu
+from bot.conversations import main_menu
 
 
 tell_about_fund_conv = ConversationHandler(
@@ -13,19 +13,21 @@ tell_about_fund_conv = ConversationHandler(
     allow_reentry=True,
     entry_points=[
         CallbackQueryHandler(
-            menu.tell_friends_about_fund,
+            main_menu.tell_friends_about_fund,
             pattern="^" + keys.TELL_ABOUT_FUND + "$",
         )
     ],
     states={
         states.SOCIAL_LINKS: [
-            CallbackQueryHandler(menu.social_link, pattern=r"^TELL_ABOUT_\S*$")
+            CallbackQueryHandler(
+                main_menu.social_link, pattern=r"^TELL_ABOUT_\S*$"
+            )
         ]
     },
     fallbacks=[
         CallbackQueryHandler(
-            menu.end_second_level, pattern="^" + str(keys.END) + "$"
+            main_menu.end_second_level, pattern="^" + str(keys.END) + "$"
         ),
-        CommandHandler("stop", menu.stop),
+        CommandHandler("stop", main_menu.stop),
     ],
 )

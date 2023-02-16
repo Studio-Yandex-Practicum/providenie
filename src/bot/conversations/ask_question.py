@@ -8,7 +8,7 @@ from bot import states as state
 from bot import templates
 
 
-async def ask_question(
+async def enter_submenu(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Возможность задать вопрос."""
@@ -32,7 +32,7 @@ async def ask_question(
     return state.ASKING_QUESTION
 
 
-async def asking_question(
+async def ask_full_name(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Начинаем поочерёдный ввод данных. Спрашиваем имя."""
@@ -44,7 +44,7 @@ async def asking_question(
     return state.ADDING_NAME
 
 
-async def adding_name(
+async def ask_question_subject(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем имя, спрашиваем тему вопроса."""
@@ -56,7 +56,7 @@ async def adding_name(
     return state.ADDING_THEME
 
 
-async def adding_theme(
+async def ask_question_message(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем тему вопроса, спрашиваем содержание вопроса."""
@@ -68,17 +68,17 @@ async def adding_theme(
     return state.ADDING_QUESTION
 
 
-async def adding_question(
+async def save_question_message(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем содержание вопроса."""
     user_data = context.user_data
     message = update.message.text
     user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
-    return await show_question(update, context)
+    return await display_entered_values(update, context)
 
 
-async def show_question(
+async def display_entered_values(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Отображение вопроса."""
@@ -118,7 +118,7 @@ async def show_question(
     return state.SHOWING_QUESTION
 
 
-async def select_question_field(
+async def display_editing_menu(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Вывод меню редактирования введённых ранее данных."""
@@ -156,7 +156,9 @@ async def select_question_field(
     return state.QUESTION_FEATURE
 
 
-async def ask_data(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
+async def ask_new_value(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> str:
     """Ввод нового значения, при редактировании данных."""
     context.user_data[key.CURRENT_FEATURE] = update.callback_query.data
     await update.callback_query.answer()
@@ -166,25 +168,27 @@ async def ask_data(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     return state.TYPING_QUESTION
 
 
-async def save_data(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
+async def save_new_value(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> str:
     """Сохранение нового значения, при редактировании данных."""
     user_data = context.user_data
     message = update.message.text
     user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
     user_data[key.START_OVER] = True
-    return await select_question_field(update, context)
+    return await display_editing_menu(update, context)
 
 
-async def end_editing(
+async def display_edited_values(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
     """Возвращение к просмотру данных после редактирования."""
     context.user_data[key.START_OVER] = True
-    await show_question(update, context)
+    await display_entered_values(update, context)
     return key.END
 
 
-async def send_question(
+async def send_values_to_curator(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> None:
     """Отправка вопроса куратору."""

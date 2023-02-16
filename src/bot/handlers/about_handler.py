@@ -5,7 +5,7 @@ from telegram.ext import (
 )
 
 from bot import keys, states
-from bot.conversations import about_fund, menu
+from bot.conversations import about_fund, main_menu
 
 
 about_fund_conv = ConversationHandler(
@@ -23,13 +23,13 @@ about_fund_conv = ConversationHandler(
     ],
     states={
         states.ABOUT_INFO: [
-            CallbackQueryHandler(menu.about, pattern=r"^ABOUT_\S*$")
+            CallbackQueryHandler(main_menu.about, pattern=r"^ABOUT_\S*$")
         ]
     },
     fallbacks=[
         CallbackQueryHandler(
-            menu.end_second_level, pattern="^" + str(keys.END) + "$"
+            main_menu.end_second_level, pattern="^" + str(keys.END) + "$"
         ),
-        CommandHandler("stop", menu.stop),
+        CommandHandler("stop", main_menu.stop),
     ],
 )

@@ -7,11 +7,10 @@ from bot import constants as const
 from bot import keys as key
 from bot import states as state
 from bot import templates
-from bot.conversations.menu import start
 from core.email import bot_send_email_to_curator
 
 
-async def add_volunteer(
+async def enter_submenu(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Путь вступления в ряды волонтёров."""
@@ -35,7 +34,7 @@ async def add_volunteer(
     return state.ADDING_VOLUNTEER
 
 
-async def adding_volunteer(
+async def ask_full_name(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Начинаем поочерёдный ввод данных. Спрашиваем ФИО."""
@@ -47,13 +46,12 @@ async def adding_volunteer(
     return state.ADDING_NAME
 
 
-async def save_volunteer_feature(
+async def save_feature(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
     next_feature: Optional[str] = None,
-    reply_text: Optional[str] = None
+    reply_text: Optional[str] = None,
 ):
-    """Сохраняем данные аттрибута волонтера"""
     user_data = context.user_data
     message = update.message.text
     user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
@@ -63,52 +61,50 @@ async def save_volunteer_feature(
         await update.message.reply_text(text=reply_text)
 
 
-async def adding_name(
+async def ask_birthday(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем ФИО, спрашиваем дату рождения."""
-    await save_volunteer_feature(update, context, next_feature=key.BIRTHDAY, reply_text=const.MSG_BIRTHDAY)
+    await save_feature(update, context, key.BIRTHDAY, const.MSG_BIRTHDAY)
     return state.ADDING_BIRTHDAY
 
 
-async def adding_birthday(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> str:
+async def ask_city(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Сохраняем дату рождения, спрашиваем город проживания."""
-    await save_volunteer_feature(update, context, next_feature=key.CITY, reply_text=const.MSG_CITY)
+    await save_feature(update, context, key.CITY, const.MSG_CITY)
     return state.ADDING_CITY
 
 
-async def adding_city(
+async def ask_phone_number(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем город проживания, спрашиваем номер телефона."""
-    await save_volunteer_feature(update, context, next_feature=key.PHONE, reply_text=const.MSG_PHONE)
+    await save_feature(update, context, key.PHONE, const.MSG_PHONE)
     return state.ADDING_PHONE
 
 
-async def adding_phone(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> str:
+async def ask_email(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Сохраняем номер телефона, спрашиваем email."""
-    await save_volunteer_feature(update, context, next_feature=key.EMAIL, reply_text=const.MSG_EMAIL)
+    await save_feature(update, context, key.EMAIL, const.MSG_EMAIL)
     return state.ADDING_EMAIL
 
 
-async def adding_email(
+async def ask_help_option(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем email, спрашиваем вариант помощи."""
-    await save_volunteer_feature(update, context, next_feature=key.MESSAGE, reply_text=const.MSG_YOUR_HELP_OPTION)
+    await save_feature(
+        update, context, key.MESSAGE, const.MSG_YOUR_HELP_OPTION
+    )
     return state.ADDING_MESSAGE
 
 
-async def adding_message(
+async def save_help_option(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем вариант помощи."""
-    await save_volunteer_feature(update, context)
-    return await show_volunteer(update, context)
+    await save_feature(update, context)
+    return await display_entered_value(update, context)
 
 
 async def skip_adding_message(
@@ -117,10 +113,10 @@ async def skip_adding_message(
     """Сохраняем пустой вариант помощи."""
     user_data = context.user_data
     user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = ""
-    return await show_volunteer(update, context)
+    return await display_entered_value(update, context)
 
 
-async def show_volunteer(
+async def display_entered_value(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Отображение всех введённых данных волонтёра."""
@@ -165,7 +161,7 @@ async def show_volunteer(
     return state.SHOWING_VOLUNTEER
 
 
-async def select_volunteer_field(
+async def display_editing_menu(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Вывод меню редактирования введённых ранее данных."""
@@ -210,7 +206,7 @@ async def select_volunteer_field(
     return state.VOLUNTEER_FEATURE
 
 
-async def ask_volunteer(
+async def ask_new_value(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Ввод нового значения, при редактировании данных."""
@@ -222,34 +218,25 @@ async def ask_volunteer(
     return state.TYPING_VOLUNTEER
 
 
-async def save_volunteer_input(
+async def save_new_value(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохранение нового значения, при редактировании данных."""
-    await save_volunteer_feature(update, context)
+    await save_feature(update, context)
     context.user_data[key.START_OVER] = True
-    return await select_volunteer_field(update, context)
+    return await display_editing_menu(update, context)
 
 
-async def end_editing(
+async def display_all_new_entered_value(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
     """Возвращение к просмотру данных после редактирования."""
     context.user_data[key.START_OVER] = True
-    await show_volunteer(update, context)
+    await display_entered_value(update, context)
     return key.END
 
 
-async def end_sending(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> int:
-    """Возвращение в главное меню после отправки письма."""
-    context.user_data[key.START_OVER] = True
-    await start(update, context)
-    return state.STOPPING
-
-
-async def send_email(
+async def send_email_to_curator(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
     """Отправка письма куратору."""

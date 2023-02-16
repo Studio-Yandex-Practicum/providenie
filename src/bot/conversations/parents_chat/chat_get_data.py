@@ -9,7 +9,9 @@ from bot import keys as key
 from bot import states as state
 
 
-async def entering_chat(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
+async def ask_full_name(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> str:
     """Начинаем поочерёдный ввод данных. Спрашиваем ФИО родителя."""
     user_data = context.user_data
     user_data[key.CHAT_FEATURES] = {key.LEVEL: key.ENTRY_CHAT}
@@ -39,7 +41,7 @@ async def save_chat_feature(
         await update.message.reply_text(text=reply_text)
 
 
-async def chat_getting_parents_name(
+async def ask_phone_number(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем ФИО, получаем номер телефона родителя"""
@@ -49,15 +51,12 @@ async def chat_getting_parents_name(
         text = const.MSG_CHAT_PARENTS_PHONE
 
     await save_chat_feature(
-        update,
-        context,
-        next_feature=key.CHAT_PARENTS_PHONE,
-        reply_text=text
+        update, context, next_feature=key.CHAT_PARENTS_PHONE, reply_text=text
     )
     return state.CHAT_GETTING_PARENTS_PHONE
 
 
-async def chat_getting_parents_phone(
+async def ask_full_name_child(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем номер телефона, получаем фамилию ребенка
@@ -74,15 +73,12 @@ async def chat_getting_parents_phone(
     else:
         text = const.MSG_CHAT_CHILD_NAME
     await save_chat_feature(
-        update,
-        context,
-        next_feature=key.CHAT_CHILD_NAME,
-        reply_text=text
+        update, context, next_feature=key.CHAT_CHILD_NAME, reply_text=text
     )
     return state.CHAT_GETTING_CHILD_NAME
 
 
-async def chat_getting_child_name(
+async def ask_child_birthday(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем фамилию ребенка,
@@ -96,7 +92,7 @@ async def chat_getting_child_name(
     return state.CHAT_GETTING_CHILD_BIRTHDAY
 
 
-async def chat_getting_child_birthday(
+async def ask_place_birthday(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем дату рождения ребенка,
@@ -110,7 +106,7 @@ async def chat_getting_child_birthday(
     return state.CHAT_GETTING_CHILD_PLACE_BIRTHDAY
 
 
-async def chat_getting_child_place_birthday(
+async def ask_child_term(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем место рождения ребенка,
@@ -124,7 +120,7 @@ async def chat_getting_child_place_birthday(
     return state.CHAT_GETTING_CHILD_TERM
 
 
-async def chat_getting_child_term(
+async def ask_child_weight(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем срок беременности рождения ребенка,
@@ -138,7 +134,7 @@ async def chat_getting_child_term(
     return state.CHAT_GETTING_CHILD_WEIGHT
 
 
-async def chat_getting_child_weight(
+async def ask_child_height(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем вес ребенка, получаем рост ребенка при рождении"""
@@ -151,7 +147,7 @@ async def chat_getting_child_weight(
     return state.CHAT_GETTING_CHILD_HEIGHT
 
 
-async def chat_getting_child_height(
+async def ask_child_diagnose(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем рост ребенка, получаем данные о диагнозах"""
@@ -164,7 +160,7 @@ async def chat_getting_child_height(
     return state.CHAT_GETTING_CHILD_DIAGNOSE
 
 
-async def chat_getting_child_diagnose(
+async def ask_child_operation(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем диагнозы ребенка, получаем данные об операциях"""
@@ -177,7 +173,7 @@ async def chat_getting_child_diagnose(
     return state.CHAT_GETTING_CHILD_OPERATION
 
 
-async def chat_getting_child_operation(
+async def ask_about_fond(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем данные об операциях,
@@ -191,7 +187,7 @@ async def chat_getting_child_operation(
     return state.CHAT_GETTING_ABOUT_FOND
 
 
-async def chat_getting_about_fond(
+async def display_entered_value(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем информацию о том, как узнали о фонде,
