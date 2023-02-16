@@ -111,7 +111,7 @@ MSG_YOUR_HELP_OPTION = (
 """Social links"""
 MSG_WEBSITE = "https://fond-providenie.ru/"
 MSG_VK = "https://vk.com/fond_providenie"
-MSG_INSTAGRAM = "https://vk.com/fond_providenie"
+MSG_INSTAGRAM = "https://instagram.com/fond_providenie/"
 MSG_FACEBOOK = "https://www.facebook.com/fond.providenie/"
 MSG_TG_CHANNEL = "https://t.me/providenie_fond"
 MSG_TG_BOT = "TODO"
