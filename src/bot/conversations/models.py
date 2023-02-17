@@ -38,9 +38,11 @@ class ChatForm(FormBase):
     child_diagnosis: str
     date_aplication: date
     surgery_on_child: str
-    child_height: conint(ge=30, le=45)
-    child_weight: confloat(ge=1, le=2.5)
-    child_term_of_birth: conint(ge=22, le=37)
+    child_height: conint(ge=30, le=56)  # Рост ребёнка в см
+    child_weight: confloat(ge=1, le=4)  # Вес ребёнка в кг
+    child_term_of_birth: conint(
+        ge=22, le=37
+    )  # Срок на котором родился ребёнок
 
 
 class FundForm(ChatForm):
