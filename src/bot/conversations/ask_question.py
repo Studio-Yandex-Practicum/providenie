@@ -8,13 +8,12 @@ from bot import states as state
 from bot import templates
 
 
-async def ask_question(
+async def enter_submenu(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Возможность задать вопрос."""
     user_data = context.user_data
     user_data[key.START_OVER] = False
-    text = const.MSG_QUESTION_NEED_INFORMATION
     buttons = [
         [
             InlineKeyboardButton(
@@ -28,25 +27,24 @@ async def ask_question(
     keyboard = InlineKeyboardMarkup(buttons)
     await update.callback_query.answer()
     await update.callback_query.edit_message_text(
-        text=text, reply_markup=keyboard
+        text=const.MSG_QUESTION_NEED_INFORMATION, reply_markup=keyboard
     )
     return state.ASKING_QUESTION
 
 
-async def asking_question(
+async def ask_full_name(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Начинаем поочерёдный ввод данных. Спрашиваем имя."""
     user_data = context.user_data
     user_data[key.FEATURES] = {key.LEVEL: key.QUESTION}
     user_data[key.CURRENT_FEATURE] = key.NAME
-    text = const.MSG_NAME
     await update.callback_query.answer()
-    await update.callback_query.edit_message_text(text=text)
+    await update.callback_query.edit_message_text(text=const.MSG_NAME)
     return state.ADDING_NAME
 
 
-async def adding_name(
+async def ask_question_subject(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем имя, спрашиваем тему вопроса."""
@@ -54,12 +52,11 @@ async def adding_name(
     message = update.message.text
     user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
     user_data[key.CURRENT_FEATURE] = key.THEME
-    text = const.MSG_THEME
-    await update.message.reply_text(text=text)
+    await update.message.reply_text(text=const.MSG_THEME)
     return state.ADDING_THEME
 
 
-async def adding_theme(
+async def ask_question_message(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем тему вопроса, спрашиваем содержание вопроса."""
@@ -67,22 +64,21 @@ async def adding_theme(
     message = update.message.text
     user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
     user_data[key.CURRENT_FEATURE] = key.QUESTION
-    text = const.MSG_QUESTION
-    await update.message.reply_text(text=text)
+    await update.message.reply_text(text=const.MSG_QUESTION)
     return state.ADDING_QUESTION
 
 
-async def adding_question(
+async def save_question_message(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем содержание вопроса."""
     user_data = context.user_data
     message = update.message.text
     user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
-    return await show_question(update, context)
+    return await display_entered_values(update, context)
 
 
-async def show_question(
+async def display_entered_values(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Отображение вопроса."""
@@ -122,7 +118,7 @@ async def show_question(
     return state.SHOWING_QUESTION
 
 
-async def select_question_field(
+async def display_editing_menu(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Вывод меню редактирования введённых ранее данных."""
@@ -147,46 +143,52 @@ async def select_question_field(
         ],
     ]
     keyboard = InlineKeyboardMarkup(buttons)
-    text = const.MSG_CHOOSE_TO_EDIT
     if not context.user_data.get(key.START_OVER):
         await update.callback_query.answer()
         await update.callback_query.edit_message_text(
-            text=text, reply_markup=keyboard
+            text=const.MSG_CHOOSE_TO_EDIT, reply_markup=keyboard
         )
     else:
-        await update.message.reply_text(text=text, reply_markup=keyboard)
+        await update.message.reply_text(
+            text=const.MSG_CHOOSE_TO_EDIT, reply_markup=keyboard
+        )
     context.user_data[key.START_OVER] = True
     return state.QUESTION_FEATURE
 
 
-async def ask_data(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
+async def ask_new_value(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> str:
     """Ввод нового значения, при редактировании данных."""
     context.user_data[key.CURRENT_FEATURE] = update.callback_query.data
-    text = const.MSG_ENTER_NEW_VALUE
     await update.callback_query.answer()
-    await update.callback_query.edit_message_text(text=text)
+    await update.callback_query.edit_message_text(
+        text=const.MSG_ENTER_NEW_VALUE
+    )
     return state.TYPING_QUESTION
 
 
-async def save_data(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
+async def save_new_value(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> str:
     """Сохранение нового значения, при редактировании данных."""
     user_data = context.user_data
     message = update.message.text
     user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
     user_data[key.START_OVER] = True
-    return await select_question_field(update, context)
+    return await display_editing_menu(update, context)
 
 
-async def end_editing(
+async def display_edited_values(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
     """Возвращение к просмотру данных после редактирования."""
     context.user_data[key.START_OVER] = True
-    await show_question(update, context)
+    await display_entered_values(update, context)
     return key.END
 
 
-async def send_question(
+async def send_values_to_curator(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> None:
     """Отправка вопроса куратору."""
@@ -196,10 +198,12 @@ async def send_question(
     theme = data.get(key.THEME, "-")
     question = data.get(key.QUESTION, "-")
     current_user_id = update.effective_chat.id
-    text = templates.MSG_QUESTION_TO_CURATOR.format(full_name, theme, question)
     user_url = f"tg://user?id={current_user_id}"
     button = InlineKeyboardButton(text=const.BTN_ANSWER, url=user_url)
+
+    text = templates.MSG_QUESTION_TO_CURATOR.format(full_name, theme, question)
     reply_markup = InlineKeyboardMarkup.from_button(button)
+
     sent = await service.send_message_to_curator(
         context=context,
         message=text,

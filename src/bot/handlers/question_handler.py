@@ -9,43 +9,50 @@ from telegram.ext import (
 from bot import keys as key
 from bot import states as state
 from bot.conversations import ask_question as question
-from bot.conversations import menu
+from bot.conversations import main_menu
 
 
 edit_question_conv = ConversationHandler(
     name="edit_question_conv",
     entry_points=[
         CallbackQueryHandler(
-            question.select_question_field,
+            question.display_editing_menu,
             pattern="^" + key.EDIT_QUESTION + "$",
         ),
         CallbackQueryHandler(
-            question.send_question,
+            question.send_values_to_curator,
             pattern="^" + key.SEND_QUESTION + "$",
         ),
     ],
     states={
         state.QUESTION_FEATURE: [
             CallbackQueryHandler(
-                question.ask_data,
+                question.ask_new_value,
                 pattern="^(?!" + str(key.END) + ").*$",
             ),
         ],
         state.TYPING_QUESTION: [
-            MessageHandler(filters.TEXT & ~filters.COMMAND, question.save_data)
+            MessageHandler(
+                filters.TEXT & ~filters.COMMAND, question.save_new_value
+            )
         ],
         state.QUESTION_SENT: [
             CallbackQueryHandler(
-                menu.end_sending, pattern="^" + key.SENT + "$"
+                main_menu.end_sending,
+                pattern="^" + key.SENT + "$",
             ),
         ],
     },
     fallbacks=[
         CallbackQueryHandler(
-            question.end_editing, pattern="^" + str(key.END) + "$"
+            question.display_edited_values,
+            pattern="^" + str(key.END) + "$",
         ),
-        CallbackQueryHandler(menu.end_sending, pattern="^" + key.SENT + "$"),
-        CommandHandler("stop", menu.stop_nested),
+        CallbackQueryHandler(
+            main_menu.end_sending,
+            pattern="^" + key.SENT + "$",
+        ),
+        CommandHandler("stop", main_menu.stop_nested),
     ],
     map_to_parent={
         key.END: state.SHOWING_QUESTION,
@@ -58,39 +65,39 @@ ask_question_conv = ConversationHandler(
     name="ask_question_conv",
     entry_points=[
         CallbackQueryHandler(
-            question.ask_question,
+            question.enter_submenu,
             pattern="^" + key.ASK_QUESTION + "$",
         )
     ],
     states={
         state.ASKING_QUESTION: [
             CallbackQueryHandler(
-                question.asking_question,
+                question.ask_full_name,
                 pattern="^" + key.QUESTION + "$",
             )
         ],
         state.ADDING_NAME: [
             MessageHandler(
-                filters.TEXT & ~filters.COMMAND, question.adding_name
+                filters.TEXT & ~filters.COMMAND, question.ask_question_subject
             )
         ],
         state.ADDING_THEME: [
             MessageHandler(
-                filters.TEXT & ~filters.COMMAND, question.adding_theme
+                filters.TEXT & ~filters.COMMAND, question.ask_question_message
             )
         ],
         state.ADDING_QUESTION: [
             MessageHandler(
-                filters.TEXT & ~filters.COMMAND, question.adding_question
+                filters.TEXT & ~filters.COMMAND, question.save_question_message
             )
         ],
         state.SHOWING_QUESTION: [edit_question_conv],
     },
     fallbacks=[
         CallbackQueryHandler(
-            menu.end_second_level, pattern="^" + str(key.END) + "$"
+            main_menu.end_second_level, pattern="^" + str(key.END) + "$"
         ),
-        CommandHandler("stop", menu.stop_nested),
+        CommandHandler("stop", main_menu.stop_nested),
     ],
     map_to_parent={
         key.END: state.SELECTING_ACTION,

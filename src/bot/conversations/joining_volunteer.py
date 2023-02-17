@@ -1,3 +1,5 @@
+from typing import Optional
+
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
@@ -5,17 +7,15 @@ from bot import constants as const
 from bot import keys as key
 from bot import states as state
 from bot import templates
-from bot.conversations.menu import start
 from core.email import bot_send_email_to_curator
 
 
-async def add_volunteer(
+async def enter_submenu(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Путь вступления в ряды волонтёров."""
     user_data = context.user_data
     user_data[key.START_OVER] = False
-    text = const.MSG_NEED_INFORMATION
     buttons = [
         [
             InlineKeyboardButton(
@@ -29,97 +29,82 @@ async def add_volunteer(
     keyboard = InlineKeyboardMarkup(buttons)
     await update.callback_query.answer()
     await update.callback_query.edit_message_text(
-        text=text, reply_markup=keyboard
+        text=const.MSG_NEED_INFORMATION, reply_markup=keyboard
     )
     return state.ADDING_VOLUNTEER
 
 
-async def adding_volunteer(
+async def ask_full_name(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Начинаем поочерёдный ввод данных. Спрашиваем ФИО."""
     user_data = context.user_data
     user_data[key.FEATURES] = {key.LEVEL: key.VOLUNTEER}
     user_data[key.CURRENT_FEATURE] = key.NAME
-    text = const.MSG_FULL_NAME
     await update.callback_query.answer()
-    await update.callback_query.edit_message_text(text=text)
+    await update.callback_query.edit_message_text(text=const.MSG_FULL_NAME)
     return state.ADDING_NAME
 
 
-async def adding_name(
+async def save_feature(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+    next_feature: Optional[str] = None,
+    reply_text: Optional[str] = None,
+):
+    user_data = context.user_data
+    message = update.message.text
+    user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
+    if next_feature:
+        user_data[key.CURRENT_FEATURE] = next_feature
+    if reply_text:
+        await update.message.reply_text(text=reply_text)
+
+
+async def ask_birthday(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем ФИО, спрашиваем дату рождения."""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
-    user_data[key.CURRENT_FEATURE] = key.BIRTHDAY
-    text = const.MSG_BIRTHDAY
-    await update.message.reply_text(text=text)
+    await save_feature(update, context, key.BIRTHDAY, const.MSG_BIRTHDAY)
     return state.ADDING_BIRTHDAY
 
 
-async def adding_birthday(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> str:
+async def ask_city(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Сохраняем дату рождения, спрашиваем город проживания."""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
-    user_data[key.CURRENT_FEATURE] = key.CITY
-    text = const.MSG_CITY
-    await update.message.reply_text(text=text)
+    await save_feature(update, context, key.CITY, const.MSG_CITY)
     return state.ADDING_CITY
 
 
-async def adding_city(
+async def ask_phone_number(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем город проживания, спрашиваем номер телефона."""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
-    user_data[key.CURRENT_FEATURE] = key.PHONE
-    text = const.MSG_PHONE
-    await update.message.reply_text(text=text)
+    await save_feature(update, context, key.PHONE, const.MSG_PHONE)
     return state.ADDING_PHONE
 
 
-async def adding_phone(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> str:
+async def ask_email(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     """Сохраняем номер телефона, спрашиваем email."""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
-    user_data[key.CURRENT_FEATURE] = key.EMAIL
-    text = const.MSG_EMAIL
-    await update.message.reply_text(text=text)
+    await save_feature(update, context, key.EMAIL, const.MSG_EMAIL)
     return state.ADDING_EMAIL
 
 
-async def adding_email(
+async def ask_help_option(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем email, спрашиваем вариант помощи."""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
-    user_data[key.CURRENT_FEATURE] = key.MESSAGE
-    text = const.MSG_YOUR_HELP_OPTION
-    await update.message.reply_text(text=text)
+    await save_feature(
+        update, context, key.MESSAGE, const.MSG_YOUR_HELP_OPTION
+    )
     return state.ADDING_MESSAGE
 
 
-async def adding_message(
+async def save_help_option(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем вариант помощи."""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
-    return await show_volunteer(update, context)
+    await save_feature(update, context)
+    return await display_entered_value(update, context)
 
 
 async def skip_adding_message(
@@ -128,10 +113,10 @@ async def skip_adding_message(
     """Сохраняем пустой вариант помощи."""
     user_data = context.user_data
     user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = ""
-    return await show_volunteer(update, context)
+    return await display_entered_value(update, context)
 
 
-async def show_volunteer(
+async def display_entered_value(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Отображение всех введённых данных волонтёра."""
@@ -176,7 +161,7 @@ async def show_volunteer(
     return state.SHOWING_VOLUNTEER
 
 
-async def select_volunteer_field(
+async def display_editing_menu(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Вывод меню редактирования введённых ранее данных."""
@@ -221,47 +206,37 @@ async def select_volunteer_field(
     return state.VOLUNTEER_FEATURE
 
 
-async def ask_volunteer(
+async def ask_new_value(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Ввод нового значения, при редактировании данных."""
     context.user_data[key.CURRENT_FEATURE] = update.callback_query.data
-    text = const.MSG_ENTER_NEW_VALUE
     await update.callback_query.answer()
-    await update.callback_query.edit_message_text(text=text)
+    await update.callback_query.edit_message_text(
+        text=const.MSG_ENTER_NEW_VALUE
+    )
     return state.TYPING_VOLUNTEER
 
 
-async def save_volunteer_input(
+async def save_new_value(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохранение нового значения, при редактировании данных."""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
-    user_data[key.START_OVER] = True
-    return await select_volunteer_field(update, context)
+    await save_feature(update, context)
+    context.user_data[key.START_OVER] = True
+    return await display_editing_menu(update, context)
 
 
-async def end_editing(
+async def display_all_new_entered_value(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
     """Возвращение к просмотру данных после редактирования."""
     context.user_data[key.START_OVER] = True
-    await show_volunteer(update, context)
+    await display_entered_value(update, context)
     return key.END
 
 
-async def end_sending(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> int:
-    """Возвращение в главное меню после отправки письма."""
-    context.user_data[key.START_OVER] = True
-    await start(update, context)
-    return state.STOPPING
-
-
-async def send_email(
+async def send_email_to_curator(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> int:
     """Отправка письма куратору."""
