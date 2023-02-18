@@ -28,6 +28,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd /home/${{ secrets.USER }}/providenie
+            docker image prune -f
             docker build --no-cache -t providenie:latest .
             rm -f .env
             touch .env
