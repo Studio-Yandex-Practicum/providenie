@@ -179,9 +179,18 @@ async def give_donation(
 
 
 async def get_events(update: Update, _) -> str:
+    buttons =[
+        [
+            InlineKeyboardButton(
+                text=const.BTN_BACK, callback_data=str(key.END)
+            )
+        ],
+    ]
+    keyboard = InlineKeyboardMarkup(buttons)
     await update.callback_query.answer()
-    await update.callback_query.edit_message_text(text=const.MSG_EVENTS)
-    return state.SELECTING_ACTION
+    await update.callback_query.edit_message_text(
+        text=const.MSG_EVENTS, reply_markup=keyboard)
+    return state.STOPPING
 
 
 async def about(update: Update, _) -> str:
