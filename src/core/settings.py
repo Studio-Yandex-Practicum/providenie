@@ -3,13 +3,19 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-
 load_dotenv()
-
 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 BASE_DIR = Path(__file__).resolve().parent.parent
-LOG_LEVEL = os.getenv("LOG_LEVEL")
+
+# Настройки logging
+FILENAME = "bot.log"
+LOG_LEVEL = os.getenv("LOG_LEVEL", default='INFO')
+LOG_FORMAT = '%(asctime)s, %(levelname)s, %(name)s, %(message)s'
+
+LOGS_FOLDER = BASE_DIR / ".data/logs"
+LOGS_FOLDER.mkdir(parents=True, exist_ok=True)
+LOG_PATH = LOGS_FOLDER / FILENAME
 
 
 # Настройки для отправки email-сообщения куратору
