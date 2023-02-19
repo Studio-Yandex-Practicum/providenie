@@ -69,6 +69,16 @@ BTN_SUCCESS_VIDEO5 = "С Днем Защиты детей"
 
 """BOT MESSAGES."""
 
+"""Social links"""
+MSG_WEBSITE = "https://fond-providenie.ru/"
+MSG_VK = "https://vk.com/fond_providenie"
+MSG_INSTAGRAM = "https://instagram.com/fond_providenie/"
+MSG_FACEBOOK = "https://www.facebook.com/fond.providenie/"
+MSG_TG_CHANNEL = "https://t.me/providenie_fond"
+MSG_TG_BOT = (
+    f"Ссылка здесь скоро появится, а пока посетите наш сайт {MSG_WEBSITE}"
+)
+
 """General."""
 MSG_FULL_NAME = "Фамилия, Имя, Отчество?"
 MSG_NAME = "Как к вам обращаться?"
@@ -76,11 +86,15 @@ MSG_BIRTHDAY = "Дата рождения?"
 MSG_CITY = "Город проживания?"
 MSG_PHONE = "Номер телефона?"
 MSG_EMAIL = "Email?"
+MSG_RESPONSE_ASK_QUESTION = """
+Ваш вопрос успешно отправлен!
+Наш куратор свяжется с Вами в течение 3 рабочих дней
+"""
 MSG_REQUEST_SENT = "Ваша заявка отправлена."
 MSG_SENDING_ERROR = "Ошибка отправки email!"
 MSG_GOODBYE = (
     "До свидания! Будем рады видеть Вас на нашем сайте!\n"
-    "https://fond-providenie.ru\n"
+    f"{MSG_WEBSITE}\n"
     "Нажмите /start для повторного запуска"
 )
 MSG_CHOOSE_TO_EDIT = "Выберите для редактирования:"
@@ -106,16 +120,6 @@ MSG_NEED_INFORMATION = "Далее необходимо предоставить
 MSG_YOUR_HELP_OPTION = (
     "Вы можете предложить свой вариант помощи (необязательно).\n"
     "Нажмите /skip чтобы пропустить."
-)
-
-"""Social links"""
-MSG_WEBSITE = "https://fond-providenie.ru/"
-MSG_VK = "https://vk.com/fond_providenie"
-MSG_INSTAGRAM = "https://instagram.com/fond_providenie/"
-MSG_FACEBOOK = "https://www.facebook.com/fond.providenie/"
-MSG_TG_CHANNEL = "https://t.me/providenie_fond"
-MSG_TG_BOT = (
-    f"Ссылка здесь скоро появится, а пока посетите наш сайт {MSG_WEBSITE}"
 )
 
 """DONATION"""
@@ -370,12 +374,6 @@ MSG_THIRD_MENU = """
 """
 
 MSG_EDIT = "Выберите пункт, который вы бы хотели изменить"
-
-MSG_GOODBYE = """
-До свидания! Будем рады видеть Вас на нашем сайте!\n
-https://fond-providenie.ru\n
-Нажмите /start для повторного запуска
-"""
 
 # Регулярки
 REGEX_EMAIL = (
