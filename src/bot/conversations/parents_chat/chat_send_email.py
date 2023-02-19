@@ -53,8 +53,7 @@ async def chat_send_email(
         html = templates.HTML_CHAT_DATA.format(*chat_data.values())
     func = bot_send_email_to_curator(chat_data["subject"], html)
     if func:
-        return_text = const.MSG_REQUEST_SENT
-        return_text += "\n<контакты куратора-волонтёра для связи>"
+        return_text = const.MSG_RESPONSE_JOIN_CHAT
     else:
         return_text = const.MSG_SENDING_ERROR
     button = InlineKeyboardButton(
