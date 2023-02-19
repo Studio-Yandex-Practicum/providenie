@@ -4,6 +4,18 @@ from typing import Optional
 from pydantic import BaseModel, EmailStr, confloat, conint, constr
 
 
+class AskQuestionForm(BaseModel):
+    """Модель для анкеты 'Задать вопрос'."""
+
+    name: str
+    email: EmailStr
+    phone_number: constr(min_length=11, max_length=15)
+    question: str
+
+    class Config:
+        min_anystr_length = 1
+
+
 class FormBase(BaseModel):
     """Базовая модель для анкет."""
 
