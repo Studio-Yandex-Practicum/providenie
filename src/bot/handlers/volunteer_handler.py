@@ -66,6 +66,7 @@ edit_volunteer_conv = ConversationHandler(
 )
 
 add_volunteer_conv = ConversationHandler(
+    allow_reentry=True,
     name="add_volunteer_conv",
     entry_points=[
         CallbackQueryHandler(

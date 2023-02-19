@@ -63,7 +63,7 @@ async def select_about_found(update: Update, _) -> str:
 
 
 async def select_success_found(update: Update, _) -> str:
-    """Вывод меню ссылок на видео успехаов фонда."""
+    """Вывод меню ссылок на видео успехов фонда."""
     buttons = [
         [
             InlineKeyboardButton(

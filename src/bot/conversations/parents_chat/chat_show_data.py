@@ -11,7 +11,7 @@ from bot import states, templates
 async def chat_show_data(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
-    """Отображение всех введённых данных для вступления в чат"""
+    """Отображение всех введённых данных для вступления в чат."""
     user_data = context.user_data
     data = user_data.get(key.CHAT_FEATURES)
     chat_data = dict(

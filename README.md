@@ -186,7 +186,7 @@ _Примеры:_
 <br>
 
 ```
-python src/run_bot.py
+python src/main.py
 ```
 
 ### 4.1.2. Запуск в режиме Webhook
