@@ -14,13 +14,13 @@ async def select_chat(
     buttons_chat = [
         [
             InlineKeyboardButton(
-                text=dict.CHAT_DESCRIPTION[key.CHAT_BABY]["name"],
+                text=dict.CHAT_DESCRIPTION[key.CHAT_BABY]["shortname"],
                 callback_data=str(key.CHAT_BABY),
             )
         ],
         [
             InlineKeyboardButton(
-                text=dict.CHAT_DESCRIPTION[key.CHAT_CHILD]["name"],
+                text=dict.CHAT_DESCRIPTION[key.CHAT_CHILD]["shortname"],
                 callback_data=str(key.CHAT_CHILD),
             )
         ],
