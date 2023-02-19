@@ -803,9 +803,7 @@ async def show_user_information(
     keyboard = InlineKeyboardMarkup(buttons)
 
     await update.message.reply_text(
-        output_text,
-        reply_markup=keyboard,
-        parse_mode="html"
+        output_text, reply_markup=keyboard, parse_mode="html"
     )
 
     return states.EDIT_USER_DATА
@@ -861,7 +859,10 @@ async def send_values_to_curator(
             fund_early=context.user_data["Фонды помогали"],
         )
 
-        bot_send_email_to_curator(constants.SUBJECT, html_from_user)
+        bot_send_email_to_curator(
+            f'{context.user_data["Диагнозы"]}_{constants.SUBJECT}',
+            html_from_user,
+        )
     except Exception as ex:
         logger.error(ex)
         html_from_user = HTML_TEMPLATE_JOIN_FUND.substitute(error=ex)

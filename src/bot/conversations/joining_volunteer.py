@@ -255,8 +255,7 @@ async def send_email_to_curator(
 
     func = bot_send_email_to_curator(subject, html)
     if func:
-        return_text = const.MSG_REQUEST_SENT
-        return_text += "\n<контакты куратора-волонтёра для связи>"
+        return_text = const.MSG_RESPONSE_BECOME_VOLUNTEER
     else:
         return_text = const.MSG_SENDING_ERROR
     button = InlineKeyboardButton(text=const.BTN_BACK, callback_data=key.SENT)

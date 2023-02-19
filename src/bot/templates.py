@@ -53,7 +53,7 @@ HTML_TEMPLATE_JOIN_FOND_ERROR = Template(
     </html>"""
 )
 
-VOLUNTEER_DATA_SUBJECT = "Новый волонтёр"
+VOLUNTEER_DATA_SUBJECT = "Заявка на волонтёрство"
 CHAT_DATA_SUBJECT = "Вступление в чат"
 
 HTML_VOLUNTEER_DATA = """
