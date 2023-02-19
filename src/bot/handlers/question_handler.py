@@ -78,10 +78,13 @@ ask_question_conv = ConversationHandler(
         ],
         state.ADDING_NAME: [
             MessageHandler(
-                filters.TEXT & ~filters.COMMAND, question.ask_question_subject
+                filters.TEXT & ~filters.COMMAND, question.ask_phone_number
             )
         ],
-        state.ADDING_THEME: [
+        state.ADDING_PHONE: [
+            MessageHandler(filters.TEXT & ~filters.COMMAND, question.ask_email)
+        ],
+        state.ADDING_EMAIL: [
             MessageHandler(
                 filters.TEXT & ~filters.COMMAND, question.ask_question_message
             )
