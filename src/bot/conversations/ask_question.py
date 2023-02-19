@@ -234,29 +234,3 @@ async def send_values_to_curator(
         text=return_text, reply_markup=keyboard
     )
     return state.VOLUNTEER_SENT
-
-    # current_user_id = update.effective_chat.id
-    # user_url = f"tg://user?id={current_user_id}"
-    # button = InlineKeyboardButton(text=const.BTN_ANSWER, url=user_url)
-
-    # text = templates.MSG_QUESTION_TO_CURATOR.format(full_name, theme, question)
-    # reply_markup = InlineKeyboardMarkup.from_button(button)
-
-    # sent = await service.send_message_to_curator(
-    #     context=context,
-    #     message=text,
-    #     reply_markup=reply_markup,
-    #     parse_mode="html",
-    # )
-    # if sent:
-    #     return_text = const.MSG_QUESTION_SENT
-    # else:
-    #     return_text = const.MSG_QUESTION_ERROR_SENT
-
-    # button = InlineKeyboardButton(text=const.BTN_BACK, callback_data=key.SENT)
-    # reply_markup = InlineKeyboardMarkup.from_button(button)
-    # await update.callback_query.answer()
-    # await update.callback_query.edit_message_text(
-    #     text=return_text, reply_markup=reply_markup
-    # )
-    # return state.QUESTION_SENT
