@@ -1,31 +1,40 @@
-import logging
-from logging.handlers import TimedRotatingFileHandler
+import logging.config
 
-from .settings import BASE_DIR, LOG_LEVEL
+from .settings import LOG_LEVEL, LOG_PATH, LOG_FORMAT
 
+DEFAULT_LOGGING = {
+    'version': 1,
+    'disable_exising_loggers': False,
+    'formatters': {
+        'standard': {
+            'format': LOG_FORMAT
+        }
+    },
+    'handlers': {
+        'default': {
+            'class': 'logging.StreamHandler',
+            'stream': 'ext://sys.stdout',
+            'level': LOG_LEVEL,
+            'formatter': 'standard',
+        },
+        'file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'precise',
+            'filename': LOG_PATH,
+            'maxBytes': 1024,
+            'backupCount': 5,
+            'level': LOG_LEVEL,
+            'formatter': 'standard',
+        }
+    },
+    'loggers': {
+        '': {
+            'handlers': ['default', 'file'],
+            'level': LOG_LEVEL,
+            'propagate': True,
+        },
+    }
+}
 
-LOGS_FOLDER = BASE_DIR / ".data/logs"
-LOGS_FOLDER.mkdir(parents=True, exist_ok=True)
-
-FILENAME = "bot.log"
-LOG_PATH = LOGS_FOLDER / FILENAME
-
-INTERVAL = 1
-INTERVAL_TYPE = "D"
-BACKUP_COUNT = 60
-
-FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
-
-handler = TimedRotatingFileHandler(
-    LOG_PATH,
-    when=INTERVAL_TYPE,
-    interval=INTERVAL,
-    backupCount=BACKUP_COUNT
-)
-handler.setFormatter(
-    logging.Formatter(FORMAT)
-)
-handler.setLevel(LOG_LEVEL)
-
+logging.config.dictConfig(DEFAULT_LOGGING)
 logger = logging.getLogger(__name__)
-logger.addHandler(handler)
