@@ -28,7 +28,6 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd /home/${{ secrets.USER }}/providenie
-            docker build -t providenie:latest .
             rm -f .env
             touch .env
             echo TELEGRAM_TOKEN="${{ secrets.TELEGRAM_TOKEN }}" >> .env
@@ -38,4 +37,4 @@ jobs:
             echo LOG_LEVEL=${{ secrets.LOG_LEVEL }} >> .env
             docker compose --file docker-compose.yaml stop
             docker compose --file docker-compose.yaml rm bot -f
-            docker compose --file docker-compose.yaml  up -d
+            docker compose --file docker-compose.yaml up --build -d
