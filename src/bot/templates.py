@@ -53,8 +53,9 @@ HTML_TEMPLATE_JOIN_FOND_ERROR = Template(
     </html>"""
 )
 
-VOLUNTEER_DATA_SUBJECT = "Новый волонтёр"
+VOLUNTEER_DATA_SUBJECT = "Заявка на волонтёрство"
 CHAT_DATA_SUBJECT = "Вступление в чат"
+ASK_QUESTION_SUBJECT = "Вопрос пользователя"
 
 HTML_VOLUNTEER_DATA = """
     <html>
@@ -67,6 +68,20 @@ HTML_VOLUNTEER_DATA = """
                 Телефон: <b>{}</b><br/>
                 Почта: <b>{}</b><br/>
                 Вариант помощи: <b>{}</b>
+            </p>
+        </body>
+    </html>
+"""
+
+HTML_ASK_QUESTION_DATA = """
+    <html>
+        <body>
+            <h1>{}</h1>
+            <p>
+                ФИО: <b>{}</b><br/>
+                Телефон: <b>{}</b><br/>
+                Почта: <b>{}</b><br/>
+                Вопрос пользователя: <b>{}</b>
             </p>
         </body>
     </html>

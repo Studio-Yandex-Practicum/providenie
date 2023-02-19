@@ -1,11 +1,13 @@
+from typing import Optional
+
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
 from bot import constants as const
 from bot import keys as key
-from bot import services as service
 from bot import states as state
 from bot import templates
+from core.email import bot_send_email_to_curator
 
 
 async def enter_submenu(
@@ -44,27 +46,40 @@ async def ask_full_name(
     return state.ADDING_NAME
 
 
-async def ask_question_subject(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> str:
-    """Сохраняем имя, спрашиваем тему вопроса."""
+async def save_feature(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+    next_feature: Optional[str] = None,
+    reply_text: Optional[str] = None,
+):
     user_data = context.user_data
     message = update.message.text
     user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
-    user_data[key.CURRENT_FEATURE] = key.THEME
-    await update.message.reply_text(text=const.MSG_THEME)
-    return state.ADDING_THEME
+    if next_feature:
+        user_data[key.CURRENT_FEATURE] = next_feature
+    if reply_text:
+        await update.message.reply_text(text=reply_text)
+
+
+async def ask_phone_number(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> str:
+    """Сохраняем имя, спрашиваем номер телефона."""
+    await save_feature(update, context, key.PHONE, const.MSG_PHONE)
+    return state.ADDING_PHONE
+
+
+async def ask_email(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
+    """Сохраняем номер телефона, спрашиваем email."""
+    await save_feature(update, context, key.EMAIL, const.MSG_EMAIL)
+    return state.ADDING_EMAIL
 
 
 async def ask_question_message(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
-    """Сохраняем тему вопроса, спрашиваем содержание вопроса."""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
-    user_data[key.CURRENT_FEATURE] = key.QUESTION
-    await update.message.reply_text(text=const.MSG_QUESTION)
+    """Сохраняем email, спрашиваем содержание вопроса."""
+    await save_feature(update, context, key.QUESTION, const.MSG_QUESTION)
     return state.ADDING_QUESTION
 
 
@@ -72,9 +87,7 @@ async def save_question_message(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> str:
     """Сохраняем содержание вопроса."""
-    user_data = context.user_data
-    message = update.message.text
-    user_data[key.FEATURES][user_data[key.CURRENT_FEATURE]] = message
+    await save_feature(update, context)
     return await display_entered_values(update, context)
 
 
@@ -84,13 +97,14 @@ async def display_entered_values(
     """Отображение вопроса."""
     user_data = context.user_data
     data = user_data.get(key.FEATURES)
-    full_name = data.get(key.NAME, "-")
-    theme = data.get(key.THEME, "-")
+    name = data.get(key.NAME, "-")
+    phone = data.get(key.PHONE, "-")
+    email = data.get(key.EMAIL, "-")
     question = data.get(key.QUESTION, "-")
     if not data:
         text = const.MSG_NO_DATA
     else:
-        text = templates.MSG_QUESTION_DATA.format(full_name, theme, question)
+        text = templates.MSG_QUESTION_DATA.format(name, phone, email, question)
     buttons = [
         [
             InlineKeyboardButton(
@@ -128,7 +142,12 @@ async def display_editing_menu(
         ],
         [
             InlineKeyboardButton(
-                text=const.BTN_THEME, callback_data=key.THEME
+                text=const.BTN_PHONE, callback_data=key.PHONE
+            ),
+        ],
+        [
+            InlineKeyboardButton(
+                text=const.BTN_EMAIL, callback_data=key.EMAIL
             ),
         ],
         [
@@ -194,31 +213,24 @@ async def send_values_to_curator(
     """Отправка вопроса куратору."""
     user_data = context.user_data
     data = user_data.get(key.FEATURES)
-    full_name = data.get(key.NAME, "-")
-    theme = data.get(key.THEME, "-")
+    name = data.get(key.NAME, "-")
+    phone = data.get(key.PHONE, "-")
+    email = data.get(key.EMAIL, "-")
     question = data.get(key.QUESTION, "-")
-    current_user_id = update.effective_chat.id
-    user_url = f"tg://user?id={current_user_id}"
-    button = InlineKeyboardButton(text=const.BTN_ANSWER, url=user_url)
 
-    text = templates.MSG_QUESTION_TO_CURATOR.format(full_name, theme, question)
-    reply_markup = InlineKeyboardMarkup.from_button(button)
-
-    sent = await service.send_message_to_curator(
-        context=context,
-        message=text,
-        reply_markup=reply_markup,
-        parse_mode="html",
+    subject = templates.ASK_QUESTION_SUBJECT
+    html = templates.HTML_ASK_QUESTION_DATA.format(
+        subject, name, phone, email, question
     )
-    if sent:
-        return_text = const.MSG_QUESTION_SENT
+    func = bot_send_email_to_curator(subject, html)
+    if func:
+        return_text = const.MSG_RESPONSE_ASK_QUESTION
     else:
-        return_text = const.MSG_QUESTION_ERROR_SENT
-
+        return_text = const.MSG_SENDING_ERROR
     button = InlineKeyboardButton(text=const.BTN_BACK, callback_data=key.SENT)
-    reply_markup = InlineKeyboardMarkup.from_button(button)
+    keyboard = InlineKeyboardMarkup.from_button(button)
     await update.callback_query.answer()
     await update.callback_query.edit_message_text(
-        text=return_text, reply_markup=reply_markup
+        text=return_text, reply_markup=keyboard
     )
-    return state.QUESTION_SENT
+    return state.VOLUNTEER_SENT

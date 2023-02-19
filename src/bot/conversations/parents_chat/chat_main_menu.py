@@ -1,6 +1,7 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
+from bot import dictionaries as dict
 from bot import keys as key
 from bot import states as state
 
@@ -13,64 +14,67 @@ async def select_chat(
     buttons_chat = [
         [
             InlineKeyboardButton(
-                text="Дети, рожде‌нные раньше срока (до 1,5)",
+                text=dict.CHAT_DESCRIPTION[key.CHAT_BABY]["shortname"],
                 callback_data=str(key.CHAT_BABY),
             )
         ],
         [
             InlineKeyboardButton(
-                text="Дети, рожде‌нные раньше срока (от 1,5)",
+                text=dict.CHAT_DESCRIPTION[key.CHAT_CHILD]["shortname"],
                 callback_data=str(key.CHAT_CHILD),
             )
         ],
         [
             InlineKeyboardButton(
-                text="Ретинопатия", callback_data=str(key.CHAT_RETINOPATIA)
+                text=dict.CHAT_DESCRIPTION[key.CHAT_RETINOPATIA]["name"],
+                callback_data=str(key.CHAT_RETINOPATIA),
             )
         ],
         [
             InlineKeyboardButton(
-                text="Шунтята", callback_data=str(key.CHAT_SHUNTATA)
+                text=dict.CHAT_DESCRIPTION[key.CHAT_SHUNTATA]["name"],
+                callback_data=str(key.CHAT_SHUNTATA),
             )
         ],
         [
             InlineKeyboardButton(
-                text="Бабушки торопыжек",
+                text=dict.CHAT_DESCRIPTION[key.CHAT_GRANDMOTHERS]["name"],
                 callback_data=str(key.CHAT_GRANDMOTHERS),
             )
         ],
         [
             InlineKeyboardButton(
-                text="Отвести душу и поплакать",
+                text=dict.CHAT_DESCRIPTION[key.CHAT_CRY]["name"],
                 callback_data=str(key.CHAT_CRY),
             )
         ],
         [
             InlineKeyboardButton(
-                text="Мамы ангелов", callback_data=str(key.CHAT_ANGELS)
+                text=dict.CHAT_DESCRIPTION[key.CHAT_ANGELS]["name"],
+                callback_data=str(key.CHAT_ANGELS),
             )
         ],
         [
             InlineKeyboardButton(
-                text="Ретинопатия недоношенных 4-5 стадии",
+                text=dict.CHAT_DESCRIPTION[key.CHAT_RETINOPATIA_4_5]["name"],
                 callback_data=str(key.CHAT_RETINOPATIA_4_5),
             )
         ],
         [
             InlineKeyboardButton(
-                text="Дети с офтальмологическими проблемами",
+                text=dict.CHAT_DESCRIPTION[key.CHAT_PROBLEMS]["name"],
                 callback_data=str(key.CHAT_PROBLEMS),
             )
         ],
         [
             InlineKeyboardButton(
-                text="Реабилитация зрения",
+                text=dict.CHAT_DESCRIPTION[key.CHAT_REHABILITATION]["name"],
                 callback_data=str(key.CHAT_REHABILITATION),
             )
         ],
         [
             InlineKeyboardButton(
-                text="«Семьи торопыжек» t.me/toropizhki",
+                text=dict.CHAT_DESCRIPTION[key.CHAT_TELEGRAM]["name"],
                 callback_data=str(key.CHAT_TELEGRAM),
             )
         ],
