@@ -114,7 +114,9 @@ MSG_VK = "https://vk.com/fond_providenie"
 MSG_INSTAGRAM = "https://instagram.com/fond_providenie/"
 MSG_FACEBOOK = "https://www.facebook.com/fond.providenie/"
 MSG_TG_CHANNEL = "https://t.me/providenie_fond"
-MSG_TG_BOT = "TODO"
+MSG_TG_BOT = (
+    f"Ссылка здесь скоро появится, а пока посетите наш сайт {MSG_WEBSITE}"
+)
 
 """DONATION"""
 """Question"""
