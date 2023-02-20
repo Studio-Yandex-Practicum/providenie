@@ -14,6 +14,7 @@ class AskQuestionForm(BaseModel):
 
     class Config:
         min_anystr_length = 1
+        max_anystr_length = 4096
 
 
 class FormBase(BaseModel):
@@ -27,6 +28,7 @@ class FormBase(BaseModel):
 
     class Config:
         min_anystr_length = 1
+        max_anystr_length = 4096
 
 
 class VolunteerForm(FormBase):
@@ -38,6 +40,7 @@ class VolunteerForm(FormBase):
 
     class Config:
         min_anystr_length = 1
+        max_anystr_length = 4096
 
 
 class ChatForm(FormBase):
@@ -56,6 +59,10 @@ class ChatForm(FormBase):
         ge=22, le=37
     )  # Срок рождения ребёнка в Неделях
 
+    class Config:
+        min_anystr_length = 1
+        max_anystr_length = 4096
+
 
 class FundForm(ChatForm):
     """Модель для анкеты на отправку заявки в фонд."""
@@ -67,3 +74,7 @@ class FundForm(ChatForm):
     another_fund_help: str
     another_fund_member: str
     family_members: conint(ge=2)
+
+    class Config:
+        min_anystr_length = 1
+        max_anystr_length = 4096
