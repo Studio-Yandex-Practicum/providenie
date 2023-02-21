@@ -1,7 +1,7 @@
 # Логика "Заявка на вступление в фонд" без хендлеров
 from datetime import date
 
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, ReplyKeyboardRemove
 from telegram.ext import ContextTypes
 
 from ..templates import HTML_TEMPLATE_JOIN_FUND
@@ -18,7 +18,6 @@ def clean_dictionary(context: dict, save_values=[None]) -> None:
     for key in context:
         if key not in save_values:
             context[key] = ""
-
 
 # Здесь начинаются обработчики кнопок и ответов на вопросы
 async def enter_submenu(
@@ -147,7 +146,7 @@ async def ask_full_name_mother(
 ) -> str:
     """Получение фамилии мамы."""
     flags_obj = context.user_data[keys.FLAGS]
-
+    
     if flags_obj.bad_request:
         await update.message.reply_text(
             text=constants.QUESTIONS_DICT["full_name_mother"]
@@ -164,13 +163,12 @@ async def ask_full_name_mother(
         flags_obj.changing_edit_mode_first(False)
         flags_obj.changing_edit_mode_second(True)
         return states.FIO_MOTHER
-
+    
     query = update.callback_query
     await query.answer()
     await query.edit_message_text(
         text=constants.QUESTIONS_DICT["full_name_mother"]
     )
-
     return states.FIO_MOTHER
 
 
@@ -202,19 +200,19 @@ async def ask_phone_mother(
     if not validators.checking_not_digits(fio):
         await update.message.reply_text(
             text=constants.ANSWERS_DICT["bad_fio_mother"],
-            reply_markup=templates.MARKUP_FIX,
+            reply_markup=templates.MARKUP_FIX,    
         )
         flags_obj.changing_bad_request(True)
-
         return states.RETURN_MOTHER_FIO
 
     context.user_data["ФИО мамы"] = fio.title()
     if flags_obj.edit_mode_second_flag:
         flags_obj.changing_edit_mode_second(False)
         return await show_user_information(update, context)
-
+    
     await update.message.reply_text(
-        text=constants.QUESTIONS_DICT["phone_number"]
+        text=constants.QUESTIONS_DICT["phone_number"],
+        reply_markup=ReplyKeyboardRemove()
     )
 
     return states.PHONE
@@ -254,7 +252,10 @@ async def ask_email_mother(
         flags_obj.changing_edit_mode_second(False)
         return await show_user_information(update, context)
 
-    await update.message.reply_text(text=constants.QUESTIONS_DICT["email"])
+    await update.message.reply_text(
+        text=constants.QUESTIONS_DICT["email"],
+        reply_markup=ReplyKeyboardRemove()
+        )
 
     return states.EMAIL
 
@@ -290,7 +291,6 @@ async def ask_full_name_child(
             reply_markup=templates.MARKUP_FIX,
         )
         flags_obj.changing_bad_request(True)
-
         return states.PHONE
 
     context.user_data["Email"] = email_mother
@@ -300,7 +300,8 @@ async def ask_full_name_child(
         return await show_user_information(update, context)
 
     await update.message.reply_text(
-        text=constants.QUESTIONS_DICT["full_name_child"]
+        text=constants.QUESTIONS_DICT["full_name_child"],
+        reply_markup=ReplyKeyboardRemove()
     )
 
     return states.FIO_CHILD
@@ -346,7 +347,8 @@ async def ask_how_many_people_in_family(
         return await show_user_information(update, context)
 
     await update.message.reply_text(
-        text=constants.QUESTIONS_DICT["how_many_people"]
+        text=constants.QUESTIONS_DICT["how_many_people"],
+        reply_markup=ReplyKeyboardRemove()
     )
 
     return states.HOW_MANY_PEOPLE
@@ -384,7 +386,10 @@ async def ask_city(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
         flags_obj.changing_edit_mode_second(False)
         return await show_user_information(update, context)
 
-    await update.message.reply_text(text=constants.QUESTIONS_DICT["city"])
+    await update.message.reply_text(
+        text=constants.QUESTIONS_DICT["city"],
+        reply_markup=ReplyKeyboardRemove()
+        )
 
     return states.CITY
 
@@ -425,7 +430,10 @@ async def ask_address(
         flags_obj.changing_edit_mode_second(False)
         return await show_user_information(update, context)
 
-    await update.message.reply_text(text=constants.QUESTIONS_DICT["address"])
+    await update.message.reply_text(
+        text=constants.QUESTIONS_DICT["address"],
+        reply_markup=ReplyKeyboardRemove()
+        )
 
     return states.ADDRESS
 
@@ -498,7 +506,8 @@ async def ask_place_birthday(
         return await show_user_information(update, context)
 
     await update.message.reply_text(
-        text=constants.QUESTIONS_DICT["place_birth"]
+        text=constants.QUESTIONS_DICT["place_birth"],
+        reply_markup=ReplyKeyboardRemove()
     )
 
     return states.PLACE_BIRTH
@@ -579,7 +588,9 @@ async def ask_child_weight(
         flags_obj.changing_edit_mode_second(False)
         return await show_user_information(update, context)
 
-    await update.message.reply_text(text=constants.QUESTIONS_DICT["weight"])
+    await update.message.reply_text(
+        text=constants.QUESTIONS_DICT["weight"],
+        reply_markup=ReplyKeyboardRemove())
 
     return states.WEIGHT
 
@@ -621,7 +632,10 @@ async def ask_child_height(
         flags_obj.changing_edit_mode_second(False)
         return await show_user_information(update, context)
 
-    await update.message.reply_text(text=constants.QUESTIONS_DICT["height"])
+    await update.message.reply_text(
+        text=constants.QUESTIONS_DICT["height"],
+        reply_markup=ReplyKeyboardRemove()
+        )
 
     return states.HEIGHT
 
@@ -665,7 +679,10 @@ async def ask_child_diagnosis(
         flags_obj.changing_edit_mode_second(False)
         return await show_user_information(update, context)
 
-    await update.message.reply_text(text=constants.QUESTIONS_DICT["diagnosis"])
+    await update.message.reply_text(
+        text=constants.QUESTIONS_DICT["diagnosis"],
+        reply_markup=ReplyKeyboardRemove()
+        )
 
     return states.DIAGNOSIS
 
@@ -702,7 +719,8 @@ async def ask_how_found_us(
         return await show_user_information(update, context)
 
     await update.message.reply_text(
-        text=constants.QUESTIONS_DICT["how_found_fund"]
+        text=constants.QUESTIONS_DICT["how_found_fund"],
+        reply_markup=ReplyKeyboardRemove()
     )
 
     return states.HOW_FOUND
