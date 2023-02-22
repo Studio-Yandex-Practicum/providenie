@@ -26,7 +26,7 @@ async def select_chat(
         ],
         [
             InlineKeyboardButton(
-                text=dict.CHAT_DESCRIPTION[key.CHAT_RETINOPATIA]["name"],
+                text=dict.CHAT_DESCRIPTION[key.CHAT_RETINOPATIA]["shortname"],
                 callback_data=str(key.CHAT_RETINOPATIA),
             )
         ],
