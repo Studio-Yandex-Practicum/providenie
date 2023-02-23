@@ -1,5 +1,4 @@
 from datetime import date
-from typing import Optional
 
 from pydantic.error_wrappers import ValidationError
 from telegram import InlineKeyboardButton as Button
@@ -7,29 +6,18 @@ from telegram import InlineKeyboardMarkup as Keyboard
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from bot.constants import states, callbacks
-from bot.constants import buttons
-from bot.constants import keys
-from bot.constants.info.forms_info import forms
+from bot.constants import buttons, callbacks, keys, states
+from bot.constants.info.forms_info import forms_info
 from bot.constants.info.question import questionnaire
+from bot.utils import send_message
+from bot.constants import keyboards
 
-
-MESSAGE_MARKDOWN = 'HTML'
 SHOW_DATA_TEMPLATE = '<b><u>{title}</u></b>:\n\t\t{value}\n\n'
 INPUT_ERROR_TEMPLATE = '<b>Некорректный ввод</b>: \n{message}'
 DATE_FORMAT = '%d.%m.%Y'
 
 
-async def send_message(update: Update, message: str, keyboard: Optional[Keyboard] = None):
-    query = update.callback_query
-    if query:
-        await query.answer()
-        await query.message.edit_text(message, reply_markup=keyboard, parse_mode=MESSAGE_MARKDOWN)
-    else:
-        await update.message.reply_text(message, reply_markup=keyboard, parse_mode=MESSAGE_MARKDOWN)
-
-
-async def show_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def form_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     user_data = context.user_data
     form_name = query.data
@@ -37,7 +25,7 @@ async def show_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if form_name == callbacks.FORM_MENU:
         form_info = user_data[keys.FORM][keys.INFO]
     else:
-        form_info = forms[form_name]
+        form_info = forms_info[form_name]
         user_data[keys.FORM] = {keys.INFO: form_info}
 
     if not (menu := form_info.get('menu')):
@@ -47,7 +35,7 @@ async def show_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [Button(text=option.get('name'), callback_data=callback)]
         for callback, option in menu.items()
     ]
-    menu_keyboard = Keyboard([*menu_buttons, [buttons.main_menu_button]])
+    menu_keyboard = Keyboard([*menu_buttons, [buttons.main_menu]])
 
     await send_message(update, form_info['desc'], keyboard=menu_keyboard)
 
@@ -67,12 +55,12 @@ async def confirm_selection(update: Update, context: ContextTypes.DEFAULT_TYPE):
         option = menu[query.data]
         form[keys.SELECTED_OPTION] = option['name']
         confirm_text = option['desc']
-        back_button = buttons.form_menu_button
+        back_button = buttons.form_menu
     else:
         confirm_text = form_info['desc']
-        back_button = buttons.main_menu_button
+        back_button = buttons.main_menu
 
-    keyboard = Keyboard([[buttons.start_data_collection_button, back_button]])
+    keyboard = Keyboard([[buttons.info_collect, back_button]])
 
     await send_message(update, confirm_text, keyboard=keyboard)
 
@@ -135,7 +123,7 @@ async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
         question = questionnaire[name.upper()]
         message += SHOW_DATA_TEMPLATE.format(title=question['name'], value=value)
 
-    await send_message(update, message, keyboard=buttons.conformation_keyboard)
+    await send_message(update, message, keyboard=keyboards.confirmation)
 
     return states.CONFIRMATION
 
@@ -147,7 +135,7 @@ async def edit_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
         question = questionnaire[field.upper()]
         callback = f'{keys.INPUT}_{field.upper()}'
         edit_buttons.append([Button(text=question['name'], callback_data=callback)])
-    edit_buttons.append([buttons.show_info_button])
+    edit_buttons.append([buttons.info_show])
 
     await send_message(update, 'Что изменить: ', keyboard=Keyboard(edit_buttons))
 

@@ -1,35 +1,66 @@
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import InlineKeyboardButton as Button
 
 from bot.constants import callbacks
-from bot.constants.info.forms_info import forms
+from bot.constants.info.forms_info import forms_info
+from bot.constants.info.share import SHARE_LINKS
+from bot.constants.info.about import ABOUT_OPTIONS
 
-main_menu_button = InlineKeyboardButton(
+'''BACk BUTTONS'''
+main_menu = Button(
     'Назад', callback_data=callbacks.BACK,
 )
-form_menu_button = InlineKeyboardButton(
-    'Назад', callback_data=callbacks.FORM_MENU,
+share_menu = Button(
+    'Назад', callback_data=callbacks.SHARE_INFO
 )
-show_info_button = InlineKeyboardButton(
-    'Назад', callback_data=callbacks.SHOW_INFO,
+about_menu = about = Button(
+    'Назад', callback_data=callbacks.MENU_ABOUT
 )
-start_data_collection_button = InlineKeyboardButton(
-    'Начать заполнение анкеты',
-    callback_data=callbacks.START_DATA_COLLECTION
-)
-forms_buttons = [
+
+
+'''MAIN BUTTONS'''
+forms = [
     [
-        InlineKeyboardButton(
-            form_info.get("button_text"), callback_data=form_name
-        )
-    ] for form_name, form_info in forms.items()
+        Button(info.get("button_text"), callback_data=callback)
+    ] for callback, info in forms_info.items()
+]
+share_info = Button(
+    'Рассказать о фонде своим друзьям', callback_data=callbacks.SHARE_INFO
+)
+share_links = [
+    [
+        Button(link.get("name"), callback_data=callback)
+    ] for callback, link in SHARE_LINKS.items()
 ]
 
-conformation_keyboard = InlineKeyboardMarkup([
-    [InlineKeyboardButton(
-        'Подтвердить данные и отправить',
-        callback_data=callbacks.SEND_USER_INFO
-    )],
-    [InlineKeyboardButton(
-        'Изменить данные', callback_data=callbacks.INFO_CHANGE,
-    ), main_menu_button],
-])
+donation_link = Button(  # TODO Перенеси в константы
+    'Сделать пожертвование', url="https://fond-providenie.ru/help-chidren/sdelat-pozhertovanie/sdelat-pozhertvovanie-s-bankovskoj-karty/"
+)
+
+about = Button(
+    'Узнать о фонде', callback_data=callbacks.MENU_ABOUT
+)
+about_options = [
+    [
+        Button(about.get("name"), callback_data=calback)
+    ] for calback, about in ABOUT_OPTIONS.items()
+]
+
+
+'''FORM BUTTONS'''
+form_menu = Button(
+    'Назад', callback_data=callbacks.FORM_MENU,
+)
+info_show = Button(
+    'Назад', callback_data=callbacks.INFO_SHOW,
+)
+info_collect = Button(
+    'Начать заполнение анкеты',
+    callback_data=callbacks.INFO_COLLECT
+)
+info_send = Button(
+    'Подтвердить данные и отправить',
+    callback_data=callbacks.INFO_SEND
+)
+info_change = Button(
+    'Изменить данные', callback_data=callbacks.INFO_CHANGE,
+)

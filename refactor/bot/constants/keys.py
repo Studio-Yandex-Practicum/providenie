@@ -1,4 +1,8 @@
-"""FORM KEYS"""
+"""MAIN MENU"""
+SHARE = 'SHARE'
+ABOUT = 'ABOUT'
+
+"""FORM"""
 
 FORM = 'FORM'
 SELECT = 'SELECT'

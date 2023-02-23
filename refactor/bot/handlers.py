@@ -4,20 +4,20 @@ from telegram.ext import (
 )
 
 from bot.constants import callbacks, states
-from bot.constants.keys import FORM, INPUT, SELECT
+from bot.constants.keys import FORM, INPUT, SELECT, SHARE, ABOUT
 from bot.conversations import form_application, main_application
 
 
 form_conversation_handler = ConversationHandler(
-    entry_points=[CallbackQueryHandler(form_application.show_menu, pattern=fr"^{FORM}_\S*$")],
+    entry_points=[CallbackQueryHandler(form_application.form_menu, pattern=fr"^{FORM}_\S*$")],
     states={
         states.CHOOSING: [
             CallbackQueryHandler(form_application.confirm_selection, pattern=fr"^{SELECT}_\S*$"),
             CallbackQueryHandler(form_application.ask_input, pattern=fr"^{INPUT}_\S*$"),
-            CallbackQueryHandler(form_application.show_data, pattern=callbacks.SHOW_INFO),
+            CallbackQueryHandler(form_application.show_data, pattern=callbacks.INFO_SHOW),
         ],
         states.CONFIRMATION: [
-            CallbackQueryHandler(form_application.ask_input, pattern=callbacks.START_DATA_COLLECTION),
+            CallbackQueryHandler(form_application.ask_input, pattern=callbacks.INFO_COLLECT),
             CallbackQueryHandler(form_application.edit_input, pattern=callbacks.INFO_CHANGE),
         ],
         states.TYPING: [MessageHandler(filters.TEXT & ~filters.COMMAND, form_application.save_input)],
@@ -35,17 +35,16 @@ form_conversation_handler = ConversationHandler(
 
 main_menu_handler = ConversationHandler(
     entry_points=[
-        CommandHandler("start", main_application.start),
-        CallbackQueryHandler(main_application.start, pattern=callbacks.BACK)
+        CommandHandler("start", main_application.main_menu),
+        CallbackQueryHandler(main_application.main_menu, pattern=callbacks.BACK)
     ],
     states={
         states.MAIN_MENU: [
             form_conversation_handler,
-            CallbackQueryHandler(main_application.tell_friend, pattern=callbacks.MENU_TELL_FRIEND),
-            CallbackQueryHandler(main_application.give_link, pattern=r"^TELL_\S*$"),
-            CallbackQueryHandler(main_application.give_donation, pattern=callbacks.MENU_GIVE_MONEY),
-            CallbackQueryHandler(main_application.start, pattern=callbacks.MENU_ASK_Q),
-            CallbackQueryHandler(main_application.show_about, pattern=callbacks.MENU_ABOUT),
+            CallbackQueryHandler(main_application.share_menu, pattern=callbacks.SHARE_INFO),
+            CallbackQueryHandler(main_application.share_link, pattern=fr"^{SHARE}_\S*$"),
+            CallbackQueryHandler(main_application.about_menu, pattern=callbacks.MENU_ABOUT),
+            CallbackQueryHandler(main_application.about_option, pattern=fr"^{ABOUT}_\S*$"),
         ],
     },
     fallbacks=[MessageHandler(filters.Regex("^Done$"), main_application.done)],

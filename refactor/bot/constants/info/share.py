@@ -1,33 +1,34 @@
+from bot.constants import keys
 
 SHARE_LINKS = {
-    "TELL_WEBPAGE": {
+    f"{keys.SHARE}_WEBPAGE": {
         "name": "Страница в интернете",
         "desc": " на страницу в интернете",
-        "link": "http://www."
+        "url": "http://www."
     },
-    "TELL_VK": {
+    f"{keys.SHARE}_VK": {
         "name": "ВКонтакте",
         "desc": " на страницу ВКонтакте",
-        "link": "http://www.vk.ru"
+        "url": "http://www.vk.ru"
     },
-    "TELL_INSTA": {
+    f"{keys.SHARE}_INSTA": {
         "name": "Instagram",
         "desc": " на страницу в Instagram",
-        "link": "http://www."
+        "url": "http://www."
     },
-    "TELL_FACEBOOK": {
+    f"{keys.SHARE}_FACEBOOK": {
         "name": "Facebook",
         "desc": " на страницу в Facebook",
-        "link": "http://www.facebook.com"
+        "url": "http://www.facebook.com"
     },
-    "TELL_CHAT": {
+    f"{keys.SHARE}_CHAT": {
         "name": "Чат",
         "desc": " в чат",
-        "link": "http://www.chat.com"
+        "url": "http://www.chat.com"
     },
-    "TELL_TELEGRAM": {
+    f"{keys.SHARE}_TELEGRAM": {
         "name": "Telegam",
         "desc": " в telegram",
-        "link": "http://www.telegram.com"
+        "url": "http://www.telegram.com"
     },
 }
