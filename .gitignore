@@ -137,3 +137,6 @@ dmypy.json
 
 # vscode
 .vscode
+
+.data/*
+src/.data/
