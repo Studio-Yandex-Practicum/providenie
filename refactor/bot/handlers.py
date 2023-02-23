@@ -1,139 +1,53 @@
 from telegram.ext import (
-    CallbackQueryHandler,
-    CommandHandler,
-    ConversationHandler,
-    filters,
-    MessageHandler
+    CallbackQueryHandler, CommandHandler,
+    ConversationHandler, MessageHandler, filters
 )
 
-from .conversations import menu, parents_chat, fund_application, volunteer_application
-from .import callbacks
-from . import states
-from bot.conversations import base
+from bot.constants import callbacks, states
+from bot.constants.keys import FORM, INPUT, SELECT
+from bot.conversations import form_application, main_application
 
-parents_chat_handler = ConversationHandler(
-    entry_points=[CallbackQueryHandler(parents_chat.start, pattern=callbacks.MENU_CHAT)],
-    states={
-        states.CHAT_CHOOSING: [
-            CallbackQueryHandler(parents_chat.confirm_selection, pattern="^CHAT_SELECT_\S*$"),
-            CallbackQueryHandler(parents_chat.ask_for_input, pattern="^INFO_\S*$"),
-            CallbackQueryHandler(parents_chat.show_data, pattern=callbacks.SHOW),
-        ],
-        states.CHAT_CONFIRMATION: [
-            CallbackQueryHandler(parents_chat.ask_for_input, pattern=callbacks.START_DATA_COLLECTION),
-            CallbackQueryHandler(parents_chat.change_input, pattern=callbacks.INFO_CHANGE),
-            CallbackQueryHandler(parents_chat.start, pattern=callbacks.MENU_CHAT),
-        ],
-        states.CHAT_TYPING: [MessageHandler(filters.TEXT & ~filters.COMMAND, parents_chat.save_input)],
-        states.CHAT_SHOWING: [MessageHandler(filters.TEXT & ~filters.COMMAND, parents_chat.show_data),],
-    },
-    fallbacks=[MessageHandler(filters.Regex("^END$"), menu.done)],
-    map_to_parent={
-        # Return to top level menu
-        states.BACK: states.LEVEL_MENU,
-        # End conversation altogether
-        states.END: states.END,
-    },
-    allow_reentry=True,
-)
 
-fond_handler = ConversationHandler(
-    entry_points=[CallbackQueryHandler(fund_application.start, pattern=callbacks.MENU_APP_FOND)],
-    states={
-        states.FOND_CHOOSING: [
-            CallbackQueryHandler(fund_application.confirm_selection, pattern=r"^FOND_SELECT_\S*$"),
-            CallbackQueryHandler(fund_application.ask_for_input, pattern=r"^INFO_\S*$"),
-            CallbackQueryHandler(fund_application.show_data, pattern=callbacks.SHOW),
-        ],
-        states.FOND_CONFIRMATION: [
-            CallbackQueryHandler(fund_application.ask_for_input, pattern=callbacks.START_DATA_COLLECTION),
-            CallbackQueryHandler(fund_application.change_input, pattern=callbacks.INFO_CHANGE),
-            CallbackQueryHandler(fund_application.start, pattern=callbacks.MENU_APP_FOND),
-        ],
-        states.FOND_TYPING: [MessageHandler(filters.TEXT & ~filters.COMMAND, fund_application.save_input)],
-        states.FOND_SHOWING: [MessageHandler(filters.TEXT & ~filters.COMMAND, fund_application.show_data),],
-    },
-    fallbacks=[MessageHandler(filters.Regex("^END$"), menu.done)],
-    map_to_parent={
-        # Return to top level menu
-        states.BACK: states.LEVEL_MENU,
-        # End conversation altogether
-        states.END: states.END,
-    },
-    allow_reentry=True,
-)
-
-volonter_handler = ConversationHandler(
-    entry_points=[CallbackQueryHandler(volunteer_application.start, pattern=callbacks.MENU_VOLONTER)],
-    states={
-        states.VOLONTER_CHOOSING: [
-            CallbackQueryHandler(volunteer_application.ask_for_input, pattern=r"^VOLONTER_INFO_\S*$"),
-            CallbackQueryHandler(volunteer_application.show_data, pattern=callbacks.SHOW),
-        ],
-        states.VOLONTER_CONFIRMATION: [
-            CallbackQueryHandler(volunteer_application.ask_for_input, pattern=callbacks.START_DATA_COLLECTION),
-            CallbackQueryHandler(volunteer_application.change_input, pattern=callbacks.INFO_CHANGE),
-            CallbackQueryHandler(menu.start, pattern=callbacks.BACK),
-        ],
-        states.VOLONTER_TYPING: [MessageHandler(filters.TEXT & ~filters.COMMAND, volunteer_application.save_input)],
-        states.VOLONTER_SHOWING: [MessageHandler(filters.TEXT & ~filters.COMMAND, volunteer_application.show_data),],
-    },
-    fallbacks=[MessageHandler(filters.Regex("^END$"), menu.done)],
-    map_to_parent={
-        # Return to top level menu
-        states.BACK: states.LEVEL_MENU,
-        # End conversation altogether
-        states.END: states.END,
-    },
-    allow_reentry=True,
-)
-
-base_handler = ConversationHandler(
-    entry_points=[CallbackQueryHandler(base.start, pattern=r"^FORM_\S*$")],
+form_conversation_handler = ConversationHandler(
+    entry_points=[CallbackQueryHandler(form_application.show_menu, pattern=fr"^{FORM}_\S*$")],
     states={
         states.CHOOSING: [
-            CallbackQueryHandler(base.confirm_selection, pattern=r"^SELECT_\S*$"),
-            # CallbackQueryHandler(base.ask_for_input, pattern=r"^INFO_\S*$"),
-            # CallbackQueryHandler(base.show_data, pattern=callbacks.SHOW),
+            CallbackQueryHandler(form_application.confirm_selection, pattern=fr"^{SELECT}_\S*$"),
+            CallbackQueryHandler(form_application.ask_input, pattern=fr"^{INPUT}_\S*$"),
+            CallbackQueryHandler(form_application.show_data, pattern=callbacks.SHOW_INFO),
         ],
         states.CONFIRMATION: [
-            CallbackQueryHandler(base.ask_for_input, pattern=callbacks.START_DATA_COLLECTION),
-            # CallbackQueryHandler(base.change_input, pattern=callbacks.INFO_CHANGE),
-            CallbackQueryHandler(base.show_menu, pattern=callbacks.NESTED_MENU),
+            CallbackQueryHandler(form_application.ask_input, pattern=callbacks.START_DATA_COLLECTION),
+            CallbackQueryHandler(form_application.edit_input, pattern=callbacks.INFO_CHANGE),
         ],
-        # states.TYPING: [MessageHandler(filters.TEXT & ~filters.COMMAND, base.save_input)],
-        # states.SHOWING: [MessageHandler(filters.TEXT & ~filters.COMMAND, base.show_data),],
+        states.TYPING: [MessageHandler(filters.TEXT & ~filters.COMMAND, form_application.save_input)],
     },
-    fallbacks=[MessageHandler(filters.Regex("^END$"), menu.done)],
-    map_to_parent={
-        # Return to top level menu
-        states.BACK: states.LEVEL_MENU,
-        # End conversation altogether
-        states.END: states.END,
-    },
+    fallbacks=[MessageHandler(filters.Regex("^END$"), main_application.done)],
+    # map_to_parent={
+    #     # Return to top level menu
+    #     states.BACK: states.MAIN_MENU,
+    #     # End conversation altogether
+    #     states.END: states.END,
+    # },
     allow_reentry=True,
 )
 
 
 main_menu_handler = ConversationHandler(
-    entry_points=[CommandHandler("start", menu.start)],
+    entry_points=[
+        CommandHandler("start", main_application.start),
+        CallbackQueryHandler(main_application.start, pattern=callbacks.BACK)
+    ],
     states={
-        states.LEVEL0: [
-            CallbackQueryHandler(menu.start, pattern=callbacks.BACK),
-        ],
-        states.LEVEL_MENU: [
-            CallbackQueryHandler(menu.start, pattern=callbacks.BACK),
-            base_handler,
-            parents_chat_handler,
-            fond_handler,
-            volonter_handler,
-            CallbackQueryHandler(menu.tell_friend, pattern=callbacks.MENU_TELL_FRIEND),
-            CallbackQueryHandler(menu.give_link, pattern=r"^TELL_\S*$"),
-            CallbackQueryHandler(menu.give_donation, pattern=callbacks.MENU_GIVE_MONEY),
-            CallbackQueryHandler(menu.start, pattern=callbacks.MENU_ASK_Q),
-            CallbackQueryHandler(menu.show_about, pattern=callbacks.MENU_ABOUT),
+        states.MAIN_MENU: [
+            form_conversation_handler,
+            CallbackQueryHandler(main_application.tell_friend, pattern=callbacks.MENU_TELL_FRIEND),
+            CallbackQueryHandler(main_application.give_link, pattern=r"^TELL_\S*$"),
+            CallbackQueryHandler(main_application.give_donation, pattern=callbacks.MENU_GIVE_MONEY),
+            CallbackQueryHandler(main_application.start, pattern=callbacks.MENU_ASK_Q),
+            CallbackQueryHandler(main_application.show_about, pattern=callbacks.MENU_ABOUT),
         ],
     },
-    fallbacks=[MessageHandler(filters.Regex("^Done$"), menu.done)],
+    fallbacks=[MessageHandler(filters.Regex("^Done$"), main_application.done)],
     allow_reentry=True,
 )

@@ -1,19 +1,15 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes, ConversationHandler
 
-from bot import callbacks, states
+from bot.constants import callbacks, states
+from bot.constants.buttons import forms_buttons
+from bot.constants.info.share import SHARE_LINKS
 from core.logger import logger  # noqa
-from .info import link_desc
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     markup = InlineKeyboardMarkup([
-        [InlineKeyboardButton(
-            'Тест кнопка', callback_data=callbacks.FORM_VOLONTEER
-        )],
-        [InlineKeyboardButton(
-            'Тест кнопка 2', callback_data=callbacks.FORM_FOND
-        )],
+        *forms_buttons,
         [InlineKeyboardButton(
             'Попасть в родительский чат', callback_data=callbacks.MENU_CHAT
         )],
@@ -26,15 +22,17 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [InlineKeyboardButton(
             'Рассказать о фонде своим друзьям', callback_data=callbacks.MENU_TELL_FRIEND
         )],
-        [InlineKeyboardButton(
-            'Сделать пожертвование', callback_data=callbacks.MENU_GIVE_MONEY
+        [InlineKeyboardButton(  # TODO Перенеси в константы
+            'Сделать пожертвование', url="https://fond-providenie.ru/help-chidren/sdelat-pozhertovanie/sdelat-pozhertvovanie-s-bankovskoj-karty/"
         )],
-        [InlineKeyboardButton(
-            'Задать вопрос', callback_data=callbacks.MENU_ASK_Q
-        ),
+        [
             InlineKeyboardButton(
-            'Узнать о фонде', callback_data=callbacks.MENU_ABOUT
-        )],
+                'Задать вопрос', callback_data=callbacks.MENU_ASK_Q
+            ),
+            InlineKeyboardButton(
+                'Узнать о фонде', callback_data=callbacks.MENU_ABOUT
+            )
+        ],
     ])
 
     query = update.callback_query
@@ -44,33 +42,33 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await update.message.reply_text(text='Я хочу...', reply_markup=markup)
 
-    return states.LEVEL_MENU
+    return states.MAIN_MENU
 
 
 async def tell_friend(update: Update, context: ContextTypes.DEFAULT_TYPE):
     markup = InlineKeyboardMarkup([
         [InlineKeyboardButton(
-            link_desc["TELL_WEBPAGE"]['name'],
+            SHARE_LINKS["TELL_WEBPAGE"]['name'],
             callback_data=callbacks.TELL_WEBPAGE
         )],
         [InlineKeyboardButton(
-            link_desc["TELL_VK"]['name'],
+            SHARE_LINKS["TELL_VK"]['name'],
             callback_data=callbacks.TELL_VK
         )],
         [InlineKeyboardButton(
-            link_desc["TELL_INSTA"]['name'],
+            SHARE_LINKS["TELL_INSTA"]['name'],
             callback_data=callbacks.TELL_INSTA
         )],
         [InlineKeyboardButton(
-            link_desc["TELL_FACEBOOK"]['name'],
+            SHARE_LINKS["TELL_FACEBOOK"]['name'],
             callback_data=callbacks.TELL_FACEBOOK
         )],
         [InlineKeyboardButton(
-            link_desc["TELL_CHAT"]['name'],
+            SHARE_LINKS["TELL_CHAT"]['name'],
             callback_data=callbacks.TELL_CHAT
         )],
         [InlineKeyboardButton(
-            link_desc["TELL_TELEGRAM"]['name'],
+            SHARE_LINKS["TELL_TELEGRAM"]['name'],
             callback_data=callbacks.TELL_TELEGRAM
         )],
         [InlineKeyboardButton(
@@ -82,13 +80,13 @@ async def tell_friend(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await query.answer()
     await query.edit_message_text(text='Выбрать чем поделиться:', reply_markup=markup)
 
-    return states.LEVEL_MENU
+    return states.MAIN_MENU
 
 
 async def give_link(update: Update, context: ContextTypes.DEFAULT_TYPE):
     link_selection = update.callback_query.data
-    link = link_desc[link_selection]['link']
-    link_info = link_desc[link_selection]['desc']
+    link = SHARE_LINKS[link_selection]['link']
+    link_info = SHARE_LINKS[link_selection]['desc']
 
     query = update.callback_query
     await query.answer()
@@ -107,7 +105,7 @@ async def give_link(update: Update, context: ContextTypes.DEFAULT_TYPE):
         text=f'Ссылка: {link}',
         reply_markup=markup)
 
-    return states.LEVEL_MENU
+    return states.MAIN_MENU
 
 
 async def give_donation(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -135,7 +133,7 @@ async def show_about(update: Update, context: ContextTypes.DEFAULT_TYPE):
         text='Информация о фонде: почитайте здесь',
         reply_markup=markup)
 
-    return states.LEVEL0
+    return states.MAIN_MENU
 
 
 async def done(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
