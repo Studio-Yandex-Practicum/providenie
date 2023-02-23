@@ -1,4 +1,9 @@
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram import (
+    BotCommand,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    Update,
+)
 from telegram.ext import ContextTypes
 
 from bot import constants as const
@@ -7,8 +12,18 @@ from bot import states as state
 from bot.flags.flag import Flags
 
 
+async def set_commands(context):
+    commands = [
+        BotCommand(command="/start", description="Перейти в главное меню"),
+        BotCommand(command="/cancel", description="Отменить текущее действие"),
+        BotCommand(command="/stop", description="Завершение работы"),
+    ]
+    await context.bot.set_my_commands(commands)
+
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Кнопка старт. Вывод главного меню."""
+    await set_commands(context)
     buttons = [
         [
             InlineKeyboardButton(
@@ -179,7 +194,7 @@ async def give_donation(
 
 
 async def get_events(update: Update, _) -> str:
-    buttons =[
+    buttons = [
         [
             InlineKeyboardButton(
                 text=const.BTN_BACK, callback_data=str(key.END)
@@ -189,7 +204,8 @@ async def get_events(update: Update, _) -> str:
     keyboard = InlineKeyboardMarkup(buttons)
     await update.callback_query.answer()
     await update.callback_query.edit_message_text(
-        text=const.MSG_EVENTS, reply_markup=keyboard)
+        text=const.MSG_EVENTS, reply_markup=keyboard
+    )
     return state.STOPPING
 
 
