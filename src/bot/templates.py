@@ -159,7 +159,8 @@ MSG_VOLUNTEER_DATA = (
 )
 MSG_QUESTION_DATA = (
     "Ваше имя - <b><i>{}</i></b>\n"
-    "Тема вопроса - <b><i>{}</i></b>\n"
+    "Телефон - <b><i>{}</i></b>\n"
+    "Email - <b><i>{}</i></b>\n"
     "Вопрос - <b><i>{}</i></b>\n"
 )
 MSG_QUESTION_TO_CURATOR = (
