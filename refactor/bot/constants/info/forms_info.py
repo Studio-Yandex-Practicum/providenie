@@ -1,6 +1,6 @@
 from bot.conversations.models import VolunteerForm, FundForm, ChatForm
 from bot.constants.keys import FORM
-from bot.constants.info.menus import FOND_MENU, CHAT_MENU
+from bot.constants.info.form_menu import FOND_MENU, CHAT_MENU
 
 forms_info = {
     f"{FORM}_VOLONTEER": {
