@@ -37,7 +37,7 @@
 # ]
 
 
-questionnaire = {
+ALL_QUESTIONS = {
     "FULL_NAME": {
         "name": "ФИО",
         "text": "Введите фамилию, имя и отчество",

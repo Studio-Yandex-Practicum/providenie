@@ -1,5 +1,5 @@
-from core.logger import logger  # noqa
 from bot.sevices import init_bot
+from core.logger import logger  # noqa
 
 
 def main() -> None:

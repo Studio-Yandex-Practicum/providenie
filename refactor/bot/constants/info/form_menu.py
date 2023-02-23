@@ -1,4 +1,4 @@
-from bot.constants.keys import SELECT
+from bot.constants.key import SELECT
 
 
 CHAT_MENU = {

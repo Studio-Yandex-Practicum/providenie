@@ -1,5 +1,6 @@
 from typing import Optional
-from telegram import Update, InlineKeyboardMarkup
+
+from telegram import InlineKeyboardMarkup, Update
 
 
 async def send_message(

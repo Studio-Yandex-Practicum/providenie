@@ -1,6 +1,8 @@
 import logging
 import logging.config
+
 from core import settings
+
 
 LOG_LEVEL = logging.getLevelName(settings.LOG_LEVEL)
 

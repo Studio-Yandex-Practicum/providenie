@@ -1,8 +1,9 @@
-from bot.conversations.models import VolunteerForm, FundForm, ChatForm
-from bot.constants.keys import FORM
-from bot.constants.info.form_menu import FOND_MENU, CHAT_MENU
+from bot.constants.info.form_menu import CHAT_MENU, FOND_MENU
+from bot.constants.key import FORM
+from bot.conversations.models import ChatForm, FundForm, VolunteerForm
 
-forms_info = {
+
+FORM_INFO = {
     f"{FORM}_VOLONTEER": {
         "name": "Волонтерство",
         "desc": "Спасибо за интерес! Вам нужно будет предоставить информацию для куратора.",

@@ -1,18 +1,19 @@
 from telegram import InlineKeyboardButton as Button
 
-from bot.constants import callbacks
-from bot.constants.info.forms_info import forms_info
+from bot.constants import callback
 from bot.constants.info.about import ABOUT_OPTIONS, SHARE_LINKS
+from bot.constants.info.form_info import FORM_INFO
+
 
 '''BACK'''
 main_menu = Button(
-    'Назад', callback_data=callbacks.BACK,
+    'Назад', callback_data=callback.BACK,
 )
 share_menu = Button(
-    'Назад', callback_data=callbacks.SHARE_INFO
+    'Назад', callback_data=callback.SHARE_INFO
 )
 about_menu = about = Button(
-    'Назад', callback_data=callbacks.MENU_ABOUT
+    'Назад', callback_data=callback.MENU_ABOUT
 )
 
 
@@ -20,10 +21,10 @@ about_menu = about = Button(
 forms = [
     [
         Button(info.get("button_text"), callback_data=callback)
-    ] for callback, info in forms_info.items()
+    ] for callback, info in FORM_INFO.items()
 ]
 share_info = Button(
-    'Рассказать о фонде своим друзьям', callback_data=callbacks.SHARE_INFO
+    'Рассказать о фонде своим друзьям', callback_data=callback.SHARE_INFO
 )
 share_links = [
     [
@@ -36,7 +37,7 @@ donation_link = Button(  # TODO Перенеси в константы
 )
 
 about = Button(
-    'Узнать о фонде', callback_data=callbacks.MENU_ABOUT
+    'Узнать о фонде', callback_data=callback.MENU_ABOUT
 )
 about_options = [
     [
@@ -47,19 +48,19 @@ about_options = [
 
 '''FORM'''
 form_menu = Button(
-    'Назад', callback_data=callbacks.FORM_MENU,
+    'Назад', callback_data=callback.FORM_MENU,
 )
 info_show = Button(
-    'Назад', callback_data=callbacks.INFO_SHOW,
+    'Назад', callback_data=callback.INFO_SHOW,
 )
 info_collect = Button(
     'Начать заполнение анкеты',
-    callback_data=callbacks.INFO_COLLECT
+    callback_data=callback.INFO_COLLECT
 )
 info_send = Button(
     'Подтвердить данные и отправить',
-    callback_data=callbacks.INFO_SEND
+    callback_data=callback.INFO_SEND
 )
 info_change = Button(
-    'Изменить данные', callback_data=callbacks.INFO_CHANGE,
+    'Изменить данные', callback_data=callback.INFO_CHANGE,
 )
