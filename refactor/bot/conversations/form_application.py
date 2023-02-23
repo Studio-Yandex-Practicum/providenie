@@ -7,15 +7,10 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from bot.constants import callback, key, state
-from bot.constants.info.form_info import FORM_INFO
+from bot.constants.info.form_info import FORM_INFO, SHOW_DATA_TEMPLATE, INPUT_ERROR_TEMPLATE, DATE_TEMPLATE
 from bot.constants.info.question import ALL_QUESTIONS
 from bot.constants.markup import button, keyboard
 from bot.utils import send_message
-
-
-SHOW_DATA_TEMPLATE = '<b><u>{title}</u></b>:\n\t\t{value}\n\n'
-INPUT_ERROR_TEMPLATE = '<b>Некорректный ввод</b>: \n{message}'
-DATE_FORMAT = '%d.%m.%Y'
 
 
 async def form_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -118,7 +113,7 @@ async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message = SHOW_DATA_TEMPLATE.format(title='Анкета', value=form[key.INFO]['name'])
     if menu_option := form.get(key.SELECTED_OPTION):
         message += SHOW_DATA_TEMPLATE.format(title='Выбор', value=menu_option)
-    message += SHOW_DATA_TEMPLATE.format(title='Дата заявки', value=date.today().strftime(DATE_FORMAT))
+    message += SHOW_DATA_TEMPLATE.format(title='Дата заявки', value=date.today().strftime(DATE_TEMPLATE))
 
     for name, value in form[key.APPLICATION]:
         question = ALL_QUESTIONS[name.upper()]
