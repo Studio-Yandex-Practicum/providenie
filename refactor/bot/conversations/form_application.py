@@ -39,7 +39,7 @@ async def form_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await send_message(update, form_info['desc'], keyboard=menu_keyboard)
 
-    return states.CHOOSING
+    return states.FORM_CHOOSING
 
 
 async def confirm_selection(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -64,7 +64,7 @@ async def confirm_selection(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await send_message(update, confirm_text, keyboard=keyboard)
 
-    return states.CONFIRMATION
+    return states.FORM_CONFIRMATION
 
 
 async def ask_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -84,7 +84,7 @@ async def ask_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await send_message(update, question['text'] + ':')
 
-    return states.TYPING
+    return states.FORM_TYPING
 
 
 async def save_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -125,7 +125,7 @@ async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await send_message(update, message, keyboard=keyboards.confirmation)
 
-    return states.CONFIRMATION
+    return states.FORM_CONFIRMATION
 
 
 async def edit_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -139,4 +139,4 @@ async def edit_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await send_message(update, 'Что изменить: ', keyboard=Keyboard(edit_buttons))
 
-    return states.CHOOSING
+    return states.FORM_CHOOSING

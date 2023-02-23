@@ -2,10 +2,9 @@ from telegram import InlineKeyboardButton as Button
 
 from bot.constants import callbacks
 from bot.constants.info.forms_info import forms_info
-from bot.constants.info.share import SHARE_LINKS
-from bot.constants.info.about import ABOUT_OPTIONS
+from bot.constants.info.about import ABOUT_OPTIONS, SHARE_LINKS
 
-'''BACk BUTTONS'''
+'''BACK'''
 main_menu = Button(
     'Назад', callback_data=callbacks.BACK,
 )
@@ -17,7 +16,7 @@ about_menu = about = Button(
 )
 
 
-'''MAIN BUTTONS'''
+'''MAIN MENU'''
 forms = [
     [
         Button(info.get("button_text"), callback_data=callback)
@@ -46,7 +45,7 @@ about_options = [
 ]
 
 
-'''FORM BUTTONS'''
+'''FORM'''
 form_menu = Button(
     'Назад', callback_data=callbacks.FORM_MENU,
 )
