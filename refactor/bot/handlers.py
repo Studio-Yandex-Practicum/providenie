@@ -9,16 +9,19 @@ from bot.conversations import form_application, main_application
 form_handler = ConversationHandler(
     entry_points=[CallbackQueryHandler(form_application.form_menu, pattern=fr"^{FORM}_\S*$")],
     states={
-        state.FORM_CHOOSING: [
+        state.FORM_SELECTION: [
             CallbackQueryHandler(form_application.confirm_selection, pattern=fr"^{SELECT}_\S*$"),
-            CallbackQueryHandler(form_application.ask_input, pattern=fr"^{INPUT}_\S*$"),
-            CallbackQueryHandler(form_application.show_data, pattern=callback.DATA_SHOW),
         ],
-        state.FORM_CONFIRMATION: [
+        state.FORM_SUBMISSION: [
             CallbackQueryHandler(form_application.ask_input, pattern=callback.DATA_COLLECT),
             CallbackQueryHandler(form_application.edit_menu, pattern=callback.DATA_EDIT),
+            CallbackQueryHandler(form_application.show_data, pattern=callback.DATA_SHOW),
+            CallbackQueryHandler(form_application.send_data, pattern=callback.DATA_SEND),
         ],
-        state.FORM_TYPING: [MessageHandler(filters.TEXT & ~filters.COMMAND, form_application.save_input)],
+        state.FORM_INPUT: [
+            CallbackQueryHandler(form_application.ask_input, pattern=fr"^{INPUT}_\S*$"),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, form_application.save_input),
+        ],
     },
     fallbacks=[MessageHandler(filters.Regex("^END$"), main_application.done)],
     allow_reentry=True,

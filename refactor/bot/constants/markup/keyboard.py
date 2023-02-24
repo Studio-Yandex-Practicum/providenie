@@ -14,6 +14,6 @@ about_menu = Keyboard([*button.about_options, [button.main_menu]])
 
 '''FORM'''
 confirmation = Keyboard([
-    [button.info_send],
-    [button.info_change, button.main_menu],
+    [button.data_send],
+    [button.data_edit, button.main_menu],
 ])

@@ -37,7 +37,7 @@ async def form_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await send_message(update, info['desc'], keyboard=menu_keyboard)
 
-    return state.FORM_CHOOSING
+    return state.FORM_SELECTION
 
 
 async def confirm_selection(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -58,11 +58,11 @@ async def confirm_selection(update: Update, context: ContextTypes.DEFAULT_TYPE):
         confirm_text = info['desc']
         back_button = button.main_menu
 
-    keyboard = Keyboard([[button.info_collect, back_button]])
+    keyboard = Keyboard([[button.data_collect, back_button]])
 
     await send_message(update, confirm_text, keyboard=keyboard)
 
-    return state.FORM_CONFIRMATION
+    return state.FORM_SUBMISSION
 
 
 async def ask_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -82,7 +82,7 @@ async def ask_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await send_message(update, question['text'] + ':')
 
-    return state.FORM_TYPING
+    return state.FORM_INPUT
 
 
 async def save_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -124,7 +124,7 @@ async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await send_message(update, message, keyboard=keyboard.confirmation)
 
-    return state.FORM_CONFIRMATION
+    return state.FORM_SUBMISSION
 
 
 async def edit_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -134,8 +134,12 @@ async def edit_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
         question = ALL_QUESTIONS[field.upper()]
         callback = f'{key.INPUT}_{field.upper()}'
         edit_button.append([Button(text=question['name'], callback_data=callback)])
-    edit_button.append([button.info_show])
+    edit_button.append([button.data_show])
 
     await send_message(update, 'Что изменить: ', keyboard=Keyboard(edit_button))
 
-    return state.FORM_CHOOSING
+    return state.FORM_INPUT
+
+
+async def send_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    pass

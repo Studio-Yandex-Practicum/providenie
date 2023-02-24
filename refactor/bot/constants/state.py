@@ -2,8 +2,7 @@
     MAIN_MENU,
     BACK,
     END,
-    FORM_CHOOSING,
-    FORM_TYPING,
-    FORM_CONFIRMATION,
-    FORM_SHOWING
-) = range(7)
+    FORM_SELECTION,
+    FORM_SUBMISSION,
+    FORM_INPUT
+) = range(6)
