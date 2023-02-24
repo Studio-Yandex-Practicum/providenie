@@ -51,16 +51,16 @@ form_menu = Button(
     'Назад', callback_data=callback.FORM_MENU,
 )
 info_show = Button(
-    'Назад', callback_data=callback.INFO_SHOW,
+    'Назад', callback_data=callback.DATA_SHOW,
 )
 info_collect = Button(
     'Начать заполнение анкеты',
-    callback_data=callback.INFO_COLLECT
+    callback_data=callback.DATA_COLLECT
 )
 info_send = Button(
     'Подтвердить данные и отправить',
-    callback_data=callback.INFO_SEND
+    callback_data=callback.DATA_SEND
 )
 info_change = Button(
-    'Изменить данные', callback_data=callback.INFO_EDIT,
+    'Изменить данные', callback_data=callback.DATA_EDIT,
 )

@@ -12,11 +12,11 @@ form_handler = ConversationHandler(
         state.FORM_CHOOSING: [
             CallbackQueryHandler(form_application.confirm_selection, pattern=fr"^{SELECT}_\S*$"),
             CallbackQueryHandler(form_application.ask_input, pattern=fr"^{INPUT}_\S*$"),
-            CallbackQueryHandler(form_application.show_data, pattern=callback.INFO_SHOW),
+            CallbackQueryHandler(form_application.show_data, pattern=callback.DATA_SHOW),
         ],
         state.FORM_CONFIRMATION: [
-            CallbackQueryHandler(form_application.ask_input, pattern=callback.INFO_COLLECT),
-            CallbackQueryHandler(form_application.edit_menu, pattern=callback.INFO_EDIT),
+            CallbackQueryHandler(form_application.ask_input, pattern=callback.DATA_COLLECT),
+            CallbackQueryHandler(form_application.edit_menu, pattern=callback.DATA_EDIT),
         ],
         state.FORM_TYPING: [MessageHandler(filters.TEXT & ~filters.COMMAND, form_application.save_input)],
     },
