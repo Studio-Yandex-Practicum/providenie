@@ -16,7 +16,7 @@ form_handler = ConversationHandler(
         ],
         state.FORM_CONFIRMATION: [
             CallbackQueryHandler(form_application.ask_input, pattern=callback.INFO_COLLECT),
-            CallbackQueryHandler(form_application.edit_input, pattern=callback.INFO_CHANGE),
+            CallbackQueryHandler(form_application.edit_menu, pattern=callback.INFO_EDIT),
         ],
         state.FORM_TYPING: [MessageHandler(filters.TEXT & ~filters.COMMAND, form_application.save_input)],
     },

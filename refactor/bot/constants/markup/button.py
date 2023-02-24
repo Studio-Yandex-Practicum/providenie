@@ -62,5 +62,5 @@ info_send = Button(
     callback_data=callback.INFO_SEND
 )
 info_change = Button(
-    'Изменить данные', callback_data=callback.INFO_CHANGE,
+    'Изменить данные', callback_data=callback.INFO_EDIT,
 )

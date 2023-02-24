@@ -45,7 +45,7 @@ async def confirm_selection(update: Update, context: ContextTypes.DEFAULT_TYPE):
     form = context.user_data[key.FORM]
     info = form[key.INFO]
 
-    form[key.APPLICATION] = info['model']()
+    form[key.DATA] = info['model']()
     form[key.FIELD_INDEX] = 0
     form[key.FIELD_EDIT] = False
 
@@ -95,7 +95,7 @@ async def save_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
         field = fields[form[key.FIELD_INDEX]]
 
     try:
-        setattr(form[key.APPLICATION], field, input_value)
+        setattr(form[key.DATA], field, input_value)
     except ValidationError:
         question_hint = ALL_QUESTIONS[field.upper()]['hint']
         error_message = INPUT_ERROR_TEMPLATE.format(hint=question_hint)
@@ -118,7 +118,7 @@ async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
         message += SHOW_DATA_TEMPLATE.format(title='Выбор', value=menu_option)
     message += SHOW_DATA_TEMPLATE.format(title='Дата заявки', value=date.today().strftime(DATE_TEMPLATE))
 
-    for name, value in form[key.APPLICATION]:
+    for name, value in form[key.DATA]:
         question = ALL_QUESTIONS[name.upper()]
         message += SHOW_DATA_TEMPLATE.format(title=question['name'], value=value)
 
@@ -127,7 +127,7 @@ async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return state.FORM_CONFIRMATION
 
 
-async def edit_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def edit_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     form = context.user_data[key.FORM]
     edit_button = []
     for field in form[key.INFO]['fields']:
