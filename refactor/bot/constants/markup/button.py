@@ -50,17 +50,18 @@ about_options = [
 form_menu = Button(
     'Назад', callback_data=callback.FORM_MENU,
 )
-data_show = Button(
-    'Назад', callback_data=callback.DATA_SHOW,
-)
-data_collect = Button(
+
+ask_input = Button(
     'Начать заполнение анкеты',
-    callback_data=callback.DATA_COLLECT
+    callback_data=callback.ASK_INPUT
 )
-data_send = Button(
+edit_menu = Button(
+    'Изменить данные', callback_data=callback.EDIT_MENU,
+)
+show_data = Button(
+    'Назад', callback_data=callback.SHOW_DATA,
+)
+send_data = Button(
     'Подтвердить данные и отправить',
-    callback_data=callback.DATA_SEND
-)
-data_edit = Button(
-    'Изменить данные', callback_data=callback.DATA_EDIT,
+    callback_data=callback.SEND_DATA
 )

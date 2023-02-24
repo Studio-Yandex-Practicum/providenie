@@ -58,7 +58,7 @@ async def confirm_selection(update: Update, context: ContextTypes.DEFAULT_TYPE):
         confirm_text = info['desc']
         back_button = button.main_menu
 
-    keyboard = Keyboard([[button.data_collect, back_button]])
+    keyboard = Keyboard([[button.ask_input, back_button]])
 
     await send_message(update, confirm_text, keyboard=keyboard)
 
@@ -70,12 +70,12 @@ async def ask_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     fields = form[key.INFO]['fields']
     query = update.callback_query
 
-    if query and query.data.startswith(key.INPUT):
-        field = query.data.replace(f'{key.INPUT}_', '')
+    if query and query.data.startswith(key.ASK):
+        field = query.data.replace(f'{key.ASK}_', '')
         question = ALL_QUESTIONS[field]
         form[key.FIELD_EDIT] = field.lower()
-    elif question_name := form.get(key.FIELD_EDIT):
-        question = ALL_QUESTIONS[question_name.upper()]
+    elif field := form.get(key.FIELD_EDIT):
+        question = ALL_QUESTIONS[field.upper()]
     else:
         field = fields[form[key.FIELD_INDEX]]
         question = ALL_QUESTIONS[field.upper()]
@@ -132,9 +132,9 @@ async def edit_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     edit_button = []
     for field in form[key.INFO]['fields']:
         question = ALL_QUESTIONS[field.upper()]
-        callback = f'{key.INPUT}_{field.upper()}'
+        callback = f'{key.ASK}_{field.upper()}'
         edit_button.append([Button(text=question['name'], callback_data=callback)])
-    edit_button.append([button.data_show])
+    edit_button.append([button.show_data])
 
     await send_message(update, 'Что изменить: ', keyboard=Keyboard(edit_button))
 
