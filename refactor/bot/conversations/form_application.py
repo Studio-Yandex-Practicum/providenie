@@ -44,8 +44,8 @@ async def confirm_selection(update: Update, context: ContextTypes.DEFAULT_TYPE):
     info = form[key.INFO]
 
     form[key.APPLICATION] = info['model']()
-    form[key.QUESTION_INDEX] = 0
-    form[key.EDIT_FIELD] = False
+    form[key.FIELD_INDEX] = 0
+    form[key.FIELD_EDIT] = False
 
     if menu := info.get('menu'):
         option = menu[query.data]
@@ -71,11 +71,11 @@ async def ask_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if query and query.data.startswith(key.INPUT):
         field = query.data.replace(f'{key.INPUT}_', '')
         question = ALL_QUESTIONS[field]
-        form[key.EDIT_FIELD] = field.lower()
-    elif question_name := form.get(key.EDIT_FIELD):
+        form[key.FIELD_EDIT] = field.lower()
+    elif question_name := form.get(key.FIELD_EDIT):
         question = ALL_QUESTIONS[question_name.upper()]
     else:
-        field = fields[form[key.QUESTION_INDEX]]
+        field = fields[form[key.FIELD_INDEX]]
         question = ALL_QUESTIONS[field.upper()]
 
     await send_message(update, question['text'] + ':')
@@ -88,9 +88,9 @@ async def save_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     fields = form[key.INFO]['fields']
     text = update.message.text
 
-    field = form.get(key.EDIT_FIELD)
+    field = form.get(key.FIELD_EDIT)
     if not field:
-        field = fields[form[key.QUESTION_INDEX]]
+        field = fields[form[key.FIELD_INDEX]]
 
     try:
         setattr(form[key.APPLICATION], field, text)
@@ -99,10 +99,10 @@ async def save_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await send_message(update, INPUT_ERROR_TEMPLATE.format(message=errors_message))
         return await ask_input(update, context)
 
-    if form.get(key.EDIT_FIELD) or (form[key.QUESTION_INDEX] + 1) >= len(fields):
+    if form.get(key.FIELD_EDIT) or (form[key.FIELD_INDEX] + 1) >= len(fields):
         return await show_data(update, context)
 
-    form[key.QUESTION_INDEX] = form[key.QUESTION_INDEX] + 1
+    form[key.FIELD_INDEX] = form[key.FIELD_INDEX] + 1
 
     return await ask_input(update, context)
 
