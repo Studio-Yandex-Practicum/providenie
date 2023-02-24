@@ -7,7 +7,9 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from bot.constants import callback, key, state
-from bot.constants.info.form_info import FORM_INFO, SHOW_DATA_TEMPLATE, INPUT_ERROR_TEMPLATE, DATE_TEMPLATE
+from bot.constants.info.form_info import (DATE_TEMPLATE, FORM_INFO,
+                                          INPUT_ERROR_TEMPLATE,
+                                          SHOW_DATA_TEMPLATE)
 from bot.constants.info.question import ALL_QUESTIONS
 from bot.constants.markup import button, keyboard
 from bot.utils import send_message
@@ -86,20 +88,21 @@ async def ask_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def save_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     form = context.user_data[key.FORM]
     fields = form[key.INFO]['fields']
-    text = update.message.text
+    input_value = update.message.text
 
     field = form.get(key.FIELD_EDIT)
     if not field:
         field = fields[form[key.FIELD_INDEX]]
 
     try:
-        setattr(form[key.APPLICATION], field, text)
-    except ValidationError as errors:
-        errors_message = '\n'.join(error['msg'] for error in errors.errors())
-        await send_message(update, INPUT_ERROR_TEMPLATE.format(message=errors_message))
+        setattr(form[key.APPLICATION], field, input_value)
+    except ValidationError:
+        question_hint = ALL_QUESTIONS[field.upper()]['hint']
+        error_message = INPUT_ERROR_TEMPLATE.format(hint=question_hint)
+        await send_message(update, error_message)
         return await ask_input(update, context)
 
-    if form.get(key.FIELD_EDIT) or (form[key.FIELD_INDEX] + 1) >= len(fields):
+    if (form[key.FIELD_INDEX] + 1) >= len(fields):
         return await show_data(update, context)
 
     form[key.FIELD_INDEX] = form[key.FIELD_INDEX] + 1

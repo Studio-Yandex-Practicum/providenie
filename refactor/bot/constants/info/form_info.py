@@ -3,7 +3,7 @@ from bot.constants.key import FORM
 from bot.conversations.models import ChatForm, FundForm, VolunteerForm
 
 SHOW_DATA_TEMPLATE = '<b><u>{title}</u></b>:\n\t\t{value}\n\n'
-INPUT_ERROR_TEMPLATE = '<b>Некорректный ввод</b>: \n{message}'
+INPUT_ERROR_TEMPLATE = '<b>Некорректные введенные данные!</b>\n\n<b>Пример:</b> \n{hint}'
 DATE_TEMPLATE = '%d.%m.%Y'
 
 FORM_INFO = {
