@@ -1,13 +1,14 @@
 from telegram import InlineKeyboardButton as Button
 
 from bot.constants import callback
+from bot.constants.info import text
 from bot.constants.info.about import ABOUT_OPTIONS, SHARE_LINKS
 from bot.constants.info.form_info import FORM_INFO
 
 
 '''BACK'''
 main_menu = Button(
-    'Назад', callback_data=callback.BACK,
+    'Главное меню', callback_data=callback.BACK,
 )
 share_menu = Button(
     'Назад', callback_data=callback.SHARE_INFO
@@ -24,7 +25,7 @@ forms = [
     ] for callback, info in FORM_INFO.items()
 ]
 share_info = Button(
-    'Рассказать о фонде своим друзьям', callback_data=callback.SHARE_INFO
+    'Рассказать о Фонде своим друзьям', callback_data=callback.SHARE_INFO
 )
 share_links = [
     [
@@ -32,10 +33,15 @@ share_links = [
     ] for callback, link in SHARE_LINKS.items()
 ]
 
-donation_link = Button(  # TODO Перенеси в константы
-    'Сделать пожертвование', url="https://fond-providenie.ru/help-chidren/sdelat-pozhertovanie/sdelat-pozhertvovanie-s-bankovskoj-karty/"
+donation_links = [
+    [Button(text.MSG_REPORT, url=text.URL_REPORTS)],
+    [Button(text.MSG_DONATE, url=text.URL_DONATION)]
+]
+# donation_report =
+# donation_link =
+event = Button(
+    'Наши события', callback_data=callback.SHOW_EVENT
 )
-
 about = Button(
     'О фонде', callback_data=callback.MENU_ABOUT
 )

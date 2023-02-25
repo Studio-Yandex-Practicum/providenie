@@ -39,6 +39,7 @@ main_menu_handler = ConversationHandler(
             CallbackQueryHandler(main_application.share_menu, pattern=callback.SHARE_INFO),
             CallbackQueryHandler(main_application.share_link, pattern=fr"^{SHARE}_\S*$"),
             CallbackQueryHandler(main_application.about_menu, pattern=callback.MENU_ABOUT),
+            CallbackQueryHandler(main_application.show_events, pattern=callback.SHOW_EVENT),
             CallbackQueryHandler(main_application.about_option, pattern=fr"^{ABOUT}_\S*$"),
         ],
     },

@@ -49,6 +49,10 @@ async def about_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return state.MAIN_MENU
 
 
+async def show_events(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await send_message(update, text.MSG_IN_PROGRESS, keyboard=Keyboard([[button.main_menu],]))
+
+
 async def about_option(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """FILL ME"""
 

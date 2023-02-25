@@ -7,10 +7,11 @@ from bot.constants.markup import button
 main_menu = Keyboard([
     *button.forms,
     [button.share_info],
-    [button.donation_link, button.about],
+    [button.event, button.about],
 ])
 share_menu = Keyboard([*button.share_links, [button.main_menu]])
 about_menu = Keyboard([*button.about_options, [button.main_menu]])
+donation_menu = Keyboard([button.donation_links])
 
 '''FORM'''
 confirmation = Keyboard([
