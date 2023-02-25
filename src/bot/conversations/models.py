@@ -4,8 +4,7 @@ from typing import Optional
 from email_validator import validate_email
 from pydantic import BaseModel, EmailStr, condate, conint, constr, validator
 
-
-EMAIL_REGEXP = r"^(?:\+)?[0-9]\d{10,14}$"
+from bot.constants import REGEX_PHONE
 
 
 class AskQuestionForm(BaseModel):
@@ -15,7 +14,7 @@ class AskQuestionForm(BaseModel):
     email: EmailStr
     phone_number: constr(
         strip_whitespace=True,
-        regex=EMAIL_REGEXP,
+        regex=REGEX_PHONE,
     )
     question: str
 
@@ -43,7 +42,7 @@ class FormBase(BaseModel):
     email: Optional[EmailStr]
     phone_number: constr(
         strip_whitespace=True,
-        regex=EMAIL_REGEXP,
+        regex=REGEX_PHONE,
     )
 
     class Config:
