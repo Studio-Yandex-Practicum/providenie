@@ -6,11 +6,10 @@ from telegram import InlineKeyboardMarkup as Keyboard
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from bot.constants import key, state
+from bot.constants import key, state, button
 from bot.constants.info.question import ALL_QUESTIONS
 from bot.constants.info.text import (DATE_TEMPLATE, INPUT_ERROR_TEMPLATE,
                                      SELECT_EDIT, SHOW_DATA_TEMPLATE)
-from bot.constants.markup import button, keyboard
 from bot.utils import send_message
 
 
@@ -82,7 +81,11 @@ async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
         question = ALL_QUESTIONS[name.upper()]
         message += SHOW_DATA_TEMPLATE.format(title=question[key.TITLE], value=value)
 
-    await send_message(update, message, keyboard=keyboard.confirmation)
+    keyboard = Keyboard([
+        [button.send_data],
+        [button.edit_menu, button.main_menu],
+    ])
+    await send_message(update, message, keyboard=keyboard)
 
     return state.FORM_SUBMISSION
 
