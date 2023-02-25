@@ -1,5 +1,6 @@
 from bot.constants import key
 
+
 SHORT_QUESTIONS = {
     "FULL_NAME": {
         key.TITLE: "ФИО",

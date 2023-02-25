@@ -1,7 +1,8 @@
 from typing import Optional
 
-from telegram import InlineKeyboardMarkup, Update
 from telegram import InlineKeyboardButton as Button
+from telegram import InlineKeyboardMarkup, Update
+
 from bot.constants import key
 
 

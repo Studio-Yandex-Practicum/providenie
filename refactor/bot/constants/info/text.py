@@ -1,4 +1,4 @@
-SHOW_DATA_TEMPLATE = '<b><u>{title}</u></b>:\n\t\t{value}\n\n'
+SHOW_DATA_TEMPLATE = '<b><u>{title}</u></b>:\n{value}\n\n'
 INPUT_ERROR_TEMPLATE = '<b>Некорректные введенные данные!</b>\n\n<b>Пример:</b> \n{hint}'
 DATE_TEMPLATE = '%d.%m.%Y'
 
@@ -10,6 +10,8 @@ SELECT_EDIT = "Выберите для редактирования:"
 IN_PROGRESS = "В разработке"
 ABOUT = "Информация о фонде"
 SELECT_URL = "Выберите интересующую вас соцсеть/страницу"
+
+OPTION_URL = "Перейти"
 
 START = (
     "Здравствуйте! Добро пожаловать!"

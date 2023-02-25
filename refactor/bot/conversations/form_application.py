@@ -6,95 +6,55 @@ from telegram import InlineKeyboardMarkup as Keyboard
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from bot.constants import callback, key, state
-from bot.constants.info.form_info import FORM_INFO
-from bot.constants.info.text import (DATE_TEMPLATE,
-                                     INPUT_ERROR_TEMPLATE,
-                                     SELECT_EDIT,
-                                     SHOW_DATA_TEMPLATE)
+from bot.constants import key, state
 from bot.constants.info.question import ALL_QUESTIONS
+from bot.constants.info.text import (DATE_TEMPLATE, INPUT_ERROR_TEMPLATE,
+                                     SELECT_EDIT, SHOW_DATA_TEMPLATE)
 from bot.constants.markup import button, keyboard
-from bot.utils import send_message, get_menu_buttons
+from bot.utils import send_message
 
 
-async def form_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    query = update.callback_query
+async def start_form(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_data = context.user_data
-    form_name = query.data
+    user_data[key.FORM] = {
+        key.DATA: user_data[key.MENU][key.MODEL](),
+        key.FIELD_INDEX: 0,
+        key.FIELD_EDIT: False,
+    }
 
-    if form_name == callback.FORM_MENU:
-        info = user_data[key.FORM][key.INFO]
-    else:
-        info = FORM_INFO[form_name]
-        user_data[key.FORM] = {key.INFO: info}
-
-    if not (menu := info.get(key.MENU)):
-        return await confirm_selection(update, context)
-
-    menu_keyboard = Keyboard([*get_menu_buttons(menu), [button.main_menu]])
-
-    await send_message(update, info[key.DESCRIPTION], keyboard=menu_keyboard)
-
-    return state.FORM_SELECTION
-
-
-async def confirm_selection(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    query = update.callback_query
-    form = context.user_data[key.FORM]
-    info = form[key.INFO]
-
-    form[key.DATA] = info[key.MODEL]()
-    form[key.FIELD_INDEX] = 0
-    form[key.FIELD_EDIT] = False
-
-    if menu := info.get(key.MENU):
-        option = menu[query.data]
-        form[key.SELECTED_OPTION] = option[key.BUTTON_TEXT]
-        confirm_text = f"{option[key.BUTTON_TEXT]}\n"
-        confirm_text += option[key.DESCRIPTION]
-        back_button = button.form_menu
-    else:
-        confirm_text = info[key.DESCRIPTION]
-        back_button = button.main_menu
-
-    keyboard = Keyboard([[button.ask_input, back_button]])
-
-    await send_message(update, confirm_text, keyboard=keyboard)
-
-    return state.FORM_SUBMISSION
+    return await ask_input(update, context)
 
 
 async def ask_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    form = context.user_data[key.FORM]
-    fields = form[key.INFO][key.FIELDS]
-    query = update.callback_query
+    callback = update.callback_query
+    user_data = context.user_data
+    form = user_data[key.FORM]
+    fields = user_data[key.MENU][key.FIELDS]
 
-    if query and query.data.startswith(key.ASK):
-        field = query.data.replace(f'{key.ASK}_', '')
-        question = ALL_QUESTIONS[field]
-        form[key.FIELD_EDIT] = field.lower()
-    elif field := form.get(key.FIELD_EDIT):
-        question = ALL_QUESTIONS[field.upper()]
-    else:
+    if callback and callback.data.startswith(key.ASK):
+        form[key.FIELD_EDIT] = callback.data.replace(f'{key.ASK}_', '').lower()
+
+    field = form.get(key.FIELD_EDIT)
+    if not field:
         field = fields[form[key.FIELD_INDEX]]
-        question = ALL_QUESTIONS[field.upper()]
 
-    await send_message(update, question[key.TEXT] + ':')
+    question = ALL_QUESTIONS[field.upper()]
+    await send_message(update, question[key.TEXT])
 
     return state.FORM_INPUT
 
 
 async def save_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    form = context.user_data[key.FORM]
-    fields = form[key.INFO][key.FIELDS]
-    input_value = update.message.text
+    user_data = context.user_data
+    form = user_data[key.FORM]
+    fields = user_data[key.MENU][key.FIELDS]
 
     field = form.get(key.FIELD_EDIT)
     if not field:
         field = fields[form[key.FIELD_INDEX]]
 
     try:
-        setattr(form[key.DATA], field, input_value)
+        setattr(form[key.DATA], field, update.message.text)
     except ValidationError:
         question_hint = ALL_QUESTIONS[field.upper()][key.HINT]
         error_message = INPUT_ERROR_TEMPLATE.format(hint=question_hint)
@@ -110,13 +70,14 @@ async def save_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    form = context.user_data[key.FORM]
+    user_data = context.user_data
+    info = user_data[key.MENU]
+    form = user_data[key.FORM]
 
-    message = SHOW_DATA_TEMPLATE.format(title='Анкета', value=form[key.INFO][key.BUTTON_TEXT])
-    if menu_option := form.get(key.SELECTED_OPTION):
-        message += SHOW_DATA_TEMPLATE.format(title='Выбор', value=menu_option)
+    message = SHOW_DATA_TEMPLATE.format(title='Анкета', value=info[key.BUTTON_TEXT])
+    if menu_option := user_data.get(key.OPTION):
+        message += SHOW_DATA_TEMPLATE.format(title='Выбор', value=menu_option[key.BUTTON_TEXT])
     message += SHOW_DATA_TEMPLATE.format(title='Дата заявки', value=date.today().strftime(DATE_TEMPLATE))
-
     for name, value in form[key.DATA]:
         question = ALL_QUESTIONS[name.upper()]
         message += SHOW_DATA_TEMPLATE.format(title=question[key.TITLE], value=value)
@@ -127,9 +88,11 @@ async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def edit_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    form = context.user_data[key.FORM]
+    user_data = context.user_data
+    fields = user_data[key.MENU][key.FIELDS]
+
     edit_button = []
-    for field in form[key.INFO][key.FIELDS]:
+    for field in fields:
         question = ALL_QUESTIONS[field.upper()]
         callback = f'{key.ASK}_{field.upper()}'
         edit_button.append([Button(text=question[key.TITLE], callback_data=callback)])
