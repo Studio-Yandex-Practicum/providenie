@@ -1,6 +1,5 @@
 from bot.constants import key
 
-
 ABOUT_OPTIONS = {
     f"{key.ABOUT}_WHO_ARE_WE": {
         "name": "Кто мы?",
