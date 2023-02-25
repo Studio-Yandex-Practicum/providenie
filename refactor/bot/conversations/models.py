@@ -3,7 +3,7 @@ from typing import Optional
 from pydantic import BaseModel, EmailStr  # , validator, ValidationError
 
 
-class FormBase(BaseModel):
+class BaseForm(BaseModel):
     """Базовая модель для анкет."""
 
     class Config:
@@ -12,7 +12,7 @@ class FormBase(BaseModel):
         validate_assignment = True
 
 
-class FormShort(FormBase):
+class ShortForm(BaseForm):
     """Базовая модель для коротких анкет."""
 
     full_name: Optional[int]
@@ -20,7 +20,7 @@ class FormShort(FormBase):
     email: Optional[EmailStr]
 
 
-class FormVolunteer(FormShort):
+class VolunteerForm(ShortForm):
     """Модель для анкеты на волонтерство."""
 
     birthday: Optional[str]
@@ -28,13 +28,13 @@ class FormVolunteer(FormShort):
     volunteer_help: Optional[str]
 
 
-class FormAskQuestion(FormShort):
+class AskQuestionForm(ShortForm):
     """Модель для анкеты 'Задать вопрос'."""
 
     question: Optional[str]
 
 
-class FormLong(FormBase):
+class LongForm(BaseForm):
     """Базовая модель для длинных анкет."""
 
     parent_full_name: Optional[str]
@@ -49,13 +49,13 @@ class FormLong(FormBase):
     where_got_info: Optional[str]
 
 
-class FormChat(FormLong):
+class ChatForm(LongForm):
     """Модель для анкеты на вступление в чат."""
 
     operation: Optional[str]
 
 
-class FormFund(FormLong):
+class FundForm(LongForm):
     """Модель для анкеты на отправку заявки в фонд."""
 
     email: Optional[EmailStr]
