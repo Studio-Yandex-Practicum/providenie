@@ -1,5 +1,19 @@
 from bot.constants import key
 
+DONATION_OPTIONS = {
+    f"{key.DONATION}_REPORT": {
+        "name": "Годовые отчёты",
+        "desc": "https://fond-providenie.ru/docs/"
+    },
+    f"{key.DONATION}_LINK": {
+        "name": "Сделать пожертвование",
+        "desc": (
+            "https://fond-providenie.ru/help-chidren/sdelat-pozhertovanie"
+            "/sdelat-pozhertvovanie-s-bankovskoj-karty/"
+        )
+    },
+}
+
 ABOUT_OPTIONS = {
     f"{key.ABOUT}_WHO_ARE_WE": {
         "name": "Кто мы?",
@@ -36,7 +50,7 @@ ABOUT_OPTIONS = {
 }
 
 
-SHARE_LINKS = {
+SHARE_OPTIONS = {
     f"{key.SHARE}_WEBPAGE": {
         "name": "Интернет сайт",
         "desc": " на страницу в интернете",
