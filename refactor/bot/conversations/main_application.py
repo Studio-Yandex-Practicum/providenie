@@ -1,6 +1,6 @@
 from telegram import InlineKeyboardButton as Button
 from telegram import InlineKeyboardMarkup as Keyboard
-from telegram import Update
+from telegram import Update, BotCommand
 from telegram.ext import ContextTypes, ConversationHandler
 
 from bot.constants import state
@@ -12,10 +12,22 @@ from bot.utils import send_message
 from core.logger import logger  # noqa
 
 
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await send_message(update, text.START, keyboard=keyboard.main_menu, link_preview=False)
+    commands = [
+        BotCommand("/start", "Начть работу"),
+        BotCommand("/menu", "Перейти в главное меню"),
+        BotCommand("/cancel", "Отменить текущее действие"),
+        BotCommand("/stop", "Завершение работы"),
+    ]
+    await context.bot.set_my_commands(commands)
+    return await main_menu(update, context)
+
+
 async def main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """FILL ME"""
 
-    await send_message(update, text.MSG_START, keyboard=keyboard.main_menu)
+    await send_message(update, text.MAIN_MENU, keyboard=keyboard.main_menu)
 
     return state.MAIN_MENU
 
@@ -23,7 +35,7 @@ async def main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def share_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """FILL ME"""
 
-    await send_message(update, text.MSG_CHOOSE_URL, keyboard=keyboard.share_menu)
+    await send_message(update, text.SELECT_URL, keyboard=keyboard.share_menu)
 
     return state.MAIN_MENU
 
@@ -45,7 +57,7 @@ async def share_link(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def donation_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """FILL ME"""
-    await send_message(update, text.MSG_INFO_ABOUT_FUND, keyboard=keyboard.donation_menu)
+    await send_message(update, text.ABOUT, keyboard=keyboard.donation_menu)
 
     return state.MAIN_MENU
 
@@ -62,7 +74,7 @@ async def donation_option(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def about_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """FILL ME"""
-    await send_message(update, text.MSG_INFO_ABOUT_FUND, keyboard=keyboard.about_menu)
+    await send_message(update, text.ABOUT, keyboard=keyboard.about_menu)
 
     return state.MAIN_MENU
 

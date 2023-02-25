@@ -10,7 +10,7 @@ from bot.constants import callback, key, state
 from bot.constants.info.form_info import FORM_INFO
 from bot.constants.info.text import (DATE_TEMPLATE,
                                      INPUT_ERROR_TEMPLATE,
-                                     MSG_CHOOSE_TO_EDIT,
+                                     SELECT_EDIT,
                                      SHOW_DATA_TEMPLATE)
 from bot.constants.info.question import ALL_QUESTIONS
 from bot.constants.markup import button, keyboard
@@ -135,7 +135,7 @@ async def edit_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
         edit_button.append([Button(text=question[key.TITLE], callback_data=callback)])
     edit_button.append([button.show_data])
 
-    await send_message(update, MSG_CHOOSE_TO_EDIT, keyboard=Keyboard(edit_button))
+    await send_message(update, SELECT_EDIT, keyboard=Keyboard(edit_button))
 
     return state.FORM_INPUT
 

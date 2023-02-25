@@ -30,7 +30,7 @@ form_handler = ConversationHandler(
 
 main_menu_handler = ConversationHandler(
     entry_points=[
-        CommandHandler("start", main_application.main_menu),
+        CommandHandler("start", main_application.start),
         CallbackQueryHandler(main_application.main_menu, pattern=callback.BACK)
     ],
     states={
