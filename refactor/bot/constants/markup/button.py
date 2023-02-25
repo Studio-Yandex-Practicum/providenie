@@ -20,7 +20,7 @@ about_menu = about = Button(
 '''MAIN MENU'''
 forms = [
     [
-        Button(info.get("button_text"), callback_data=callback)
+        Button(info.get("name"), callback_data=callback)
     ] for callback, info in FORM_INFO.items()
 ]
 share_info = Button(
