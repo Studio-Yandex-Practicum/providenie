@@ -52,7 +52,9 @@ async def confirm_selection(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if menu := info.get('menu'):
         option = menu[query.data]
         form[key.SELECTED_OPTION] = option['name']
-        confirm_text = option['desc']
+        confirm_text = f"{option['name']}\n"
+        confirm_text += option['desc']
+        confirm_text += main.REQUIRED_DOCUMENTS
         back_button = button.form_menu
     else:
         confirm_text = info['desc']

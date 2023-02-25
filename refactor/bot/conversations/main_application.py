@@ -4,6 +4,7 @@ from telegram import Update
 from telegram.ext import ContextTypes, ConversationHandler
 
 from bot.constants import state
+from bot.constants.info import text
 from bot.constants.info.about import ABOUT_OPTIONS, SHARE_LINKS
 from bot.constants.markup import button, keyboard
 from bot.utils import send_message
@@ -13,7 +14,7 @@ from core.logger import logger  # noqa
 async def main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """FILL ME"""
 
-    await send_message(update, 'Сообщение в главном меню', keyboard=keyboard.main_menu)
+    await send_message(update, text.MSG_START, keyboard=keyboard.main_menu)
 
     return state.MAIN_MENU
 
@@ -21,7 +22,7 @@ async def main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def share_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """FILL ME"""
 
-    await send_message(update, 'Выбрать чем поделиться:', keyboard=keyboard.share_menu)
+    await send_message(update, text.MSG_CHOOSE_URL, keyboard=keyboard.share_menu)
 
     return state.MAIN_MENU
 
@@ -43,7 +44,7 @@ async def share_link(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def about_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """FILL ME"""
-    await send_message(update, 'Информация о фонде: почитайте здесь', keyboard=keyboard.about_menu)
+    await send_message(update, text.MSG_INFO_ABOUT_FUND, keyboard=keyboard.about_menu)
 
     return state.MAIN_MENU
 
