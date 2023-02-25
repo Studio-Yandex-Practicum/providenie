@@ -11,7 +11,7 @@ main_menu = Button(
     'Главное меню', callback_data=callback.BACK,
 )
 share_menu = Button(
-    'Назад', callback_data=callback.SHARE_INFO
+    'Назад', callback_data=callback.MENU_SHARE
 )
 about_menu = about = Button(
     'Назад', callback_data=callback.MENU_ABOUT
@@ -25,7 +25,7 @@ forms = [
     ] for callback, info in FORM_INFO.items()
 ]
 share_info = Button(
-    'Рассказать о Фонде своим друзьям', callback_data=callback.SHARE_INFO
+    'Рассказать о Фонде своим друзьям', callback_data=callback.MENU_SHARE
 )
 share_links = [
     [
