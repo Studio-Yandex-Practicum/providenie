@@ -23,7 +23,7 @@ form_handler = ConversationHandler(
             MessageHandler(filters.TEXT & ~filters.COMMAND, form_application.save_input),
         ],
     },
-    fallbacks=[MessageHandler(filters.Regex("^END$"), main_application.done)],
+    fallbacks=[],
     allow_reentry=True,
 )
 
@@ -43,6 +43,10 @@ main_menu_handler = ConversationHandler(
             CallbackQueryHandler(main_application.about_option, pattern=fr"^{ABOUT}_\S*$"),
         ],
     },
-    fallbacks=[MessageHandler(filters.Regex("^Done$"), main_application.done)],
+    fallbacks=[
+        CommandHandler("menu", main_application.main_menu),
+        CommandHandler("cancel", main_application.main_menu),
+        CommandHandler("stop", main_application.stop),
+    ],
     allow_reentry=True,
 )

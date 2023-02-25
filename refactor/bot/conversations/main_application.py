@@ -63,7 +63,7 @@ async def about_option(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return state.MAIN_MENU
 
 
-async def done(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Display the gathered info and end the conversation."""
     await update.message.reply_text("Until next time!")
 
