@@ -2,7 +2,7 @@ from telegram.ext import (CallbackQueryHandler, CommandHandler,
                           ConversationHandler, MessageHandler, filters)
 
 from bot.constants import callback, state
-from bot.constants.key import ABOUT, FORM, ASK, SELECT, SHARE
+from bot.constants.key import ABOUT, FORM, ASK, SELECT, SHARE, DONATION
 from bot.conversations import form_application, main_application
 
 
@@ -38,8 +38,9 @@ main_menu_handler = ConversationHandler(
             form_handler,
             CallbackQueryHandler(main_application.share_menu, pattern=callback.MENU_SHARE),
             CallbackQueryHandler(main_application.share_link, pattern=fr"^{SHARE}_\S*$"),
+            CallbackQueryHandler(main_application.donation_menu, pattern=callback.MENU_DONATION),
+            CallbackQueryHandler(main_application.donation_menu, pattern=fr"^{DONATION}_\S*$"),
             CallbackQueryHandler(main_application.about_menu, pattern=callback.MENU_ABOUT),
-            CallbackQueryHandler(main_application.show_events, pattern=callback.SHOW_EVENT),
             CallbackQueryHandler(main_application.about_option, pattern=fr"^{ABOUT}_\S*$"),
         ],
     },
