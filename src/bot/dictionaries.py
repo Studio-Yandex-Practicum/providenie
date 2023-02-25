@@ -13,12 +13,12 @@ PROGRAM_FUND = {
         constants.REQUIRED_DOCUMENTS,
     ),
     keys.PSIHO_PROGRAM: (
-        "Помощь незрячим и слабовидящим детям",
+        "Психологическая поддержка семьи",
         constants.PSYCHOLOGICAL_HELP_DESCRIPTION,
         constants.REQUIRED_DOCUMENTS,
     ),
     keys.KIND_LESSONS_PROGRAM: (
-        "Психологическая поддержка семьи",
+        "Помощь незрячим и слабовидящим детям",
         constants.KIND_LESSONS_DESCRIPTION,
         constants.REQUIRED_DOCUMENTS,
     ),
