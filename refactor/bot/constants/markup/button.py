@@ -53,7 +53,7 @@ form_menu = Button(
 
 ask_input = Button(
     'Начать заполнение анкеты',
-    callback_data=callback.ASK_INPUT
+    callback_data=callback.COLLECT_DATA
 )
 edit_menu = Button(
     'Изменить данные', callback_data=callback.EDIT_MENU,

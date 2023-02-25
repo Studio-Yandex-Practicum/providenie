@@ -13,7 +13,7 @@ form_handler = ConversationHandler(
             CallbackQueryHandler(form_application.confirm_selection, pattern=fr"^{SELECT}_\S*$"),
         ],
         state.FORM_SUBMISSION: [
-            CallbackQueryHandler(form_application.ask_input, pattern=callback.ASK_INPUT),
+            CallbackQueryHandler(form_application.ask_input, pattern=callback.COLLECT_DATA),
             CallbackQueryHandler(form_application.edit_menu, pattern=callback.EDIT_MENU),
             CallbackQueryHandler(form_application.show_data, pattern=callback.SHOW_DATA),
             CallbackQueryHandler(form_application.send_data, pattern=callback.SEND_DATA),
