@@ -3,22 +3,22 @@ from . import constants, keys
 
 PROGRAM_FUND = {
     keys.LOOK_WORLD_PROGRAM: (
-        "Смотри на мир",
+        "Смотри на мир (помощь детям с нарушениями зрения)",
         constants.LOOK_AT_WORLD_DESCRIPTION,
         constants.REQUIRED_DOCUMENTS,
     ),
     keys.REABILITATION_PROGRAM: (
-        "Реабилитация",
+        "Реабилитация недоношенных детей с инвалидностью",
         constants.REABILITATION_DESCRIPTION,
         constants.REQUIRED_DOCUMENTS,
     ),
     keys.PSIHO_PROGRAM: (
-        "Психологическая помощь",
+        "Помощь незрячим и слабовидящим детям",
         constants.PSYCHOLOGICAL_HELP_DESCRIPTION,
         constants.REQUIRED_DOCUMENTS,
     ),
     keys.KIND_LESSONS_PROGRAM: (
-        "Добрые уроки",
+        "Психологическая поддержка семьи",
         constants.KIND_LESSONS_DESCRIPTION,
         constants.REQUIRED_DOCUMENTS,
     ),
