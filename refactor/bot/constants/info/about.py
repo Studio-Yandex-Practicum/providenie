@@ -2,12 +2,12 @@ from bot.constants import key
 
 DONATION_MENU = {
     f"{key.DONATION}_REPORT": {
-        "name": "Годовые отчёты",
-        "desc": "https://fond-providenie.ru/docs/"
+        key.BUTTON_TEXT: "Годовые отчёты",
+        key.DESCRIPTION: "https://fond-providenie.ru/docs/"
     },
     f"{key.DONATION}_LINK": {
-        "name": "Сделать пожертвование",
-        "desc": (
+        key.BUTTON_TEXT: "Сделать пожертвование",
+        key.DESCRIPTION: (
             "https://fond-providenie.ru/help-chidren/sdelat-pozhertovanie"
             "/sdelat-pozhertvovanie-s-bankovskoj-karty/"
         )
@@ -16,70 +16,69 @@ DONATION_MENU = {
 
 ABOUT_MENU = {
     f"{key.ABOUT}_WHO_ARE_WE": {
-        "name": "Кто мы?",
-        "desc": "https://telegra.ph/Kto-my-02-06"
+        key.BUTTON_TEXT: "Кто мы?",
+        key.DESCRIPTION: "https://telegra.ph/Kto-my-02-06"
     },
     f"{key.ABOUT}_PROBLEM_SOLVING": {
-        "name": "Какую социальную проблему мы решаем?",
-        "desc": "https://telegra.ph/Kakuyu-socialnuyu-problemu-my-reshaem-02-06"
+        key.BUTTON_TEXT: "Какую социальную проблему мы решаем?",
+        key.DESCRIPTION: "https://telegra.ph/Kakuyu-socialnuyu-problemu-my-reshaem-02-06"
     },
     f"{key.ABOUT}_HOW_PROBLEM_SOLVING": {
-        "name": "Как мы её решаем?",
-        "desc": "https://telegra.ph/Kak-my-eyo-reshaem-02-06"
+        key.BUTTON_TEXT: "Как мы её решаем?",
+        key.DESCRIPTION: "https://telegra.ph/Kak-my-eyo-reshaem-02-06"
     },
     f"{key.ABOUT}_LIFE_CHANGE": {
-        "name": "Как мы меняем жизнь людей?",
-        "desc": "https://telegra.ph/Kak-my-menyaem-zhizn-lyudej-02-06"
+        key.BUTTON_TEXT: "Как мы меняем жизнь людей?",
+        key.DESCRIPTION: "https://telegra.ph/Kak-my-menyaem-zhizn-lyudej-02-06"
     },
     f"{key.ABOUT}_WHAT_IS_DONE": {
-        "name": "Что мы уже сделали?",
-        "desc": "https://telegra.ph/CHto-uzhe-sdelano-Kto-obrashchaetsya-za-pomoshchyu-02-06"
+        key.BUTTON_TEXT: "Что мы уже сделали?",
+        key.DESCRIPTION: "https://telegra.ph/CHto-uzhe-sdelano-Kto-obrashchaetsya-za-pomoshchyu-02-06"
     },
     f"{key.ABOUT}_WHY_DONATION_NEED": {
-        "name": "Зачем нужны пожертвования?",
-        "desc": "https://telegra.ph/Zachem-nuzhny-pozhertvovaniya-02-06"
+        key.BUTTON_TEXT: "Зачем нужны пожертвования?",
+        key.DESCRIPTION: "https://telegra.ph/Zachem-nuzhny-pozhertvovaniya-02-06"
     },
     f"{key.ABOUT}_ABOUT_SUCCESS": {
-        "name": "История успеха",
-        "desc": ("https://youtu.be/n-hByd_oiIo\n"
-                 "https://youtu.be/NG4QUO-hvCk\n"
-                 "https://youtu.be/cAQayg_ZNok\n"
-                 "https://youtu.be/26mYPRE4BQo\n"
-                 "https://youtu.be/CINnVYp6hQI")
+        key.BUTTON_TEXT: "История успеха",
+        key.DESCRIPTION: ("https://youtu.be/n-hByd_oiIo\n"
+                          "https://youtu.be/NG4QUO-hvCk\n"
+                          "https://youtu.be/cAQayg_ZNok\n"
+                          "https://youtu.be/26mYPRE4BQo\n"
+                          "https://youtu.be/CINnVYp6hQI")
     },
 }
 
 
 SHARE_MENU = {
     f"{key.SHARE}_WEBPAGE": {
-        "name": "Интернет сайт",
-        "desc": " на страницу в интернете",
-        "url": "https://fond-providenie.ru/"
+        key.BUTTON_TEXT: "Интернет сайт",
+        key.DESCRIPTION: " на страницу в интернете",
+        key.LINK: "https://fond-providenie.ru/"
     },
     f"{key.SHARE}_VK": {
-        "name": "VK",
-        "desc": " на страницу ВКонтакте",
-        "url": "https://vk.com/fond_providenie"
+        key.BUTTON_TEXT: "VK",
+        key.DESCRIPTION: " на страницу ВКонтакте",
+        key.LINK: "https://vk.com/fond_providenie"
     },
     f"{key.SHARE}_INSTA": {
-        "name": "Instagram",
-        "desc": " на страницу в Instagram",
-        "url": "https://instagram.com/fond_providenie/"
+        key.BUTTON_TEXT: "Instagram",
+        key.DESCRIPTION: " на страницу в Instagram",
+        key.LINK: "https://instagram.com/fond_providenie/"
     },
     f"{key.SHARE}_FACEBOOK": {
-        "name": "Facebook",
-        "desc": " на страницу в Facebook",
-        "url": "https://www.facebook.com/fond.providenie/"
+        key.BUTTON_TEXT: "Facebook",
+        key.DESCRIPTION: " на страницу в Facebook",
+        key.LINK: "https://www.facebook.com/fond.providenie/"
     },
     f"{key.SHARE}_CHAT": {
-        "name": "Новостной канал в Телеграм",
-        "desc": " в чат",
-        "url": "https://t.me/providenie_fond"
+        key.BUTTON_TEXT: "Новостной канал в Телеграм",
+        key.DESCRIPTION: " в чат",
+        key.LINK: "https://t.me/providenie_fond"
     },
     f"{key.SHARE}_TELEGRAM": {
-        "name": "Приглашение в чат бот",
-        "desc": " в чат бот",
-        "url": "https://fond-providenie.ru/"
-        # "url": "Ссылка здесь скоро появится, а пока посетите наш сайт https://fond-providenie.ru/"
+        key.BUTTON_TEXT: "Приглашение в чат бот",
+        key.DESCRIPTION: " в чат бот",
+        key.LINK: "https://fond-providenie.ru/"
     },
 }
