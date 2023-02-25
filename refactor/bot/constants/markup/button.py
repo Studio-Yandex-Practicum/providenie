@@ -37,7 +37,7 @@ donation_link = Button(  # TODO Перенеси в константы
 )
 
 about = Button(
-    'Узнать о фонде', callback_data=callback.MENU_ABOUT
+    'О фонде', callback_data=callback.MENU_ABOUT
 )
 about_options = [
     [
