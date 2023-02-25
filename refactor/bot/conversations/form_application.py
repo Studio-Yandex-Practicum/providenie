@@ -14,7 +14,7 @@ from bot.constants.info.text import (DATE_TEMPLATE,
                                      SHOW_DATA_TEMPLATE)
 from bot.constants.info.question import ALL_QUESTIONS
 from bot.constants.markup import button, keyboard
-from bot.utils import send_message
+from bot.utils import send_message, get_menu_buttons
 
 
 async def form_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -31,11 +31,7 @@ async def form_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not (menu := info.get('menu')):
         return await confirm_selection(update, context)
 
-    menu_button = [
-        [Button(text=option.get('name'), callback_data=callback)]
-        for callback, option in menu.items()
-    ]
-    menu_keyboard = Keyboard([*menu_button, [button.main_menu]])
+    menu_keyboard = Keyboard([*get_menu_buttons(menu), [button.main_menu]])
 
     await send_message(update, info['desc'], keyboard=menu_keyboard)
 

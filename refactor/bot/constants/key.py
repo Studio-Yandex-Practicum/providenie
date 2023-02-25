@@ -8,6 +8,9 @@ FORM = 'FORM'
 SELECT = 'SELECT'
 ASK = 'ASK'
 
+"""MENU"""
+BUTTON_TEXT = 'name'
+
 """FORM"""
 INFO = 'INFO'
 DATA = 'DATA'

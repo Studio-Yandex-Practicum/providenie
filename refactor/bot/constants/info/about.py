@@ -1,6 +1,6 @@
 from bot.constants import key
 
-DONATION_OPTIONS = {
+DONATION_MENU = {
     f"{key.DONATION}_REPORT": {
         "name": "Годовые отчёты",
         "desc": "https://fond-providenie.ru/docs/"
@@ -14,7 +14,7 @@ DONATION_OPTIONS = {
     },
 }
 
-ABOUT_OPTIONS = {
+ABOUT_MENU = {
     f"{key.ABOUT}_WHO_ARE_WE": {
         "name": "Кто мы?",
         "desc": "https://telegra.ph/Kto-my-02-06"
@@ -50,7 +50,7 @@ ABOUT_OPTIONS = {
 }
 
 
-SHARE_OPTIONS = {
+SHARE_MENU = {
     f"{key.SHARE}_WEBPAGE": {
         "name": "Интернет сайт",
         "desc": " на страницу в интернете",

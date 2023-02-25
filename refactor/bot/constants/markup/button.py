@@ -2,7 +2,7 @@ from telegram import InlineKeyboardButton as Button
 
 from bot.constants import callback
 from bot.constants.info import text
-from bot.constants.info.about import ABOUT_OPTIONS, SHARE_OPTIONS, DONATION_OPTIONS
+from bot.constants.info.about import ABOUT_MENU, SHARE_MENU, DONATION_MENU
 from bot.constants.info.form_info import FORM_INFO
 
 
@@ -22,11 +22,6 @@ about_menu = about = Button(
 
 
 '''MAIN MENU'''
-forms = [
-    [
-        Button(info.get("name"), callback_data=callback)
-    ] for callback, info in FORM_INFO.items()
-]
 share = Button(
     'Рассказать о Фонде своим друзьям', callback_data=callback.MENU_SHARE
 )
@@ -36,21 +31,6 @@ donation = Button(
 about = Button(
     'О фонде', callback_data=callback.MENU_ABOUT
 )
-share_options = [
-    [
-        Button(link.get("name"), callback_data=callback)
-    ] for callback, link in SHARE_OPTIONS.items()
-]
-donation_options = [
-    [
-        Button(about.get("name"), callback_data=calback)
-    ] for calback, about in DONATION_OPTIONS.items()
-]
-about_options = [
-    [
-        Button(about.get("name"), callback_data=calback)
-    ] for calback, about in ABOUT_OPTIONS.items()
-]
 
 
 '''FORM'''
