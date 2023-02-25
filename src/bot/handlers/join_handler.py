@@ -168,9 +168,13 @@ dates_about_parent_and_child = ConversationHandler(
         ],
         states.EDIT_USER_DATА: selection_handlers_second_level,
     },
-    fallbacks=[CommandHandler("stop", fund.stop_nested)],
+    fallbacks=[
+        CommandHandler("stop", fund.stop_nested),
+        CommandHandler("cancel", fund.cancel),
+    ],
     # Возврат на первый уровень
     map_to_parent={
+        states.END_MAIN_MENU: states.END_MAIN_MENU,
         states.END_FIRST_LEVEL: states.JOIN_PROGRAM,
         states.STOPPING: states.STOPPING,
     },
@@ -214,7 +218,10 @@ conv_handler_join_to_fund = ConversationHandler(
         states.JOIN_PROGRAM: selection_handlers,
         states.GO_SECOND_LEVEL: [dates_about_parent_and_child],
     },
-    fallbacks=[CommandHandler("stop", fund.stop_nested)],
+    fallbacks=[
+        CommandHandler("stop", fund.stop_nested),
+        CommandHandler("cancel", fund.cancel),
+    ],
     map_to_parent={
         states.END_MAIN_MENU: states.SELECTING_ACTION,
         states.STOPPING: states.STOPPING,
