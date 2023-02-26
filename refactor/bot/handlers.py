@@ -26,7 +26,7 @@ form_handler = ConversationHandler(
 
 main_menu_handler = ConversationHandler(
     entry_points=[
-        CommandHandler("start", main_application.start),
+        CommandHandler('start', main_application.start),
         CallbackQueryHandler(main_application.main_menu, pattern=callback.BACK)
     ],
     states={
@@ -37,9 +37,9 @@ main_menu_handler = ConversationHandler(
         ],
     },
     fallbacks=[
-        CommandHandler("menu", main_application.main_menu),
-        CommandHandler("cancel", main_application.main_menu),
-        CommandHandler("stop", main_application.stop),
+        CommandHandler('menu', main_application.main_menu),
+        CommandHandler('cancel', main_application.main_menu),
+        CommandHandler('stop', main_application.stop),
     ],
     allow_reentry=True,
 )

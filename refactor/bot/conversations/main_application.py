@@ -14,10 +14,10 @@ from core.logger import logger  # noqa
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await send_message(update, text.START, link_preview=False)
     COMMANDS = [
-        BotCommand("/start", START_CMD),
-        BotCommand("/menu", MENU_CMD),
-        BotCommand("/cancel", CANCEL_CMD),
-        BotCommand("/stop", STOP_CMD),
+        BotCommand('/start', START_CMD),
+        BotCommand('/menu', MENU_CMD),
+        BotCommand('/cancel', CANCEL_CMD),
+        BotCommand('/stop', STOP_CMD),
     ]
     await context.bot.set_my_commands(COMMANDS)
     return await main_menu(update, context)

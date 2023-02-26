@@ -7,10 +7,8 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from bot.constants import button, key, state
+from bot.constants.info import text
 from bot.constants.info.question import ALL_QUESTIONS
-from bot.constants.info.text import (APPLICATION_DATE, CHOICE, DATE_TEMPLATE,
-                                     FORM, INPUT_ERROR_TEMPLATE, SELECT_EDIT,
-                                     SHOW_DATA_TEMPLATE)
 from bot.utils import send_message
 
 
@@ -58,7 +56,7 @@ async def save_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
         setattr(form[key.DATA], field, input)
     except ValidationError:
         question_hint = ALL_QUESTIONS[field.upper()][key.HINT]
-        error_message = INPUT_ERROR_TEMPLATE.format(hint=question_hint)
+        error_message = text.INPUT_ERROR_TEMPLATE.format(hint=question_hint)
         await send_message(update, error_message)
         return await ask_input(update, context)
 
@@ -75,18 +73,21 @@ async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     info = user_data[key.MENU]
     form = user_data[key.FORM]
 
-    message = SHOW_DATA_TEMPLATE.format(title=FORM, value=info[key.BUTTON_TEXT])
+    message = text.SHOW_DATA_TEMPLATE.format(title=text.FORM, value=info[key.BUTTON_TEXT])
     if menu_option := user_data.get(key.OPTION):
-        message += SHOW_DATA_TEMPLATE.format(title=CHOICE, value=menu_option[key.BUTTON_TEXT])
-    message += SHOW_DATA_TEMPLATE.format(title=APPLICATION_DATE, value=date.today().strftime(DATE_TEMPLATE))
+        message += text.SHOW_DATA_TEMPLATE.format(
+            title=text.CHOICE,
+            value=menu_option[key.BUTTON_TEXT]
+        )
+    message += text.SHOW_DATA_TEMPLATE.format(
+        title=text.APPLICATION_DATE,
+        value=date.today().strftime(text.DATE_TEMPLATE)
+    )
     for name, value in form[key.DATA]:
         question = ALL_QUESTIONS[name.upper()]
-        message += SHOW_DATA_TEMPLATE.format(title=question[key.TITLE], value=value)
+        message += text.SHOW_DATA_TEMPLATE.format(title=question[key.TITLE], value=value)
 
-    keyboard = Keyboard([
-        [button.SEND_DATA],
-        [button.EDIT_MENU, button.MAIN_MENU],
-    ])
+    keyboard = Keyboard([[button.SEND_DATA], [button.EDIT_MENU, button.MAIN_MENU]])
     await send_message(update, message, keyboard=keyboard)
 
     return state.FORM_SUBMISSION
@@ -103,7 +104,7 @@ async def edit_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
         edit_button.append([Button(text=question[key.TITLE], callback_data=callback)])
     edit_button.append([button.SHOW_DATA])
 
-    await send_message(update, SELECT_EDIT, keyboard=Keyboard(edit_button))
+    await send_message(update, text.SELECT_EDIT, keyboard=Keyboard(edit_button))
 
     return state.FORM_INPUT
 

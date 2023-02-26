@@ -3,5 +3,5 @@
     BACK,
     END,
     FORM_SUBMISSION,
-    FORM_INPUT
+    FORM_INPUT,
 ) = range(5)
