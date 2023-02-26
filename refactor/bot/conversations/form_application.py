@@ -82,7 +82,10 @@ async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     info = user_data[key.MENU]
     form = user_data[key.FORM]
 
-    message = text.SHOW_DATA_TEMPLATE.format(title=text.FORM, value=info[key.BUTTON_TEXT])
+    message = text.SHOW_DATA_TEMPLATE.format(
+        title=text.FORM,
+        value=info[key.BUTTON_TEXT]
+    )
     if menu_option := user_data.get(key.OPTION):
         message += text.SHOW_DATA_TEMPLATE.format(
             title=text.CHOICE,
@@ -94,9 +97,14 @@ async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     for name, value in form[key.DATA]:
         question = ALL_QUESTIONS[name.upper()]
-        message += text.SHOW_DATA_TEMPLATE.format(title=question[key.TITLE], value=value)
+        message += text.SHOW_DATA_TEMPLATE.format(
+            title=question[key.TITLE],
+            value=value
+        )
 
-    keyboard = Keyboard([[button.SEND_DATA], [button.EDIT_MENU, button.MAIN_MENU]])
+    keyboard = Keyboard(
+        [[button.SEND_DATA], [button.EDIT_MENU, button.MAIN_MENU]]
+    )
     await send_message(update, message, keyboard=keyboard)
 
     return state.FORM_SUBMISSION
@@ -112,7 +120,9 @@ async def edit_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     for field in fields:
         question = ALL_QUESTIONS[field.upper()]
         callback = f'{key.ASK}_{field.upper()}'
-        edit_button.append([Button(text=question[key.TITLE], callback_data=callback)])
+        edit_button.append(
+            [Button(text=question[key.TITLE], callback_data=callback)]
+        )
     edit_button.append([button.SHOW_DATA])
 
     await send_message(update, text.SELECT_EDIT, keyboard=Keyboard(edit_button))
