@@ -48,13 +48,14 @@ async def save_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_data = context.user_data
     form = user_data[key.FORM]
     fields = user_data[key.MENU][key.FIELDS]
+    input = update.message.text.strip()
 
     field = form.get(key.FIELD_EDIT)
     if not field:
         field = fields[form[key.FIELD_INDEX]]
 
     try:
-        setattr(form[key.DATA], field, update.message.text)
+        setattr(form[key.DATA], field, input)
     except ValidationError:
         question_hint = ALL_QUESTIONS[field.upper()][key.HINT]
         error_message = INPUT_ERROR_TEMPLATE.format(hint=question_hint)

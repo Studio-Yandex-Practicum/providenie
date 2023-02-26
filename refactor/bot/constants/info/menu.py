@@ -6,7 +6,7 @@ from bot.conversations.models import AskQuestionForm, ChatForm, FundForm, Volunt
 ALL_MENU = {
     f"{key.MENU}_CHAT": {
         key.BUTTON_TEXT: "Хочу попасть в родительский чат",
-        key.DESCRIPTION: "Выберите чат для вступления:",    # TODO Не отображается DESC в чате
+        key.DESCRIPTION: "Выберите чат для вступления:",
         key.MODEL: ChatForm,
         key.FIELDS: list(ChatForm.__fields__),
         key.OPTIONS: option.CHAT,
