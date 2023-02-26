@@ -12,15 +12,15 @@ from bot.utils import get_menu_buttons, send_message
 async def show_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Show the selected menu or sub-menu to the user"""
 
+    await context.bot.set_my_commands([button.MENU_CMD])
     query = update.callback_query
     user_data = context.user_data
-    menu_name = query.data
 
-    if menu_name == callback.MENU_BACK:
+    if not query or query.data == callback.MENU_BACK:
         menu = user_data[key.MENU]
         user_data[key.OPTION] = False
     else:
-        menu = ALL_MENU[menu_name]
+        menu = ALL_MENU[query.data]
         user_data[key.MENU] = menu
 
     if not (options := menu.get(key.OPTIONS)):
@@ -39,8 +39,9 @@ async def show_option(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     user_data = context.user_data
     menu = user_data[key.MENU]
+    options = menu.get(key.OPTIONS)
 
-    if options := menu.get(key.OPTIONS):
+    if query and query.data.startswith(key.OPTION):
         option = options[query.data]
         user_data[key.OPTION] = option
         title = option.get(key.NAME, option[key.BUTTON_TEXT])

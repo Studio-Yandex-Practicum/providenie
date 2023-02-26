@@ -19,7 +19,9 @@ form_handler = ConversationHandler(
             MessageHandler(filters.TEXT & ~filters.COMMAND, form_application.save_input),
         ],
     },
-    fallbacks=[],
+    fallbacks=[
+        CommandHandler('cancel', menu_application.show_menu)
+    ],
     allow_reentry=True,
 )
 
@@ -38,7 +40,6 @@ main_menu_handler = ConversationHandler(
     },
     fallbacks=[
         CommandHandler('menu', main_application.main_menu),
-        CommandHandler('cancel', main_application.main_menu),
         CommandHandler('stop', main_application.stop),
     ],
     allow_reentry=True,
