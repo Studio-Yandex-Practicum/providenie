@@ -11,10 +11,10 @@ form_handler = ConversationHandler(
     states={
         state.FORM_SUBMISSION: [
             CallbackQueryHandler(form_application.edit_menu, pattern=callback.EDIT_MENU),
-            CallbackQueryHandler(form_application.show_data, pattern=callback.SHOW_DATA),
             CallbackQueryHandler(form_application.send_data, pattern=callback.SEND_DATA),
         ],
         state.FORM_INPUT: [
+            CallbackQueryHandler(form_application.show_data, pattern=callback.SHOW_DATA),
             CallbackQueryHandler(form_application.ask_input, pattern=fr"^{key.ASK}_\S*$"),
             MessageHandler(filters.TEXT & ~filters.COMMAND, form_application.save_input),
         ],
