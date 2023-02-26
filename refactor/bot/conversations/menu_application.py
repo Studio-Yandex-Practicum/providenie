@@ -38,7 +38,8 @@ async def show_option(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if options := menu.get(key.OPTIONS):
         option = options[query.data]
         user_data[key.OPTION] = option
-        message = text.SHOW_DATA_TEMPLATE.format(title=option[key.BUTTON_TEXT], value=option[key.DESCRIPTION])
+        title = option.get(key.NAME, option[key.BUTTON_TEXT])
+        message = text.SHOW_DATA_TEMPLATE.format(title=title, value=option[key.DESCRIPTION])
         back_button = button.MENU_BACK
     else:
         message = menu[key.DESCRIPTION]
