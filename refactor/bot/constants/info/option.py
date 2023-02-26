@@ -192,23 +192,23 @@ CHAT = {
 FUND = {
     f"{key.OPTION}_LOOKWORLD": {
         key.BUTTON_TEXT: "Смотри на мир",
-        key.DESCRIPTION: "Описание программы 'Смотри на мир'."  # TODO Добавить описание
+        key.DESCRIPTION: "Описание"  # TODO Добавить описание
         f"{REQUIRED_DOCUMENTS}"
     },
     f"{key.OPTION}_REHABILITATION": {
         key.BUTTON_TEXT: "Реабилитация",
-        key.DESCRIPTION: "Описание программы 'Реабилитация'."   # TODO Добавить описание
+        key.DESCRIPTION: "Описание"   # TODO Добавить описание
         f"{REQUIRED_DOCUMENTS}"
     },
     f"{key.OPTION}_PSYHELP": {
         key.NAME: "Психологическая помощь",
         key.BUTTON_TEXT: "Помощь психолога",
-        key.DESCRIPTION: "Описание программы 'Психологическая помощь'."  # TODO Добавить описание
+        key.DESCRIPTION: "Описание"  # TODO Добавить описание
         f"{REQUIRED_DOCUMENTS}"
     },
     f"{key.OPTION}_LESSONS": {
         key.BUTTON_TEXT: "Добрые уроки",
-        key.DESCRIPTION: "Описание программы 'Добрые уроки'."   # TODO Добавить описание
+        key.DESCRIPTION: "Описание"   # TODO Добавить описание
         f"{REQUIRED_DOCUMENTS}"
     },
 }

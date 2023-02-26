@@ -6,11 +6,11 @@ from telegram import InlineKeyboardMarkup as Keyboard
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from bot.constants import key, state, button
+from bot.constants import button, key, state
 from bot.constants.info.question import ALL_QUESTIONS
-from bot.constants.info.text import (DATE_TEMPLATE, INPUT_ERROR_TEMPLATE,
-                                     SELECT_EDIT, SHOW_DATA_TEMPLATE,
-                                     FORM, CHOICE, APPLICATION_DATE)
+from bot.constants.info.text import (APPLICATION_DATE, CHOICE, DATE_TEMPLATE,
+                                     FORM, INPUT_ERROR_TEMPLATE, SELECT_EDIT,
+                                     SHOW_DATA_TEMPLATE)
 from bot.utils import send_message
 
 

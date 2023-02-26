@@ -1,7 +1,8 @@
 from telegram import InlineKeyboardButton as Button
 
 from bot.constants import callback
-from bot.constants.info.text import BACK, START_FORM, SEND_FORM, EDIT_FORM
+from bot.constants.info.text import BACK, EDIT_FORM, SEND_FORM, START_FORM
+
 
 '''BACK'''
 MAIN_MENU = Button(

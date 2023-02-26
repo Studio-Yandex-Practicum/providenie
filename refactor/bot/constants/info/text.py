@@ -45,6 +45,7 @@ FORM = "Анкета"
 CHOICE = "Выбор"
 APPLICATION_DATE = "Дата заявки"
 SELECT_EDIT = "Выберите для редактирования:"
+MESSAGE_MARKDOWN = 'HTML'
 SHOW_DATA_TEMPLATE = '<b><u>{title}</u></b>:\n{value}\n\n'
 INPUT_ERROR_TEMPLATE = '<b>Некорректные введенные данные!</b>\n\n<b>Пример:</b> \n{hint}'
 DATE_TEMPLATE = '%d.%m.%Y'

@@ -1,6 +1,7 @@
 from bot.constants import key
 from bot.constants.info import option
-from bot.conversations.models import AskQuestionForm, ChatForm, FundForm, VolunteerForm
+from bot.conversations.models import (AskQuestionForm, ChatForm, FundForm,
+                                      VolunteerForm)
 
 
 ALL_MENU = {
