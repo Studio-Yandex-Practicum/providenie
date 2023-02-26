@@ -6,6 +6,8 @@ from telegram.ext import ContextTypes, ConversationHandler
 from bot.constants import state
 from bot.constants.info import text
 from bot.constants.info.menu import ALL_MENU
+from bot.constants.info.text import (START_BOT, MENU_BOT,
+                                     CANCEL_BOT, STOP_BOT)
 from bot.utils import get_menu_buttons, send_message
 from core.logger import logger  # noqa
 
@@ -13,10 +15,10 @@ from core.logger import logger  # noqa
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await send_message(update, text.START, link_preview=False)
     COMMANDS = [
-        BotCommand("/start", "Начть работу"),
-        BotCommand("/menu", "Перейти в главное меню"),
-        BotCommand("/cancel", "Отменить текущее действие"),
-        BotCommand("/stop", "Завершение работы"),
+        BotCommand("/start", START_BOT),
+        BotCommand("/menu", MENU_BOT),
+        BotCommand("/cancel", CANCEL_BOT),
+        BotCommand("/stop", STOP_BOT),
     ]
     await context.bot.set_my_commands(COMMANDS)
     return await main_menu(update, context)
