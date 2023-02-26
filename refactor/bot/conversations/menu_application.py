@@ -23,7 +23,7 @@ async def show_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not (options := menu.get(key.OPTIONS)):
         return await show_option(update, context)
 
-    menu_keyboard = Keyboard([*get_menu_buttons(options), [button.main_menu]])
+    menu_keyboard = Keyboard([*get_menu_buttons(options), [button.MAIN_MENU]])
 
     await send_message(update, menu[key.BUTTON_TEXT], keyboard=menu_keyboard)
 
@@ -39,14 +39,14 @@ async def show_option(update: Update, context: ContextTypes.DEFAULT_TYPE):
         option = options[query.data]
         user_data[key.OPTION] = option
         message = text.SHOW_DATA_TEMPLATE.format(title=option[key.BUTTON_TEXT], value=option[key.DESCRIPTION])
-        back_button = button.menu_back
+        back_button = button.MENU_BACK
     else:
         message = menu[key.DESCRIPTION]
-        back_button = button.main_menu
+        back_button = button.MAIN_MENU
 
     buttons = [back_button]
     if menu.get(key.MODEL):
-        buttons.insert(0, button.start_form)
+        buttons.insert(0, button.START_FORM)
     if options and (url := option.get(key.LINK)):
         buttons.insert(0, Button(text.OPTION_URL, url=url))
 

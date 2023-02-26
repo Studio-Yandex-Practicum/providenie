@@ -1,29 +1,29 @@
 from telegram import InlineKeyboardButton as Button
 
 from bot.constants import callback
-
+from bot.constants.info.text import BACK, START_FILL_FORM, SEND_FORM, EDIT_FORM
 
 '''BACK'''
-main_menu = Button(
-    'Назад', callback_data=callback.BACK,
+MAIN_MENU = Button(
+    BACK, callback_data=callback.BACK,
 )
-menu_back = Button(
-    'Назад', callback_data=callback.MENU_BACK
+MENU_BACK = Button(
+    BACK, callback_data=callback.MENU_BACK
 )
 
 
 '''FORM'''
-start_form = Button(
-    'Начать заполнение анкеты',
+START_FORM = Button(
+    START_FILL_FORM,
     callback_data=callback.START_FORM
 )
-send_data = Button(
-    'Подтвердить и отправить',
+SEND_DATA = Button(
+    SEND_FORM,
     callback_data=callback.SEND_DATA
 )
-edit_menu = Button(
-    'Редактировать', callback_data=callback.EDIT_MENU,
+EDIT_MENU = Button(
+    EDIT_FORM, callback_data=callback.EDIT_MENU,
 )
-show_data = Button(
-    'Назад', callback_data=callback.SHOW_DATA,
+SHOW_DATA = Button(
+    BACK, callback_data=callback.SHOW_DATA,
 )

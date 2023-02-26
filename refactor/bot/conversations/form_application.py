@@ -82,8 +82,8 @@ async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
         message += SHOW_DATA_TEMPLATE.format(title=question[key.TITLE], value=value)
 
     keyboard = Keyboard([
-        [button.send_data],
-        [button.edit_menu, button.main_menu],
+        [button.SEND_DATA],
+        [button.EDIT_MENU, button.MAIN_MENU],
     ])
     await send_message(update, message, keyboard=keyboard)
 
@@ -99,7 +99,7 @@ async def edit_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
         question = ALL_QUESTIONS[field.upper()]
         callback = f'{key.ASK}_{field.upper()}'
         edit_button.append([Button(text=question[key.TITLE], callback_data=callback)])
-    edit_button.append([button.show_data])
+    edit_button.append([button.SHOW_DATA])
 
     await send_message(update, SELECT_EDIT, keyboard=Keyboard(edit_button))
 
