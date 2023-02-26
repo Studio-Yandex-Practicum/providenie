@@ -18,6 +18,7 @@ async def show_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if menu_name == callback.MENU_BACK:
         menu = user_data[key.MENU]
+        user_data[key.OPTION] = False
     else:
         menu = ALL_MENU[menu_name]
         user_data[key.MENU] = menu
