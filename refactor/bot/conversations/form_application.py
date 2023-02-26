@@ -81,32 +81,32 @@ async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_data = context.user_data
     info = user_data[key.MENU]
     form = user_data[key.FORM]
-    show_message = form[key.SHOW_DATA] = ''
 
-    show_message = text.SHOW_DATA_TEMPLATE.format(
+    message = text.SHOW_DATA_TEMPLATE.format(
         title=text.FORM,
         value=info[key.BUTTON_TEXT]
     )
     if menu_option := user_data.get(key.OPTION):
-        show_message += text.SHOW_DATA_TEMPLATE.format(
+        message += text.SHOW_DATA_TEMPLATE.format(
             title=text.CHOICE,
             value=menu_option[key.BUTTON_TEXT]
         )
-    show_message += text.SHOW_DATA_TEMPLATE.format(
+    message += text.SHOW_DATA_TEMPLATE.format(
         title=text.APPLICATION_DATE,
         value=date.today().strftime(text.DATE_TEMPLATE)
     )
     for name, value in form[key.DATA]:
         question = ALL_QUESTIONS[name.upper()]
-        show_message += text.SHOW_DATA_TEMPLATE.format(
+        message += text.SHOW_DATA_TEMPLATE.format(
             title=question[key.TITLE],
             value=value
         )
+    form[key.SHOW_DATA] = message
 
     keyboard = Keyboard(
         [[button.SEND_DATA], [button.EDIT_MENU, button.MAIN_MENU]]
     )
-    await send_message(update, show_message, keyboard=keyboard)
+    await send_message(update, message, keyboard=keyboard)
 
     return state.FORM_SUBMISSION
 
