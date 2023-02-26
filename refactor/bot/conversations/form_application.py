@@ -9,7 +9,8 @@ from telegram.ext import ContextTypes
 from bot.constants import key, state, button
 from bot.constants.info.question import ALL_QUESTIONS
 from bot.constants.info.text import (DATE_TEMPLATE, INPUT_ERROR_TEMPLATE,
-                                     SELECT_EDIT, SHOW_DATA_TEMPLATE)
+                                     SELECT_EDIT, SHOW_DATA_TEMPLATE,
+                                     FORM, CHOICE, APPLICATION_DATE)
 from bot.utils import send_message
 
 
@@ -73,10 +74,10 @@ async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     info = user_data[key.MENU]
     form = user_data[key.FORM]
 
-    message = SHOW_DATA_TEMPLATE.format(title='Анкета', value=info[key.BUTTON_TEXT])
+    message = SHOW_DATA_TEMPLATE.format(title=FORM, value=info[key.BUTTON_TEXT])
     if menu_option := user_data.get(key.OPTION):
-        message += SHOW_DATA_TEMPLATE.format(title='Выбор', value=menu_option[key.BUTTON_TEXT])
-    message += SHOW_DATA_TEMPLATE.format(title='Дата заявки', value=date.today().strftime(DATE_TEMPLATE))
+        message += SHOW_DATA_TEMPLATE.format(title=CHOICE, value=menu_option[key.BUTTON_TEXT])
+    message += SHOW_DATA_TEMPLATE.format(title=APPLICATION_DATE, value=date.today().strftime(DATE_TEMPLATE))
     for name, value in form[key.DATA]:
         question = ALL_QUESTIONS[name.upper()]
         message += SHOW_DATA_TEMPLATE.format(title=question[key.TITLE], value=value)

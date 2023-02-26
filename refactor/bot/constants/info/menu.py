@@ -40,6 +40,10 @@ ALL_MENU = {
         key.DESCRIPTION: "Сделать пожертвование",
         key.OPTIONS: option.DONATION,
     },
+    f"{key.MENU}_EVENT": {
+        key.BUTTON_TEXT: "Наши события",
+        key.DESCRIPTION: "В разработке",
+    },
     f"{key.MENU}_ABOUT": {
         key.BUTTON_TEXT: "О Фонде",
         key.DESCRIPTION: "Информация о фонде",

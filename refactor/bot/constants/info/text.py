@@ -25,13 +25,6 @@ MAIN_MENU = (
 )
 
 
-"""MENU DESCRIPTIONS"""
-SELECT_EDIT = "Выберите для редактирования:"
-IN_PROGRESS = "В разработке"
-ABOUT = "Информация о фонде"
-SELECT_URL = "Выберите интересующую вас соцсеть/страницу"
-
-
 """MAIN BUTTONS"""
 BACK = "Назад"
 OPTION_URL = "Перейти"
@@ -40,12 +33,17 @@ SEND_FORM = "Подтвердить и отправить"
 EDIT_FORM = "Редактировать"
 
 
-
+"""SHOW FORM RESULTS"""
+FORM = "Анкета"
+CHOICE = "Выбор"
+APPLICATION_DATE = "Дата заявки"
+SELECT_EDIT = "Выберите для редактирования:"
 SHOW_DATA_TEMPLATE = '<b><u>{title}</u></b>:\n{value}\n\n'
 INPUT_ERROR_TEMPLATE = '<b>Некорректные введенные данные!</b>\n\n<b>Пример:</b> \n{hint}'
 DATE_TEMPLATE = '%d.%m.%Y'
 
 
+""""""
 REQUIRED_DOCUMENTS = """\n
 Необходимые документы:\n
 - Справка о многодетности, малообеспеченности, инвалидности (фото)\n
