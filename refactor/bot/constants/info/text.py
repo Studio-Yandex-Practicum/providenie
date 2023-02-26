@@ -26,21 +26,21 @@ MAIN_MENU = (
 
 
 """MAIN COMMANDS"""
-START_BOT = "Начть работу"
-MENU_BOT = "Перейти в главное меню"
-CANCEL_BOT = "Отменить текущее действие"
-STOP_BOT = "Завершение работы"
+START_CMD = "Начть работу"
+MENU_CMD = "Перейти в главное меню"
+CANCEL_CMD = "Отменить текущее действие"
+STOP_CMD = "Завершение работы"
 
 
 """MAIN BUTTONS"""
 BACK = "Назад"
-OPTION_URL = "Перейти"
-START_FILL_FORM = "Начать заполнение анкеты"
+FOLLOW_LINK = "Перейти"
+START_FORM = "Начать заполнение анкеты"
 SEND_FORM = "Подтвердить и отправить"
 EDIT_FORM = "Редактировать"
 
 
-"""SHOW FORM RESULTS"""
+"""SHOW FORM DATA"""
 FORM = "Анкета"
 CHOICE = "Выбор"
 APPLICATION_DATE = "Дата заявки"
