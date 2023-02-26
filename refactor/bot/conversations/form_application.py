@@ -101,6 +101,7 @@ async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
             title=question[key.TITLE],
             value=value
         )
+    form[key.SHOW_DATA] = message
 
     keyboard = Keyboard(
         [[button.SEND_DATA], [button.EDIT_MENU, button.MAIN_MENU]]
