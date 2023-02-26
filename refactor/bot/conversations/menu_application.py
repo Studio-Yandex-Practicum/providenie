@@ -25,7 +25,7 @@ async def show_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     menu_keyboard = Keyboard([*get_menu_buttons(options), [button.MAIN_MENU]])
 
-    await send_message(update, menu[key.BUTTON_TEXT], keyboard=menu_keyboard)
+    await send_message(update, menu[key.DESCRIPTION], keyboard=menu_keyboard)
 
     return state.MAIN_MENU
 
