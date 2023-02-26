@@ -13,7 +13,7 @@ async def send_message(
     keyboard: Optional[InlineKeyboardMarkup] = None,
     link_preview: bool = False
 ):
-    '''Send a message with optional inline keyboard and link preview'''
+    """Send a message with optional inline keyboard and link preview"""
 
     message_args = {
         'text': text,
@@ -30,7 +30,7 @@ async def send_message(
 
 
 def get_menu_buttons(menu: dict):
-    '''Generate inline keyboard buttons for menu'''
+    """Generate inline keyboard buttons for menu"""
 
     return [
         [Button(text=option.get(key.BUTTON_TEXT), callback_data=callback)]

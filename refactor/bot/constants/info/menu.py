@@ -25,7 +25,7 @@ ALL_MENU = {
     },
     f'{key.MENU}_VOLONTEER': {
         key.BUTTON_TEXT: 'Хочу стать волонтёром',
-        key.DESCRIPTION: 'Далее необходимо предоставить информацию для куратора Далее необходимо предоставить информацию для куратора',
+        key.DESCRIPTION: 'Далее необходимо предоставить информацию для куратора',
         key.MODEL: VolunteerForm,
         key.FIELDS: list(VolunteerForm.__fields__),
     },

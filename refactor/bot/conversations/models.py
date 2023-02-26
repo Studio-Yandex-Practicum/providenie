@@ -4,7 +4,7 @@ from pydantic import BaseModel, EmailStr  # , validator, ValidationError
 
 
 class BaseForm(BaseModel):
-    """Базовая модель для анкет."""
+    """Base model for forms"""
 
     class Config:
         min_anystr_length = 1
@@ -13,7 +13,7 @@ class BaseForm(BaseModel):
 
 
 class ShortForm(BaseForm):
-    """Базовая модель для коротких анкет."""
+    """Base model for short forms"""
 
     full_name: Optional[int]
     phone: Optional[str]
@@ -21,7 +21,7 @@ class ShortForm(BaseForm):
 
 
 class VolunteerForm(ShortForm):
-    """Модель для анкеты на волонтерство."""
+    """Model for volunteer form"""
 
     birthday: Optional[str]
     city: Optional[str]
@@ -29,13 +29,13 @@ class VolunteerForm(ShortForm):
 
 
 class AskQuestionForm(ShortForm):
-    """Модель для анкеты 'Задать вопрос'."""
+    """Model for 'Ask a question' form"""
 
     question: Optional[str]
 
 
 class LongForm(BaseForm):
-    """Базовая модель для длинных анкет."""
+    """Base model for long forms"""
 
     parent_full_name: Optional[str]
     phone: Optional[str]
@@ -50,13 +50,13 @@ class LongForm(BaseForm):
 
 
 class ChatForm(LongForm):
-    """Модель для анкеты на вступление в чат."""
+    """Model for chat application form"""
 
     operation: Optional[str]
 
 
 class FundForm(LongForm):
-    """Модель для анкеты на отправку заявки в фонд."""
+    """Model for fund application form"""
 
     email: Optional[EmailStr]
     family_members: Optional[int]
