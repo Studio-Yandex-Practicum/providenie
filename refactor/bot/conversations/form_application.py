@@ -134,5 +134,17 @@ async def edit_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def send_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_data = context.user_data
     form = user_data[key.FORM]
-    message = form[key.SHOW_DATA]
-    send_email_message(message)
+    message = form[key.SHOW_DATA].replace('\n', '<br>')
+
+    if send_email_message(message):
+        text_message = text.MAIL_SEND_OK_MESSAGE
+    else:
+        text_message = text.MAIL_SEND_ERROR_MESSAGE
+
+    await send_message(
+        update,
+        text_message,
+        keyboard=Keyboard([[button.MAIN_MENU]])
+    )
+
+    return state.MAIN_MENU

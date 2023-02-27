@@ -33,8 +33,8 @@ STOP_CMD = 'Завершение работы'
 # MAIN BUTTONS
 BACK = 'Назад'
 FOLLOW_LINK = 'Перейти'
-START_FORM = 'Начать заполнение анкеты'
-SEND_FORM = 'Подтвердить и отправить'
+START_FORM = 'Заполнить анкету'
+SEND_FORM = 'Отправить'
 EDIT_FORM = 'Редактировать'
 
 
