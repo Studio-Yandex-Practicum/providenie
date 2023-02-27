@@ -11,7 +11,7 @@ from bot.utils import get_menu_buttons, send_message
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Send a welcome message to the user"""
+    """Send a welcome message to the user."""
 
     await send_message(update, text.START, link_preview=False)
 
@@ -19,7 +19,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Show the main menu to the user and set the bot's commands"""
+    """Show the main menu to the user and set the bot's commands."""
 
     await context.bot.set_my_commands([button.START_CMD, button.STOP_CMD])
     await send_message(update, text.MAIN_MENU, keyboard=Keyboard([*get_menu_buttons(ALL_MENU)]))
@@ -28,7 +28,7 @@ async def main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    """End the conversation"""
+    """End the conversation."""
 
     await send_message(update, text.STOP)
 

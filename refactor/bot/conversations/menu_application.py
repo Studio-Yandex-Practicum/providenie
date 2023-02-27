@@ -10,7 +10,7 @@ from bot.utils import get_menu_buttons, send_message
 
 
 async def show_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Show the selected menu or sub-menu to the user"""
+    """Show the selected menu or sub-menu to the user."""
 
     await context.bot.set_my_commands([button.MENU_CMD])
     query = update.callback_query
@@ -34,7 +34,7 @@ async def show_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def show_option(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Show the option selected from the menu"""
+    """Show the option selected from the menu."""
 
     query = update.callback_query
     user_data = context.user_data
