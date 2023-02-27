@@ -49,7 +49,7 @@ async def select_about_found(update: Update, _) -> str:
         ],
         [
             InlineKeyboardButton(
-                text=const.BTN_BACK, callback_data=str(key.END)
+                text=const.BIN_MAIN_MENU, callback_data=str(key.END)
             )
         ],
     ]
