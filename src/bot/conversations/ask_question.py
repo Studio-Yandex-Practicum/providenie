@@ -22,7 +22,7 @@ async def enter_submenu(
                 text=const.BTN_BEGIN, callback_data=key.QUESTION
             ),
             InlineKeyboardButton(
-                text=const.BTN_BACK, callback_data=str(key.END)
+                text=const.BIN_MAIN_MENU, callback_data=str(key.END)
             ),
         ],
     ]

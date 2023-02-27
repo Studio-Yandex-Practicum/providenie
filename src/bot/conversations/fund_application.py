@@ -54,7 +54,7 @@ async def enter_submenu(
         ],
         [
             InlineKeyboardButton(
-                text="Главное меню", callback_data=keys.MAIN_MENU
+                text=constants.BIN_MAIN_MENU, callback_data=keys.MAIN_MENU
             ),
         ],
     ]
