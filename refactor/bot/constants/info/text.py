@@ -1,4 +1,4 @@
-"""MAIN MENU"""
+# MAIN MENU
 START = (
     'Здравствуйте! Добро пожаловать!'
     '\n\nЯ бот - помощник благотворительного фонда «Провидение».'
@@ -23,14 +23,14 @@ MAIN_MENU = (
 )
 
 
-"""MAIN COMMANDS"""
+# MAIN COMMANDS
 START_CMD = 'Начть работу'
 MENU_CMD = 'Перейти в главное меню'
 CANCEL_CMD = 'Отменить текущее действие'
 STOP_CMD = 'Завершение работы'
 
 
-"""MAIN BUTTONS"""
+# MAIN BUTTONS
 BACK = 'Назад'
 FOLLOW_LINK = 'Перейти'
 START_FORM = 'Начать заполнение анкеты'
@@ -38,7 +38,7 @@ SEND_FORM = 'Подтвердить и отправить'
 EDIT_FORM = 'Редактировать'
 
 
-"""SHOW FORM DATA"""
+# SHOW FORM DATA
 FORM = 'Анкета'
 CHOICE = 'Выбор'
 APPLICATION_DATE = 'Дата заявки'
@@ -51,7 +51,7 @@ INPUT_ERROR_TEMPLATE = (
 DATE_TEMPLATE = '%d.%m.%Y'
 
 
-"""DOCUMENTS FOR FORMS"""
+# DOCUMENTS FOR FORMS
 REQUIRED_DOCUMENTS = """\n
 Необходимые документы:\n
 - Справка о многодетности, малообеспеченности, инвалидности (фото)\n
@@ -61,3 +61,7 @@ REQUIRED_DOCUMENTS = """\n
 - Паспорт (фото/скан)\n
 - Счёт на лечение (какое лечение требуется, стоимость) или ссылка на то, что необходимо приобрести\n
 """
+
+
+# MAIL CONSTANTS
+MAIL_SUBJECT = 'Сообщение от чат-бота Провидение'

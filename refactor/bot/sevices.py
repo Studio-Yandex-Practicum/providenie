@@ -1,8 +1,8 @@
 from telegram.ext import Application
 
-from bot.handlers import main_menu_handler
-from bot.core.settings import settings
 from bot.core.logger import logger  # noqa
+from bot.core.settings import settings
+from bot.handlers import main_menu_handler
 
 
 def init_bot():
