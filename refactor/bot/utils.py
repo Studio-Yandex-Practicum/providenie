@@ -45,7 +45,7 @@ def get_menu_buttons(menu: dict):
     ]
 
 
-def send_email_message(message: str, debug: bool = False) -> bool:
+def send_email_message(message: str) -> bool:
     """Send email message to the specified curator email-address."""
 
     msg = MIMEMultipart()
@@ -59,7 +59,7 @@ def send_email_message(message: str, debug: bool = False) -> bool:
             settings.smtp_server_address,
             settings.smtp_server_port
         )
-        if debug:
+        if settings.debug:
             mailserver.set_debuglevel(True)
 
         mailserver.login(
