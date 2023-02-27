@@ -47,6 +47,7 @@ def get_menu_buttons(menu: dict):
 
 def send_email_message(message: str, debug: bool = False) -> bool:
     """Send email message to the specified curator email-address."""
+
     msg = MIMEMultipart()
     msg['From'] = settings.smtp_server_bot_email
     msg['To'] = settings.email_curator
