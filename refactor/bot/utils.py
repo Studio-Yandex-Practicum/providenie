@@ -8,7 +8,9 @@ from telegram import InlineKeyboardButton as Button
 from telegram import InlineKeyboardMarkup, Update
 
 from bot.constants import key
-from bot.constants.info.text import MAIL_SUBJECT, MESSAGE_MARKDOWN
+from bot.constants.info.text import (MAIL_SEND_ERROR_MESSAGE,
+                                     MAIL_SEND_OK_MESSAGE, MAIL_SUBJECT,
+                                     MESSAGE_MARKDOWN)
 from bot.core.settings import settings
 
 
@@ -43,29 +45,36 @@ def get_menu_buttons(menu: dict):
     ]
 
 
-# Need refactoring
-def send_email_message(message: str):
+def send_email_message(message: str, debug: bool = False) -> bool:
+    """Send email message to the specified curator email-address."""
     msg = MIMEMultipart()
     msg['From'] = settings.smtp_server_bot_email
     msg['To'] = settings.email_curator
     msg['Subject'] = MAIL_SUBJECT
-    msg.attach(MIMEText(message))
+    msg.attach(MIMEText(message, 'html'))
+    mailserver = None
     try:
-        mailserver = smtplib.SMTP(
-            settings.smtp_server_address, settings.smtp_server_port
+        mailserver = smtplib.SMTP_SSL(
+            settings.smtp_server_address,
+            settings.smtp_server_port
         )
-        mailserver.ehlo()
-        mailserver.starttls()
+        if debug:
+            mailserver.set_debuglevel(True)
+
         mailserver.login(
-            settings.smtp_server_bot_email, settings.smtp_server_bot_password
+            settings.smtp_server_bot_email,
+            settings.smtp_server_bot_password
         )
-        mailserver.set_debuglevel(1)  # for debugging
+
         mailserver.sendmail(
             settings.smtp_server_bot_email,
             settings.email_curator,
             msg.as_string()
         )
-        mailserver.quit()
-        logging.info("Письмо успешно отправлено")
+        logging.info(MAIL_SEND_OK_MESSAGE)
+        return True
     except smtplib.SMTPException:
-        logging.error("Ошибка: Невозможно отправить почтовое сообщение")
+        logging.error(MAIL_SEND_ERROR_MESSAGE)
+        return False
+    finally:
+        mailserver.quit()
