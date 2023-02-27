@@ -14,7 +14,6 @@ from bot.utils import send_email_message, send_message
 
 async def start_form(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Initializes the user's form data and asks for input."""
-
     await context.bot.set_my_commands([button.MENU_CMD, button.CANCEL_CMD])
     user_data = context.user_data
     user_data[key.FORM] = {
@@ -28,7 +27,6 @@ async def start_form(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def ask_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Ask the user for input related to the current form field."""
-
     callback = update.callback_query
     user_data = context.user_data
     form = user_data[key.FORM]
@@ -49,7 +47,6 @@ async def ask_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def save_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Save the user's input for the current form field."""
-
     user_data = context.user_data
     form = user_data[key.FORM]
     fields = user_data[key.MENU][key.FIELDS]
@@ -77,7 +74,6 @@ async def save_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Show the completed form data to the user."""
-
     user_data = context.user_data
     info = user_data[key.MENU]
     form = user_data[key.FORM]
@@ -113,7 +109,6 @@ async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def edit_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Display the edit menu to the user."""
-
     user_data = context.user_data
     fields = user_data[key.MENU][key.FIELDS]
 
@@ -134,6 +129,7 @@ async def edit_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def send_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Send form data to the specified curator email-address."""
     user_data = context.user_data
     form = user_data[key.FORM]
     message = form[key.SHOW_DATA].replace('\n', '<br>')

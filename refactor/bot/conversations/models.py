@@ -14,7 +14,6 @@ class BaseForm(BaseModel):
 
 class ShortForm(BaseForm):
     """Base model for short forms."""
-
     full_name: Optional[str]
     phone: Optional[str]
     email: Optional[EmailStr]
@@ -22,7 +21,6 @@ class ShortForm(BaseForm):
 
 class VolunteerForm(ShortForm):
     """Model for volunteer form."""
-
     birthday: Optional[str]
     city: Optional[str]
     volunteer_help: Optional[str]
@@ -30,13 +28,11 @@ class VolunteerForm(ShortForm):
 
 class AskQuestionForm(ShortForm):
     """Model for 'Ask a question' form."""
-
     question: Optional[str]
 
 
 class LongForm(BaseForm):
     """Base model for long forms."""
-
     parent_full_name: Optional[str]
     phone: Optional[str]
     child_full_name: Optional[str]
@@ -51,13 +47,11 @@ class LongForm(BaseForm):
 
 class ChatForm(LongForm):
     """Model for chat application form."""
-
     operation: Optional[str]
 
 
 class FundForm(LongForm):
     """Model for fund application form."""
-
     email: Optional[EmailStr]
     family_members: Optional[int]
     city: Optional[str]

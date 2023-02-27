@@ -21,7 +21,6 @@ async def send_message(
     link_preview: bool = False
 ):
     """Send a message with optional inline keyboard and link preview."""
-
     message_args = {
         'text': text,
         'reply_markup': keyboard,
@@ -47,7 +46,6 @@ def get_menu_buttons(menu: dict):
 
 def send_email_message(message: str) -> bool:
     """Send email message to the specified curator email-address."""
-
     msg = MIMEMultipart()
     msg['From'] = settings.smtp_server_bot_email
     msg['To'] = settings.email_curator
