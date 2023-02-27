@@ -65,5 +65,5 @@ REQUIRED_DOCUMENTS = """\n
 
 # MAIL CONSTANTS
 MAIL_SUBJECT = 'Сообщение от чат-бота Провидение'
-MAIL_SEND_OK_MESSAGE = 'Письмо успешно отправлено'
-MAIL_SEND_ERROR_MESSAGE = 'Ошибка: Невозможно отправить почтовое сообщение'
+MAIL_SEND_OK_MESSAGE = 'Запрос успешно отправлен'
+MAIL_SEND_ERROR_MESSAGE = 'Ошибка: Невозможно отправить запрос'
