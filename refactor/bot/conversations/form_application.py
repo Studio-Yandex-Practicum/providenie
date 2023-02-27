@@ -117,16 +117,18 @@ async def edit_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_data = context.user_data
     fields = user_data[key.MENU][key.FIELDS]
 
-    edit_button = []
+    edit_buttons = []
     for field in fields:
         question = ALL_QUESTIONS[field.upper()]
         callback = f'{key.ASK}_{field.upper()}'
-        edit_button.append(
+        edit_buttons.append(
             [Button(text=question[key.TITLE], callback_data=callback)]
         )
-    edit_button.append([button.SHOW_DATA])
+    edit_buttons.append([button.SHOW_DATA])
 
-    await send_message(update, text.SELECT_EDIT, keyboard=Keyboard(edit_button))
+    await send_message(
+        update, text.SELECT_EDIT, keyboard=Keyboard(edit_buttons)
+    )
 
     return state.FORM_INPUT
 

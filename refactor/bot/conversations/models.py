@@ -15,7 +15,7 @@ class BaseForm(BaseModel):
 class ShortForm(BaseForm):
     """Base model for short forms."""
 
-    full_name: Optional[int]
+    full_name: Optional[str]
     phone: Optional[str]
     email: Optional[EmailStr]
 

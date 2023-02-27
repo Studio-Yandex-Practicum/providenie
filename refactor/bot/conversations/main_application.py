@@ -22,7 +22,11 @@ async def main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Show the main menu to the user and set the bot's commands."""
 
     await context.bot.set_my_commands([button.START_CMD, button.STOP_CMD])
-    await send_message(update, text.MAIN_MENU, keyboard=Keyboard([*get_menu_buttons(ALL_MENU)]))
+    await send_message(
+        update,
+        text.MAIN_MENU,
+        keyboard=Keyboard([*get_menu_buttons(ALL_MENU)])
+    )
 
     return state.MAIN_MENU
 
