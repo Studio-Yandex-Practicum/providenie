@@ -9,11 +9,12 @@ from bot import states as state
 from bot.conversations import main_menu
 from bot.handlers.about_handler import about_fund_conv
 from bot.handlers.chat_handler import chat_conv
+from bot.handlers.donation_handler import donation_conv
+from bot.handlers.event_handler import event_conv
 from bot.handlers.join_handler import conv_handler_join_to_fund
 from bot.handlers.question_handler import ask_question_conv
 from bot.handlers.share_links_handler import tell_about_fund_conv
 from bot.handlers.volunteer_handler import add_volunteer_conv
-from bot.handlers.event_handler import event_conv
 
 
 selection_handlers = [
@@ -21,9 +22,7 @@ selection_handlers = [
     conv_handler_join_to_fund,
     add_volunteer_conv,
     about_fund_conv,
-    CallbackQueryHandler(
-        main_menu.give_donation, pattern="^" + key.DONATION + "$"
-    ),
+    donation_conv,
     event_conv,
     ask_question_conv,
     tell_about_fund_conv,
@@ -44,5 +43,8 @@ conv_handler = ConversationHandler(
             )
         ],
     },
-    fallbacks=[CommandHandler("stop", main_menu.stop)],
+    fallbacks=[
+        CommandHandler("stop", main_menu.stop),
+        CommandHandler("cancel", main_menu.start),
+    ],
 )

@@ -140,4 +140,5 @@ dmypy.json
 .vscode
 
 .data/*
+
 src/.data/
