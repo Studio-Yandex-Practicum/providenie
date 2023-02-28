@@ -9,11 +9,11 @@ from bot import states as state
 from bot.conversations import main_menu
 from bot.handlers.about_handler import about_fund_conv
 from bot.handlers.chat_handler import chat_conv
+from bot.handlers.event_handler import event_conv
 from bot.handlers.join_handler import conv_handler_join_to_fund
 from bot.handlers.question_handler import ask_question_conv
 from bot.handlers.share_links_handler import tell_about_fund_conv
 from bot.handlers.volunteer_handler import add_volunteer_conv
-from bot.handlers.event_handler import event_conv
 
 
 selection_handlers = [
@@ -34,7 +34,7 @@ selection_handlers = [
 conv_handler = ConversationHandler(
     name="conv_handler",
     allow_reentry=True,
-    entry_points=[CommandHandler("start", main_menu.start)],
+    entry_points=[CommandHandler("start", main_menu.first_start)],
     states={
         state.SELECTING_ACTION: selection_handlers,
         state.STOPPING: [CommandHandler("start", main_menu.start)],
@@ -44,5 +44,8 @@ conv_handler = ConversationHandler(
             )
         ],
     },
-    fallbacks=[CommandHandler("stop", main_menu.stop)],
+    fallbacks=[
+        CommandHandler("stop", main_menu.stop),
+        CommandHandler("menu", main_menu.start),
+    ],
 )

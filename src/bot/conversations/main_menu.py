@@ -7,53 +7,60 @@ from bot import states as state
 from bot.flags.flag import Flags
 
 
+BUTTONS_FOR_MENU = [
+    [
+        InlineKeyboardButton(
+            text=const.BTN_TO_PARENTS_CHAT,
+            callback_data=key.CHATS,
+        )
+    ],
+    [InlineKeyboardButton(text=const.BTN_TO_FUND, callback_data=key.REQUEST)],
+    [
+        InlineKeyboardButton(
+            text=const.BTN_TO_VOLUNTEER,
+            callback_data=key.ADD_VOLUNTEER,
+        ),
+    ],
+    [
+        InlineKeyboardButton(
+            text=const.BTN_TO_TELL_ABOUT_FUND,
+            callback_data=key.TELL_ABOUT_FUND,
+        )
+    ],
+    [
+        InlineKeyboardButton(
+            text=const.BTN_TO_DONATION, callback_data=key.DONATION
+        )
+    ],
+    [
+        InlineKeyboardButton(
+            text=const.BTN_TO_OUR_EVENTS, callback_data=key.EVENTS
+        ),
+        InlineKeyboardButton(
+            text=const.BTN_TO_ASK_A_QUESTION,
+            callback_data=key.ASK_QUESTION,
+        ),
+    ],
+    [
+        InlineKeyboardButton(
+            text=const.BTN_TO_ABOUT_FUND, callback_data=key.ABOUT_FUND
+        ),
+    ],
+]
+
+
+async def first_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Первый старт бота."""
+    keyboard = InlineKeyboardMarkup(BUTTONS_FOR_MENU)
+    await update.message.reply_markdown_v2(
+        text=const.MSG_FIRST_START, reply_markup=keyboard
+    )
+    return state.SELECTING_ACTION
+
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Кнопка старт. Вывод главного меню."""
-    buttons = [
-        [
-            InlineKeyboardButton(
-                text=const.BTN_TO_PARENTS_CHAT,
-                callback_data=key.CHATS,
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                text=const.BTN_TO_FUND, callback_data=key.REQUEST
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                text=const.BTN_TO_VOLUNTEER,
-                callback_data=key.ADD_VOLUNTEER,
-            ),
-        ],
-        [
-            InlineKeyboardButton(
-                text=const.BTN_TO_TELL_ABOUT_FUND,
-                callback_data=key.TELL_ABOUT_FUND,
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                text=const.BTN_TO_DONATION, callback_data=key.DONATION
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                text=const.BTN_TO_OUR_EVENTS, callback_data=key.EVENTS
-            ),
-            InlineKeyboardButton(
-                text=const.BTN_TO_ASK_A_QUESTION,
-                callback_data=key.ASK_QUESTION,
-            ),
-        ],
-        [
-            InlineKeyboardButton(
-                text=const.BTN_TO_ABOUT_FUND, callback_data=key.ABOUT_FUND
-            ),
-        ],
-    ]
-    keyboard = InlineKeyboardMarkup(buttons)
+    keyboard = InlineKeyboardMarkup(BUTTONS_FOR_MENU)
 
     if not context.user_data.get(key.FLAGS):
         context.user_data[key.FLAGS] = Flags()
@@ -67,7 +74,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(
             text=const.MSG_START, reply_markup=keyboard
         )
-
     context.user_data[key.START_OVER] = False
     return state.SELECTING_ACTION
 

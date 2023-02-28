@@ -114,6 +114,29 @@ MSG_ENTER_NEW_VALUE = "Введите новое значение:"
 MSG_NO_DATA = "Нет данных."
 
 """MENU"""
+MSG_FIRST_START = """
+    *Здравствуйте\! Добро пожаловать\!*
+
+    Я бот\-помощник благотворительного фонда «Провидение»\.
+    Мы помогаем детям\, родившимся раньше срока, лучше видеть\, слышать и разговаривать\, а также поддерживаем их родителей\.
+
+
+    Наша миссия – спасти зрение детей\, помочь им избежать инвалидности и улучшить качество жизни их семей\.
+
+
+    Для того\, чтобы оставаться в курсе последних новостей\, рекомендуем Вам подписаться на наши страницы в социальных сетях\:
+
+
+    [Сайт благотворительного фонда “Провидение”](https://fond-providenie.ru)
+    [Группа Вконтакте](https://vk.com/fond_providenie)
+    [Группа в Facebook ](https://www.facebook.com/fond.providenie/)
+    [Наша страница на Яндекс\.Дзен](https://zen.yandex.ru/fond_providenie)
+    [Новостной канал Telegram](https://t.me/providenie_fond)
+    [Наша страница в Instagram](https://www.instagram.com/fond_providenie/)
+    [Наша страница на Mail\.ru](https://dobro.mail.ru/funds/blagotvoritelnyij-fond-pomoschi-nedonoshennyim-detyam-i-ih-semyam-providenie-2/)
+    [Наш канал на Youtube](https://youtube.com/channel/UC_co5lBatw_pA2DceKCqZfg)
+"""
+
 MSG_START = (
     "Фонд помогает всем детям с нарушениями зрения"
     " независимо от места рождения и поддерживает семьи,"
