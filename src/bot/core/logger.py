@@ -31,7 +31,7 @@ DEFAULT_LOGGING = {
             'filename': LOG_PATH,
             'when': 'D',
             'interval': 1,
-            'backupCount': 5,
+            'backupCount': 60,
             'level': settings.log_level,
             'formatter': 'standard',
         }
