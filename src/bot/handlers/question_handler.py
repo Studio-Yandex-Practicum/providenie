@@ -54,7 +54,7 @@ edit_question_conv = ConversationHandler(
         ),
         CommandHandler("stop", main_menu.stop_nested),
         CommandHandler("cancel", main_menu.start),
-        CommandHandler("start", main_menu.start),
+        CommandHandler("menu", main_menu.start),
     ],
     map_to_parent={
         key.END: state.SHOWING_QUESTION,
@@ -104,7 +104,7 @@ ask_question_conv = ConversationHandler(
         ),
         CommandHandler("stop", main_menu.stop_nested),
         CommandHandler("cancel", main_menu.start),
-        CommandHandler("start", main_menu.start),
+        CommandHandler("menu", main_menu.start),
     ],
     map_to_parent={
         state.SELECTING_ACTION: state.SELECTING_ACTION,

@@ -1074,7 +1074,7 @@ async def stop_nested(
 
 
 async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    """Выход в главное меню по команде /cancel"""
+    """Выход в главное меню по команде /cancel или /menu"""
     clean_dictionary(context.user_data, save_values=[keys.FLAGS])
     await start(update, context)
     return states.END_MAIN_MENU

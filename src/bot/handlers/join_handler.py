@@ -171,6 +171,7 @@ dates_about_parent_and_child = ConversationHandler(
     fallbacks=[
         CommandHandler("stop", fund.stop_nested),
         CommandHandler("cancel", fund.cancel),
+        CommandHandler("menu", fund.cancel),
     ],
     # Возврат на первый уровень
     map_to_parent={
@@ -221,6 +222,7 @@ conv_handler_join_to_fund = ConversationHandler(
     fallbacks=[
         CommandHandler("stop", fund.stop_nested),
         CommandHandler("cancel", fund.cancel),
+        CommandHandler("menu", fund.cancel),
     ],
     map_to_parent={
         states.END_MAIN_MENU: states.SELECTING_ACTION,

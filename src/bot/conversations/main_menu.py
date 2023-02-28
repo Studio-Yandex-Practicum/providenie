@@ -14,7 +14,7 @@ from bot.flags.flag import Flags
 
 async def set_commands(context):
     commands = [
-        BotCommand(command="/start", description="Перейти в главное меню"),
+        BotCommand(command="/menu", description="Перейти в главное меню"),
         BotCommand(command="/cancel", description="Отменить текущее действие"),
         BotCommand(command="/stop", description="Завершение работы"),
     ]
