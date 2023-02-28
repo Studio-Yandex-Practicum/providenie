@@ -1,5 +1,5 @@
 import logging
-import smtplib
+from smtplib import SMTP_SSL, SMTPException
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from typing import Optional
@@ -51,29 +51,27 @@ def send_email_message(message: str) -> bool:
     msg['To'] = settings.email_curator
     msg['Subject'] = MAIL_SUBJECT
     msg.attach(MIMEText(message, 'html'))
-    mailserver = None
     try:
-        mailserver = smtplib.SMTP_SSL(
+        with SMTP_SSL(
             settings.smtp_server_address,
             settings.smtp_server_port
-        )
-        if settings.debug:
-            mailserver.set_debuglevel(True)
+        ) as mailserver:
+            if settings.debug:
+                mailserver.set_debuglevel(True)
 
-        mailserver.login(
-            settings.smtp_server_bot_email,
-            settings.smtp_server_bot_password
-        )
+            mailserver.login(
+                settings.smtp_server_bot_email,
+                settings.smtp_server_bot_password
+            )
 
-        mailserver.sendmail(
-            settings.smtp_server_bot_email,
-            settings.email_curator,
-            msg.as_string()
-        )
-        logging.info(MAIL_SEND_OK_MESSAGE)
-        return True
-    except smtplib.SMTPException:
+            mailserver.sendmail(
+                settings.smtp_server_bot_email,
+                settings.email_curator,
+                msg.as_string()
+            )
+    except SMTPException:
         logging.error(MAIL_SEND_ERROR_MESSAGE)
         return False
-    finally:
-        mailserver.quit()
+
+    logging.info(MAIL_SEND_OK_MESSAGE)
+    return True
