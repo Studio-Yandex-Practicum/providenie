@@ -109,6 +109,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.data/
 
 # Spyder project settings
 .spyderproject
@@ -137,5 +138,7 @@ dmypy.json
 
 # vscode
 .vscode
+
+.data/*
 
 src/.data/

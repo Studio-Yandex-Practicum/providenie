@@ -118,7 +118,7 @@ async def tell_friends_about_fund(update: Update, _) -> str:
         ],
         [
             InlineKeyboardButton(
-                text=const.BTN_BACK, callback_data=str(key.END)
+                text=const.BIN_MAIN_MENU, callback_data=str(key.END)
             )
         ],
     ]
@@ -180,7 +180,7 @@ async def give_donation(
         ],
         [
             InlineKeyboardButton(
-                text=const.BTN_MENU, callback_data=str(key.END)
+                text=const.BIN_MAIN_MENU, callback_data=str(key.END)
             )
         ],
     ]
@@ -196,7 +196,7 @@ async def get_events(update: Update, _) -> str:
     buttons = [
         [
             InlineKeyboardButton(
-                text=const.BTN_BACK, callback_data=str(key.END)
+                text=const.BIN_MAIN_MENU, callback_data=str(key.END)
             )
         ],
     ]
@@ -227,7 +227,7 @@ async def about(update: Update, _) -> str:
         ],
         [
             InlineKeyboardButton(
-                text=const.BTN_BACK, callback_data=str(key.ABOUT_FUND)
+                text=const.BIN_MAIN_MENU, callback_data=str(key.ABOUT_FUND)
             )
         ],
     ]
