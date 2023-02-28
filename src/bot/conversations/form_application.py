@@ -80,22 +80,22 @@ async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     message = text.SHOW_DATA_TEMPLATE.format(
         title=text.FORM,
-        value=info[key.BUTTON_TEXT]
+        value=info[key.BUTTON_TEXT],
     )
     if menu_option := user_data.get(key.OPTION):
         message += text.SHOW_DATA_TEMPLATE.format(
             title=text.CHOICE,
-            value=menu_option[key.BUTTON_TEXT]
+            value=menu_option[key.BUTTON_TEXT],
         )
     message += text.SHOW_DATA_TEMPLATE.format(
         title=text.APPLICATION_DATE,
-        value=date.today().strftime(text.DATE_TEMPLATE)
+        value=date.today().strftime(text.DATE_TEMPLATE),
     )
     for name, value in form[key.DATA]:
         question = ALL_QUESTIONS[name.upper()]
         message += text.SHOW_DATA_TEMPLATE.format(
             title=question[key.TITLE],
-            value=value
+            value=value,
         )
     form[key.SHOW_DATA] = message
 
@@ -142,7 +142,7 @@ async def send_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await send_message(
         update,
         text_message,
-        keyboard=Keyboard([[button.MAIN_MENU]])
+        keyboard=Keyboard([[button.MAIN_MENU]]),
     )
 
     return state.MAIN_MENU

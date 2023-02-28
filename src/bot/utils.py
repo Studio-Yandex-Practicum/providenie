@@ -54,20 +54,20 @@ def send_email_message(message: str) -> bool:
     try:
         with SMTP_SSL(
             settings.smtp_server_address,
-            settings.smtp_server_port
+            settings.smtp_server_port,
         ) as mailserver:
             if settings.debug:
                 mailserver.set_debuglevel(True)
 
             mailserver.login(
                 settings.smtp_server_bot_email,
-                settings.smtp_server_bot_password
+                settings.smtp_server_bot_password,
             )
 
             mailserver.sendmail(
                 settings.smtp_server_bot_email,
                 settings.email_curator,
-                msg.as_string()
+                msg.as_string(),
             )
     except SMTPException:
         logging.error(MAIL_SEND_ERROR_MESSAGE)
