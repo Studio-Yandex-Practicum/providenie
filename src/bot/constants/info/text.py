@@ -63,6 +63,8 @@ REQUIRED_DOCUMENTS = """\n
 
 
 # MAIL CONSTANTS
-MAIL_SUBJECT = 'Сообщение от чат-бота Провидение'
 MAIL_SEND_OK_MESSAGE = 'Запрос успешно отправлен'
 MAIL_SEND_ERROR_MESSAGE = 'Ошибка: Невозможно отправить запрос'
+
+# REGEXP
+REGEX_PHONE = r"^(?:\+)?[0-9]\d{10,14}$"
