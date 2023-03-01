@@ -131,8 +131,10 @@ dmypy.json
 # .idea
 .idea
 
-# DataBase
+# Logs
+.data
 
+# DataBase
 *.db
 
 # vscode
