@@ -64,14 +64,10 @@ def send_email_message(message: str) -> bool:
                 settings.smtp_server_bot_password,
             )
 
-            mailserver.sendmail(
-                settings.smtp_server_bot_email,
-                settings.email_curator,
-                msg.as_string(),
-            )
+            mailserver.send_message(msg)
+
+        logging.info(MAIL_SEND_OK_MESSAGE)
+        return True
     except SMTPException:
         logging.error(MAIL_SEND_ERROR_MESSAGE)
         return False
-
-    logging.info(MAIL_SEND_OK_MESSAGE)
-    return True
