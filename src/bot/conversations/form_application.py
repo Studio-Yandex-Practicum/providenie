@@ -132,10 +132,11 @@ async def send_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Send form data to the specified curator email-address."""
     user_data = context.user_data
     form = user_data[key.FORM]
+    info = user_data[key.MENU]
     message = form[key.SHOW_DATA].replace('\n', '<br>')
 
     if send_email_message(message):
-        text_message = text.MAIL_SEND_OK_MESSAGE
+        text_message = info.get(key.RESPONSE, text.MAIL_SEND_OK_MESSAGE)
     else:
         text_message = text.MAIL_SEND_ERROR_MESSAGE
 
