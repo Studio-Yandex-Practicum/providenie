@@ -80,7 +80,7 @@ async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     message = text.SHOW_DATA_TEMPLATE.format(
         title=text.FORM,
-        value=info[key.BUTTON_TEXT],
+        value=info.get(key.NAME),
     )
     if menu_option := user_data.get(key.OPTION):
         message += text.SHOW_DATA_TEMPLATE.format(
@@ -134,8 +134,9 @@ async def send_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     form = user_data[key.FORM]
     info = user_data[key.MENU]
     message = form[key.SHOW_DATA].replace('\n', '<br>')
+    subject = info.get(key.NAME)
 
-    if send_email_message(message):
+    if send_email_message(message, subject):
         text_message = info.get(key.RESPONSE, text.MAIL_SEND_OK_MESSAGE)
     else:
         text_message = text.MAIL_SEND_ERROR_MESSAGE

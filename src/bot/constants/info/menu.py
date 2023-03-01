@@ -6,6 +6,7 @@ from bot.conversations.models import (AskQuestionForm, ChatForm, FundForm,
 
 ALL_MENU = {
     f'{key.MENU}_CHAT': {
+        key.NAME: 'Вступление в чат',
         key.BUTTON_TEXT: 'Хочу попасть в родительский чат',
         key.DESCRIPTION: 'Выберите чат для вступления:',
         key.MODEL: ChatForm,
@@ -19,6 +20,7 @@ ALL_MENU = {
         ),
     },
     f'{key.MENU}_FOND': {
+        key.NAME: 'Заявка на помощь',
         key.BUTTON_TEXT: 'Заявка в фонд',
         key.DESCRIPTION: 'Выберите программу фонда:',
         key.MODEL: FundForm,
@@ -33,6 +35,7 @@ ALL_MENU = {
         ),
     },
     f'{key.MENU}_VOLONTEER': {
+        key.NAME: 'Заявка на волонтёрство',
         key.BUTTON_TEXT: 'Хочу стать волонтёром',
         key.DESCRIPTION:
             'Далее необходимо предоставить информацию для куратора',
@@ -45,6 +48,7 @@ ALL_MENU = {
         ),
     },
     f'{key.MENU}_ASK_QUESTION': {
+        key.NAME: 'Вопрос пользователя',
         key.BUTTON_TEXT: 'Задать вопрос',
         key.DESCRIPTION: 'Далее необходимо заполнить поля для вопроса',
         key.MODEL: AskQuestionForm,
