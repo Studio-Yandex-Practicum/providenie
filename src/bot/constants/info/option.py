@@ -5,7 +5,7 @@ from bot.constants.info.text import REQUIRED_DOCUMENTS
 DONATION = {
     f'{key.OPTION}_REPORT': {
         key.BUTTON_TEXT: 'Годовые отчёты',
-        key.DESCRIPTION: 'описание',  # TODO Добавить описание
+        key.DESCRIPTION: 'Здесь вы найдете отчетность фонда',
         key.LINK: 'https://fond-providenie.ru/docs/',
     },
     f'{key.OPTION}_LINK': {
