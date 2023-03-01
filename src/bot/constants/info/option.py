@@ -10,7 +10,7 @@ DONATION = {
     },
     f'{key.OPTION}_LINK': {
         key.BUTTON_TEXT: 'Сделать пожертвование',
-        key.DESCRIPTION: 'описание',  # TODO Добавить описание
+        key.DESCRIPTION: 'По ссылке вы можете сделать пожертвование. Убедительно просим Вас подключить регулярный платеж в фонд. Это очень важно. Спасибо!', 
         key.LINK: (
             'https://fond-providenie.ru/help-chidren/sdelat-pozhertovanie'
             '/sdelat-pozhertvovanie-s-bankovskoj-karty/'
