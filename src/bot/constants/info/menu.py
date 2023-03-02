@@ -10,7 +10,6 @@ ALL_MENU = {
         key.BUTTON_TEXT: 'Хочу попасть в родительский чат',
         key.DESCRIPTION: 'Выберите чат для вступления:',
         key.MODEL: ChatForm,
-        key.FIELDS: list(ChatForm.__fields__),
         key.OPTIONS: option.CHAT,
         key.RESPONSE: (
             'Спасибо за ваши ответы!'
@@ -24,7 +23,6 @@ ALL_MENU = {
         key.BUTTON_TEXT: 'Заявка в фонд',
         key.DESCRIPTION: 'Выберите программу фонда:',
         key.MODEL: FundForm,
-        key.FIELDS: list(FundForm.__fields__),
         key.OPTIONS: option.FUND,
         key.RESPONSE: (
             'Спасибо за ваши ответы!'
@@ -40,7 +38,6 @@ ALL_MENU = {
         key.DESCRIPTION:
             'Далее необходимо предоставить информацию для куратора',
         key.MODEL: VolunteerForm,
-        key.FIELDS: list(VolunteerForm.__fields__),
         key.RESPONSE: (
             'Спасибо за ваши ответы!'
             '\nВаша заявка отправлена.'
@@ -52,7 +49,6 @@ ALL_MENU = {
         key.BUTTON_TEXT: 'Задать вопрос',
         key.DESCRIPTION: 'Далее необходимо заполнить поля для вопроса',
         key.MODEL: AskQuestionForm,
-        key.FIELDS: list(AskQuestionForm.__fields__),
         key.RESPONSE: (
             'Ваш вопрос успешно отправлен!'
             '\nНаш куратор свяжется с Вами в течение 3 рабочих дней.'

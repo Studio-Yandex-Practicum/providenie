@@ -15,15 +15,21 @@ from bot.utils import send_email_message, send_message
 
 async def start_form(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Initializes the user's form data and asks for input."""
+    user_data = context.user_data
     await context.bot.set_my_commands(
         [button.MENU_CMD, button.CANCEL_CMD],
         scope=BotCommandScopeChat(update.effective_chat.id),
     )
-    user_data = context.user_data
+    option = user_data.get(key.OPTION, {})
+    model = option.get(key.CUSTOM_MODEL)
+    if not model:
+        model = user_data[key.MENU][key.MODEL]
+
     user_data[key.FORM] = {
-        key.DATA: user_data[key.MENU][key.MODEL](),
+        key.DATA: model(),
         key.FIELD_INDEX: 0,
         key.FIELD_EDIT: False,
+        key.FIELDS: list(model.__fields__),
     }
 
     return await ask_input(update, context)
@@ -34,7 +40,7 @@ async def ask_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     callback = update.callback_query
     user_data = context.user_data
     form = user_data[key.FORM]
-    fields = user_data[key.MENU][key.FIELDS]
+    fields = user_data[key.FORM][key.FIELDS]
 
     if callback and callback.data.startswith(key.ASK):
         form[key.FIELD_EDIT] = callback.data.replace(f'{key.ASK}_', '').lower()
@@ -53,7 +59,7 @@ async def save_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Save the user's input for the current form field."""
     user_data = context.user_data
     form = user_data[key.FORM]
-    fields = user_data[key.MENU][key.FIELDS]
+    fields = user_data[key.FORM][key.FIELDS]
     input = update.message.text.strip()
 
     field = form.get(key.FIELD_EDIT)
@@ -114,7 +120,7 @@ async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def edit_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Display the edit menu to the user."""
     user_data = context.user_data
-    fields = user_data[key.MENU][key.FIELDS]
+    fields = user_data[key.FORM][key.FIELDS]
 
     edit_buttons = []
     for field in fields:

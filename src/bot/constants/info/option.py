@@ -1,5 +1,6 @@
 from bot.constants import key
 from bot.constants.info.text import REQUIRED_DOCUMENTS
+from bot.conversations.models import ShortForm
 
 
 DONATION = {
@@ -10,7 +11,7 @@ DONATION = {
     },
     f'{key.OPTION}_LINK': {
         key.BUTTON_TEXT: 'Сделать пожертвование',
-        key.DESCRIPTION: 'По ссылке вы можете сделать пожертвование. Убедительно просим Вас подключить регулярный платеж в фонд. Это очень важно. Спасибо!', 
+        key.DESCRIPTION: 'По ссылке вы можете сделать пожертвование. Убедительно просим Вас подключить регулярный платеж в фонд. Это очень важно. Спасибо!',
         key.LINK: (
             'https://fond-providenie.ru/help-chidren/sdelat-pozhertovanie'
             '/sdelat-pozhertvovanie-s-bankovskoj-karty/'
@@ -204,6 +205,7 @@ CHAT = {
             'Для вступления в чат Вам необходимо '
             'предоставить свое имя и телефон.'
         ),
+        key.CUSTOM_MODEL: ShortForm,
     },
     f'{key.OPTION}_RETINOPATIA_4_5': {
         key.BUTTON_TEXT: 'Ретинопатия недоношеных 4-5 стадии',
