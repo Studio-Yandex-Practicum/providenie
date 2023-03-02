@@ -1,7 +1,7 @@
 import logging
-from smtplib import SMTP_SSL, SMTPException
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from smtplib import SMTP_SSL, SMTPException
 from typing import Optional
 
 from telegram import InlineKeyboardButton as Button
@@ -9,8 +9,7 @@ from telegram import InlineKeyboardMarkup, Update
 
 from bot.constants import key
 from bot.constants.info.text import (MAIL_SEND_ERROR_MESSAGE,
-                                     MAIL_SEND_OK_MESSAGE,
-                                     MESSAGE_MARKDOWN)
+                                     MAIL_SEND_OK_MESSAGE, MESSAGE_MARKDOWN)
 from bot.core.settings import settings
 
 
