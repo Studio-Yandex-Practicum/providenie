@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     debug: bool = False
 
     smtp_server_port: int = 465
-    smtp_server_address: str = 'localhost'
+    smtp_server_address: str = 'smtp.yandex.ru'
     smtp_server_bot_email: str = ''
     smtp_server_bot_password: str = ''
 

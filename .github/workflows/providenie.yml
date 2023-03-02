@@ -31,6 +31,8 @@ jobs:
             rm -f .env
             touch .env
             echo TELEGRAM_TOKEN="${{ secrets.TELEGRAM_TOKEN }}" >> .env
+            echo SMTP_SERVER_PORT="${{ secrets.SMTP_SERVER_PORT }}" >> .env
+            echo SMTP_SERVER_ADDRESS="${{ secrets.SMTP_SERVER_ADDRESS }}" >> .env
             echo SMTP_SERVER_BOT_EMAIL=${{ secrets.EMAIL_BOT }} >> .env
             echo SMTP_SERVER_BOT_PASSWORD=${{ secrets.EMAIL_BOT_PASSWORD }} >> .env
             echo EMAIL_CURATOR=${{ secrets.EMAIL_CURATOR }} >> .env
