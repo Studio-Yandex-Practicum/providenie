@@ -60,13 +60,17 @@ class LongForm(BaseForm):
     parent_full_name: Optional[str]
     phone: str = Field(None, regex=REGEX_PHONE, strip_whitespace=True)
     child_full_name: Optional[str]
-    child_birthday: Optional[str]
+    child_birthday: Optional[date]
     child_birth_place: Optional[str]
     child_birth_date: int = Field(None, ge=22, le=37.)
     child_birth_weight: int = Field(None, ge=400, le=4000)
     child_birth_height: int = Field(None, ge=30, le=56)
     child_diagnosis: Optional[str]
     where_got_info: Optional[str]
+
+    @validator('child_birthday', pre=True)
+    def parse_child_birthday(cls, value):
+        return datetime.strptime(value, '%d.%m.%Y').date()
 
 
 class ChatForm(LongForm):
