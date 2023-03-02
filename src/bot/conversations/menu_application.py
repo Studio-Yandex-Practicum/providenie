@@ -21,7 +21,7 @@ async def show_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if not query or query.data == callback.MENU_BACK:
         menu = user_data[key.MENU]
-        user_data[key.OPTION] = False
+        user_data.pop(key.OPTION, None)
     else:
         menu = ALL_MENU[query.data]
         user_data[key.MENU] = menu

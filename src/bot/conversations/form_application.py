@@ -27,9 +27,9 @@ async def start_form(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     user_data[key.FORM] = {
         key.DATA: model(),
+        key.FIELDS: list(model.__fields__),
         key.FIELD_INDEX: 0,
         key.FIELD_EDIT: False,
-        key.FIELDS: list(model.__fields__),
     }
 
     return await ask_input(update, context)
