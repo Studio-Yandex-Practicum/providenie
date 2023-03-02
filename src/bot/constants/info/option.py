@@ -1,5 +1,4 @@
 from bot.constants import key
-from bot.constants.info.text import REQUIRED_DOCUMENTS
 from bot.conversations.models import ShortForm
 
 
@@ -253,7 +252,6 @@ FUND = {
             'нацелен на спасение зрения ребёнка '
             'и представляет собой своевременную информационную '
             'и психологическую поддержку всей семьи.'
-            f'{REQUIRED_DOCUMENTS}'
         ),
     },
     f'{key.OPTION}_REHABILITATION': {
@@ -267,7 +265,6 @@ FUND = {
             'со специально подобранным комплексом процедур '
             'по современным методикам поможет '
             'значительно улучшить состояние ребёнка.'
-            f'{REQUIRED_DOCUMENTS}'
         ),
     },
     f'{key.OPTION}_PSYHELP': {
@@ -278,17 +275,15 @@ FUND = {
             'во многом зависят от грамотности и эмоциональной устойчивости '
             'родителей, граммотные психологи '
             'могут оказать в этом неоценимую поддержку.'
-            f'{REQUIRED_DOCUMENTS}'
         ),
     },
     f'{key.OPTION}_LESSONS': {
         key.NAME: 'Помощь незрячим и слабовидящим детям',
-        key.BUTTON_TEXT: 'Добрые уроки',
+        key.BUTTON_TEXT: 'Помощь детям',
         key.DESCRIPTION: (
             'Помощь недоношенным детям с проблемами со зрением: '
             'трости для слепых детей, очки, линзы, '
             'лекарства для малоимущих семей из РФ и СНГ.'
-            f'{REQUIRED_DOCUMENTS}'
         ),
     },
 }
