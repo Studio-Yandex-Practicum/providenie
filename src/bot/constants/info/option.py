@@ -1,5 +1,4 @@
 from bot.constants import key
-from bot.constants.info.text import REQUIRED_DOCUMENTS
 from bot.conversations.models import ShortForm
 
 
