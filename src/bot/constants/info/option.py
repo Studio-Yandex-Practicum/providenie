@@ -1,5 +1,5 @@
 from bot.constants import key
-from bot.conversations.models import ShortForm
+from bot.conversations.models import ChatAngelsForm
 
 
 DONATION = {
@@ -204,7 +204,7 @@ CHAT = {
             'Для вступления в чат Вам необходимо '
             'предоставить свое имя и телефон.'
         ),
-        key.CUSTOM_MODEL: ShortForm,
+        key.CUSTOM_MODEL: ChatAngelsForm,
     },
     f'{key.OPTION}_RETINOPATIA_4_5': {
         key.BUTTON_TEXT: 'Ретинопатия недоношеных 4-5 стадии',
