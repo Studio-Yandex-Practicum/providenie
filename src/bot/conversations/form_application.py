@@ -1,6 +1,7 @@
 from datetime import date
 
 from pydantic.error_wrappers import ValidationError
+from telegram import BotCommandScopeChat
 from telegram import InlineKeyboardButton as Button
 from telegram import InlineKeyboardMarkup as Keyboard
 from telegram import Update
@@ -14,7 +15,10 @@ from bot.utils import send_email_message, send_message
 
 async def start_form(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Initializes the user's form data and asks for input."""
-    await context.bot.set_my_commands([button.MENU_CMD, button.CANCEL_CMD])
+    await context.bot.set_my_commands(
+        [button.MENU_CMD, button.CANCEL_CMD],
+        scope=BotCommandScopeChat(update.effective_chat.id),
+    )
     user_data = context.user_data
     user_data[key.FORM] = {
         key.DATA: user_data[key.MENU][key.MODEL](),

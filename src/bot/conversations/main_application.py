@@ -1,3 +1,4 @@
+from telegram import BotCommandScopeChat
 from telegram import InlineKeyboardMarkup as Keyboard
 from telegram import Update
 from telegram.ext import ContextTypes, ConversationHandler
@@ -18,7 +19,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Show the main menu to the user and set the bot's commands."""
-    await context.bot.set_my_commands([button.START_CMD, button.STOP_CMD])
+    await context.bot.set_my_commands(
+        [button.START_CMD, button.STOP_CMD],
+        scope=BotCommandScopeChat(update.effective_chat.id),
+    )
     await send_message(
         update,
         text.MAIN_MENU,

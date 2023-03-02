@@ -1,3 +1,4 @@
+from telegram import BotCommandScopeChat
 from telegram import InlineKeyboardButton as Button
 from telegram import InlineKeyboardMarkup as Keyboard
 from telegram import Update
@@ -11,7 +12,10 @@ from bot.utils import get_menu_buttons, send_message
 
 async def show_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Show the selected menu or sub-menu to the user."""
-    await context.bot.set_my_commands([button.MENU_CMD])
+    await context.bot.set_my_commands(
+        [button.MENU_CMD],
+        scope=BotCommandScopeChat(update.effective_chat.id),
+    )
     query = update.callback_query
     user_data = context.user_data
 
