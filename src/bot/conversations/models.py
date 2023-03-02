@@ -72,6 +72,12 @@ class LongForm(BaseForm):
     def parse_child_birthday(cls, value):
         return datetime.strptime(value, '%d.%m.%Y').date()
 
+    @validator('child_birthday')
+    def validate_birthday(cls, value):
+        if not date.today() > value > date.today() - timedelta(days=365 * 18):
+            raise ValueError('Дата?')
+        return value
+
 
 class ChatForm(LongForm):
     """Model for chat application form."""
