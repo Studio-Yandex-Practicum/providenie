@@ -1,104 +1,101 @@
-from datetime import date
+from datetime import date, datetime, timedelta
 from typing import Optional
 
 from email_validator import validate_email
-from pydantic import BaseModel, EmailStr, condate, conint, constr, validator
+from pydantic import BaseModel, EmailStr, Field, validator
 
-from bot.constants import REGEX_PHONE
+from bot.constants.info.text import REGEX_PHONE
 
 
-class AskQuestionForm(BaseModel):
-    """Модель для анкеты 'Задать вопрос'."""
-
-    name: str
-    email: EmailStr
-    phone_number: constr(
-        strip_whitespace=True,
-        regex=REGEX_PHONE,
-    )
-    question: str
+class BaseForm(BaseModel):
+    """Base model for forms."""
 
     class Config:
         min_anystr_length = 1
         max_anystr_length = 4096
-
-    @validator("email")
-    def email_validator(cls, email):
-        return validate_email(
-            email,
-            check_deliverability=False,
-        ).email
+        validate_assignment = True
 
 
-class FormBase(BaseModel):
-    """Базовая модель для анкет."""
-
-    name: str
-    birthday: condate(
-        gt=date.today().year - 18,
-        lt=date.today(),
-    )
-    city: Optional[str]
+class ShortForm(BaseForm):
+    """Base model for short forms."""
+    full_name: Optional[str]
+    phone: str = Field(None, regex=REGEX_PHONE, strip_whitespace=True)
     email: Optional[EmailStr]
-    phone_number: constr(
-        strip_whitespace=True,
-        regex=REGEX_PHONE,
-    )
 
-    class Config:
-        min_anystr_length = 1
-        max_anystr_length = 4096
-
-    @validator("email")
-    def email_validator(cls, email):
+    @validator('email')
+    def validator_email(email):
         return validate_email(
             email,
             check_deliverability=False,
         ).email
 
 
-class VolunteerForm(FormBase):
-    """Модель для анкеты на волонтерство."""
+class VolunteerForm(ShortForm):
+    """Model for volunteer form."""
+    birthday: Optional[date]
+    city: Optional[str]
+    volunteer_help: Optional[str]
 
-    city: str
-    message: str
+    @validator('birthday', pre=True)
+    def parse_birthday(cls, value):
+        return datetime.strptime(value, '%d.%m.%Y').date()
 
-    class Config:
-        min_anystr_length = 1
-        max_anystr_length = 4096
-
-
-class ChatForm(FormBase):
-    """Модель для анкеты на вступление в чат."""
-
-    child_name: str
-    current_chat: str
-    how_find_fund: str
-    place_of_birth: str
-    child_diagnosis: str
-    date_aplication: date
-    surgery_on_child: str
-    child_weight: conint(ge=400, le=4000)  # Вес ребёнка при рождении в ГР
-    child_height: conint(ge=30, le=56)  # Рост ребёнка при рождении в СМ
-    child_term_of_birth: conint(
-        ge=22, le=37
-    )  # Срок рождения ребёнка в Неделях
-
-    class Config:
-        min_anystr_length = 1
-        max_anystr_length = 4096
+    @validator('birthday')
+    def validate_birthday(cls, value):
+        if (
+                value > date.today()
+                - timedelta(days=365 * 18) or value > date.today()
+        ):
+            raise ValueError('Дата?')
+        return value
 
 
-class FundForm(ChatForm):
-    """Модель для анкеты на отправку заявки в фонд."""
+class AskQuestionForm(ShortForm):
+    """Model for 'Ask a question' form."""
+    question: Optional[str]
 
-    city: str
-    address: str
-    programm: str
-    another_fund_help: str
-    another_fund_member: str
-    family_members: conint(ge=2)
 
-    class Config:
-        min_anystr_length = 1
-        max_anystr_length = 4096
+class LongForm(BaseForm):
+    """Base model for long forms."""
+    parent_full_name: Optional[str]
+    phone: str = Field(None, regex=REGEX_PHONE, strip_whitespace=True)
+    child_full_name: Optional[str]
+    child_birthday: Optional[date]
+    child_birth_place: Optional[str]
+    child_birth_date: int = Field(None, ge=22, le=37.)
+    child_birth_weight: int = Field(None, ge=400, le=4000)
+    child_birth_height: int = Field(None, ge=30, le=56)
+    child_diagnosis: Optional[str]
+    where_got_info: Optional[str]
+
+    @validator('child_birthday', pre=True)
+    def parse_child_birthday(cls, value):
+        return datetime.strptime(value, '%d.%m.%Y').date()
+
+    @validator('child_birthday')
+    def validate_birthday(cls, value):
+        if not date.today() > value > date.today() - timedelta(days=365 * 18):
+            raise ValueError('Дата?')
+        return value
+
+
+class ChatForm(LongForm):
+    """Model for chat application form."""
+    operation: Optional[str]
+
+
+class FundForm(LongForm):
+    """Model for fund application form."""
+    email: Optional[EmailStr]
+    family_members: int = Field(None, ge=2)
+    city: Optional[str]
+    address: Optional[str]
+    another_fund_member: Optional[str]
+    another_fund_help: Optional[str]
+
+    @ validator('email')
+    def validator_email(email):
+        return validate_email(
+            email,
+            check_deliverability=False,
+        ).email

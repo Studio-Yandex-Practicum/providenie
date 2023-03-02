@@ -1,9 +1,9 @@
-import core.logger  # noqa
-from bot.services import start_bot
+from bot.core import logger  # noqa
+from bot.services import init_bot
 
 
 def main() -> None:
-    application = start_bot()
+    application = init_bot()
     application.run_polling()
 
 
