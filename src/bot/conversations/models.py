@@ -63,14 +63,24 @@ class LongForm(BaseForm):
 
     parent_full_name: str = Field(None, regex=REGEX_NAME, max_length=100)
     phone: str = Field(None, regex=REGEX_PHONE, strip_whitespace=True)
+    email: Optional[EmailStr]
+    family_members: int = Field(None, ge=2)
+    city: Optional[str]
     child_full_name: str = Field(None, regex=REGEX_NAME, max_length=100)
     child_birthday: Optional[date]
     child_birth_place: Optional[str] = Field(None, max_length=100)
-    child_birth_date: int = Field(None, ge=22, le=37.0)
+    child_birth_date: int = Field(None, ge=22, le=37)
     child_birth_weight: int = Field(None, ge=400, le=4000)
     child_birth_height: int = Field(None, ge=30, le=56)
     child_diagnosis: Optional[str]
     where_got_info: Optional[str]
+
+    @validator("email")
+    def validator_email(email):
+        return validate_email(
+            email,
+            check_deliverability=False,
+        ).email
 
     @validator("child_birthday", pre=True)
     def parse_child_birthday(cls, value):
@@ -86,22 +96,25 @@ class LongForm(BaseForm):
 class ChatForm(LongForm):
     """Model for chat application form."""
 
-    operation: Optional[str]
+    additional_chats: Optional[str]
+
+
+class ChatAngelsForm(ShortForm):
+    """Model for angels chat application form."""
+
+    family_members: Optional[int]
+    city: Optional[str]
+    where_got_info: Optional[str]
+    additional_chats: Optional[str]
 
 
 class FundForm(LongForm):
     """Model for fund application form."""
 
-    email: Optional[EmailStr]
-    family_members: int = Field(None, ge=2)
-    city: Optional[str] = Field(None, max_length=100)
     address: Optional[str]
+    required_therapy: Optional[str]
+    request_goal: Optional[str]
+    social_networks: Optional[str]
+    parents_work_place: Optional[str]
     another_fund_member: Optional[str]
     another_fund_help: Optional[str]
-
-    @validator("email")
-    def validator_email(email):
-        return validate_email(
-            email,
-            check_deliverability=False,
-        ).email
