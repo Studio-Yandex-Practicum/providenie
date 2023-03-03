@@ -1,5 +1,5 @@
 from bot.constants import key
-from bot.conversations.models import ShortForm
+from bot.conversations.models import ChatAngelsForm
 
 
 DONATION = {
@@ -10,7 +10,11 @@ DONATION = {
     },
     f'{key.OPTION}_LINK': {
         key.BUTTON_TEXT: 'Сделать пожертвование',
-        key.DESCRIPTION: 'По ссылке вы можете сделать пожертвование. Убедительно просим Вас подключить регулярный платеж в фонд. Это очень важно. Спасибо!',
+        key.DESCRIPTION: (
+            'По ссылке вы можете сделать пожертвование. '
+            'Убедительно просим Вас подключить регулярный платеж в фонд. '
+            'Это очень важно. Спасибо!'
+        ),
         key.LINK: (
             'https://fond-providenie.ru/help-chidren/sdelat-pozhertovanie'
             '/sdelat-pozhertvovanie-s-bankovskoj-karty/'
@@ -120,12 +124,12 @@ SHARE = {
     f'{key.OPTION}_DZEN': {
         key.BUTTON_TEXT: 'Yandex Dzen',
         key.DESCRIPTION: 'Наша страница на Яндекс.Дзен',
-        key.LINK: 'https://t.me/providenie_fond',
+        key.LINK: 'https://zen.yandex.ru/fond_providenie',
     },
     f'{key.OPTION}_MAIL': {
         key.BUTTON_TEXT: 'Mail.ru',
         key.DESCRIPTION: 'Наша страница на Mail.ru',
-        key.LINK: 'https://t.me/providenie_fond',
+        key.LINK: 'https://dobro.mail.ru/funds/blagotvoritelnyij-fond-pomoschi-nedonoshennyim-detyam-i-ih-semyam-providenie-2/',
     },
     f'{key.OPTION}_YOUTUBE': {
         key.BUTTON_TEXT: 'Youtube ',
@@ -204,7 +208,7 @@ CHAT = {
             'Для вступления в чат Вам необходимо '
             'предоставить свое имя и телефон.'
         ),
-        key.CUSTOM_MODEL: ShortForm,
+        key.CUSTOM_MODEL: ChatAngelsForm,
     },
     f'{key.OPTION}_RETINOPATIA_4_5': {
         key.BUTTON_TEXT: 'Ретинопатия недоношеных 4-5 стадии',
