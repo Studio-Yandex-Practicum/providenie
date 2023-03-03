@@ -65,7 +65,7 @@ class LongForm(BaseForm):
     phone: str = Field(None, regex=REGEX_PHONE, strip_whitespace=True)
     email: Optional[EmailStr]
     family_members: int = Field(None, ge=2)
-    city: Optional[str]
+    city: Optional[str] = Field(None, max_length=100)
     child_full_name: str = Field(None, regex=REGEX_NAME, max_length=100)
     child_birthday: Optional[date]
     child_birth_place: Optional[str] = Field(None, max_length=100)
@@ -103,7 +103,7 @@ class ChatAngelsForm(ShortForm):
     """Model for angels chat application form."""
 
     family_members: Optional[int]
-    city: Optional[str]
+    city: Optional[str] = Field(None, max_length=100)
     where_got_info: Optional[str]
     additional_chats: Optional[str]
 
