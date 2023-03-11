@@ -28,6 +28,7 @@ class ShortForm(BaseForm):
         return validate_or_fail(
             email_address=email,
             check_blacklist=False,
+            check_smtp=False,
         ).email
 
 
@@ -80,6 +81,7 @@ class LongForm(BaseForm):
         return validate_or_fail(
             email_address=email,
             check_blacklist=False,
+            check_smtp=False,
         ).email
 
     @validator("child_birthday", pre=True)
