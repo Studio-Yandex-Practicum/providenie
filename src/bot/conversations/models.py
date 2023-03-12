@@ -1,7 +1,7 @@
 from datetime import date, datetime, timedelta
 from typing import Optional
 
-from email_validator import validate_email
+from email_validate import validate_or_fail
 from pydantic import BaseModel, EmailStr, Field, validator
 
 from bot.constants.info.text import REGEX_NAME, REGEX_PHONE
@@ -25,9 +25,10 @@ class ShortForm(BaseForm):
 
     @validator("email")
     def validator_email(email):
-        return validate_email(
-            email,
-            check_deliverability=False,
+        return validate_or_fail(
+            email_address=email,
+            check_blacklist=False,
+            check_smtp=False,
         ).email
 
 
@@ -77,9 +78,10 @@ class LongForm(BaseForm):
 
     @validator("email")
     def validator_email(email):
-        return validate_email(
-            email,
-            check_deliverability=False,
+        return validate_or_fail(
+            email_address=email,
+            check_blacklist=False,
+            check_smtp=False,
         ).email
 
     @validator("child_birthday", pre=True)
