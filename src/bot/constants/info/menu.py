@@ -73,7 +73,7 @@ ALL_MENU = {
     },
     f'{key.MENU}_ABOUT': {
         key.BUTTON_TEXT: 'О Фонде',
-        key.DESCRIPTION: 'Информация о фонде',
+        key.DESCRIPTION: 'Информация о Фонде',
         key.OPTIONS: option.ABOUT,
     },
 }
