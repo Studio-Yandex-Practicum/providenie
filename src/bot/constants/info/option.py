@@ -119,10 +119,11 @@ SHARE = {
     },
     f'{key.OPTION}_MAIL': {
         key.BUTTON_TEXT: 'Наша страница на Mail.ru',
-        key.LINK: ('https://dobro.mail.ru/funds/blagotvoritelnyij'
-                   '-fond-pomoschi-nedonoshennyim-detyam-i-ih-semyam'
-                   '-providenie-2/'
-                   ),
+        key.LINK: (
+            'https://dobro.mail.ru/funds/blagotvoritelnyij'
+            '-fond-pomoschi-nedonoshennyim-detyam-i-ih-semyam'
+            '-providenie-2/'
+        ),
     },
     f'{key.OPTION}_YOUTUBE': {
         key.BUTTON_TEXT: 'Наш канал на Youtube',
