@@ -1,5 +1,6 @@
 from datetime import date
 
+from email_validate.exceptions import AddressFormatError
 from pydantic.error_wrappers import ValidationError
 from telegram import BotCommandScopeChat
 from telegram import InlineKeyboardButton as Button
@@ -68,7 +69,7 @@ async def save_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     try:
         setattr(form[key.DATA], field, input)
-    except ValidationError:
+    except (ValidationError, AddressFormatError):
         question_hint = ALL_QUESTIONS[field.upper()][key.HINT]
         error_message = text.INPUT_ERROR_TEMPLATE.format(hint=question_hint)
         await send_message(update, error_message)

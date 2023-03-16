@@ -1,10 +1,11 @@
+import re
 from datetime import date, datetime, timedelta
 from typing import Optional
 
 from email_validate import validate_or_fail
 from pydantic import BaseModel, EmailStr, Field, validator
 
-from bot.constants.info.text import REGEX_NAME, REGEX_PHONE
+from bot.constants.info.text import REGEX_FULL_NAME, REGEX_NAME, REGEX_PHONE
 
 
 class BaseForm(BaseModel):
@@ -30,6 +31,15 @@ class ShortForm(BaseForm):
             check_blacklist=False,
             check_smtp=False,
         ).email
+
+    @validator("full_name")
+    def validator_full_name(full_name):
+        """Gets a count of words after filling the field.
+        Raises ValidationError if count < 2."""
+        words = re.findall(REGEX_NAME, full_name)
+        if len(words) < 2:
+            raise ValueError("Неполное имя")
+        return full_name
 
 
 class VolunteerForm(ShortForm):
@@ -93,6 +103,15 @@ class LongForm(BaseForm):
         if not date.today() > value > date.today() - timedelta(days=365 * 18):
             raise ValueError("Дата?")
         return value
+
+    @validator("parent_full_name", "child_full_name")
+    def validator_full_name(full_name):
+        """Gets a count of words after filling the field.
+        Raises ValidationError if count < 2."""
+        words = re.findall(REGEX_FULL_NAME, full_name)
+        if len(words) < 2:
+            raise ValueError("Неполное имя")
+        return full_name
 
 
 class ChatForm(LongForm):
