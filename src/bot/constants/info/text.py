@@ -6,7 +6,6 @@ START = (
     "\n\nНаша миссия – спасти зрение детей, помочь им избежать инвалидности и улучшить качество жизни их семей."
     "\n\nДля того, чтобы оставаться в курсе последних новостей, рекомендуем Вам подписаться на наши страницы в социальных сетях: "
     "\n\n<a href='https://www.google.com/'>Сайт благотворительного фонда “Провидение”</a>"
-    "\n<a href='https://www.facebook.com/fond.providenie/'>Группа в Facebook</a>"
     "\n<a href='https://vk.com/fond_providenie '>Группа Вконтакте</a>"
     "\n<a href='https://zen.yandex.ru/fond_providenie'>Наша страница на Яндекс.Дзен</a>"
     "\n<a href='https://t.me/providenie_fond'>Новостной канал Telegram</a>"
