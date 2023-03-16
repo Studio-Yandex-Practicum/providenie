@@ -142,6 +142,23 @@ trio = ["trio (>=0.14,<0.23)"]
 wmi = ["wmi (>=1.5.1,<2.0.0)"]
 
 [[package]]
+name = "email-validate"
+version = "1.1.2"
+description = "Email validator with regex, blacklisted domains and SMTP checking."
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "email-validate-1.1.2.tar.gz", hash = "sha256:59eeb4e056a6347a2f55d06ebe9475918d75244e3a5be0f1ec833c67cc24b591"},
+    {file = "email_validate-1.1.2-py3-none-any.whl", hash = "sha256:0f746d1600ab8a0b27795b39b01f37e64ec476885f4fa0f817e2e9a83ac5df5c"},
+]
+
+[package.dependencies]
+dnspython = ">=2.0,<3.0"
+filelock = ">=3.0,<4.0"
+idna = "<3.0"
+
+[[package]]
 name = "email-validator"
 version = "1.3.1"
 description = "A robust email address syntax and deliverability validation library."
@@ -265,14 +282,14 @@ license = ["ukkonen"]
 
 [[package]]
 name = "idna"
-version = "3.4"
+version = "2.10"
 description = "Internationalized Domain Names in Applications (IDNA)"
 category = "main"
 optional = false
-python-versions = ">=3.5"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 files = [
-    {file = "idna-3.4-py3-none-any.whl", hash = "sha256:90b77e79eaa3eba6de819a0c442c0b4ceefc341a7a2ab77d7562bf49f425c5c2"},
-    {file = "idna-3.4.tar.gz", hash = "sha256:814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4"},
+    {file = "idna-2.10-py2.py3-none-any.whl", hash = "sha256:b97d804b1e9b523befed77c48dacec60e6dcb0b5391d57af6a65a312a90648c0"},
+    {file = "idna-2.10.tar.gz", hash = "sha256:b307872f855b18632ce0c21c5e45be78c0ea7ae4c15c828c20788b26921eb3f6"},
 ]
 
 [[package]]
@@ -438,6 +455,7 @@ files = [
 ]
 
 [package.dependencies]
+email-validator = {version = ">=1.0.3", optional = true, markers = "extra == \"email\""}
 typing-extensions = ">=4.2.0"
 
 [package.extras]
@@ -641,4 +659,4 @@ test = ["covdefaults (>=2.2.2)", "coverage (>=7.1)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "51eb26ad7ddcd4ca396fa88c003e93961961e97d72c3a1c6ceb3ff5f00620b20"
+content-hash = "9eae88cd5c6d2d08b63bf66b7eedeb61503dc6604c41ee2ee6b28b667e94f8b9"
