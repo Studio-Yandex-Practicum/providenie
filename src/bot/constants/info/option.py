@@ -94,24 +94,16 @@ ABOUT = {
 
 SHARE = {
     f'{key.OPTION}_WEBPAGE': {
-        key.BUTTON_TEXT: 'Интернет сайт',
-        key.DESCRIPTION: 'Сайт благотворительного фонда “Провидение”',
+        key.BUTTON_TEXT: 'Сайт фонда “Провидение”',
         key.LINK: 'https://fond-providenie.ru/',
     },
     f'{key.OPTION}_VK': {
-        key.BUTTON_TEXT: 'VK',
-        key.DESCRIPTION: 'Группа Вконтакте',
+        key.BUTTON_TEXT: 'Группа Вконтакте',
         key.LINK: 'https://vk.com/fond_providenie',
     },
     f'{key.OPTION}_INSTA': {
-        key.BUTTON_TEXT: 'Instagram',
-        key.DESCRIPTION: 'Наша страница в Instagram',
+        key.BUTTON_TEXT: 'Наша страница в Instagram',
         key.LINK: 'https://instagram.com/fond_providenie/',
-    },
-    f'{key.OPTION}_FACEBOOK': {
-        key.BUTTON_TEXT: 'Facebook',
-        key.DESCRIPTION: 'Группа в Facebook',
-        key.LINK: 'https://www.facebook.com/fond.providenie/',
     },
     f'{key.OPTION}_TELEGRAM': {
         key.BUTTON_TEXT: 'Новостной канал в Телеграм',
@@ -122,18 +114,19 @@ SHARE = {
         key.LINK: 'https://t.me/providenie_fond',
     },
     f'{key.OPTION}_DZEN': {
-        key.BUTTON_TEXT: 'Yandex Dzen',
-        key.DESCRIPTION: 'Наша страница на Яндекс.Дзен',
+        key.BUTTON_TEXT: 'Наша страница на Яндекс.Дзен',
         key.LINK: 'https://zen.yandex.ru/fond_providenie',
     },
     f'{key.OPTION}_MAIL': {
-        key.BUTTON_TEXT: 'Mail.ru',
-        key.DESCRIPTION: 'Наша страница на Mail.ru',
-        key.LINK: 'https://dobro.mail.ru/funds/blagotvoritelnyij-fond-pomoschi-nedonoshennyim-detyam-i-ih-semyam-providenie-2/',
+        key.BUTTON_TEXT: 'Наша страница на Mail.ru',
+        key.LINK: (
+            'https://dobro.mail.ru/funds/blagotvoritelnyij'
+            '-fond-pomoschi-nedonoshennyim-detyam-i-ih-semyam'
+            '-providenie-2/'
+        ),
     },
     f'{key.OPTION}_YOUTUBE': {
-        key.BUTTON_TEXT: 'Youtube ',
-        key.DESCRIPTION: 'Наш канал на Youtube',
+        key.BUTTON_TEXT: 'Наш канал на Youtube',
         key.LINK: 'https://youtube.com/channel/UC_co5lBatw_pA2DceKCqZfg',
     },
 }
