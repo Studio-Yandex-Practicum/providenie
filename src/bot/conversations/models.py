@@ -25,12 +25,13 @@ class ShortForm(BaseForm):
     email: Optional[EmailStr]
 
     @validator("email")
-    def validator_email(email):
-        return validate_or_fail(
+    def validator_email(cls, email):
+        validate_or_fail(
             email_address=email,
             check_blacklist=False,
             check_smtp=False,
-        ).email
+        )
+        return email
 
 
 class VolunteerForm(ShortForm):
@@ -78,12 +79,13 @@ class LongForm(BaseForm):
     where_got_info: Optional[str]
 
     @validator("email")
-    def validator_email(email):
-        return validate_or_fail(
+    def validator_email(cls, email):
+        validate_or_fail(
             email_address=email,
             check_blacklist=False,
             check_smtp=False,
-        ).email
+        )
+        return email
 
     @validator("child_birthday", pre=True)
     def parse_child_birthday(cls, value):
