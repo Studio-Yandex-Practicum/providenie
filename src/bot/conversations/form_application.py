@@ -25,7 +25,6 @@ async def start_form(update: Update, context: ContextTypes.DEFAULT_TYPE):
     model = option.get(key.CUSTOM_MODEL)
     if not model:
         model = user_data[key.MENU][key.MODEL]
-
     user_data[key.FORM] = {
         key.DATA: model(),
         key.FIELDS: list(model.__fields__),
@@ -45,11 +44,9 @@ async def ask_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if callback and callback.data.startswith(key.ASK):
         form[key.FIELD_EDIT] = callback.data.replace(f'{key.ASK}_', '').lower()
-
     field = form.get(key.FIELD_EDIT)
     if not field:
         field = fields[form[key.FIELD_INDEX]]
-
     question = ALL_QUESTIONS[field.upper()]
     await send_message(update, question[key.TEXT])
 

@@ -66,10 +66,10 @@ class LongForm(BaseForm):
     parent_full_name: str = Field(None, regex=REGEX_FULL_NAME, max_length=100)
     phone: str = Field(None, regex=REGEX_PHONE, strip_whitespace=True)
     email: Optional[EmailStr]
-    family_members: int = Field(None, ge=2)
-    city: Optional[str] = Field(None, max_length=100)
     child_full_name: str = Field(None, regex=REGEX_FULL_NAME, max_length=100)
     child_birthday: Optional[date]
+    family_members: int = Field(None, ge=2)
+    city: Optional[str] = Field(None, max_length=100)
     child_birth_place: Optional[str] = Field(None, max_length=100)
     child_birth_date: int = Field(None, ge=22, le=37)
     child_birth_weight: int = Field(None, ge=400, le=4000)
