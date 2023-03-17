@@ -67,4 +67,4 @@ MAIL_SEND_ERROR_MESSAGE = "Ошибка: Невозможно отправить
 
 # REGEXP
 REGEX_PHONE = r"^(?:\+)?[0-9]\d{10,14}$"
-REGEX_FULL_NAME = r'[А-Яа-яЁё\-]{2,}'
+REGEX_FULL_NAME = r'^([А-Яа-яЁё\-]+\b ?){2,}$'
