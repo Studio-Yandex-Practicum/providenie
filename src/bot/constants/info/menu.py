@@ -20,8 +20,8 @@ ALL_MENU = {
     },
     f'{key.MENU}_FOND': {
         key.NAME: 'Заявка на помощь',
-        key.BUTTON_TEXT: 'Заявка в фонд',
-        key.DESCRIPTION: 'Выберите программу фонда:',
+        key.BUTTON_TEXT: 'Заявка в Фонд',
+        key.DESCRIPTION: 'Выберите программу Фонда:',
         key.MODEL: FundForm,
         key.OPTIONS: option.FUND,
         key.RESPONSE: (
@@ -40,7 +40,7 @@ ALL_MENU = {
         key.RESPONSE: (
             'Спасибо за ваши ответы!'
             '\nВаша заявка отправлена.'
-            '\nТелефон для связи с координатором фонда + 79169814619 (Юлия)'
+            '\nТелефон для связи с координатором Фонда + 79169814619 (Юлия)'
         ),
     },
     f'{key.MENU}_ASK_QUESTION': {
@@ -73,7 +73,7 @@ ALL_MENU = {
     },
     f'{key.MENU}_ABOUT': {
         key.BUTTON_TEXT: 'О Фонде',
-        key.DESCRIPTION: 'Информация о фонде',
+        key.DESCRIPTION: 'Информация о Фонде',
         key.OPTIONS: option.ABOUT,
     },
 }
