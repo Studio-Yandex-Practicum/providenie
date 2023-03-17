@@ -1,10 +1,11 @@
+import re
 from datetime import date, datetime, timedelta
 from typing import Optional
 
 from email_validate import validate_or_fail
 from pydantic import BaseModel, EmailStr, Field, validator
 
-from bot.constants.info.text import REGEX_NAME, REGEX_PHONE
+from bot.constants.info.text import REGEX_FULL_NAME, REGEX_PHONE
 
 
 class BaseForm(BaseModel):
@@ -19,7 +20,7 @@ class BaseForm(BaseModel):
 class ShortForm(BaseForm):
     """Base model for short forms."""
 
-    full_name: str = Field(None, regex=REGEX_NAME, max_length=100)
+    full_name: str = Field(None, regex=REGEX_FULL_NAME, max_length=100)
     phone: str = Field(None, regex=REGEX_PHONE, strip_whitespace=True)
     email: Optional[EmailStr]
 
@@ -62,12 +63,12 @@ class AskQuestionForm(ShortForm):
 class LongForm(BaseForm):
     """Base model for long forms."""
 
-    parent_full_name: str = Field(None, regex=REGEX_NAME, max_length=100)
+    parent_full_name: str = Field(None, regex=REGEX_FULL_NAME, max_length=100)
     phone: str = Field(None, regex=REGEX_PHONE, strip_whitespace=True)
     email: Optional[EmailStr]
     family_members: int = Field(None, ge=2)
     city: Optional[str] = Field(None, max_length=100)
-    child_full_name: str = Field(None, regex=REGEX_NAME, max_length=100)
+    child_full_name: str = Field(None, regex=REGEX_FULL_NAME, max_length=100)
     child_birthday: Optional[date]
     child_birth_place: Optional[str] = Field(None, max_length=100)
     child_birth_date: int = Field(None, ge=22, le=37)
