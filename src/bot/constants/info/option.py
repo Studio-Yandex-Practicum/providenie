@@ -5,14 +5,14 @@ from bot.conversations.models import ChatAngelsForm
 DONATION = {
     f'{key.OPTION}_REPORT': {
         key.BUTTON_TEXT: 'Годовые отчёты',
-        key.DESCRIPTION: 'Здесь вы найдете отчетность фонда',
+        key.DESCRIPTION: 'Здесь вы найдете отчетность Фонда',
         key.LINK: 'https://fond-providenie.ru/docs/',
     },
     f'{key.OPTION}_LINK': {
         key.BUTTON_TEXT: 'Сделать пожертвование',
         key.DESCRIPTION: (
             'По ссылке вы можете сделать пожертвование. '
-            'Убедительно просим Вас подключить регулярный платеж в фонд. '
+            'Убедительно просим Вас подключить регулярный платеж в Фонд. '
             'Это очень важно. Спасибо!'
         ),
         key.LINK: (
@@ -41,7 +41,7 @@ ABOUT = {
     f'{key.OPTION}_HOW_PROBLEM_SOLVING': {
         key.BUTTON_TEXT: 'Как мы её решаем?',
         key.DESCRIPTION: (
-            'Главное направление работы фонда - '
+            'Главное направление работы Фонда - '
             'комплексное сопровождение детей с проблемами по офтальмологии, '
             'в первую очередь вызванных ретинопатией недоношенных.'
         ),
@@ -94,7 +94,7 @@ ABOUT = {
 
 SHARE = {
     f'{key.OPTION}_WEBPAGE': {
-        key.BUTTON_TEXT: 'Сайт фонда “Провидение”',
+        key.BUTTON_TEXT: 'Сайт Фонда “Провидение”',
         key.LINK: 'https://fond-providenie.ru/',
     },
     f'{key.OPTION}_VK': {
@@ -109,7 +109,7 @@ SHARE = {
         key.BUTTON_TEXT: 'Новостной канал в Телеграм',
         key.DESCRIPTION: (
             'Наш новостной канал Telegram '
-            'с информацией о последних событиях фонда'
+            'с информацией о последних событиях Фонда'
         ),
         key.LINK: 'https://t.me/providenie_fond',
     },
