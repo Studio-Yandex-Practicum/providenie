@@ -62,13 +62,7 @@ ALL_MENU = {
             "Для того, чтобы оставаться в курсе последних "
             "новостей, рекомендуем Вам подписаться на наши "
             "страницы в социальных сетях:"
-            "\n\n<a href='https://www.google.com/'>Сайт Благотворительного Фонда “Провидение”</a>"
-            "\n<a href='https://vk.com/fond_providenie '>Группа Вконтакте</a>"
-            "\n<a href='https://zen.yandex.ru/fond_providenie'>Наша страница на Яндекс.Дзен</a>"
-            "\n<a href='https://t.me/providenie_fond'>Новостной канал Telegram</a>"
-            "\n<a href='https://www.instagram.com/fond_providenie/'>Наша страница в Instagram</a>"
-            "\n<a href='https://dobro.mail.ru/funds/blagotvoritelnyij-fond-pomoschi-nedonoshennyim-detyam-i-ih-semyam-providenie-2/'>Наша страница на Mail.ru</a>"
-            "\n<a href='https://youtube.com/channel/UC_co5lBatw_pA2DceKCqZfg'>Наш канал на Youtube</a>"
+            f"{text.SHARE}"
         ),
     },
     f"{key.MENU}_DONATION": {
