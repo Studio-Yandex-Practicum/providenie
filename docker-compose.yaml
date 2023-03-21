@@ -6,3 +6,6 @@ services:
     restart: always
     env_file:
       - ./.env
+    volumes:
+      - ~:/app/bot/.data/
+
