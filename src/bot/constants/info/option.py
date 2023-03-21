@@ -23,61 +23,6 @@ DONATION = {
 }
 
 ABOUT = {
-    f"{key.OPTION}_WHO_ARE_WE": {
-        key.BUTTON_TEXT: "Кто мы?",
-        key.DESCRIPTION: (
-            "Мы – Благотворительный Фонд, "
-            "основанный родителями недоношенного ребенка в 2018 году."
-        ),
-        key.LINK: "https://telegra.ph/Kto-my-02-06",
-    },
-    f"{key.OPTION}_PROBLEM_SOLVING": {
-        key.NAME: "Какую социальную проблему мы решаем?",
-        key.BUTTON_TEXT: "Какую проблему мы решаем?",
-        key.DESCRIPTION: "Основная задача Фонда — сохранить зрение детей.",
-        key.LINK: "https://telegra.ph/Kakuyu-socialnuyu-problemu-my-reshaem-02-06",
-    },
-    f"{key.OPTION}_HOW_PROBLEM_SOLVING": {
-        key.BUTTON_TEXT: "Как мы её решаем?",
-        key.DESCRIPTION: (
-            "Главное направление работы Фонда - "
-            "комплексное сопровождение детей с проблемами по офтальмологии, "
-            "в первую очередь вызванных ретинопатией недоношенных."
-        ),
-        key.LINK: "https://telegra.ph/Kak-my-eyo-reshaem-02-06",
-    },
-    f"{key.OPTION}_LIFE_CHANGE": {
-        key.BUTTON_TEXT: "Как мы меняем жизнь людей?",
-        key.DESCRIPTION: (
-            "Благодаря нашей работе "
-            "подопечные из любой точки России и стран СНГ "
-            "могут попасть на операцию по зрению в день обращения, "
-            "заручившись поддержкой Фонда"
-        ),
-        key.LINK: "https://telegra.ph/Kak-my-menyaem-zhizn-lyudej-02-06",
-    },
-    f"{key.OPTION}_WHAT_IS_DONE": {
-        key.BUTTON_TEXT: "Что мы уже сделали?",
-        key.DESCRIPTION: (
-            "На данный момент благодаря нашему Фонду "
-            "уже почти 350 детей "
-            "получили операции по сохранению и улучшению зрения."
-        ),
-        key.LINK: (
-            "https://telegra.ph/"
-            "CHto-uzhe-sdelano-Kto-obrashchaetsya-za-pomoshchyu-02-06"
-        ),
-    },
-    f"{key.OPTION}_WHY_DONATION_NEED": {
-        key.BUTTON_TEXT: "Зачем нужны пожертвования?",
-        key.DESCRIPTION: (
-            "Пожертвования, особенно регулярные, "
-            "пусть даже на небольшие суммы, "
-            "помогут нам планировать нашу деятельность "
-            "и дадут возможность брать на попечение больше детей."
-        ),
-        key.LINK: "https://telegra.ph/Zachem-nuzhny-pozhertvovaniya-02-06",
-    },
     f"{key.OPTION}_ABOUT_SUCCESS": {
         key.BUTTON_TEXT: "История успеха",
         key.DESCRIPTION: (
