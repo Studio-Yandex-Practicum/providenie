@@ -90,47 +90,6 @@ ABOUT = {
     },
 }
 
-
-SHARE = {
-    f"{key.OPTION}_WEBPAGE": {
-        key.BUTTON_TEXT: "Сайт Фонда “Провидение”",
-        key.LINK: "https://fond-providenie.ru/",
-    },
-    f"{key.OPTION}_VK": {
-        key.BUTTON_TEXT: "Группа Вконтакте",
-        key.LINK: "https://vk.com/fond_providenie",
-    },
-    f"{key.OPTION}_INSTA": {
-        key.BUTTON_TEXT: "Наша страница в Instagram",
-        key.LINK: "https://instagram.com/fond_providenie/",
-    },
-    f"{key.OPTION}_TELEGRAM": {
-        key.BUTTON_TEXT: "Новостной канал в Телеграм",
-        key.DESCRIPTION: (
-            "Наш новостной канал Telegram "
-            "с информацией о последних событиях Фонда"
-        ),
-        key.LINK: "https://t.me/providenie_fond",
-    },
-    f"{key.OPTION}_DZEN": {
-        key.BUTTON_TEXT: "Наша страница на Яндекс.Дзен",
-        key.LINK: "https://zen.yandex.ru/fond_providenie",
-    },
-    f"{key.OPTION}_MAIL": {
-        key.BUTTON_TEXT: "Наша страница на Mail.ru",
-        key.LINK: (
-            "https://dobro.mail.ru/funds/blagotvoritelnyij"
-            "-fond-pomoschi-nedonoshennyim-detyam-i-ih-semyam"
-            "-providenie-2/"
-        ),
-    },
-    f"{key.OPTION}_YOUTUBE": {
-        key.BUTTON_TEXT: "Наш канал на Youtube",
-        key.LINK: "https://youtube.com/channel/UC_co5lBatw_pA2DceKCqZfg",
-    },
-}
-
-
 CHAT = {
     f"{key.OPTION}_BABY": {
         key.NAME: "Дети, рожде‌нные раньше срока (от рождения до 1,5 лет)",
@@ -183,7 +142,7 @@ CHAT = {
     f"{key.OPTION}_REHABILITATION": {
         key.BUTTON_TEXT: "Реабилитация зрения",
         key.DESCRIPTION: (
-            "Чат для родителей детей, нуждающихся в реабилитации зрения"
+            "Чат для родителей детей, нуждающихся в реабилитации зрения. "
             "Для вступления в чат Вам необходимо "
             "предоставить информацию для куратора."
         ),
@@ -191,7 +150,7 @@ CHAT = {
     f"{key.OPTION}_SHUNTATA": {
         key.BUTTON_TEXT: "Шунтята",
         key.DESCRIPTION: (
-            "Группа для родителей деток с шунтами"
+            "Группа для родителей деток с шунтами. "
             "Для вступления в чат Вам необходимо "
             "предоставить информацию для куратора."
         ),
@@ -226,7 +185,7 @@ CHAT = {
     f"{key.OPTION}_ANGELS": {
         key.BUTTON_TEXT: "Мамы ангелов",
         key.DESCRIPTION: (
-            "Чат для родителей, которые столкнулись со смертью ребенка"
+            "Чат для родителей, которые столкнулись со смертью ребенка. "
             "Для вступления в чат Вам необходимо "
             "предоставить свое имя и телефон."
         ),
@@ -237,7 +196,7 @@ CHAT = {
 FUND = {
     f"{key.OPTION}_LOOKWORLD": {
         key.NAME: "Смотри на мир (помощь детям с нарушениями зрения)",
-        key.BUTTON_TEXT: "Смотри на мир",
+        key.BUTTON_TEXT: "Смотри на мир (помощь детям с нарушениями зрения)",
         key.DESCRIPTION: (
             "Проект «Смотри на мир: СТОП ретинопатии недоношенных» "
             "нацелен на спасение зрения ребёнка "
@@ -247,7 +206,7 @@ FUND = {
     },
     f"{key.OPTION}_REHABILITATION": {
         key.NAME: "Реабилитация недоношенных детей с инвалидностью",
-        key.BUTTON_TEXT: "Реабилитация",
+        key.BUTTON_TEXT: "Реабилитация недоношенных детей с инвалидностью",
         key.DESCRIPTION: (
             "Деток, родившихся раньше срока, "
             "нередко сопровождают такие диагнозы, как дцп, тугоухость и т.д., "
@@ -258,23 +217,23 @@ FUND = {
             "значительно улучшить состояние ребёнка."
         ),
     },
+    f"{key.OPTION}_LESSONS": {
+        key.NAME: "Помощь незрячим и слабовидящим детям",
+        key.BUTTON_TEXT: "Помощь незрячим и слабовидящим детям",
+        key.DESCRIPTION: (
+            "Помощь недоношенным детям с проблемами со зрением: "
+            "трости для слепых детей, очки, линзы, "
+            "лекарства для малоимущих семей из РФ и СНГ."
+        ),
+    },
     f"{key.OPTION}_PSYHELP": {
         key.NAME: "Психологическая поддержка семьи",
-        key.BUTTON_TEXT: "Помощь психолога",
+        key.BUTTON_TEXT: "Психологическая поддержка семьи",
         key.DESCRIPTION: (
             "Успех выхаживания и дальнейшее развитие недоношенного ребенка "
             "во многом зависят от грамотности и эмоциональной устойчивости "
             "родителей, граммотные психологи "
             "могут оказать в этом неоценимую поддержку."
-        ),
-    },
-    f"{key.OPTION}_LESSONS": {
-        key.NAME: "Помощь незрячим и слабовидящим детям",
-        key.BUTTON_TEXT: "Помощь детям",
-        key.DESCRIPTION: (
-            "Помощь недоношенным детям с проблемами со зрением: "
-            "трости для слепых детей, очки, линзы, "
-            "лекарства для малоимущих семей из РФ и СНГ."
         ),
     },
 }
