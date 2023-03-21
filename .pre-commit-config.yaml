@@ -11,13 +11,6 @@ repos:
 
 - repo: local
   hooks:
-    - id: black
-      name: black
-      entry: black
-      files: ^(bot/|core/|src/)
-      language: system
-      types: [python]
-      args: [--line-length=79]
 
     - id: isort
       name: isort
