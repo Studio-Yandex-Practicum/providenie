@@ -33,6 +33,7 @@ STOP_CMD = "Завершение работы"
 # MAIN BUTTONS
 BACK = "Назад"
 FOLLOW_LINK = "Перейти"
+MAIN_BACK = "Главное меню"
 START_FORM = "Заполнить анкету"
 SEND_FORM = "Отправить"
 EDIT_FORM = "Редактировать"

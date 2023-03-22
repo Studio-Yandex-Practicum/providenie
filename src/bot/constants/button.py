@@ -6,7 +6,7 @@ from bot.constants.info import text
 
 
 # BACK
-MAIN_MENU = Button(text.BACK, callback_data=callback.BACK)
+MAIN_MENU = Button(text.MAIN_BACK, callback_data=callback.BACK)
 MENU_BACK = Button(text.BACK, callback_data=callback.MENU_BACK)
 
 
@@ -17,7 +17,7 @@ EDIT_MENU = Button(text.EDIT_FORM, callback_data=callback.EDIT_MENU)
 SHOW_DATA = Button(text.BACK, callback_data=callback.SHOW_DATA)
 
 # COMMANDS
-START_CMD = BotCommand('/start', text.START_CMD)
-STOP_CMD = BotCommand('/stop', text.STOP_CMD)
-MENU_CMD = BotCommand('/menu', text.MENU_CMD)
-CANCEL_CMD = BotCommand('/cancel', text.CANCEL_CMD)
+START_CMD = BotCommand("/start", text.START_CMD)
+STOP_CMD = BotCommand("/stop", text.STOP_CMD)
+MENU_CMD = BotCommand("/menu", text.MENU_CMD)
+CANCEL_CMD = BotCommand("/cancel", text.CANCEL_CMD)
