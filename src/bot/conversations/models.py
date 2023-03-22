@@ -11,15 +11,15 @@ class BaseForm(BaseModel):
     """Base model for forms."""
 
     def __new__(cls):
-        '''Method overriding makes it possibleto change the order of
+        '''Method overriding makes it possible to change the order of
         the fields.
-        All class.__fields__ must be specified in "fields_order" 
+        All class.__fields__ must be specified in "fields_order"
         for correct method working if you need to change its ordering
         otherwise there is no need to define "fields_order" in Config.'''
 
         fields_order = cls.Config.__dict__.get('fields_order')
-        fields = cls.__fields__
         if fields_order:
+            fields = cls.__fields__
             cls.__fields__ = {key: fields.get(key) for key in fields_order}
         return super().__new__(cls)
 
@@ -135,7 +135,6 @@ class FundForm(LongForm):
     social_networks: Optional[str]
     parents_work_place: Optional[str]
     another_fund_member: Optional[str]
-    another_fund_help: Optional[str]
 
     class Config:
         fields_order = ['parent_full_name', 'phone', 'email', 'social_networks',
