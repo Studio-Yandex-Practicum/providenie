@@ -1,4 +1,3 @@
-import re
 from datetime import date, datetime, timedelta
 from typing import Optional
 
@@ -122,4 +121,3 @@ class FundForm(LongForm):
     social_networks: Optional[str]
     parents_work_place: Optional[str]
     another_fund_member: Optional[str]
-    another_fund_help: Optional[str]
