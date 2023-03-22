@@ -131,7 +131,6 @@ class FundForm(LongForm):
     address: Optional[str]
     required_therapy: Optional[str]
     request_goal: Optional[str]
-    request_date: Optional[str]
     social_networks: Optional[str]
     parents_work_place: Optional[str]
     another_fund_member: Optional[str]
@@ -141,5 +140,5 @@ class FundForm(LongForm):
                         'child_full_name', 'child_birthday', 'family_members',
                         'address', 'city', 'child_birth_place', 'child_birth_date',
                         'child_birth_weight', 'child_birth_height', 'child_diagnosis',
-                        'parents_work_place', 'request_date', 'where_got_info',
-                        'required_therapy', 'request_goal', 'another_fund_member']
+                        'parents_work_place', 'where_got_info', 'required_therapy',
+                        'request_goal', 'another_fund_member']
