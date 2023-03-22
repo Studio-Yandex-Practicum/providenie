@@ -10,6 +10,19 @@ from bot.constants.info.text import REGEX_FULL_NAME, REGEX_PHONE
 class BaseForm(BaseModel):
     """Base model for forms."""
 
+    def __new__(cls):
+        '''Method overriding makes it possibleto change the order of
+        the fields.
+        All class.__fields__ must be specified in "fields_order" 
+        for correct method working if you need to change its ordering
+        otherwise there is no need to define "fields_order" in Config.'''
+
+        fields_order = cls.Config.__dict__.get('fields_order')
+        fields = cls.__fields__
+        if fields_order:
+            cls.__fields__ = {key: fields.get(key) for key in fields_order}
+        return super().__new__(cls)
+
     class Config:
         min_anystr_length = 1
         max_anystr_length = 4096
@@ -118,7 +131,16 @@ class FundForm(LongForm):
     address: Optional[str]
     required_therapy: Optional[str]
     request_goal: Optional[str]
+    request_date: Optional[str]
     social_networks: Optional[str]
     parents_work_place: Optional[str]
     another_fund_member: Optional[str]
     another_fund_help: Optional[str]
+
+    class Config:
+        fields_order = ['parent_full_name', 'phone', 'email', 'social_networks',
+                        'child_full_name', 'child_birthday', 'family_members',
+                        'address', 'city', 'child_birth_place', 'child_birth_date',
+                        'child_birth_weight', 'child_birth_height', 'child_diagnosis',
+                        'parents_work_place', 'request_date', 'where_got_info',
+                        'required_therapy', 'request_goal', 'another_fund_member']
