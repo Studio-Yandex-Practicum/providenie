@@ -75,7 +75,7 @@ ASK_QUESTIONS = {
 
 LONG_QUESTIONS = {
     'PARENT_FULL_NAME': {
-        key.TITLE: 'ФИО мамы',
+        key.TITLE: 'ФИО родителя',
         key.TEXT: 'Введите фамилию, имя и отчество родителя',
         key.HINT: ('Пример: Иванова Мария или '
                    'Иванова Мария Петровна'),
