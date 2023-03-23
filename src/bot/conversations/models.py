@@ -141,4 +141,4 @@ class FundForm(LongForm):
                         'address', 'city', 'child_birth_place', 'child_birth_date',
                         'child_birth_weight', 'child_birth_height', 'child_diagnosis',
                         'parents_work_place', 'where_got_info', 'required_therapy',
-                        'request_goal', 'another_fund_member']
+                        'request_goal', 'another_fund_member',]
