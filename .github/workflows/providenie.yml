@@ -16,7 +16,7 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.PORT }}
-          source: .
+          source: "src/,Dockerfile,docker-compose.yaml"
           target: /home/${{ secrets.USER }}/providenie
 
       - name: Building Docker image on remote server and deploy
