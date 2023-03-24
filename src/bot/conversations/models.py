@@ -1,5 +1,4 @@
-import re
-from datetime import date, datetime, timedelta
+from datetime import datetime
 from typing import Optional
 
 from email_validate import validate_or_fail
@@ -37,22 +36,22 @@ class ShortForm(BaseForm):
 class VolunteerForm(ShortForm):
     """Model for volunteer form."""
 
-    birthday: Optional[date]
+    birthday: Optional[datetime]
     city: Optional[str] = Field(None, max_length=100)
     volunteer_help: Optional[str]
 
     @validator("birthday", pre=True)
     def parse_birthday(cls, value):
-        return datetime.strptime(value, "%d.%m.%Y").date()
+        return datetime.strptime(value, "%d.%m.%Y")
 
     @validator("birthday")
     def validate_birthday(cls, value):
-        if (
-            value > date.today() - timedelta(days=365 * 18)
-            or value > date.today()
-        ):
-            raise ValueError("Дата?")
-        return value
+        today = datetime.today()
+        age = today.year - value.year - ((today.month, today.day) < (value.month, value.day))
+        if age < 18 or age > 80:
+            raise ValueError("Пользователю должно быть не менее 18 лет")
+
+        return value.strftime('%d.%m.%Y')
 
 
 class AskQuestionForm(ShortForm):
@@ -68,12 +67,12 @@ class LongForm(BaseForm):
     phone: str = Field(None, regex=REGEX_PHONE, strip_whitespace=True)
     email: Optional[EmailStr]
     child_full_name: str = Field(None, regex=REGEX_FULL_NAME, max_length=100)
-    child_birthday: Optional[date]
+    child_birthday: Optional[datetime]
     family_members: int = Field(None, ge=2)
     city: Optional[str] = Field(None, max_length=100)
     child_birth_place: Optional[str] = Field(None, max_length=100)
     child_birth_date: int = Field(None, ge=22, le=37)
-    child_birth_weight: int = Field(None, ge=400, le=4000)
+    child_birth_weight: int = Field(None, ge=400, le=5000)
     child_birth_height: int = Field(None, ge=30, le=56)
     child_diagnosis: Optional[str]
     where_got_info: Optional[str]
@@ -89,13 +88,17 @@ class LongForm(BaseForm):
 
     @validator("child_birthday", pre=True)
     def parse_child_birthday(cls, value):
-        return datetime.strptime(value, "%d.%m.%Y").date()
+        return datetime.strptime(value, "%d.%m.%Y")
 
     @validator("child_birthday")
     def validate_birthday(cls, value):
-        if not date.today() > value > date.today() - timedelta(days=365 * 18):
-            raise ValueError("Дата?")
-        return value
+        today = datetime.today()
+        age = today.year - value.year - ((today.month, today.day) < (value.month, value.day))
+        if value >= today:
+            raise ValueError('День рождения не может быть в будущем')
+        if age >= 18:
+            raise ValueError("Пользователю должно быть не больше 18 лет")
+        return value.strftime('%d.%m.%Y')
 
 
 class ChatForm(LongForm):
@@ -122,4 +125,3 @@ class FundForm(LongForm):
     social_networks: Optional[str]
     parents_work_place: Optional[str]
     another_fund_member: Optional[str]
-    another_fund_help: Optional[str]
