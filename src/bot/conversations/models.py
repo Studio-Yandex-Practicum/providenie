@@ -72,7 +72,7 @@ class LongForm(BaseForm):
     city: Optional[str] = Field(None, max_length=100)
     child_birth_place: Optional[str] = Field(None, max_length=100)
     child_birth_date: int = Field(None, ge=22, le=37)
-    child_birth_weight: int = Field(None, ge=400, le=5000)
+    child_birth_weight: int = Field(None, ge=400, le=4000)
     child_birth_height: int = Field(None, ge=30, le=56)
     child_diagnosis: Optional[str]
     where_got_info: Optional[str]
