@@ -41,7 +41,7 @@ COMMON_QUESTIONS = {
 
 VOLUNTEER_QUESTIONS = {
     'BIRTHDAY': {
-        key.TITLE: 'День рождения',
+        key.TITLE: 'Дата рождения',
         key.TEXT: 'Введите дату рождения',
         key.HINT: 'Пожалуйста, введите в формате ДД.ММ.ГГГГ '
                   '(также возраст должен быть больше 18 лет)',
