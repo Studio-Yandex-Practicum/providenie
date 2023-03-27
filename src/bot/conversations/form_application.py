@@ -41,10 +41,10 @@ async def ask_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     callback = update.callback_query
     user_data = context.user_data
     form = user_data[key.FORM]
-    fields = user_data[key.FORM][key.FIELDS]
+    fields = form[key.FIELDS]
 
     if callback and callback.data.startswith(key.ASK):
-        form[key.FIELD_EDIT] = callback.data.replace(f'{key.ASK}_', '').lower()
+        form[key.FIELD_EDIT] = callback.data.replace(f"{key.ASK}_", "").lower()
 
     field = form.get(key.FIELD_EDIT)
     if not field:
@@ -60,7 +60,7 @@ async def save_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Save the user's input for the current form field."""
     user_data = context.user_data
     form = user_data[key.FORM]
-    fields = user_data[key.FORM][key.FIELDS]
+    fields = form[key.FIELDS]
     input = update.message.text.strip()
 
     field = form.get(key.FIELD_EDIT)
@@ -133,7 +133,9 @@ async def edit_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     edit_buttons.append([button.SHOW_DATA])
 
     await send_message(
-        update, text.SELECT_EDIT, keyboard=Keyboard(edit_buttons)
+        update,
+        text.SELECT_EDIT,
+        keyboard=Keyboard(edit_buttons)
     )
 
     return state.FORM_INPUT
@@ -144,7 +146,7 @@ async def send_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_data = context.user_data
     form = user_data[key.FORM]
     info = user_data[key.MENU]
-    message = form[key.SHOW_DATA].replace('\n', '<br>')
+    message = form[key.SHOW_DATA].replace("\n", "<br>")
     subject = info.get(key.NAME)
 
     if send_email_message(message, subject):
