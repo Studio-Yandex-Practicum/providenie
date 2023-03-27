@@ -2,8 +2,9 @@ from datetime import datetime
 from typing import Optional
 
 from email_validate import validate_or_fail
-from pydantic import BaseModel, EmailStr, Field, validator
+from pydantic import BaseModel, EmailStr, Field, root_validator, validator
 
+from bot.constants.info.fields_order import FUND_FIELDS_ORDER
 from bot.constants.info.text import REGEX_FULL_NAME, REGEX_PHONE
 
 
@@ -47,11 +48,14 @@ class VolunteerForm(ShortForm):
     @validator("birthday")
     def validate_birthday(cls, value):
         today = datetime.today()
-        age = today.year - value.year - ((today.month, today.day) < (value.month, value.day))
+        age = (
+            today.year - value.year
+            - ((today.month, today.day) < (value.month, value.day))
+        )
         if age < 18 or age > 80:
             raise ValueError("Пользователю должно быть не менее 18 лет")
 
-        return value.strftime('%d.%m.%Y')
+        return value.strftime("%d.%m.%Y")
 
 
 class AskQuestionForm(ShortForm):
@@ -93,12 +97,15 @@ class LongForm(BaseForm):
     @validator("child_birthday")
     def validate_birthday(cls, value):
         today = datetime.today()
-        age = today.year - value.year - ((today.month, today.day) < (value.month, value.day))
+        age = (
+            today.year - value.year
+            - ((today.month, today.day) < (value.month, value.day))
+        )
         if value >= today:
-            raise ValueError('День рождения не может быть в будущем')
+            raise ValueError("День рождения не может быть в будущем")
         if age >= 18:
             raise ValueError("Пользователю должно быть не больше 18 лет")
-        return value.strftime('%d.%m.%Y')
+        return value.strftime("%d.%m.%Y")
 
 
 class ChatForm(LongForm):
@@ -125,3 +132,7 @@ class FundForm(LongForm):
     social_networks: Optional[str]
     parents_work_place: Optional[str]
     another_fund_member: Optional[str]
+
+    @root_validator
+    def order_fields(cls, values):
+        return {field_name: values.get(field_name) for field_name in FUND_FIELDS_ORDER}
