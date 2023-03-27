@@ -2,8 +2,9 @@ from datetime import datetime
 from typing import Optional
 
 from email_validate import validate_or_fail
-from pydantic import BaseModel, EmailStr, Field, validator
+from pydantic import BaseModel, EmailStr, Field, root_validator, validator
 
+from bot.constants.info.fields_order import FUND_FIELDS_ORDER
 from bot.constants.info.text import REGEX_FULL_NAME, REGEX_PHONE
 
 
@@ -131,3 +132,7 @@ class FundForm(LongForm):
     social_networks: Optional[str]
     parents_work_place: Optional[str]
     another_fund_member: Optional[str]
+
+    @root_validator
+    def order_fields(cls, values):
+        return {field_name: values.get(field_name) for field_name in FUND_FIELDS_ORDER}

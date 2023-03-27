@@ -28,7 +28,7 @@ async def start_form(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     user_data[key.FORM] = {
         key.DATA: model(),
-        key.FIELDS: list(model.__fields__),
+        key.FIELDS: list(model().dict()),
         key.FIELD_INDEX: 0,
         key.FIELD_EDIT: False,
     }
