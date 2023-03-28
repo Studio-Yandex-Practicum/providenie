@@ -10,14 +10,16 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Uploading project files to remote server
-        uses: appleboy/scp-action@master
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.PORT }}
-          source: "src/,Dockerfile,docker-compose.yaml,requirements.txt"
-          target: /home/${{ secrets.USER }}/providenie
+          script: |
+            sudo git clone git@github.com:Studio-Yandex-Practicum/providenie.git \
+            /home/${{ secrets.USER }} 2> /dev/null \
+            || (cd ~/home/${{ secrets.USER }}/test_workflow; git pull)
 
       - name: Building Docker image on remote server and deploy
         uses: appleboy/ssh-action@master
