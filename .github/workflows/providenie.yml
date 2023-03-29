@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - name: Uploading project files to remote server
+      - name: Deploy on remote server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -17,19 +17,16 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            sudo git clone git@github.com:Studio-Yandex-Practicum/providenie.git \
-            /home/${{ secrets.USER }} 2> /dev/null \
-            || (cd ~/home/${{ secrets.USER }}/test_workflow; git pull)
+            cd ~/home/${{ secrets.USER }}
 
-      - name: Building Docker image on remote server and deploy
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.PORT }}
-          script: |
-            cd /home/${{ secrets.USER }}/providenie
+            if [ ! -d providenie ]
+            then sudo git clone -b release git@github.com:Studio-Yandex-Practicum/providenie.git
+            else cd providenie
+            git checkout release
+            git pull
+            fi
+
+            cd providenie
             rm -f .env
             touch .env
             echo TELEGRAM_TOKEN="${{ secrets.TELEGRAM_TOKEN }}" >> .env
