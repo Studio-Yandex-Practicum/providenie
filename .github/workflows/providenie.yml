@@ -17,19 +17,14 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            cd ~/home/${{ secrets.USER }}
-
-            if [ ! -d providenie ]
-            then sudo git clone -b release git@github.com:Studio-Yandex-Practicum/providenie.git
-            else cd providenie
+            repo="git@github.com:${{ github.repository }}.git"
+            if [ ! -d "home/${{ secrets.USER }}/providenie" ];
+            then git clone -b release $repo home/${{ secrets.USER }}/providenie \
+            && cd home/${{ secrets.USER }}/providenie
+            else cd home/${{ secrets.USER }}/providenie
             git checkout release
             git pull
-            fi
-
-            cd providenie
-            rm -f .env
-            touch .env
-            echo TELEGRAM_TOKEN="${{ secrets.TELEGRAM_TOKEN }}" >> .env
+            echo TELEGRAM_TOKEN="${{ secrets.TELEGRAM_TOKEN }}" > .env
             echo SMTP_SERVER_PORT="${{ secrets.SMTP_SERVER_PORT }}" >> .env
             echo SMTP_SERVER_ADDRESS="${{ secrets.SMTP_SERVER_ADDRESS }}" >> .env
             echo SMTP_SERVER_BOT_EMAIL=${{ secrets.EMAIL_BOT }} >> .env
