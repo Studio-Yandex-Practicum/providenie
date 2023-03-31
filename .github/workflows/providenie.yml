@@ -18,10 +18,9 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             repo="git@github.com:${{ github.repository }}.git"
-            if [ ! -d "home/${{ secrets.USER }}/providenie" ];
-            then git clone -b release $repo home/${{ secrets.USER }}/providenie \
-            && cd home/${{ secrets.USER }}/providenie
-            else cd home/${{ secrets.USER }}/providenie
+            cd /home/${{ secrets.USER }}/
+            [ ! -d "providenie" ] && git clone -b release $repo providenie 
+            cd providenie
             git checkout release
             git pull
             echo TELEGRAM_TOKEN="${{ secrets.TELEGRAM_TOKEN }}" > .env
