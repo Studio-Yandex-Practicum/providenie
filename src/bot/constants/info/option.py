@@ -24,7 +24,7 @@ DONATION = {
 
 ABOUT = {
     f"{key.OPTION}_ABOUT_SUCCESS": {
-        key.BUTTON_TEXT: "История успеха",
+        key.BUTTON_TEXT: "Истории успеха",
         key.DESCRIPTION: (
             "https://youtu.be/n-hByd_oiIo\n"
             "https://youtu.be/NG4QUO-hvCk\n"
