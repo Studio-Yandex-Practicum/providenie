@@ -73,4 +73,4 @@ REGEX_PHONE = r"^(?:\+)?[0-9]\d{10,14}$"
 REGEX_FULL_NAME = r"^([А-Яа-яЁё\-]+\b {,3}){2,}$"
 
 # Quantity of family members (variants)
-FAMILY_MEMBERS = ['полная', 'неполная']
+FAMILY_MEMBERS = r"(([Нн]е*)*\s*[Пп]олная){1}"

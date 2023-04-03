@@ -73,7 +73,7 @@ class LongForm(BaseForm):
     email: Optional[EmailStr]
     child_full_name: str = Field(None, regex=REGEX_FULL_NAME, max_length=100)
     child_birthday: Optional[datetime]
-    family_members: str = Field(None, strip_whitespace=True)
+    family_members: str = Field(None, regex=FAMILY_MEMBERS)
     city: Optional[str] = Field(None, max_length=100)
     child_birth_place: Optional[str] = Field(None, max_length=100)
     child_birth_date: int = Field(None, ge=22, le=37)
@@ -107,16 +107,6 @@ class LongForm(BaseForm):
         if age >= 18:
             raise ValueError("Пользователю должно быть не больше 18 лет")
         return value.strftime("%d.%m.%Y")
-
-    @validator('family_members')
-    def validate_family_members(cls, value: str):
-        value = value.replace(' ', '')
-        if value.lower() not in FAMILY_MEMBERS:
-            raise ValueError(
-                'Введенные данные не соответствуют '
-                'возможным вариантам'
-            )
-        return value
 
 
 class ChatForm(LongForm):
