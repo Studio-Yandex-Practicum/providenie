@@ -1,3 +1,4 @@
+import logging
 from datetime import date
 
 from email_validate.exceptions import Error as EmailValidationError
@@ -66,10 +67,10 @@ async def save_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     field = form.get(key.FIELD_EDIT)
     if not field:
         field = fields[form[key.FIELD_INDEX]]
-
     try:
         setattr(form[key.DATA], field, input)
-    except (ValidationError, EmailValidationError):
+    except (ValidationError, EmailValidationError) as error:
+        logging.error(f'Error in form: {error}')
         question_hint = ALL_QUESTIONS[field.upper()][key.HINT]
         error_message = text.INPUT_ERROR_TEMPLATE.format(hint=question_hint)
         await send_message(update, error_message)
@@ -151,6 +152,7 @@ async def send_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if send_email_message(message, subject):
         text_message = info.get(key.RESPONSE, text.MAIL_SEND_OK_MESSAGE)
+        logging.info(f'Форма для "{key.NAME}" заполнена и отправлена.')
     else:
         text_message = text.MAIL_SEND_ERROR_MESSAGE
 
