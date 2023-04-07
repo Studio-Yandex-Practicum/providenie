@@ -5,7 +5,8 @@ from email_validate import validate_or_fail
 from pydantic import BaseModel, EmailStr, Field, root_validator, validator
 
 from bot.constants.info.fields_order import FUND_FIELDS_ORDER
-from bot.constants.info.text import REGEX_FULL_NAME, REGEX_PHONE
+from bot.constants.info.text import (FAMILY_MEMBERS, REGEX_FULL_NAME,
+                                     REGEX_PHONE)
 
 
 class BaseForm(BaseModel):
@@ -72,7 +73,7 @@ class LongForm(BaseForm):
     email: Optional[EmailStr]
     child_full_name: str = Field(None, regex=REGEX_FULL_NAME, max_length=100)
     child_birthday: Optional[datetime]
-    family_members: int = Field(None, ge=2)
+    family_members: str = Field(None, regex=FAMILY_MEMBERS)
     city: Optional[str] = Field(None, max_length=100)
     child_birth_place: Optional[str] = Field(None, max_length=100)
     child_birth_date: int = Field(None, ge=22, le=37)
