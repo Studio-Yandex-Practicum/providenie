@@ -76,6 +76,7 @@ ALL_MENU = {
     f"{key.MENU}_EVENT": {
         key.BUTTON_TEXT: "Наши события",
         key.DESCRIPTION: "В разработке",
+        key.OPTIONS: option.EVENT,
     },
     f"{key.MENU}_ABOUT": {
         key.BUTTON_TEXT: "О Фонде",
