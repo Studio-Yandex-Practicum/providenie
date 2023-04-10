@@ -69,7 +69,7 @@ ALL_MENU = {
         ),
     },
     f"{key.MENU}_DONATION": {
-        key.BUTTON_TEXT: "Отчёты и пожертвование",
+        key.BUTTON_TEXT: "Отчёты и пожертвования",
         key.DESCRIPTION: "Сделать пожертвование",
         key.OPTIONS: option.DONATION,
     },
