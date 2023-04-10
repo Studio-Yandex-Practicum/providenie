@@ -18,7 +18,7 @@ async def start_form(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Initializes the user's form data and asks for input."""
     user_data = context.user_data
     await context.bot.set_my_commands(
-        [button.MENU_CMD, button.CANCEL_CMD],
+        [button.MENU_CMD, button.CANCEL_CMD, button.START_CMD],
         scope=BotCommandScopeChat(update.effective_chat.id),
     )
     option = user_data.get(key.OPTION, {})
