@@ -26,11 +26,11 @@ ABOUT = {
     f"{key.OPTION}_ABOUT_SUCCESS": {
         key.BUTTON_TEXT: "Истории успеха",
         key.DESCRIPTION: (
-            "https://youtu.be/n-hByd_oiIo\n"
-            "https://youtu.be/NG4QUO-hvCk\n"
-            "https://youtu.be/cAQayg_ZNok\n"
-            "https://youtu.be/26mYPRE4BQo\n"
-            "https://youtu.be/CINnVYp6hQI"
+            "\n<a href='https://youtu.be/n-hByd_oiIo/'>Лучик добра</a>"
+            "\n\n<a href='https://youtu.be/NG4QUO-hvCk/'>Фотосессия к 8 марта в г. Электросталь </a>"
+            "\n\n<a href='https://youtu.be/cAQayg_ZNok/'>История успеха маленькой Хаёт </a>"
+            "\n\n<a href='https://youtu.be/26mYPRE4BQo/'>Праздник в честь трехлетия Фонда “Провидение”</a>"
+            "\n\n<a href='https://youtu.be/CINnVYp6hQI/'>История успеха Григория Жижилкина </a>"
         ),
     },
 }
