@@ -189,11 +189,3 @@ FUND = {
         ),
     },
 }
-
-EVENT = {
-    f"{key.OPTION}_FUND_EVENTS": {
-        key.BUTTON_TEXT: "События Фонда",
-        key.DESCRIPTION: "Здесь вы найдете информацию о событиях Фонда",
-        key.LINK: "https://fond-providenie.ru/news/",
-    },
-}
