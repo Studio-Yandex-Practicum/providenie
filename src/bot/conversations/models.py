@@ -16,6 +16,7 @@ class BaseForm(BaseModel):
         min_anystr_length = 1
         max_anystr_length = 4096
         validate_assignment = True
+        anystr_strip_whitespace = True
 
 
 class ShortForm(BaseForm):
@@ -73,7 +74,7 @@ class LongForm(BaseForm):
     email: Optional[EmailStr]
     child_full_name: str = Field(None, regex=REGEX_FULL_NAME, max_length=100)
     child_birthday: Optional[datetime]
-    family_members: str = Field(None, regex=FAMILY_MEMBERS, strip_whitespace=True)
+    family_members: str = Field(None, regex=FAMILY_MEMBERS)
     city: Optional[str] = Field(None, max_length=100)
     child_birth_place: Optional[str] = Field(None, max_length=100)
     child_birth_date: int = Field(None, ge=22, le=37)
