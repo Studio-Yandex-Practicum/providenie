@@ -23,7 +23,7 @@ class ShortForm(BaseForm):
     """Base model for short forms."""
 
     full_name: str = Field(None, regex=REGEX_FULL_NAME, max_length=100)
-    phone: str = Field(None, regex=REGEX_PHONE, strip_whitespace=True)
+    phone: str = Field(None, regex=REGEX_PHONE)
     email: Optional[EmailStr]
 
     @validator("email")
@@ -70,7 +70,7 @@ class LongForm(BaseForm):
     """Base model for long forms."""
 
     parent_full_name: str = Field(None, regex=REGEX_FULL_NAME, max_length=100)
-    phone: str = Field(None, regex=REGEX_PHONE, strip_whitespace=True)
+    phone: str = Field(None, regex=REGEX_PHONE)
     email: Optional[EmailStr]
     child_full_name: str = Field(None, regex=REGEX_FULL_NAME, max_length=100)
     child_birthday: Optional[datetime]
