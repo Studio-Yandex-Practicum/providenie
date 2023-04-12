@@ -61,12 +61,7 @@ ALL_MENU = {
     },
     f"{key.MENU}_SHARE": {
         key.BUTTON_TEXT: "Рассказать о Фонде своим друзьям",
-        key.DESCRIPTION: (
-            "Для того, чтобы оставаться в курсе последних "
-            "новостей, рекомендуем Вам подписаться на наши "
-            "страницы в социальных сетях:"
-            f"{text.SHARE}"
-        ),
+        key.DESCRIPTION: text.SHARE,
     },
     f"{key.MENU}_DONATION": {
         key.BUTTON_TEXT: "Отчёты и пожертвования",
