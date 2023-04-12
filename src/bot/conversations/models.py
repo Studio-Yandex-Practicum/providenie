@@ -5,8 +5,11 @@ from email_validate import validate_or_fail
 from pydantic import BaseModel, EmailStr, Field, root_validator, validator
 
 from bot.constants.info.fields_order import FUND_FIELDS_ORDER
-from bot.constants.info.text import (FAMILY_MEMBERS, REGEX_FULL_NAME,
-                                     REGEX_PHONE)
+from bot.constants.info.text import (
+    FAMILY_MEMBERS,
+    REGEX_FULL_NAME,
+    REGEX_PHONE,
+)
 
 
 class BaseForm(BaseModel):
@@ -119,7 +122,7 @@ class ChatForm(LongForm):
 class ChatAngelsForm(ShortForm):
     """Model for angels chat application form."""
 
-    family_members: Optional[int]
+    family_members: str = Field(None, regex=FAMILY_MEMBERS)
     city: Optional[str] = Field(None, max_length=100)
     where_got_info: Optional[str]
     additional_chats: Optional[str]
