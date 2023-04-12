@@ -78,8 +78,9 @@ ALL_MENU = {
         key.DESCRIPTION: (
             "Вы можете ознакомиться с ключевыми событиями "
             "Фонда, перейдя по ссылке ниже"
+            "\n<a href='https://fond-providenie.ru/news/'>"
+            "Ссылка на страницу с ключевыми событиями фонда</a>"
         ),
-        key.LINK: 'https://fond-providenie.ru/news/',
     },
     f"{key.MENU}_ABOUT": {
         key.BUTTON_TEXT: "О Фонде",

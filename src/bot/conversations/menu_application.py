@@ -58,8 +58,7 @@ async def show_option(update: Update, context: ContextTypes.DEFAULT_TYPE):
     buttons = [back_button]
     if menu.get(key.MODEL):
         buttons.insert(0, button.START_FORM)
-    url = option.get(key.LINK) if options else menu.get(key.LINK)
-    if url:
+    if options and (url := option.get(key.LINK)):
         buttons.insert(0, Button(text.FOLLOW_LINK, url=url))
 
     await send_message(update, message, keyboard=Keyboard([buttons]))
