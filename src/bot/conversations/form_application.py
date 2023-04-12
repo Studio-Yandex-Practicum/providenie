@@ -70,7 +70,7 @@ async def save_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         setattr(form[key.DATA], field, input)
     except (ValidationError, EmailValidationError) as error:
-        logging.error(f'Error in form: {error}')
+        logging.error(f'Error in field {field} of form "{user_data[key.MENU][key.NAME]}": {error}')
         question_hint = ALL_QUESTIONS[field.upper()][key.HINT]
         error_message = text.INPUT_ERROR_TEMPLATE.format(hint=question_hint)
         await send_message(update, error_message)
@@ -115,6 +115,7 @@ async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [[button.SEND_DATA], [button.EDIT_MENU, button.MAIN_MENU]]
     )
     await send_message(update, message, keyboard=keyboard)
+    logging.info(f'User filled out the form for "{user_data[key.MENU][key.NAME]}".')
 
     return state.FORM_SUBMISSION
 
@@ -150,9 +151,9 @@ async def send_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message = form[key.SHOW_DATA].replace("\n", "<br>")
     subject = info.get(key.NAME)
 
+    logging.info(f'Form for "{user_data[key.MENU][key.NAME]}" is completed and sent.')
     if send_email_message(message, subject):
         text_message = info.get(key.RESPONSE, text.MAIL_SEND_OK_MESSAGE)
-        logging.info(f'Форма для "{key.NAME}" заполнена и отправлена.')
     else:
         text_message = text.MAIL_SEND_ERROR_MESSAGE
 
