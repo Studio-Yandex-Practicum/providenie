@@ -75,8 +75,11 @@ ALL_MENU = {
     },
     f"{key.MENU}_EVENT": {
         key.BUTTON_TEXT: "Наши события",
-        key.DESCRIPTION: "Здесь можно ознакомиться с событиями Фонда.",
-        key.OPTIONS: option.EVENT,
+        key.DESCRIPTION: (
+            "Вы можете ознакомиться с ключевыми событиями "
+            "Фонда, перейдя по ссылке ниже"
+        ),
+        key.LINK: 'https://fond-providenie.ru/news/',
     },
     f"{key.MENU}_ABOUT": {
         key.BUTTON_TEXT: "О Фонде",
