@@ -24,7 +24,7 @@ ALL_MENU = {
     },
     f"{key.MENU}_FOND": {
         key.NAME: "Заявка на помощь",
-        key.BUTTON_TEXT: "Заявка в Фонд",
+        key.BUTTON_TEXT: "Подать заявку в Фонд",
         key.DESCRIPTION: "Выберите программу Фонда:",
         key.MODEL: FundForm,
         key.OPTIONS: option.FUND,
