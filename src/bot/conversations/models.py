@@ -45,6 +45,7 @@ class VolunteerForm(ShortForm):
     birthday: Optional[datetime]
     city: Optional[str] = Field(None, max_length=100)
     volunteer_help: Optional[str]
+    volunteer_time: Optional[str]
 
     @validator("birthday", pre=True)
     def parse_birthday(cls, value):
@@ -57,8 +58,8 @@ class VolunteerForm(ShortForm):
             today.year - value.year
             - ((today.month, today.day) < (value.month, value.day))
         )
-        if age < 18 or age > 80:
-            raise ValueError("Пользователю должно быть не менее 18 лет")
+        if age < 16 or age > 80:
+            raise ValueError("Пользователю должно быть не менее 16 лет")
 
         return value.strftime("%d.%m.%Y")
 

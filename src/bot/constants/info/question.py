@@ -1,4 +1,7 @@
+from datetime import datetime as dt
+
 from bot.constants import key
+from . import option
 
 
 COMMON_QUESTIONS = {
@@ -49,10 +52,14 @@ COMMON_QUESTIONS = {
     },
     'ADDITIONAL_CHATS': {
         key.TITLE: 'Дополнительные чаты',
-        key.TEXT: 'В какие ещё чаты Вы хотели бы вступить?',
+        key.TEXT: (
+            'В какие ещё чаты Вы хотели бы вступить?'
+            '\nСписок возможных чатов для вступления:\n- ' +
+            '\n- '.join([chat.get(key.BUTTON_TEXT) for chat in option.CHAT.values()])
+        ),
         key.HINT: (
             'Пожалуйста, укажите, В какие ещё чаты Вы хотели бы вступить, '
-            'например: Да, хочу вступить в "Смотри на мир", "Шунтята"'
+            'например: Да, хочу вступить в "Смотри на мир", "Дети с гидроцефалией"'
         ),
     }
 }
@@ -61,7 +68,8 @@ VOLUNTEER_QUESTIONS = {
     'BIRTHDAY': {
         key.TITLE: 'Дата рождения',
         key.TEXT: 'Введите дату рождения',
-        key.HINT: 'Пожалуйста, введите дату рождения, например: 09.03.2005',
+        key.HINT: 'Пожалуйста, введите дату рождения, например: '
+        f'{dt.now().strftime("%d.%m")}.{dt.now().year - 16}',
     },
     'VOLUNTEER_HELP': {
         key.TITLE: 'Предлагаемая помощь',
@@ -82,6 +90,15 @@ VOLUNTEER_QUESTIONS = {
             'есть машина легкового типа'
         ),
     },
+    'VOLUNTEER_TIME': {
+        key.TITLE: 'Количество уделяемого времени',
+        key.TEXT: 'Как часто Вы сможете уделять время волонтерству?',
+        key.HINT: (
+            'Пожалуйста, укажите сколько времени Вы сможете уделять '
+            'волонтерству.'
+            '\nПример: 5 часов в неделю.'
+        )
+    }
 }
 
 ASK_QUESTIONS = {
