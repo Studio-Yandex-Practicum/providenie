@@ -1,4 +1,5 @@
 from bot.constants import key
+from datetime import datetime as dt
 
 
 COMMON_QUESTIONS = {
@@ -61,7 +62,8 @@ VOLUNTEER_QUESTIONS = {
     'BIRTHDAY': {
         key.TITLE: 'Дата рождения',
         key.TEXT: 'Введите дату рождения',
-        key.HINT: 'Пожалуйста, введите дату рождения, например: 09.03.2005',
+        key.HINT: 'Пожалуйста, введите дату рождения, например: '
+        f'{dt.now().strftime("%d.%m")}.{dt.now().year - 16}',
     },
     'VOLUNTEER_HELP': {
         key.TITLE: 'Предлагаемая помощь',
