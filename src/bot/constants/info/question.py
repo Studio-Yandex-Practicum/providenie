@@ -1,4 +1,5 @@
 from bot.constants import key
+from . import option
 
 
 COMMON_QUESTIONS = {
@@ -49,7 +50,11 @@ COMMON_QUESTIONS = {
     },
     'ADDITIONAL_CHATS': {
         key.TITLE: 'Дополнительные чаты',
-        key.TEXT: 'В какие ещё чаты Вы хотели бы вступить?',
+        key.TEXT: (
+            'В какие ещё чаты Вы хотели бы вступить?'
+            '\nСписок возможных чатов для вступления:\n- ' +
+            '\n- '.join([chat.get(key.BUTTON_TEXT) for chat in option.CHAT.values()])
+        ),
         key.HINT: (
             'Пожалуйста, укажите, В какие ещё чаты Вы хотели бы вступить, '
             'например: Да, хочу вступить в "Смотри на мир", "Шунтята"'
@@ -137,7 +142,7 @@ LONG_QUESTIONS = {
     },
     'CHILD_BIRTH_WEIGHT': {
         key.TITLE: 'Вес ребенка при рождении',
-        key.TEXT: 'Введите вес ребенка при рождении',
+        key.TEXT: 'Введите в граммах вес ребенка при рождении',
         key.HINT: (
             'Пожалуйста, введите вес ребенка в граммах, например: 3000'
         ),
