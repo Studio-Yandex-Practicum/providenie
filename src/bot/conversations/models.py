@@ -44,8 +44,9 @@ class VolunteerForm(ShortForm):
     """Model for volunteer form."""
 
     birthday: Optional[datetime]
-    city: Optional[str] = Field(None, max_length=100)
+    city: str = Field(None, regex=REGEX_NON_LATIN, max_length=100)
     volunteer_help: str = Field(None, regex=REGEX_NON_LATIN)
+    volunteer_time: str = Field(None, regex=REGEX_NON_LATIN)
 
     @validator("birthday", pre=True)
     def parse_birthday(cls, value):
@@ -58,8 +59,8 @@ class VolunteerForm(ShortForm):
             today.year - value.year
             - ((today.month, today.day) < (value.month, value.day))
         )
-        if age < 18 or age > 80:
-            raise ValueError("Пользователю должно быть не менее 18 лет")
+        if age < 16 or age > 80:
+            raise ValueError("Пользователю должно быть не менее 16 лет")
 
         return value.strftime("%d.%m.%Y")
 
@@ -124,7 +125,7 @@ class ChatAngelsForm(ShortForm):
     """Model for angels chat application form."""
 
     family_members: str = Field(None, regex=FAMILY_MEMBERS)
-    city: Optional[str] = Field(None, max_length=100)
+    city: str = Field(None, regex=REGEX_NON_LATIN, max_length=100)
     where_got_info: str = Field(None, regex=REGEX_NON_LATIN)
     additional_chats: str = Field(None, regex=REGEX_NON_LATIN)
 
