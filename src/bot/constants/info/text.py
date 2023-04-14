@@ -48,6 +48,10 @@ MESSAGE_MARKDOWN = "HTML"
 SHOW_DATA_TEMPLATE = "<b><u>{title}</u></b>:\n{value}\n\n"
 INPUT_ERROR_TEMPLATE = "<b>Некорректно введены данные!</b>\n\n{hint}"
 DATE_TEMPLATE = "%d.%m.%Y"
+FORM_HEADER = {
+    'Вступление в чат': 'Выбранный чат',
+    'Заявка на помощь': 'Выбранная программа',
+}
 
 
 # DOCUMENTS FOR FORMS
