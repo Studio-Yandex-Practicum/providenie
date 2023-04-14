@@ -12,6 +12,7 @@ from telegram.ext import ContextTypes
 from bot.constants import button, key, state
 from bot.constants.info import text
 from bot.constants.info.question import ALL_QUESTIONS
+from bot.core.logger import pydantic_error
 from bot.utils import send_email_message, send_message
 
 
@@ -70,7 +71,7 @@ async def save_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         setattr(form[key.DATA], field, input)
     except (ValidationError, EmailValidationError) as error:
-        logging.error(f'Error in field {field} of form "{user_data[key.MENU][key.NAME]}": {error}')
+        logging.error(pydantic_error(field, input, error) if type(error) is ValidationError else error)
         question_hint = ALL_QUESTIONS[field.upper()][key.HINT]
         error_message = text.INPUT_ERROR_TEMPLATE.format(hint=question_hint)
         await send_message(update, error_message)

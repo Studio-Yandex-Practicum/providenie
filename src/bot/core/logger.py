@@ -46,3 +46,8 @@ DEFAULT_LOGGING = {
 }
 logging.config.dictConfig(DEFAULT_LOGGING)
 logger = logging.getLogger(__name__)
+
+
+def pydantic_error(field, input, error):
+    """Reducing the pidantic validation error to a string value."""
+    return f'Validation error in {field}={input}: {error.errors()[0]["msg"]}'
