@@ -52,7 +52,7 @@ ALL_MENU = {
     f"{key.MENU}_ASK_QUESTION": {
         key.NAME: "Вопрос пользователя",
         key.BUTTON_TEXT: "Задать вопрос",
-        key.DESCRIPTION: "Далее необходимо заполнить поля для вопроса",
+        key.DESCRIPTION: "Чтобы задать вопрос, заполните, пожалуйста, нашу анкету",
         key.MODEL: AskQuestionForm,
         key.RESPONSE: (
             "Ваш вопрос успешно отправлен!"
