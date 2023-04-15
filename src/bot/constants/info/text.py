@@ -72,6 +72,7 @@ MAIL_SEND_ERROR_MESSAGE = "Ошибка: Невозможно отправить
 # REGEXP
 REGEX_PHONE = r"^(?:\+)?[0-9]\d{10,14}$"
 REGEX_FULL_NAME = r"^([А-Яа-яЁё\-]+\b {,3}){2,}$"
+REGEX_NON_LATIN = r"^[^a-zA-Z]*$"
 
 # Quantity of family members (variants)
 FAMILY_MEMBERS = r"(?i)^(не)?\s?полная$"

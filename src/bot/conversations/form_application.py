@@ -147,7 +147,12 @@ async def send_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     form = user_data[key.FORM]
     info = user_data[key.MENU]
     message = form[key.SHOW_DATA].replace("\n", "<br>")
-    subject = info.get(key.NAME)
+    choice = user_data.get(key.OPTION)
+
+    if choice:
+        subject = f"{choice.get(key.NAME)}_{info.get(key.NAME)}"
+    else:
+        subject = info.get(key.NAME)
 
     if send_email_message(message, subject):
         text_message = info.get(key.RESPONSE, text.MAIL_SEND_OK_MESSAGE)
