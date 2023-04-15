@@ -26,11 +26,17 @@ ABOUT = {
     f"{key.OPTION}_ABOUT_SUCCESS": {
         key.BUTTON_TEXT: "Истории успеха",
         key.DESCRIPTION: (
-            "\n<a href='https://youtu.be/n-hByd_oiIo/'>Лучик добра</a>"
-            "\n\n<a href='https://youtu.be/NG4QUO-hvCk/'>Фотосессия к 8 марта в г. Электросталь </a>"
+            "Вы можете ознакомиться с нашими победами и историями успеха, перейдя по ссылкам ниже."
+            "\n\n<a href='https://youtu.be/muZOfVryzFY/'>История Фонда “Провидение”</a>"
+            "\n\n<a href='https://youtu.be/txSZhTntM_k/'>Чудесная история Савелия Рыжкова</a>"
             "\n\n<a href='https://youtu.be/cAQayg_ZNok/'>История успеха маленькой Хаёт </a>"
-            "\n\n<a href='https://youtu.be/26mYPRE4BQo/'>Праздник в честь трехлетия Фонда “Провидение”</a>"
-            "\n\n<a href='https://youtu.be/CINnVYp6hQI/'>История успеха Григория Жижилкина </a>"
+            "\n\n<a href='https://youtu.be/eK1JQ0RbCrY/'>История успеха новорожденной Адель</a>"
+            "\n\n<a href='https://youtu.be/2CwAIm_8Ywg/'>История успеха: первый этап операции Вани</a>"
+            "\n\n<a href='https://youtu.be/KxyoASCXMBs/'>История успеха новорожденного Барсбека</a>"
+            "\n\n<a href='https://youtu.be/VzeM-0wL61g/'>История успеха Златы Григорьевой</a>"
+            "\n\n<a href='https://youtu.be/9lk559x69R4/'>История успеха Артема Антипорович</a>"
+            "\n\n<a href='https://youtu.be/bQqtUN80LJU/'>История успеха маленького Билала</a>"
+            "\n\n<a href='https://youtu.be/NG4QUO-hvCk/'>Фотосессия к 8 марта г. Электросталь</a>"
         ),
     },
 }
