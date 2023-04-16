@@ -64,7 +64,7 @@ ALL_MENU = {
         key.DESCRIPTION: text.SHARE
     },
     f"{key.MENU}_DONATION": {
-        key.BUTTON_TEXT: "Отчёты и пожертвования",
+        key.BUTTON_TEXT: "Оказать помощь Фонду",
         key.DESCRIPTION: "Сделать пожертвование",
         key.OPTIONS: option.DONATION,
     },
