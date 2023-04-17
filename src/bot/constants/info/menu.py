@@ -65,14 +65,22 @@ ALL_MENU = {
     },
     f"{key.MENU}_DONATION": {
         key.BUTTON_TEXT: "Оказать помощь Фонду",
-        key.DESCRIPTION: "Сделать пожертвование",
+        key.DESCRIPTION: "Оказать помощь Фонду",
         key.OPTIONS: option.DONATION,
+    },
+    f"{key.MENU}_REPORT": {
+        key.BUTTON_TEXT: "Отчеты Фонда",
+        key.DESCRIPTION: (
+            "Вы сможете найти годовую отчетность Фонда, перейдя по ссылке ниже:"
+            "\n<a href='https://fond-providenie.ru/docs/'>"
+            "Ссылка на страницу с отчетами Фонда</a>"
+        )
     },
     f"{key.MENU}_EVENT": {
         key.BUTTON_TEXT: "Наши события",
         key.DESCRIPTION: (
             "Вы можете ознакомиться с ключевыми событиями "
-            "Фонда, перейдя по ссылке ниже"
+            "Фонда, перейдя по ссылке ниже:"
             "\n<a href='https://fond-providenie.ru/news/'>"
             "Ссылка на страницу с ключевыми событиями фонда</a>"
         ),
