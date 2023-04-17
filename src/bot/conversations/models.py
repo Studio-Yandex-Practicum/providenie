@@ -5,7 +5,12 @@ from email_validate import validate_or_fail
 from pydantic import BaseModel, EmailStr, Field, root_validator, validator
 
 from bot.constants.info.fields_order import FUND_FIELDS_ORDER
-from bot.constants.info.text import REGEX_FULL_NAME, REGEX_PHONE
+from bot.constants.info.text import (
+    FAMILY_MEMBERS,
+    REGEX_FULL_NAME,
+    REGEX_NON_LATIN,
+    REGEX_PHONE,
+)
 
 
 class BaseForm(BaseModel):
@@ -15,13 +20,14 @@ class BaseForm(BaseModel):
         min_anystr_length = 1
         max_anystr_length = 4096
         validate_assignment = True
+        anystr_strip_whitespace = True
 
 
 class ShortForm(BaseForm):
     """Base model for short forms."""
 
     full_name: str = Field(None, regex=REGEX_FULL_NAME, max_length=100)
-    phone: str = Field(None, regex=REGEX_PHONE, strip_whitespace=True)
+    phone: str = Field(None, regex=REGEX_PHONE)
     email: Optional[EmailStr]
 
     @validator("email")
@@ -38,8 +44,9 @@ class VolunteerForm(ShortForm):
     """Model for volunteer form."""
 
     birthday: Optional[datetime]
-    city: Optional[str] = Field(None, max_length=100)
-    volunteer_help: Optional[str]
+    city: str = Field(None, regex=REGEX_NON_LATIN, max_length=100)
+    volunteer_help: str = Field(None, regex=REGEX_NON_LATIN)
+    volunteer_time: str = Field(None, regex=REGEX_NON_LATIN)
 
     @validator("birthday", pre=True)
     def parse_birthday(cls, value):
@@ -52,8 +59,8 @@ class VolunteerForm(ShortForm):
             today.year - value.year
             - ((today.month, today.day) < (value.month, value.day))
         )
-        if age < 18 or age > 80:
-            raise ValueError("Пользователю должно быть не менее 18 лет")
+        if age < 16 or age > 80:
+            raise ValueError("Пользователю должно быть не менее 16 лет")
 
         return value.strftime("%d.%m.%Y")
 
@@ -61,25 +68,25 @@ class VolunteerForm(ShortForm):
 class AskQuestionForm(ShortForm):
     """Model for 'Ask a question' form."""
 
-    question: Optional[str]
+    question: str = Field(None, regex=REGEX_NON_LATIN)
 
 
 class LongForm(BaseForm):
     """Base model for long forms."""
 
     parent_full_name: str = Field(None, regex=REGEX_FULL_NAME, max_length=100)
-    phone: str = Field(None, regex=REGEX_PHONE, strip_whitespace=True)
+    phone: str = Field(None, regex=REGEX_PHONE)
     email: Optional[EmailStr]
     child_full_name: str = Field(None, regex=REGEX_FULL_NAME, max_length=100)
     child_birthday: Optional[datetime]
-    family_members: int = Field(None, ge=2)
-    city: Optional[str] = Field(None, max_length=100)
-    child_birth_place: Optional[str] = Field(None, max_length=100)
+    family_members: str = Field(None, regex=FAMILY_MEMBERS)
+    city: str = Field(None, regex=REGEX_NON_LATIN, max_length=100)
+    child_birth_place: str = Field(None, regex=REGEX_NON_LATIN, max_length=100)
     child_birth_date: int = Field(None, ge=22, le=37)
     child_birth_weight: int = Field(None, ge=400, le=4000)
     child_birth_height: int = Field(None, ge=30, le=56)
-    child_diagnosis: Optional[str]
-    where_got_info: Optional[str]
+    child_diagnosis: str = Field(None, regex=REGEX_NON_LATIN)
+    where_got_info: str = Field(None, regex=REGEX_NON_LATIN)
 
     @validator("email")
     def validator_email(cls, email):
@@ -111,27 +118,27 @@ class LongForm(BaseForm):
 class ChatForm(LongForm):
     """Model for chat application form."""
 
-    additional_chats: Optional[str]
+    additional_chats: str = Field(None, regex=REGEX_NON_LATIN)
 
 
 class ChatAngelsForm(ShortForm):
     """Model for angels chat application form."""
 
-    family_members: Optional[int]
-    city: Optional[str] = Field(None, max_length=100)
-    where_got_info: Optional[str]
-    additional_chats: Optional[str]
+    family_members: str = Field(None, regex=FAMILY_MEMBERS)
+    city: str = Field(None, regex=REGEX_NON_LATIN, max_length=100)
+    where_got_info: str = Field(None, regex=REGEX_NON_LATIN)
+    additional_chats: str = Field(None, regex=REGEX_NON_LATIN)
 
 
 class FundForm(LongForm):
     """Model for fund application form."""
 
-    address: Optional[str]
-    required_therapy: Optional[str]
-    request_goal: Optional[str]
+    address: str = Field(None, regex=REGEX_NON_LATIN)
+    required_therapy: str = Field(None, regex=REGEX_NON_LATIN)
+    request_goal: str = Field(None, regex=REGEX_NON_LATIN)
     social_networks: Optional[str]
-    parents_work_place: Optional[str]
-    another_fund_member: Optional[str]
+    parents_work_place: str = Field(None, regex=REGEX_NON_LATIN)
+    another_fund_member: str = Field(None, regex=REGEX_NON_LATIN)
 
     @root_validator
     def order_fields(cls, values):

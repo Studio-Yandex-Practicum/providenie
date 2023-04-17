@@ -19,7 +19,7 @@ async def start_form(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Initializes the user's form data and asks for input."""
     user_data = context.user_data
     await context.bot.set_my_commands(
-        [button.MENU_CMD, button.CANCEL_CMD],
+        [button.MENU_CMD, button.CANCEL_CMD, button.START_CMD],
         scope=BotCommandScopeChat(update.effective_chat.id),
     )
     option = user_data.get(key.OPTION, {})
@@ -101,7 +101,7 @@ async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     if menu_option := user_data.get(key.OPTION):
         message += text.SHOW_DATA_TEMPLATE.format(
-            title=text.CHOICE,
+            title=info.get(key.FORM_HEADER),
             value=menu_option[key.BUTTON_TEXT],
         )
     message += text.SHOW_DATA_TEMPLATE.format(
@@ -154,7 +154,12 @@ async def send_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     form = user_data[key.FORM]
     info = user_data[key.MENU]
     message = form[key.SHOW_DATA].replace("\n", "<br>")
-    subject = info.get(key.NAME)
+    choice = user_data.get(key.OPTION)
+
+    if choice:
+        subject = f"{choice.get(key.NAME)}_{info.get(key.NAME)}"
+    else:
+        subject = info.get(key.NAME)
 
     logging.info(f'Form for "{user_data[key.MENU][key.NAME]}" is completed and sent.')
     if send_email_message(message, subject):
