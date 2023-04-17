@@ -71,7 +71,7 @@ async def save_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         setattr(form[key.DATA], field, input)
     except (ValidationError, EmailValidationError) as error:
-        logging.error(pydantic_error(field, input, error) if type(error) is ValidationError else error)
+        logging.error(pydantic_error(field, user_data, error) if type(error) is ValidationError else error)
         question_hint = ALL_QUESTIONS[field.upper()][key.HINT]
         error_message = text.INPUT_ERROR_TEMPLATE.format(hint=question_hint)
         await send_message(update, error_message)
