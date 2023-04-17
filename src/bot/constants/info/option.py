@@ -3,22 +3,18 @@ from bot.conversations.models import ChatAngelsForm
 
 
 DONATION = {
-    f"{key.OPTION}_REPORT": {
-        key.BUTTON_TEXT: "Годовые отчёты",
-        key.DESCRIPTION: "Здесь вы найдете отчетность Фонда",
-        key.LINK: "https://fond-providenie.ru/docs/",
-    },
-    f"{key.OPTION}_LINK": {
-        key.BUTTON_TEXT: "Сделать пожертвование",
-        key.DESCRIPTION: (
-            "По ссылке вы можете сделать пожертвование. "
-            "Убедительно просим Вас подключить регулярный платеж в Фонд. "
-            "Это очень важно. Спасибо!"
-        ),
+    f"{key.OPTION}_HELP": {
+        key.BUTTON_TEXT: "Поддержать Фонд",
+        key.DESCRIPTION: "текст (ждем информацию от заказчика)",
         key.LINK: (
             "https://fond-providenie.ru/help-chidren/sdelat-pozhertovanie"
             "/sdelat-pozhertvovanie-s-bankovskoj-karty/"
         ),
+    },
+    f"{key.OPTION}_TARGETED_HELP": {
+        key.BUTTON_TEXT: "Поддержать адресно",
+        key.DESCRIPTION: "текст (ждем информацию от заказчика)",
+        key.LINK: "https://fond-providenie.ru/need-help/"
     },
 }
 
