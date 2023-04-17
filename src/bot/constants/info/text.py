@@ -76,3 +76,6 @@ REGEX_NON_LATIN = r"^[^a-zA-Z]*$"
 
 # Quantity of family members (variants)
 FAMILY_MEMBERS = r"(?i)^(не)?\s?полная$"
+
+# Validation error template
+VALIDATION_ERROR = "Validation Error in {field} of {form}: {error}"

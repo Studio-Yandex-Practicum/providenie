@@ -11,6 +11,7 @@ from bot.conversations.models import (
 ALL_MENU = {
     f"{key.MENU}_CHAT": {
         key.NAME: "Вступление в чат",
+        key.FORM_HEADER: "Выбранный чат",
         key.BUTTON_TEXT: "Хочу попасть в родительский чат",
         key.DESCRIPTION: "Выберите чат для вступления:",
         key.MODEL: ChatForm,
@@ -24,6 +25,7 @@ ALL_MENU = {
     },
     f"{key.MENU}_FOND": {
         key.NAME: "Заявка на помощь",
+        key.FORM_HEADER: "Выбранная программа",
         key.BUTTON_TEXT: "Подать заявку в Фонд",
         key.DESCRIPTION: "Выберите программу Фонда:",
         key.MODEL: FundForm,
