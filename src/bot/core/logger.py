@@ -1,7 +1,6 @@
 import logging.config
 from pathlib import Path
 
-from bot.constants import key
 from bot.core.settings import settings
 
 
@@ -47,8 +46,3 @@ DEFAULT_LOGGING = {
 }
 logging.config.dictConfig(DEFAULT_LOGGING)
 logger = logging.getLogger(__name__)
-
-
-def pydantic_error(field, user_data, error):
-    """Reducing the pidantic validation error to a string value."""
-    return f'Validation Error in {field} of {user_data[key.FORM][key.DATA].__class__.__name__}: {error}'
