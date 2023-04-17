@@ -1,3 +1,4 @@
+import logging
 from datetime import date
 
 from email_validate.exceptions import Error as EmailValidationError
@@ -66,10 +67,15 @@ async def save_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
     field = form.get(key.FIELD_EDIT)
     if not field:
         field = fields[form[key.FIELD_INDEX]]
-
     try:
         setattr(form[key.DATA], field, input)
-    except (ValidationError, EmailValidationError):
+    except (ValidationError, EmailValidationError) as error:
+        error_message = text.VALIDATION_ERROR.format(
+            field=field,
+            form=user_data[key.FORM][key.DATA].__class__.__name__,
+            error=error.errors()[0]["msg"],
+        ) if type(error) is ValidationError else error
+        logging.info(error_message)
         question_hint = ALL_QUESTIONS[field.upper()][key.HINT]
         error_message = text.INPUT_ERROR_TEMPLATE.format(hint=question_hint)
         await send_message(update, error_message)
@@ -114,6 +120,7 @@ async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [[button.SEND_DATA], [button.EDIT_MENU, button.MAIN_MENU]]
     )
     await send_message(update, message, keyboard=keyboard)
+    logging.info(f'User filled out the form for "{user_data[key.MENU][key.NAME]}".')
 
     return state.FORM_SUBMISSION
 
@@ -154,6 +161,7 @@ async def send_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         subject = info.get(key.NAME)
 
+    logging.info(f'Form for "{user_data[key.MENU][key.NAME]}" is completed and sent.')
     if send_email_message(message, subject):
         text_message = info.get(key.RESPONSE, text.MAIL_SEND_OK_MESSAGE)
     else:
