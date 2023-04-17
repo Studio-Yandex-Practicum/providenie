@@ -95,7 +95,7 @@ async def show_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     if menu_option := user_data.get(key.OPTION):
         message += text.SHOW_DATA_TEMPLATE.format(
-            title=text.CHOICE,
+            title=info.get(key.FORM_HEADER),
             value=menu_option[key.BUTTON_TEXT],
         )
     message += text.SHOW_DATA_TEMPLATE.format(
