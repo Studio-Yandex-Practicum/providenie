@@ -73,4 +73,4 @@ REGEX_PHONE = r"^(?:\+)?[0-9]\d{10,14}$"
 REGEX_FULL_NAME = r"^([А-Яа-яЁё\-]+\b {,3}){2,}$"
 
 # PYDANTIC VALIDATION ERROR
-PYDANTIC_ERROR = "Validation Error in {field} of {user_data[FORM][DATA].__class__.__name__}: {error}"
+VALIDATION_ERROR = "Validation Error in {field} of {form}: {error}"
