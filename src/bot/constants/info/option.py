@@ -5,7 +5,11 @@ from bot.conversations.models import ChatAngelsForm
 DONATION = {
     f"{key.OPTION}_HELP": {
         key.BUTTON_TEXT: "Поддержать Фонд",
-        key.DESCRIPTION: "текст (ждем информацию от заказчика)",
+        key.DESCRIPTION: (
+            "Ваша регулярная помощь очень важна для нас. Благодаря ей мы "
+            "можем планировать нашу работу и поддерживать тех, кто сейчас "
+            "наиболее уязвим."
+        ),
         key.LINK: (
             "https://fond-providenie.ru/help-chidren/sdelat-pozhertovanie"
             "/sdelat-pozhertvovanie-s-bankovskoj-karty/"
@@ -13,7 +17,11 @@ DONATION = {
     },
     f"{key.OPTION}_TARGETED_HELP": {
         key.BUTTON_TEXT: "Поддержать адресно",
-        key.DESCRIPTION: "текст (ждем информацию от заказчика)",
+        key.DESCRIPTION: (
+            "Ваша регулярная помощь очень важна для нас. Благодаря ей мы "
+            "можем планировать нашу работу и поддерживать тех, кто сейчас "
+            "наиболее уязвим."
+        ),
         key.LINK: "https://fond-providenie.ru/need-help/"
     },
 }
