@@ -41,6 +41,7 @@ ABOUT = {
             "\n\n<a href='https://youtu.be/9lk559x69R4/'>История успеха Артема Антипорович</a>"
             "\n\n<a href='https://youtu.be/bQqtUN80LJU/'>История успеха маленького Билала</a>"
             "\n\n<a href='https://youtu.be/NG4QUO-hvCk/'>Фотосессия к 8 марта г. Электросталь</a>"
+            "\n\n<a href='https://youtu.be/26mYPRE4BQo/'>Праздник в честь 3-летия Фонда</a>"
         ),
     },
 }
