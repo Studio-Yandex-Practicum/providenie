@@ -5,7 +5,11 @@ from bot.conversations.models import ChatAngelsForm
 DONATION = {
     f"{key.OPTION}_HELP": {
         key.BUTTON_TEXT: "Поддержать Фонд",
-        key.DESCRIPTION: "текст (ждем информацию от заказчика)",
+        key.DESCRIPTION: (
+            "Ваша регулярная помощь очень важна для нас. Благодаря ей мы "
+            "можем планировать нашу работу и поддерживать тех, кто сейчас "
+            "наиболее уязвим."
+        ),
         key.LINK: (
             "https://fond-providenie.ru/help-chidren/sdelat-pozhertovanie"
             "/sdelat-pozhertvovanie-s-bankovskoj-karty/"
@@ -13,7 +17,11 @@ DONATION = {
     },
     f"{key.OPTION}_TARGETED_HELP": {
         key.BUTTON_TEXT: "Поддержать адресно",
-        key.DESCRIPTION: "текст (ждем информацию от заказчика)",
+        key.DESCRIPTION: (
+            "Ваша регулярная помощь очень важна для нас. Благодаря ей мы "
+            "можем планировать нашу работу и поддерживать тех, кто сейчас "
+            "наиболее уязвим."
+        ),
         key.LINK: "https://fond-providenie.ru/need-help/"
     },
 }
@@ -33,6 +41,7 @@ ABOUT = {
             "\n\n<a href='https://youtu.be/9lk559x69R4/'>История успеха Артема Антипорович</a>"
             "\n\n<a href='https://youtu.be/bQqtUN80LJU/'>История успеха маленького Билала</a>"
             "\n\n<a href='https://youtu.be/NG4QUO-hvCk/'>Фотосессия к 8 марта г. Электросталь</a>"
+            "\n\n<a href='https://youtu.be/26mYPRE4BQo/'>Праздник в честь 3-летия Фонда</a>"
         ),
     },
 }
