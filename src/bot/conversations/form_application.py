@@ -163,7 +163,7 @@ async def send_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
         subject = info.get(key.NAME)
 
     logging.info(f'Form for "{user_data[key.MENU][key.NAME]}" is completed and sent.')
-    curators = settings.email_curator.split(', ')
+    curators = settings.email_curator.split(',')
     if all(send_email_message(message, subject, curator) for curator in curators):
         response_message = info.get(key.RESPONSE, text.MAIL_SEND_OK_MESSAGE)
     else:
