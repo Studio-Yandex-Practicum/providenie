@@ -12,6 +12,7 @@ from telegram.ext import ContextTypes
 from bot.constants import button, key, state
 from bot.constants.info import text
 from bot.constants.info.question import ALL_QUESTIONS
+from bot.core.settings import settings
 from bot.utils import send_email_message, send_message
 
 
@@ -162,14 +163,15 @@ async def send_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
         subject = info.get(key.NAME)
 
     logging.info(f'Form for "{user_data[key.MENU][key.NAME]}" is completed and sent.')
-    if send_email_message(message, subject):
-        text_message = info.get(key.RESPONSE, text.MAIL_SEND_OK_MESSAGE)
+    curators = settings.email_curator.split(',')
+    if all(send_email_message(message, subject, curator) for curator in curators):
+        response_message = info.get(key.RESPONSE, text.MAIL_SEND_OK_MESSAGE)
     else:
-        text_message = text.MAIL_SEND_ERROR_MESSAGE
+        response_message = text.MAIL_SEND_ERROR_MESSAGE
 
     await send_message(
         update,
-        text_message,
+        response_message,
         keyboard=Keyboard([[button.MAIN_MENU]]),
     )
 
