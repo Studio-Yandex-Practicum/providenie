@@ -171,7 +171,7 @@ async def send_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await send_message(
         update,
-        text_message,
+        response_message,
         keyboard=Keyboard([[button.MAIN_MENU]]),
     )
 
