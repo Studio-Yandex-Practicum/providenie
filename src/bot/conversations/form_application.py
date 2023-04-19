@@ -12,7 +12,7 @@ from telegram.ext import ContextTypes
 from bot.constants import button, key, state
 from bot.constants.info import text
 from bot.constants.info.question import ALL_QUESTIONS
-from bot.utils import send_email_message, send_message
+from bot.utils import send_email, send_message
 
 
 async def start_form(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -162,7 +162,7 @@ async def send_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
         subject = info.get(key.NAME)
 
     logging.info(f'Form for "{user_data[key.MENU][key.NAME]}" is completed and sent.')
-    if send_email_message(message, subject):
+    if send_email(message, subject):
         text_message = info.get(key.RESPONSE, text.MAIL_SEND_OK_MESSAGE)
     else:
         text_message = text.MAIL_SEND_ERROR_MESSAGE
