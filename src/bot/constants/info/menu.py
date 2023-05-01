@@ -7,6 +7,30 @@ from bot.conversations.models import (
     VolunteerForm,
 )
 
+FAQ = {
+    f"{key.MENU}_FAQ": {
+        key.BUTTON_TEXT: 'Ответы на часто задаваемые вопросы',
+        key.DESCRIPTION: (
+            'Здесь Вы можете ознакомиться с наиболее часто возникающими вопросами'
+        ),
+        key.RELATED_MENU: {
+            f"{key.MENU}_DONATORS": {
+                key.BUTTON_TEXT: 'Вопросы жертвователей',
+                key.DESCRIPTION: (
+                    'Наиболее частые вопросы жертвователей'
+                ),
+                key.OPTIONS: option.DONATORS,
+            },
+            f"{key.MENU}_PARENTS": {
+                key.BUTTON_TEXT: 'Вопросы родителей',
+                key.DESCRIPTION: (
+                    'Наиболее частые вопросы родителей'
+                ),
+                key.OPTIONS: option.PARENTS,
+            },
+        },
+    },
+}
 
 ALL_MENU = {
     f"{key.MENU}_CHAT": {
@@ -37,7 +61,7 @@ ALL_MENU = {
             f"\n{text.REQUIRED_DOCUMENTS}"
         ),
     },
-    f"{key.MENU}_VOLONTEER": {
+    f"{key.MENU}_VOLUNTEER": {
         key.NAME: "Заявка на волонтёрство",
         key.BUTTON_TEXT: "Хочу стать волонтёром",
         key.DESCRIPTION: (
@@ -60,6 +84,7 @@ ALL_MENU = {
             "Ваш вопрос успешно отправлен!"
             "\nНаш координатор свяжется с Вами в течение 3 рабочих дней."
         ),
+        key.RELATED_MENU: FAQ,
     },
     f"{key.MENU}_SHARE": {
         key.BUTTON_TEXT: "Рассказать о Фонде своим друзьям",
@@ -130,4 +155,7 @@ ALL_MENU = {
             "\nТелефон: +79031397876"
         ),
     },
+    f"{key.MENU}_FAQ": FAQ.get(f"{key.MENU}_FAQ"),
+    f"{key.MENU}_DONATORS": FAQ.get(f"{key.MENU}_FAQ")[key.RELATED_MENU][f"{key.MENU}_DONATORS"],
+    f"{key.MENU}_PARENTS": FAQ.get(f"{key.MENU}_FAQ")[key.RELATED_MENU][f"{key.MENU}_PARENTS"],
 }

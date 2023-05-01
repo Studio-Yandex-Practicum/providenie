@@ -36,12 +36,13 @@ async def show_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return state.MAIN_MENU
 
 
-async def show_option(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def show_option(update: Update, context: ContextTypes.DEFAULT_TYPE, recursion=None):
     """Show the option selected from the menu."""
     query = update.callback_query
     user_data = context.user_data
     menu = user_data[key.MENU]
     options = menu.get(key.OPTIONS)
+    buttons = []
 
     if query and query.data.startswith(key.OPTION):
         option = options[query.data]
@@ -54,13 +55,18 @@ async def show_option(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         message = menu[key.DESCRIPTION]
         back_button = button.MAIN_MENU
+        if related_menu := menu.get(key.RELATED_MENU):
+            related_buttons = [*get_menu_buttons(related_menu)]
+            buttons += [*related_buttons]
 
-    buttons = [back_button]
+    buttons.append([back_button])
     if menu.get(key.MODEL):
-        buttons.insert(0, button.START_FORM)
+        buttons.insert(0, [button.START_FORM])
     if options and (url := option.get(key.LINK)):
-        buttons.insert(0, Button(text.FOLLOW_LINK, url=url))
+        buttons.insert(0, [Button(text.FOLLOW_LINK, url=url)])
 
-    await send_message(update, message, keyboard=Keyboard([buttons]))
+    keyboard = Keyboard([*buttons])
+
+    await send_message(update, message, keyboard=keyboard)
 
     return state.MAIN_MENU
