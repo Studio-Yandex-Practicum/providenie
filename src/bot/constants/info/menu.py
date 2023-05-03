@@ -51,16 +51,6 @@ ALL_MENU = {
             "\nТелефон для связи с координатором Фонда +79169814619 (Юлия)"
         ),
     },
-    f"{key.MENU}_ASK_QUESTION": {
-        key.NAME: "Вопрос пользователя",
-        key.BUTTON_TEXT: "Задать вопрос",
-        key.DESCRIPTION: "Чтобы задать вопрос, заполните, пожалуйста, нашу анкету",
-        key.MODEL: AskQuestionForm,
-        key.RESPONSE: (
-            "Ваш вопрос успешно отправлен!"
-            "\nНаш координатор свяжется с Вами в течение 3 рабочих дней."
-        ),
-    },
     f"{key.MENU}_DONATORS_FAQ": {
         key.BUTTON_TEXT: "Частые вопросы жертвователей",
         key.DESCRIPTION: (
@@ -76,6 +66,16 @@ ALL_MENU = {
             "родителей"
         ),
         key.OPTIONS: option.PARENTS,
+    },
+    f"{key.MENU}_ASK_QUESTION": {
+        key.NAME: "Вопрос пользователя",
+        key.BUTTON_TEXT: "Задать вопрос",
+        key.DESCRIPTION: "Чтобы задать вопрос, заполните, пожалуйста, нашу анкету",
+        key.MODEL: AskQuestionForm,
+        key.RESPONSE: (
+            "Ваш вопрос успешно отправлен!"
+            "\nНаш координатор свяжется с Вами в течение 3 рабочих дней."
+        ),
     },
     f"{key.MENU}_SHARE": {
         key.BUTTON_TEXT: "Рассказать о Фонде своим друзьям",
