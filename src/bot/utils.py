@@ -8,8 +8,11 @@ from telegram import InlineKeyboardButton as Button
 from telegram import InlineKeyboardMarkup, Update
 
 from bot.constants import key
-from bot.constants.info.text import (MAIL_SEND_ERROR_MESSAGE,
-                                     MAIL_SEND_OK_MESSAGE, MESSAGE_MARKDOWN)
+from bot.constants.info.text import (
+    MAIL_SEND_ERROR_MESSAGE,
+    MAIL_SEND_OK_MESSAGE,
+    MESSAGE_MARKDOWN,
+)
 from bot.core.settings import settings
 
 
@@ -43,11 +46,11 @@ def get_menu_buttons(menu: dict):
     ]
 
 
-def send_email_message(message: str, subject: str) -> bool:
+def send_email_message(message: str, subject: str, recipient: str) -> bool:
     """Send email message to the specified curator email-address."""
     msg = MIMEMultipart()
     msg['From'] = settings.smtp_server_bot_email
-    msg['To'] = settings.email_curator
+    msg['To'] = recipient
     msg['Subject'] = subject
     msg.attach(MIMEText(message, 'html'))
     try:
