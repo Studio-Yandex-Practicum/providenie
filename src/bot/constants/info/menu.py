@@ -61,6 +61,22 @@ ALL_MENU = {
             "\nНаш координатор свяжется с Вами в течение 3 рабочих дней."
         ),
     },
+    f"{key.MENU}_DONATORS_FAQ": {
+        key.BUTTON_TEXT: "Частые вопросы жертвователей",
+        key.DESCRIPTION: (
+            "Здесь вы можете найти ответы на наиболее часто задаваемые вопросы "
+            "жертвователей Фонда"
+        ),
+        key.OPTIONS: option.DONATORS,
+    },
+    f"{key.MENU}_PARENTS_FAQ": {
+        key.BUTTON_TEXT: "Частые вопросы родителей",
+        key.DESCRIPTION: (
+            "Здесь вы можете найти ответы на наиболее часто задаваемые вопросы "
+            "родителей"
+        ),
+        key.OPTIONS: option.PARENTS,
+    },
     f"{key.MENU}_SHARE": {
         key.BUTTON_TEXT: "Рассказать о Фонде своим друзьям",
         key.DESCRIPTION: text.SHARE
