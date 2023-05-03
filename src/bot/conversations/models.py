@@ -5,12 +5,8 @@ from email_validate import validate_or_fail
 from pydantic import BaseModel, EmailStr, Field, root_validator, validator
 
 from bot.constants.info.fields_order import FUND_FIELDS_ORDER
-from bot.constants.info.text import (
-    FAMILY_MEMBERS,
-    REGEX_FULL_NAME,
-    REGEX_NON_LATIN,
-    REGEX_PHONE,
-)
+from bot.constants.info.text import (FAMILY_MEMBERS, REGEX_FULL_NAME,
+                                     REGEX_NON_LATIN, REGEX_PHONE)
 
 
 class BaseForm(BaseModel):

@@ -1,7 +1,7 @@
 from datetime import datetime as dt
 
-from bot.constants import key
 from . import option
+from bot.constants import key
 
 
 COMMON_QUESTIONS = {
