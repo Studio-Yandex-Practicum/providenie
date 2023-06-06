@@ -158,9 +158,9 @@ async def send_data(update: Update, context: ContextTypes.DEFAULT_TYPE):
     choice = user_data.get(key.OPTION)
 
     if choice:
-        subject = f"{choice.get(key.NAME)}_{info.get(key.NAME)}"
+        subject = f"Анкета_{choice.get(key.BUTTON_TEXT)}_{info.get(key.NAME)}"
     else:
-        subject = info.get(key.NAME)
+        subject = f"Анкета_{info.get(key.NAME)}"
 
     logging.info(f'Form for "{user_data[key.MENU][key.NAME]}" is completed and sent.')
     curators = settings.email_curator.split(',')
