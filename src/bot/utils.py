@@ -67,6 +67,6 @@ def send_email_message(message: str, subject: str, recipient: str) -> bool:
 
         logging.info(MAIL_SEND_OK_MESSAGE)
         return True
-    except SMTPException:
-        logging.error(MAIL_SEND_ERROR_MESSAGE)
+    except SMTPException as error:
+        logging.error(MAIL_SEND_ERROR_MESSAGE, error)
         return False
