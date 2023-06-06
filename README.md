@@ -19,7 +19,8 @@
 
     4.3. [GitHub Actions](#git-actions)
 
-<br><br>
+<br>
+<br>
 
 # 1. О чём проект? <a id="about"></a>
 
