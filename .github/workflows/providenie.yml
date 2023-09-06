@@ -9,17 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - name: Uploading project files to remote server
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.PORT }}
-          source: "src/,Dockerfile,docker-compose.yaml,requirements.txt"
-          target: /home/${{ secrets.USER }}/providenie
-
-      - name: Building Docker image on remote server and deploy
+      - name: Deploy on remote server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -27,10 +17,13 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            cd /home/${{ secrets.USER }}/providenie
-            rm -f .env
-            touch .env
-            echo TELEGRAM_TOKEN="${{ secrets.TELEGRAM_TOKEN }}" >> .env
+            repo="git@github.com:${{ github.repository }}.git"
+            cd /home/${{ secrets.USER }}/
+            [ ! -d "providenie" ] && git clone -b release $repo providenie 
+            cd providenie
+            git checkout release
+            git pull
+            echo TELEGRAM_TOKEN="${{ secrets.TELEGRAM_TOKEN }}" > .env
             echo SMTP_SERVER_PORT="${{ secrets.SMTP_SERVER_PORT }}" >> .env
             echo SMTP_SERVER_ADDRESS="${{ secrets.SMTP_SERVER_ADDRESS }}" >> .env
             echo SMTP_SERVER_BOT_EMAIL=${{ secrets.EMAIL_BOT }} >> .env
