@@ -1,5 +1,6 @@
 import multiprocessing
 import uvicorn
+
 from telegram import Update
 
 from app.main import app  # Импорт FastAPI-приложения
