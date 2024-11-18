@@ -1,4 +1,4 @@
-from pydantic import BaseSettings
+from pydantic import BaseSettings, Field
 
 
 class Settings(BaseSettings):
@@ -18,6 +18,13 @@ class Settings(BaseSettings):
     smtp_server_bot_password: str = ''
 
     email_curator: str = ''
+
+    postgres_user: str = Field(..., env='POSTGRES_USER')
+    postgres_password: str = Field(..., env='POSTGRES_PASSWORD')
+    postgres_db: str = Field(..., env='POSTGRES_DB')
+    postgres_server: str = Field(default='localhost', env='POSTGRES_SERVER')
+    postgres_port: int = Field(default=5432, env='POSTGRES_PORT')
+    database_url: str = Field(..., env='DATABASE_URL')
 
     class Config:  # noqa: D106
         env_file = '.env'

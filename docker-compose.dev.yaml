@@ -1,5 +1,4 @@
 version: '3.8'
-name: providenie
 
 services:
   bot:
@@ -8,20 +7,33 @@ services:
     env_file:
       - ./src/.env
     volumes:
-      - ~:/app/bot/.data/
+      - ./src:/app  # Корректный путь к исходникам
+    depends_on:
+      - db
+
+  fastapi:
+    build:
+      context: .
+      dockerfile: Dockerfile.fastapi
+    restart: always
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./src/.env
+    volumes:
+      - ./src:/app
     depends_on:
       - db
 
   db:
-    env_file:
-      - path: ./src/.env
-        required: true
     image: postgres:17-alpine
+    restart: always
+    env_file:
+      - ./src/.env
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-
 
 volumes:
   db_data:
