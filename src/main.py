@@ -1,8 +1,10 @@
 import multiprocessing
+
 import uvicorn
 from telegram import Update
 
 from app.main import app  # Импорт FastAPI-приложения
+
 from bot.services import init_bot
 
 
@@ -14,7 +16,7 @@ def run_bot() -> None:
 
 def run_fastapi() -> None:
     """Запуск FastAPI."""
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host='0.0.0.0', port=8000)
 
 
 def run_both() -> None:
@@ -31,5 +33,5 @@ def run_both() -> None:
     fastapi_process.join()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     run_both()
