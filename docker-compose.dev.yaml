@@ -2,27 +2,15 @@ version: '3.8'
 name: providenie
 
 services:
-  bot:
+  app:
     build: .
     restart: always
     env_file:
       - ./src/.env
     volumes:
       - ./src:/app
-    depends_on:
-      - db
-
-  fastapi:
-    build:
-      context: .
-      dockerfile: Dockerfile.fastapi
-    restart: always
     ports:
       - "8000:8000"
-    env_file:
-      - ./src/.env
-    volumes:
-      - ./src:/app
     depends_on:
       - db
 
@@ -30,7 +18,8 @@ services:
     image: postgres:17-alpine
     restart: always
     env_file:
-      - ./src/.env
+      - path: ./src/.env
+        required: true
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
