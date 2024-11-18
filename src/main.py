@@ -1,5 +1,4 @@
 import multiprocessing
-
 import uvicorn
 from telegram import Update
 
