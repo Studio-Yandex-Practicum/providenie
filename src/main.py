@@ -1,37 +1,39 @@
-import multiprocessing
+import asyncio
+from typing import Dict
 
 import uvicorn
-from telegram import Update
-
-from app.main import app  # Импорт FastAPI-приложения
+from fastapi import FastAPI
 
 from bot.services import init_bot
 
+app = FastAPI()
 
-def run_bot() -> None:
-    """Запуск Telegram бота."""
+
+@app.get('/')
+def read_root() -> Dict[str, str]:
+    """Return a welcome message in JSON format."""
+    return {'message': 'Hello, the API is working!'}
+
+
+async def run_bot() -> None:
+    """Launch the Telegram bot."""
     application = init_bot()
-    application.run_polling(allowed_updates=Update.ALL_TYPES)
+    await application.initialize()
+    await application.start()
+    await application.updater.start_polling()
 
 
-def run_fastapi() -> None:
-    """Запуск FastAPI."""
-    uvicorn.run(app, host='0.0.0.0', port=8000)
+async def run_fastapi() -> None:
+    """Launch the FastAPI application."""
+    config = uvicorn.Config(app, host='0.0.0.0', port=8000)
+    server = uvicorn.Server(config)
+    await server.serve()
 
 
-def run_both() -> None:
-    """Запуск Telegram бота и FastAPI в разных процессах."""
-    bot_process = multiprocessing.Process(target=run_bot)
-    fastapi_process = multiprocessing.Process(target=run_fastapi)
-
-    # Запускаем процессы
-    bot_process.start()
-    fastapi_process.start()
-
-    # Ждем завершения процессов
-    bot_process.join()
-    fastapi_process.join()
+async def main() -> None:
+    """Run both the Telegram bot and FastAPI concurrently."""
+    await asyncio.gather(run_bot(), run_fastapi())
 
 
 if __name__ == '__main__':
-    run_both()
+    asyncio.run(main())
