@@ -4,7 +4,7 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-ModelType = TypeVar('ModelType')  # Здесь перечислить модели.
+ModelType = TypeVar('ModelType')
 
 
 class CRUDBase:
@@ -48,7 +48,7 @@ class CRUDBase:
         return await self._get_by_attribute(
             attr_name, attr_value, session, single=False)
 
-    async def get_obj_by_obj_id(
+    async def get_obj_by_id(
             self,
             obj_id: int,
             session: AsyncSession) -> Optional[ModelType]:
