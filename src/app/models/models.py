@@ -3,22 +3,29 @@ from datetime import datetime
 from sqlalchemy import (
     BigInteger,
     Boolean,
+    CheckConstraint,
     Column,
     DateTime,
     ForeignKey,
     String,
-    Table,
 )
 from sqlalchemy.orm import relationship
 
 from app.core.db import Base
 
-user_group_association = Table(
-    'user_group',
-    Base.metadata,
-    Column('user_id', ForeignKey('user_tg.id'), primary_key=True),
-    Column('group_id', ForeignKey('group.id'), primary_key=True),
-)
+
+class UserGroupAssociation(Base):
+    """Model for many-to-many relation between users and groups."""
+
+    __tablename__ = 'user_group'
+
+    id = None
+    created_at = None
+    updated_at = None
+    user_id = Column(ForeignKey('user_tg.id'), primary_key=True)
+    group_id = Column(ForeignKey('group.id'), primary_key=True)
+    user = relationship('UserTG', back_populates='groups')
+    group = relationship('Group', back_populates='users')
 
 
 class UserTG(Base):
@@ -27,18 +34,24 @@ class UserTG(Base):
     __tablename__ = 'user_tg'
 
     tg_id = Column(String, nullable=False)
-    first_name = Column(String, nullable=False)
-    last_name = Column(String, nullable=True)
-    user_name = Column(String, nullable=True)
+    first_name = Column(String(64), nullable=False)
+    last_name = Column(String(64), nullable=True)
+    user_name = Column(String(32), nullable=True)
     groups = relationship(
-        'Group',
-        secondary=user_group_association,
-        back_populates='users',
+        'UserGroupAssociation',
+        back_populates='user',
     )
     is_block = Column(Boolean, default=False)
     is_admin = Column(Boolean, default=False)
     hashed_password = Column(String, nullable=True)
     is_active = Column(Boolean, default=True)
+
+    __table_args__ = (
+        CheckConstraint(
+            'length(user_name) >= 5',
+            name='check_user_name_min_length',
+        ),
+    )
 
 
 class Group(Base):
@@ -47,9 +60,8 @@ class Group(Base):
     name = Column(String, unique=True, nullable=False)
     is_active = Column(Boolean, default=True)
     users = relationship(
-        'User_TG',
-        secondary=user_group_association,
-        back_populates='groups',
+        'UserGroupAssociation',
+        back_populates='group',
     )
 
 
