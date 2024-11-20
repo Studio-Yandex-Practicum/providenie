@@ -12,6 +12,7 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 
 from app.core.db import Base
+from app.models.constants import LENGTH_32, LENGTH_64, LENGTH_256
 
 
 class UserGroupAssociation(Base):
@@ -19,13 +20,8 @@ class UserGroupAssociation(Base):
 
     __tablename__ = 'user_group'
 
-    id = None
-    created_at = None
-    updated_at = None
     user_id = Column(ForeignKey('user_tg.id'), primary_key=True)
     group_id = Column(ForeignKey('group.id'), primary_key=True)
-    user = relationship('UserTG', back_populates='groups')
-    group = relationship('Group', back_populates='users')
 
 
 class UserTG(Base):
@@ -34,12 +30,13 @@ class UserTG(Base):
     __tablename__ = 'user_tg'
 
     tg_id = Column(String, nullable=False)
-    first_name = Column(String(64), nullable=False)
-    last_name = Column(String(64), nullable=True)
-    user_name = Column(String(32), nullable=True)
+    first_name = Column(String(LENGTH_64), nullable=False)
+    last_name = Column(String(LENGTH_64), nullable=True)
+    user_name = Column(String(LENGTH_32), nullable=True)
     groups = relationship(
-        'UserGroupAssociation',
-        back_populates='user',
+        'Group',
+        secondary='user_group',
+        back_populates='users',
     )
     is_block = Column(Boolean, default=False)
     is_admin = Column(Boolean, default=False)
@@ -60,15 +57,16 @@ class Group(Base):
     name = Column(String, unique=True, nullable=False)
     is_active = Column(Boolean, default=True)
     users = relationship(
-        'UserGroupAssociation',
-        back_populates='group',
+        'UserTG',
+        secondary='user_group',
+        back_populates='groups',
     )
 
 
 class Message(Base):
     """Message model."""
 
-    text = Column(String(256), nullable=True)
+    text = Column(String(LENGTH_256), nullable=True)
     photos = relationship('Photo')
     send_on = Column(DateTime, default=datetime.now())
     is_send = Column(Boolean, default=False)
