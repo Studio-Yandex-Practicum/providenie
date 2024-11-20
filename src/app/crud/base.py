@@ -67,7 +67,7 @@ class CRUDBase:
 
     async def create(
             self,
-            pydantic_scheme_obj,
+            pydantic_scheme_obj: ModelType,
             session: AsyncSession) -> ModelType:
         """Create object in database."""
         db_obj = self.model(**pydantic_scheme_obj.dict())
@@ -78,8 +78,8 @@ class CRUDBase:
 
     async def update(
             self,
-            db_obj,
-            pydantic_scheme_obj,
+            db_obj: ModelType,
+            pydantic_scheme_obj: ModelType,
             session: AsyncSession) -> ModelType:
         """Update object in database."""
         obj_data = jsonable_encoder(db_obj)
