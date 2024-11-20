@@ -90,3 +90,9 @@ FAMILY_MEMBERS = r'(?i)^(не)?\s?полная$'
 
 # Validation error template
 VALIDATION_ERROR = 'Validation Error in {field} of {form}: {error}'
+
+
+MESSAGE_BLOCK_ACCOUNT = (
+    'Ваш аккаунт заблокирован. Свяжитесь с администратором для разблокировки.'
+)
+MESSAGE_RECOVERY_ACCOUNT = 'Ваш аккаунт был восстановлен. Добро пожаловать!'

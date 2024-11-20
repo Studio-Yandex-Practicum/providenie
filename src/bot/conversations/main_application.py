@@ -1,5 +1,9 @@
-from telegram import BotCommandScopeChat, Update
+from app.core.db import get_async_session
+from app.models.db_utils import create_or_update_user, get_user_by_tg_id
+
+from telegram import BotCommandScopeChat
 from telegram import InlineKeyboardMarkup as Keyboard
+from telegram import Update
 from telegram.ext import ContextTypes, ConversationHandler
 
 from bot.constants import button, state
@@ -11,7 +15,27 @@ from bot.utils import get_menu_buttons, send_message
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Send a welcome message to the user."""
-    await send_message(update, text.START, link_preview=False)
+    tg_user = update.effective_user
+
+    async for session in get_async_session():
+        db_user = await get_user_by_tg_id(session, tg_user.id)
+
+        if db_user and db_user.is_block:
+            await send_message(
+                update,
+                text.MESSAGE_BLOCK_ACCOUNT,
+            )
+            return ConversationHandler.END
+
+        await create_or_update_user(session, tg_user)
+
+        if db_user and not db_user.is_active:
+            await send_message(
+                update,
+                text.MESSAGE_RECOVERY_ACCOUNT,
+            )
+        else:
+            await send_message(update, text.START, link_preview=False)
 
     return await main_menu(update, context)
 
