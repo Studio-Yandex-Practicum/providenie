@@ -1,5 +1,5 @@
 from app.crud.base import CRUDBase
-from app.models import Photo
+from app.models.models import Photo
 
 
 class CRUDPhoto(CRUDBase):

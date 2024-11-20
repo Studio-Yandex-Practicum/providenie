@@ -1,5 +1,5 @@
 from app.crud.base import CRUDBase
-from app.models import Message
+from app.models.models import Message
 
 
 class CRUDMessage(CRUDBase):

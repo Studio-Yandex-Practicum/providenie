@@ -1,5 +1,5 @@
 from app.crud.base import CRUDBase
-from app.models import User_TG
+from app.models.models import UserTG
 
 
 class CRUDUserTG(CRUDBase):
@@ -8,4 +8,4 @@ class CRUDUserTG(CRUDBase):
     pass
 
 
-crud_user = CRUDUserTG(User_TG)
+crud_user = CRUDUserTG(UserTG)

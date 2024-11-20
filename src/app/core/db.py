@@ -1,4 +1,6 @@
-from sqlalchemy import Column, DateTime, Integer
+from datetime import datetime
+
+from sqlalchemy import BigInteger, Column, DateTime
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import declarative_base, declared_attr, sessionmaker
 
@@ -6,15 +8,19 @@ from src.bot.core.settings import settings
 
 
 class PreBase:
-    """Base class for all tables."""
+    """Initial db class with general columns."""
 
     @declared_attr
-    def __tablename__(cls):  # noqa: ANN204, N805
+    def __tablename__(cls) -> str:  # noqa
         return cls.__name__.lower()
 
-    id = Column(Integer, primary_key=True)
-    created_at = Column(DateTime)
-    updated_at = Column(DateTime)
+    id = Column(BigInteger, primary_key=True)
+    created_at = Column(DateTime, default=datetime.now())
+    updated_at = Column(
+        DateTime,
+        default=datetime.now(),
+        onupdate=datetime.now(),
+    )
 
 
 Base = declarative_base(cls=PreBase)
