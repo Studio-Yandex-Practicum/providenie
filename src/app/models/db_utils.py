@@ -18,7 +18,8 @@ async def fetch_one(session: AsyncSession, query: select) -> User | None:
 
 
 async def save_and_commit(
-    session: AsyncSession, instance: DeclarativeMeta
+    session: AsyncSession,
+    instance: DeclarativeMeta,
 ) -> None:
     """Сохраняет объект в базе данных и выполняет коммит.
 
