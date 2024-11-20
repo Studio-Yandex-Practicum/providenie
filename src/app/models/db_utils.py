@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy.orm import DeclarativeMeta
 
 from app.models.models import User
 
@@ -16,7 +17,9 @@ async def fetch_one(session: AsyncSession, query: select) -> User | None:
     return result.scalar_one_or_none()
 
 
-async def save_and_commit(session: AsyncSession, instance) -> None:
+async def save_and_commit(
+    session: AsyncSession, instance: DeclarativeMeta
+) -> None:
     """Сохраняет объект в базе данных и выполняет коммит.
 
     :param session: Асинхронная сессия для работы с базой данных.
