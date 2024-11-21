@@ -28,13 +28,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
 
         await create_or_update_user(session, tg_user)
 
-        if db_user and not db_user.is_active:
-            await send_message(
-                update,
-                text.MESSAGE_RECOVERY_ACCOUNT,
-            )
-        else:
-            await send_message(update, text.START, link_preview=False)
+        await send_message(update, text.START, link_preview=False)
 
     return await main_menu(update, context)
 
