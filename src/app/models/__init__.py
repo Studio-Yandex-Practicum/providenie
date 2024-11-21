@@ -1,1 +1,1 @@
-from app.models.models import User  # noqa
+from .models import Group, Message, Photo, UserTG, UserGroupAssociation  # noqa
