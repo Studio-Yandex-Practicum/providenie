@@ -7,6 +7,7 @@ from sqlalchemy import (
     Column,
     DateTime,
     ForeignKey,
+    Integer,
     String,
 )
 from sqlalchemy.orm import relationship
@@ -29,7 +30,7 @@ class UserTG(Base):
 
     __tablename__ = 'user_tg'
 
-    tg_id = Column(String, nullable=False)
+    tg_id = Column(Integer, nullable=False)
     first_name = Column(String(LENGTH_64), nullable=False)
     last_name = Column(String(LENGTH_64), nullable=True)
     user_name = Column(String(LENGTH_32), nullable=True)

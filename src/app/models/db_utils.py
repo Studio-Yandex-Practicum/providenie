@@ -2,10 +2,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import DeclarativeMeta
 
-from app.models.models import User
+from app.models.models import UserTG
 
 
-async def fetch_one(session: AsyncSession, query: select) -> User | None:
+async def fetch_one(session: AsyncSession, query: select) -> UserTG | None:
     """Выполняет запрос и возвращает одну запись из базы данных.
 
     :param session: Асинхронная сессия для работы с базой данных.
@@ -32,7 +32,7 @@ async def save_and_commit(
     await session.commit()
 
 
-async def get_user_by_tg_id(session: AsyncSession, tg_id: int) -> User:
+async def get_user_by_tg_id(session: AsyncSession, tg_id: int) -> UserTG:
     """Получает пользователя по его Telegram ID.
 
     :param session: Асинхронная сессия для работы с базой данных.
@@ -40,11 +40,14 @@ async def get_user_by_tg_id(session: AsyncSession, tg_id: int) -> User:
 
     :return: Возвращает объект User или None, если не найден.
     """
-    query = select(User).where(User.tg_id == tg_id)
+    query = select(UserTG).where(UserTG.tg_id == tg_id)
     return await fetch_one(session, query)
 
 
-async def create_or_update_user(session: AsyncSession, tg_user: User) -> User:
+async def create_or_update_user(
+    session: AsyncSession,
+    tg_user: UserTG,
+) -> UserTG:
     """Создает нового пользователя или обновляет существующего.
 
     :param session: Асинхронная сессия для работы с базой данных.
@@ -57,14 +60,14 @@ async def create_or_update_user(session: AsyncSession, tg_user: User) -> User:
     if user:
         user.first_name = tg_user.first_name
         user.last_name = tg_user.last_name
-        user.username = tg_user.username
+        user.user_name = tg_user.username
         user.is_active = True
     else:
-        user = User(
+        user = UserTG(
             tg_id=tg_user.id,
             first_name=tg_user.first_name,
             last_name=tg_user.last_name,
-            username=tg_user.user_name,
+            user_name=tg_user.username,
             is_active=True,
         )
     await save_and_commit(session, user)
