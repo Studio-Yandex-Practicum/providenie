@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 
 import jwt
 from fastapi import Depends, HTTPException
@@ -18,9 +18,9 @@ def create_access_token(
     """Создаёт JWT токен."""
     to_encode = data.copy()
     if expires_delta:
-        expire = datetime.now(timezone.utc) + expires_delta
+        expire = datetime.now() + expires_delta
     else:
-        expire = datetime.now(timezone.utc) + timedelta(
+        expire = datetime.now() + timedelta(
             minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES,
         )
     to_encode.update({'exp': expire})
@@ -52,8 +52,8 @@ async def get_current_user(
                 detail='Пользователь не найден или неактивен',
             )
         return user
-    except PyJWTError as exc:
+    except PyJWTError as e:
         raise HTTPException(
             status_code=401,
             detail='Не удалось проверить токен',
-        ) from exc
+        ) from e
