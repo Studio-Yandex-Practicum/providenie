@@ -18,6 +18,9 @@ class Settings(BaseSettings):
     smtp_server_bot_password: str = ''
 
     email_curator: str = ''
+    database_url: str = 'postgresql://user:password@localhost/dbname'
+    SECRET_KEY: str = 'my_secret_key'
+    ALGORITHM: str = 'HS256'
 
     class Config:  # noqa: D106
         env_file = '.env'
