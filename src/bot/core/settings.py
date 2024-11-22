@@ -19,6 +19,7 @@ class Settings(BaseSettings):
 
     email_curator: str = ''
     database_url: str = 'postgresql://user:password@localhost/dbname'
+
     SECRET_KEY: str = 'my_secret_key'
     ALGORITHM: str = 'HS256'
 
