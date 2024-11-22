@@ -4,6 +4,7 @@ from typing import Dict
 import uvicorn
 from fastapi import FastAPI
 
+from bot.core import logger  # noqa
 from bot.services import init_bot
 
 app = FastAPI()
