@@ -21,8 +21,7 @@ class CRUDUserTG(CRUDBase):
         """Create new user in database."""
         new_user_dict = pydantic_scheme_user.dict()
         password = new_user_dict.pop('password')
-        # TODO "заменить на получение хеша после создания функций
-        # для авторизации"
+        # TODO: "заменить на получение хеша после создания функций для авторизации"
         new_user_dict['hashed_password'] = hash(password)
         new_user = self.model(**new_user_dict)
         session.add(new_user)
@@ -42,8 +41,7 @@ class CRUDUserTG(CRUDBase):
             exclude_none=True)
         if 'password' in update_data:
             password = update_data.pop('password')
-            # TODO "заменить на получение хеша после создания функций
-            # для авторизации"
+            # TODO: "заменить на получение хеша после создания функций для авторизации"
             update_data['hashed_password'] = hash(password)
         for field in update_data:
             if hasattr(user_data, field):
