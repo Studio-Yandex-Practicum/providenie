@@ -22,9 +22,17 @@ class Settings(BaseSettings):
 
     email_curator: str = ''
 
+    postgres_user: str
+    postgres_password: str
+    postgres_db: str
+    postgres_server: str
+    postgres_port: str
+    database_url: str
+
     class Config:  # noqa: D106
         env_file = '.env'
         env_file_encoding = 'utf-8'
+        extra = 'ignore'
 
 
 settings = Settings()

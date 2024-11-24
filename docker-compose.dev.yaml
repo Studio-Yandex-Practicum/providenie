@@ -2,26 +2,28 @@ version: '3.8'
 name: providenie
 
 services:
-  bot:
+  app:
     build: .
     restart: always
     env_file:
       - ./src/.env
     volumes:
       - ~:/app/bot/.data/
+    ports:
+      - "8000:8000"
     depends_on:
       - db
 
   db:
+    image: postgres:17-alpine
+    restart: always
     env_file:
       - path: ./src/.env
         required: true
-    image: postgres:17-alpine
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-
 
 volumes:
   db_data:
