@@ -5,7 +5,7 @@ from sqlalchemy import BigInteger, Column, DateTime
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import declarative_base, declared_attr, sessionmaker
 
-from bot.core.settings import settings
+from src.bot.core.settings import settings
 
 
 class PreBase:
@@ -26,21 +26,12 @@ class PreBase:
 
 Base = declarative_base(cls=PreBase)
 
+engine = create_async_engine(settings.database_url)
 
-engine = create_async_engine(settings.database_url, future=True, echo=True)
-
-AsyncSessionLocal = sessionmaker(
-    engine,
-    expire_on_commit=False,
-    class_=AsyncSession,
-)
+AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession)
 
 
-async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
-    """Генератор для создания и получения асинхронной сессии SQLAlchemy.
-
-    Этот метод позволяет использовать сессию для взаимодействия с базой данных.
-    :yield: объект сессии для работы с базой данных.
-    """
-    async with AsyncSessionLocal() as session:
-        yield session
+async def get_async_session():  # noqa: ANN201
+    """Asynchronous session generator."""
+    async with AsyncSessionLocal() as async_session:
+        yield async_session
