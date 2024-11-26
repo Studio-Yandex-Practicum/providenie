@@ -1,6 +1,5 @@
-from telegram import BotCommandScopeChat
+from telegram import BotCommandScopeChat, Update
 from telegram import InlineKeyboardMarkup as Keyboard
-from telegram import Update
 from telegram.ext import ContextTypes, ConversationHandler
 
 from src.bot.constants import button, state
