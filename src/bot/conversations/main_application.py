@@ -3,9 +3,9 @@ from telegram import InlineKeyboardMarkup as Keyboard
 from telegram import Update
 from telegram.ext import ContextTypes, ConversationHandler
 
-from bot.constants.info.menu import ALL_MENU
 from src.bot.constants import button, state
 from src.bot.constants.info import text
+from src.bot.constants.info.menu import ALL_MENU
 from src.bot.core.logger import logger  # noqa
 from src.bot.utils import get_menu_buttons, send_message
 
