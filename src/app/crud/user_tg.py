@@ -1,13 +1,13 @@
 from typing import TypeVar
 
-from app.crud.base import CRUDBase
-from app.models.models import UserTG
-
 import bcrypt
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import exists
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+
+from src.app.crud.base import CRUDBase
+from src.app.models.models import UserTG
 
 
 ModelType = TypeVar('ModelType')

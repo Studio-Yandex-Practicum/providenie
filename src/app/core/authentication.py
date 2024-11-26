@@ -1,13 +1,13 @@
-from app.core.auth import verify_token
-from app.core.db import get_async_session
-from app.crud.user_tg import crud_user
-
 from fastapi.requests import HTTPConnection
 from starlette.authentication import (
     AuthCredentials,
     AuthenticationBackend,
     SimpleUser,
 )
+
+from src.app.core.auth import verify_token
+from src.app.core.db import get_async_session
+from src.app.crud.user_tg import crud_user
 
 
 class MyUser(SimpleUser):  # noqa: W0223

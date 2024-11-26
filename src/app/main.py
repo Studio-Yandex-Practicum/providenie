@@ -1,8 +1,8 @@
-from app.core.authentication import MyAuthBackEnd
-from app.routers import auth as auth_router
-
 from fastapi import FastAPI
 from starlette.middleware.authentication import AuthenticationMiddleware
+
+from src.app.core.authentication import MyAuthBackEnd
+from src.app.routers import auth as auth_router
 
 
 app = FastAPI()

@@ -4,7 +4,7 @@ from typing import Optional
 import jwt
 from jwt import PyJWTError
 
-from bot.core.settings import settings
+from src.bot.core.settings import settings
 
 
 # from src.bot.core import settings

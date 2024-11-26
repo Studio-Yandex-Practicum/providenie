@@ -1,12 +1,13 @@
-from telegram import BotCommandScopeChat, Update
+from telegram import BotCommandScopeChat
 from telegram import InlineKeyboardMarkup as Keyboard
+from telegram import Update
 from telegram.ext import ContextTypes, ConversationHandler
 
-from bot.constants import button, state
-from bot.constants.info import text
 from bot.constants.info.menu import ALL_MENU
-from bot.core.logger import logger  # noqa
-from bot.utils import get_menu_buttons, send_message
+from src.bot.constants import button, state
+from src.bot.constants.info import text
+from src.bot.core.logger import logger  # noqa
+from src.bot.utils import get_menu_buttons, send_message
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:

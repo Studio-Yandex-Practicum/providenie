@@ -4,7 +4,7 @@ from sqlalchemy import BigInteger, Column, DateTime
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import declarative_base, declared_attr, sessionmaker
 
-from bot.core.settings import settings
+from src.bot.core.settings import settings
 
 
 class PreBase:

@@ -1,14 +1,14 @@
-from app.core.auth import create_access_token
-from app.core.authentication import MyUser
-from app.core.db import get_async_session
-from app.crud.user_tg import crud_user
-from app.models.models import UserTG
-from app.schemas.auth import UserCreate
-
 import bcrypt
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.app.core.auth import create_access_token
+from src.app.core.authentication import MyUser
+from src.app.core.db import get_async_session
+from src.app.crud.user_tg import crud_user
+from src.app.models.models import UserTG
+from src.app.schemas.auth import UserCreate
 
 
 router = APIRouter()
