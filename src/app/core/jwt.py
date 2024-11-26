@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 
 import jwt
-from fastapi import HTTPException, status
 from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
 
@@ -20,7 +19,7 @@ def password_verify(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def create_access_token(sub: str) -> str:
+def create_access_token(sub: dict) -> str:
     """Generate encryption token."""
     expire = datetime.now() + timedelta(minutes=settings.token_expire_minutes)
 
@@ -33,13 +32,11 @@ def create_access_token(sub: str) -> str:
     )
 
 
-def jwt_decode(token: str) -> str:
+def jwt_decode(token: str) -> dict:
     """Decode token."""
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail='Could not validate credentials',
-        headers={'WWW-Authenticate': 'Bearer'},
-    )
+    response = {
+        'status': 'error',
+    }
 
     try:
         payload = jwt.decode(
@@ -47,9 +44,14 @@ def jwt_decode(token: str) -> str:
             settings.token_secret_key,
             algorithms=[settings.token_algorithm],
         )
-        tg_id = int(payload.get('sub'))
-        if not tg_id:
-            raise credentials_exception
+        sub = payload.get('sub')
+        if sub is None:
+            response['error'] = 'Token does not contain valid subject'
+            return response
+
+        response['status'] = 'ok'
+        response['data'] = sub
     except InvalidTokenError:
-        raise credentials_exception
-    return tg_id
+        response['error'] = 'Could not validate credentials'
+
+    return response
