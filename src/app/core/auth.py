@@ -1,28 +1,30 @@
 from datetime import datetime, timedelta
+from typing import Optional
 
 import jwt
-from fastapi import Depends, HTTPException
 from jwt import PyJWTError
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from app.core.db import get_async_session
-from app.models.models import UserTG
 
 from bot.core.settings import settings
 
 
+# from src.bot.core import settings
+
+
 def create_access_token(
     data: dict,
-    expires_delta: timedelta | None = None,
+    expires_delta: Optional[timedelta] = None,
 ) -> str:
-    """Создаёт JWT токен."""
+    """Создаёт JWT-токен с заданными данными и временем истечения.
+
+    Returns:
+        str: Сгенерированный JWT-токен.
+
+    """
     to_encode = data.copy()
-    if expires_delta:
-        expire = datetime.now() + expires_delta
-    else:
-        expire = datetime.now() + timedelta(
-            minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES,
-        )
+    expire = datetime.now() + (
+        expires_delta
+        or timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    )
     to_encode.update({'exp': expire})
     return jwt.encode(
         to_encode,
@@ -31,29 +33,22 @@ def create_access_token(
     )
 
 
-async def get_current_user(
-    token: str,
-    session: AsyncSession = Depends(get_async_session),
-) -> UserTG:
-    """Получает текущего пользователя на основе JWT токена."""
+def verify_token(token: str) -> Optional[dict]:
+    """Проверка валидности JWT-токена.
+
+    Args:
+        token (str): JWT-токен для проверки.
+
+    Returns:
+        Optional[dict]: Раскодированные данные токена, если он валиден.
+        None: Если токен недействителен или истёк.
+
+    """
     try:
-        payload = jwt.decode(
+        return jwt.decode(
             token,
             settings.SECRET_KEY,
             algorithms=[settings.ALGORITHM],
         )
-        user_id: int = payload.get('sub')
-        if user_id is None:
-            raise HTTPException(status_code=401, detail='Ошибка токена')
-        user = await session.get(UserTG, user_id)
-        if not user or not user.is_active:
-            raise HTTPException(
-                status_code=401,
-                detail='Пользователь не найден или неактивен',
-            )
-        return user
-    except PyJWTError as e:
-        raise HTTPException(
-            status_code=401,
-            detail='Не удалось проверить токен',
-        ) from e
+    except PyJWTError:
+        return None
