@@ -4,7 +4,6 @@ from starlette.middleware.authentication import AuthenticationMiddleware
 from src.app.core.authentication import MyAuthBackEnd
 from src.app.routers import auth as auth_router
 
-
 app = FastAPI()
 
 app.add_middleware(AuthenticationMiddleware, backend=MyAuthBackEnd())

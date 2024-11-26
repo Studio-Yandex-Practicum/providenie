@@ -9,7 +9,6 @@ from sqlalchemy.future import select
 from src.app.crud.base import CRUDBase
 from src.app.models.models import UserTG
 
-
 ModelType = TypeVar('ModelType')
 
 

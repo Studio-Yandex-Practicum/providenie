@@ -7,9 +7,6 @@ from jwt import PyJWTError
 from src.bot.core.settings import settings
 
 
-# from src.bot.core import settings
-
-
 def create_access_token(
     data: dict,
     expires_delta: Optional[timedelta] = None,
