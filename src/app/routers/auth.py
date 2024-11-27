@@ -86,20 +86,19 @@ async def login(
     user_name: str = Form(...),
     password: str = Form(...),
     session: AsyncSession = Depends(get_async_session),
-) -> dict:
-    """Аутентификация пользователя и создание токена доступа.
+) -> Response:
+    """Аутентификация пользователя и установка токена в cookie.
 
     Args:
         response (Response): Объект ответа для установки cookie.
+        request (Request): Объект запроса.
         user_name (str): Имя пользователя.
         password (str): Пароль пользователя.
-        session (AsyncSession): Асинхронная сессия для взаимодействия с БД.
+        session (AsyncSession): Асинхронная сессия для взаимодействия с бд.
 
     Returns:
-        dict: Сообщение о статусе аутентификации.
-
-    Raises:
-        HTTPException: Если данные пользователя неверны.
+        Response: Перенаправление на страницу панели управления
+        или форма входа с ошибкой.
 
     """
     user = await crud_user.get_user_by_username(session, user_name)
@@ -136,14 +135,14 @@ async def login(
 
 
 @router.post('/logout/')
-async def logout(response: Response) -> dict:
-    """Выход из системы.
+async def logout(response: Response) -> Response:
+    """Выход из системы и удаление токена из cookie.
 
     Args:
-        response (Response): Объект ответа для удаления cookie.
+        response (Response): Объект ответа.
 
     Returns:
-        dict: Сообщение о статусе выхода.
+        Response: Перенаправление на страницу входа.
 
     """
     response = RedirectResponse(url='/auth/login/', status_code=303)
@@ -166,8 +165,16 @@ async def read_items(user: MyUser = Depends(get_current_user)) -> dict:
 
 
 @router.get('/register/', response_class=HTMLResponse)
-async def show_register_page(request: Request) -> Response:
-    """Показывает страницу регистрации."""
+async def show_register_page(request: Request) -> HTMLResponse:
+    """Показывает страницу регистрации.
+
+    Args:
+        request (Request): Объект запроса.
+
+    Returns:
+        HTMLResponse: Шаблон страницы регистрации.
+
+    """
     return templates.TemplateResponse('register.html', {'request': request})
 
 
@@ -179,22 +186,22 @@ async def register_user(
     tg_id: str = Form(...),
     is_admin: bool = Form(False),
     session: AsyncSession = Depends(get_async_session),
-) -> dict:
-    """Регистрирация нового пользователя.
+) -> Response:
+    """Регистрация нового пользователя.
 
     Args:
-        user_name: Логин пользователя.
-        password: Пароль.
-        first_name: Имя пользователя.
-        tg_id: Телеграмм id.
-        is_admin: False
-        session (AsyncSession): Асинхронная сессия для взаимодействия с БД.
+        user_name (str): Логин пользователя.
+        password (str): Пароль пользователя.
+        first_name (str): Имя пользователя.
+        tg_id (str): Telegram ID.
+        is_admin (bool): Признак администратора.
+        session (AsyncSession): Асинхронная сессия для взаимодействия с бд.
 
     Returns:
-        dict: Сообщение об успешной регистрации.
+        Response: Перенаправление на страницу входа.
 
     Raises:
-        HTTPException: Если пользователь с таким именем уже существует.
+        HTTPException: Если пользователь с таким логином уже существует.
 
     """
     user = UserCreate(
@@ -219,8 +226,16 @@ async def register_user(
 
 
 @router.get('/dashboard/', response_class=HTMLResponse)
-async def dashboard(request: Request) -> Response:
-    """Пустая страница после успешного входа."""
+async def dashboard(request: Request) -> HTMLResponse:
+    """Показывает страницу панели управления.
+
+    Args:
+        request (Request): Объект запроса.
+
+    Returns:
+        HTMLResponse: Шаблон страницы панели управления.
+
+    """
     return templates.TemplateResponse(
         'dashboard.html',
         {'request': request},
