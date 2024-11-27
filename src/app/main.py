@@ -1,23 +1,22 @@
-from src.app.config import BASE_DIR
-from src.app.core.authentication import MyAuthBackEnd
-from src.app.routers import auth as auth_router
-
 from fastapi import FastAPI, Request, Response
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware.authentication import AuthenticationMiddleware
-from fastapi.middleware.cors import CORSMiddleware
 
+from src.app.config import BASE_DIR
+from src.app.core.authentication import MyAuthBackEnd
+from src.app.routers import auth as auth_router
 
 app = FastAPI()
 
 app.add_middleware(AuthenticationMiddleware, backend=MyAuthBackEnd())
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8000"],
+    allow_origins=['http://localhost:8000'],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=['*'],
+    allow_headers=['*'],
 )
 app.include_router(auth_router.router, prefix='/auth', tags=['Authentication'])
 
