@@ -7,7 +7,6 @@ from fastapi import FastAPI
 from bot.core import logger  # noqa
 from bot.services import init_bot
 
-
 app = FastAPI()
 
 
