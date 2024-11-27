@@ -13,7 +13,6 @@ from src.app.crud.user_tg import crud_user
 from src.app.models.models import UserTG
 from src.app.schemas.auth import UserCreate
 
-
 router = APIRouter()
 
 templates = Jinja2Templates(directory=BASE_DIR / 'app/templates')
