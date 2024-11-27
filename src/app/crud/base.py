@@ -1,6 +1,5 @@
 from typing import Any, Dict, List, Optional, Type, TypeVar
 
-from fastapi.encoders import jsonable_encoder
 from sqlalchemy import and_
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
