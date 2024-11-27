@@ -81,12 +81,11 @@ class CRUDBase:
             pydantic_scheme_obj: ModelType,
             session: AsyncSession) -> ModelType:
         """Update object in database."""
-        obj_data = jsonable_encoder(db_obj)
         update_data = pydantic_scheme_obj.dict(
             exclude_unset=True,
             exclude_none=True)
         for field in update_data:
-            if hasattr(obj_data, field):
+            if hasattr(db_obj, field):
                 setattr(db_obj, field, update_data[field])
         session.add(db_obj)
         await session.commit()
