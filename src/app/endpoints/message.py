@@ -1,28 +1,36 @@
-from fastapi import APIRouter, Depends, HTTPException, Path, Request, status
+from datetime import datetime
+from typing import Optional
+
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    Path,
+    Query,
+    Request,
+    status,
+)
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from sqlalchemy import DateTime
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import get_async_session
-from app.core.dependencies import get_current_admin
 from app.crud.message import crud_message
-from app.models import UserTG
 from app.schemas.message import MessageCreate, MessageUpdate
 
 router = APIRouter()
 templates = Jinja2Templates(directory='app/templates')
 
 
-@router.get('/messages', response_class=HTMLResponse)
+@router.get('/admin/messages', response_class=HTMLResponse)
 async def messages(
     request: Request,
-    is_send: bool,
-    sended_at: DateTime,
-    create_user: int,
-    update_users: int,
+    is_send: Optional[bool] = Query(None),
+    sended_at: Optional[datetime] = Query(None),
+    create_user: Optional[int] = Query(None),
+    update_users: Optional[int] = Query(None),
     session: AsyncSession = Depends(get_async_session),
-    current_user: UserTG = Depends(get_current_admin)) -> Jinja2Templates:
+    ) -> HTMLResponse:
     """Endpoint to get messages."""
     filters = {}
     if is_send is not None:
@@ -32,7 +40,7 @@ async def messages(
     if create_user is not None:
         filters['create_user'] = create_user
     if update_users is not None:
-        update_users['update_users'] = update_users
+        filters['update_users'] = update_users
 
     messages = await crud_message.get_all_by_attributes(filters, session)
 
@@ -41,32 +49,44 @@ async def messages(
         {'request': request, 'messages': messages})
 
 
-@router.post('/messages', response_class=HTMLResponse)
+@router.post('/admin/messages/create', response_class=HTMLResponse)
 async def create_messages(
     request: Request,
-    message: MessageCreate,
+    text: Optional[str] = Query(None),
     session: AsyncSession = Depends(get_async_session),
-    current_user: UserTG = Depends(get_current_admin)) -> HTMLResponse:
+    ) -> HTMLResponse:
     """Endpoint to create a new message."""
+    message = MessageCreate(
+        text=text,
+        create_user=request.user.id,  # TODO Брать из current_user (Depends)
+        update_users=request.user.id)  # TODO Брать из current_user (Depends)
     new_message = await crud_message.create(message, session)
     return templates.TemplateResponse(
-        'message_created.html', {'request': request, 'message': new_message})
+        'message_created.html',
+        {'request': request, 'message': new_message})
 
 
-@router.patch('/messages/{message_id}', response_class=HTMLResponse)
+@router.patch('/admin/messages/{message_id}/edit',
+              response_class=HTMLResponse)
 async def update_message(
     request: Request,
-    message: MessageUpdate,
+    text: Optional[str] = Query(None),
+    is_send: Optional[bool] = Query(None),
+    sended_at: Optional[datetime] = Query(None),
     message_id: int = Path(..., title='Message id in DB'),
     session: AsyncSession = Depends(get_async_session),
-    current_user: UserTG = Depends(get_current_admin)) -> HTMLResponse:
+    ) -> HTMLResponse:
     """Endpoint to update an existing message."""
-    existing_message = await crud_message.get_one_by_attributes(
-        {'id': message_id}, session)
+    existing_message = await crud_message.get_obj_by_id(message_id, session)
     if not existing_message:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail='Message not found.')
+    message = MessageUpdate(
+        text=text,
+        is_send=is_send,
+        update_users=request.user.id,  # TODO Брать из current_user (Depends)
+        sended_at=sended_at)
     updated_message = await crud_message.update(
         existing_message, message, session)
     return templates.TemplateResponse(
