@@ -29,4 +29,4 @@ class UserCreate(LoginRequest):
 
     first_name: str
     tg_id: str
-    is_admin: bool
+    is_admin: bool = False

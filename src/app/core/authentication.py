@@ -20,7 +20,12 @@ class MyUser(SimpleUser):  # noqa: W0223
 
     """
 
-    def __init__(self, user_name: str, user_id: int, is_admin: bool) -> None:  # noqa
+    def __init__(  # noqa
+        self,
+        user_name: str,
+        user_id: int,
+        is_admin: bool,
+    ) -> None:
         super().__init__(user_name)
         self.user_id = user_id
         self._is_admin = is_admin

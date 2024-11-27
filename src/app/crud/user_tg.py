@@ -8,6 +8,7 @@ from sqlalchemy.future import select
 
 from src.app.crud.base import CRUDBase
 from src.app.models.models import UserTG
+from src.app.schemas.auth import UserCreate
 
 ModelType = TypeVar('ModelType')
 
@@ -17,7 +18,7 @@ class CRUDUserTG(CRUDBase):
 
     async def create(
         self,
-        pydantic_scheme_user: ModelType,
+        pydantic_scheme_user: UserCreate,
         session: AsyncSession,
     ) -> ModelType:
         """Create new user in database."""

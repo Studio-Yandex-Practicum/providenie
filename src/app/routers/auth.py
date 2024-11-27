@@ -1,8 +1,11 @@
 import bcrypt
-from fastapi import APIRouter, Depends, HTTPException, Request, Response
+from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response
+from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.templating import Jinja2Templates
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.app.config import BASE_DIR
 from src.app.core.auth import create_access_token
 from src.app.core.authentication import MyUser
 from src.app.core.db import get_async_session
@@ -10,7 +13,10 @@ from src.app.crud.user_tg import crud_user
 from src.app.models.models import UserTG
 from src.app.schemas.auth import UserCreate
 
+
 router = APIRouter()
+
+templates = Jinja2Templates(directory=BASE_DIR / 'app/templates')
 
 
 async def get_current_user(
@@ -65,11 +71,21 @@ async def get_current_admin(
     return user
 
 
+@router.get('/login/', response_class=HTMLResponse)
+async def show_login_page(request: Request, message: str = None) -> Response:
+    """Показывает страницу входа."""
+    return templates.TemplateResponse(
+        'login.html',
+        {'request': request, 'message': message},
+    )
+
+
 @router.post('/login/')
 async def login(
     response: Response,
-    user_name: str,
-    password: str,
+    request: Request,
+    user_name: str = Form(...),
+    password: str = Form(...),
     session: AsyncSession = Depends(get_async_session),
 ) -> dict:
     """Аутентификация пользователя и создание токена доступа.
@@ -90,17 +106,34 @@ async def login(
     user = await crud_user.get_user_by_username(session, user_name)
 
     if not user:
-        raise HTTPException(status_code=401, detail='Неверные учётные данные')
+        return templates.TemplateResponse(
+            'login.html',
+            {'request': request, 'message': 'Неверные данные для входа'},
+            status_code=401,
+        )
 
     if not bcrypt.checkpw(
         password.encode('utf-8'),
         user.hashed_password.encode('utf-8'),
     ):
-        raise HTTPException(status_code=401, detail='Неверные учётные данные')
+        return templates.TemplateResponse(
+            'login.html',
+            {'request': request, 'message': 'Неверные данные для входа'},
+            status_code=401,
+        )
 
     token = create_access_token({'user_id': user.id})
-    response.set_cookie(key='access_token', value=token, httponly=True)
-    return {'message': 'Вход выполнен успешно'}
+    response = RedirectResponse(
+        url='/auth/dashboard/',
+        status_code=303,
+    )
+    response.set_cookie(
+        key='access_token',
+        value=token,
+        samesite='Lax',
+        httponly=True,
+    )
+    return response
 
 
 @router.post('/logout/')
@@ -114,8 +147,9 @@ async def logout(response: Response) -> dict:
         dict: Сообщение о статусе выхода.
 
     """
+    response = RedirectResponse(url='/auth/login/', status_code=303)
     response.delete_cookie('access_token')
-    return {'message': 'Выход выполнен успешно'}
+    return response
 
 
 @router.get('/items/', dependencies=[Depends(get_current_admin)])
@@ -132,15 +166,29 @@ async def read_items(user: MyUser = Depends(get_current_user)) -> dict:
     return {'user': user.display_name}
 
 
+@router.get('/register/', response_class=HTMLResponse)
+async def show_register_page(request: Request) -> Response:
+    """Показывает страницу регистрации."""
+    return templates.TemplateResponse('register.html', {'request': request})
+
+
 @router.post('/register/', response_model=dict)
 async def register_user(
-    user: UserCreate,
+    user_name: str = Form(...),
+    password: str = Form(...),
+    first_name: str = Form(...),
+    tg_id: str = Form(...),
+    is_admin: bool = Form(False),
     session: AsyncSession = Depends(get_async_session),
 ) -> dict:
     """Регистрирация нового пользователя.
 
     Args:
-        user (UserCreate): Данные нового пользователя.
+        user_name: Логин пользователя.
+        password: Пароль.
+        first_name: Имя пользователя.
+        tg_id: Телеграмм id.
+        is_admin: False
         session (AsyncSession): Асинхронная сессия для взаимодействия с БД.
 
     Returns:
@@ -150,6 +198,13 @@ async def register_user(
         HTTPException: Если пользователь с таким именем уже существует.
 
     """
+    user = UserCreate(
+        first_name=first_name,
+        user_name=user_name,
+        password=password,
+        tg_id=tg_id,
+        is_admin=is_admin,
+    )
     existing_user = await crud_user.get_user_by_username(
         session,
         user.user_name,
@@ -157,11 +212,17 @@ async def register_user(
     if existing_user:
         raise HTTPException(
             status_code=400,
-            detail='User with this username already exists',
+            detail='Пользователь уже существует',
         )
 
-    new_user = await crud_user.create(user, session)
-    return {
-        'message': 'User created successfully',
-        'user_name': new_user.user_name,
-    }
+    await crud_user.create(pydantic_scheme_user=user, session=session)
+    return RedirectResponse(url='/auth/login/', status_code=303)
+
+
+@router.get('/dashboard/', response_class=HTMLResponse)
+async def dashboard(request: Request) -> Response:
+    """Пустая страница после успешного входа."""
+    return templates.TemplateResponse(
+        'dashboard.html',
+        {'request': request},
+    )

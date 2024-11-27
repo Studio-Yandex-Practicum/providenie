@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     database_url: str
 
     class Config:  # noqa: D106
-        env_file = '.env'
+        env_file = 'src/.env'
         env_file_encoding = 'utf-8'
         extra = 'ignore'
 
