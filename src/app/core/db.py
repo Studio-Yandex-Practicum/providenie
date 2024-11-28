@@ -7,7 +7,6 @@ from sqlalchemy.orm import declarative_base, declared_attr, sessionmaker
 from src.bot.core.settings import settings
 
 
-
 class PreBase:
     """Initial db class with general columns."""
 
@@ -27,9 +26,11 @@ class PreBase:
 Base = declarative_base(cls=PreBase)
 
 
-engine = create_async_engine(settings.database_url, future=True,)
+engine = create_async_engine(settings.database_url, future=True)
 
-AsyncSessionLocal = sessionmaker(engine, expire_on_commit=False, class_=AsyncSession,)
+AsyncSessionLocal = sessionmaker(
+    engine, expire_on_commit=False, class_=AsyncSession,
+)
 
 
 async def get_async_session():  # noqa: ANN201
