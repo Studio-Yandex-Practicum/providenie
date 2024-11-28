@@ -1,12 +1,13 @@
-from typing import TypeVar
+from typing import List, TypeVar
 
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import exists
+from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-from app.crud.base import CRUDBase
-from app.models.models import UserTG
+from src.app.crud.base import CRUDBase
+from src.app.models.models import UserTG
 
 ModelType = TypeVar('ModelType')
 
@@ -70,6 +71,22 @@ class CRUDUserTG(CRUDBase):
             select(exists().where(UserTG.tg_id == tg_id)),
         )
         return not user_exists.scalar()
+
+    async def get_by_tg_id(
+        self, tg_id: str, session: AsyncSession
+    ) -> ModelType:
+        """Get user by Telegram ID."""
+        result = await session.execute(
+            select(self.model).where(UserTG.tg_id == tg_id)
+        )
+        user = result.scalar()
+        if not user:
+            raise NoResultFound(f'User with tg_id {tg_id} not found.')
+        return user
+
+    async def get_all_users(self, session: AsyncSession) -> List[ModelType]:
+        """Get all users from the database."""
+        return (await session.execute(select(self.model))).scalars().all()
 
 
 crud_user = CRUDUserTG(UserTG)

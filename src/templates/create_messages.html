@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    {% include 'header.html' %}
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            {% include 'admin_sidebar.html' %}
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-4">
+                <h2>Создать новое сообщение</h2>
+                <!-- Отображение статуса сообщения -->
+                {% if status %}
+                    <div class="alert alert-info" role="alert">
+                        {{ status }}
+                    </div>
+                {% endif %}
+
+                <form method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="text" class="form-label">Текст сообщения</label>
+                        <textarea id="text" name="message" class="form-control" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="photos" class="form-label">Фото</label>
+                        <input type="file" id="photos" name="file" class="form-control" multiple>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Создать сообщение</button>
+                </form>
+            </main>
+        </div>
+    </div>
+
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    {% include 'footer.html' %}
+</body>
+</html>

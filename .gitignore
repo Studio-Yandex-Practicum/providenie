@@ -139,3 +139,9 @@ dmypy.json
 
 # vscode
 .vscode
+
+# .gitignore
+src/bot/static/css/bootstrap.rtl.min.css.map
+src/bot/static/css/bootstrap.rtl.css.map
+src/bot/static/css/bootstrap.min.css.map
+src/bot/static/css/bootstrap.css.map
