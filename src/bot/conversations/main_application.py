@@ -1,34 +1,53 @@
+from sqlalchemy import select
 from telegram import BotCommandScopeChat, Update
 from telegram import InlineKeyboardMarkup as Keyboard
 from telegram.ext import ContextTypes, ConversationHandler
 
-from app.core.db import get_async_session
-from app.models.db_utils import create_or_update_user, get_user_by_tg_id
-
-from bot.constants import button, state
-from bot.constants.info import text
-from bot.constants.info.menu import ALL_MENU
-from bot.core.logger import logger  # noqa
-from bot.utils import get_menu_buttons, send_message
+from src.app.core.db import get_async_session
+from src.app.crud.user_tg import crud_user
+from src.app.models.models import UserTG
+from src.app.schemas.auth import UserCreate
+from src.bot.constants import button, state
+from src.bot.constants.info import text
+from src.bot.constants.info.menu import ALL_MENU
+from src.bot.core.logger import logger  # noqa
+from src.bot.utils import get_menu_buttons, send_message
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Send a welcome message to the user."""
     tg_user = update.effective_user
+    user_data = {
+        'tg_id': str(tg_user.id),
+        'first_name': tg_user.first_name or 'Unknown',
+        'last_name': tg_user.last_name or 'Unknown',
+        'user_name': tg_user.username,
+    }
 
     async for session in get_async_session():
-        db_user = await get_user_by_tg_id(session, tg_user.id)
-
-        if db_user and db_user.is_block:
+        result = await session.execute(
+            select(UserTG).where(UserTG.tg_id == user_data['tg_id']),
+        )
+        existing_user = result.scalar_one_or_none()
+        if existing_user:
+            if existing_user.is_block:
+                await send_message(
+                    update,
+                    text.MESSAGE_BLOCK_ACCOUNT,
+                    link_preview=False,
+                )
+                return None
+        else:
+            new_user = UserCreate(**user_data)
+            await crud_user.create(
+                pydantic_scheme_user=new_user,
+                session=session,
+            )
             await send_message(
                 update,
-                text.MESSAGE_BLOCK_ACCOUNT,
+                text.MESSAGE_WELCOME,
+                link_preview=False,
             )
-            return ConversationHandler.END
-
-        await create_or_update_user(session, tg_user)
-
-        await send_message(update, text.START, link_preview=False)
 
     return await main_menu(update, context)
 

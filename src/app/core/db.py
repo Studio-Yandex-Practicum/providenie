@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import AsyncGenerator
 
 from sqlalchemy import BigInteger, Column, DateTime
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
