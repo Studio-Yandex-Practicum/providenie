@@ -8,6 +8,8 @@ class MessageCreate(BaseModel):
     """The pydantic model for create message."""
 
     text: Optional[str] = Field(None)
+    create_user: int = Field(...)
+    update_users: int = Field(...)
 
     class Config:
         """Config subclass for MessageCreate."""

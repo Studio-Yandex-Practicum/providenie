@@ -14,9 +14,9 @@ class UserCreate(BaseModel):
     user_name: Optional[str] = Field(..., min_length=5, max_length=32)
     is_block: Optional[bool] = Field(False)
     is_admin: Optional[bool] = Field(False)
-    hashed_password: Optional[str] = Field(None)
+    password: Optional[str] = Field(None)
     is_active: Optional[bool] = Field(True)
-    groups: Optional[List[Group]]
+    groups: Optional[List[int]] = Field(None)
 
     class Config:
         """Config subclass for UserCreate model."""
@@ -29,23 +29,10 @@ class UserUpdate(BaseModel):
 
     is_block: Optional[bool] = Field(False)
     is_admin: Optional[bool] = Field(False)
-    hashed_password: Optional[str] = Field(None)
-    groups: Optional[List[Group]]
+    password: Optional[str] = Field(None)
+    groups: Optional[List[int]] = Field(None)
 
     class Config:
         """Config subclass for UserUpdate model."""
-
-        orm_mode = True
-
-
-class UserDB(BaseModel):
-    """The pydantic model for get users from database."""
-
-    is_block: Optional[bool]
-    is_admin: Optional[bool]
-    groups: Optional[List[Group]]
-
-    class Config:
-        """Config subclass for UserDB model."""
 
         orm_mode = True
