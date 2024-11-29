@@ -1,11 +1,11 @@
-from telegram import BotCommandScopeChat
+from telegram import BotCommandScopeChat, Update
 from telegram import InlineKeyboardMarkup as Keyboard
-from telegram import Update
 from telegram.ext import ContextTypes, ConversationHandler
 
 from app.core.db import get_async_session
 from app.crud.user_tg import crud_user
 from app.schemas.auth import UserCreate
+
 from bot.constants import button, state
 from bot.constants.info import text
 from bot.constants.info.menu import ALL_MENU
