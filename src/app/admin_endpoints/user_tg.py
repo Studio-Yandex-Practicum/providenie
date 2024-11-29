@@ -77,7 +77,7 @@ async def create_users(
     return templates.TemplateResponse(
         'user_created.html', {'request': request,
                               'user': result['user'],
-                              'groups': result['groups']})
+                              'group_names': result['group_names']})
 
 
 @router.patch('/admin/users/{tg_id}/edit', response_class=HTMLResponse)
@@ -104,7 +104,9 @@ async def update_user(
         groups=groups)
     updated_user = await crud_user.update(existing_user, user_scheme, session)
     return templates.TemplateResponse(
-        'user_updated.html', {'request': request, 'user': updated_user})
+        'user_updated.html', {'request': request,
+                              'user': updated_user['user'],
+                              'group_names': updated_user['group_names']})
 
 
 @router.get('/admin', response_class=HTMLResponse)
