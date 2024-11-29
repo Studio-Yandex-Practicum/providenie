@@ -1,12 +1,11 @@
 from typing import TypeVar
 
-from fastapi.encoders import jsonable_encoder
-from sqlalchemy import exists
+from sqlalchemy import delete, exists
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from app.crud.base import CRUDBase
-from app.models.models import UserTG
+from app.models.models import Group, UserGroupAssociation, UserTG
 
 ModelType = TypeVar('ModelType')
 
@@ -22,14 +21,24 @@ class CRUDUserTG(CRUDBase):
         """Create new user in database."""
         new_user_dict = pydantic_scheme_user.dict()
         password = new_user_dict.pop('password')
-        # TODO: "заменить на получение хеша после создания функций для
-        # авторизации"
-        new_user_dict['hashed_password'] = hash(password)
-        new_user = self.model(**new_user_dict)
+        groups = new_user_dict.pop('groups')
+        new_user_dict['hashed_password'] = str(hash(password))  # TODO:
+        # "заменить на получение хеша после создания функций для авторизации"  # noqa: E501
+        new_user: UserTG = self.model(**new_user_dict)
         session.add(new_user)
+        if groups:
+            result = await session.execute(select(Group).filter(
+                Group.id.in_(pydantic_scheme_user.groups)))
+            group_objects = result.scalars().all()
+
+        for group in group_objects:
+            association = UserGroupAssociation(
+                user_id=new_user.id, group_id=group.id)
+            session.add(association)
+
         await session.commit()
         await session.refresh(new_user)
-        return new_user
+        return {'user': new_user, 'groups': group_objects}
 
     async def update(
         self,
@@ -38,23 +47,32 @@ class CRUDUserTG(CRUDBase):
         session: AsyncSession,
     ) -> ModelType:
         """Update user in database."""
-        user_data = jsonable_encoder(db_user)
         update_data = pydantic_scheme_user.dict(
             exclude_unset=True,
-            exclude_none=True,
-        )
+            exclude_none=True)
         if 'password' in update_data:
             password = update_data.pop('password')
-            # TODO: "заменить на получение хеша после создания функций
-            # для авторизации"
-            update_data['hashed_password'] = hash(password)
-        for field in update_data:
-            if hasattr(user_data, field):
-                setattr(db_user, field, update_data[field])
-        session.add(db_user)
+            update_data['hashed_password'] = str(hash(password))  # TODO:
+            # "заменить на получение хеша после создания функций для авторизации"  # noqa: E501
+
+        if 'groups' in update_data:
+            groups = update_data.pop('groups')
+            await session.execute(
+                delete(UserGroupAssociation).filter(
+                    UserGroupAssociation.user_id == db_user.id))
+            for group_id in groups:
+                association = UserGroupAssociation(
+                    user_id=db_user.id, group_id=group_id)
+                session.add(association)
+        for field, value in update_data.items():
+           if hasattr(db_user, field):
+               setattr(db_user, field, value)
         await session.commit()
         await session.refresh(db_user)
-        return db_user
+        result = await session.execute(select(Group).filter(
+            Group.id.in_(pydantic_scheme_user.groups)))
+        group_objects = result.scalars().all()
+        return {'user': db_user, 'groups': group_objects}
 
     async def check_tg_id_unique(
         self,
@@ -70,6 +88,24 @@ class CRUDUserTG(CRUDBase):
             select(exists().where(UserTG.tg_id == tg_id)),
         )
         return not user_exists.scalar()
+
+    async def get_users_by_params(
+            self,
+            filters: dict,
+            session: AsyncSession) -> ModelType:
+        """Get user by params."""
+        query = select(UserTG)
+        conditions = []
+        if 'groups' in filters:
+            conditions.append(UserTG.groups.any(Group.id.in_(filters['groups'])))
+        if 'is_admin' in filters:
+            conditions.append(UserTG.is_admin == filters['is_admin'])
+        if 'is_block' in filters:
+            conditions.append(UserTG.is_block == filters['is_block'])
+        if conditions:
+            query = query.where(*conditions)
+        result = await session.execute(query)
+        return result.scalars().all()
 
 
 crud_user = CRUDUserTG(UserTG)
