@@ -31,8 +31,12 @@ class Settings(BaseSettings):
     postgres_port: str
     database_url: str
 
+    token_secret_key: str = 'my_secret_key'
+    token_algorithm: str = 'HS256'
+    token_expire_minutes: int = 30
+
     class Config:  # noqa: D106
-        env_file = 'src/.env'
+        env_file = '.env'
         env_file_encoding = 'utf-8'
         extra = 'ignore'
 

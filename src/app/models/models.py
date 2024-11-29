@@ -11,8 +11,8 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 
-from src.app.core.db import Base
-from src.app.models.constants import LENGTH_32, LENGTH_64, LENGTH_256
+from app.core.db import Base
+from app.models.constants import LENGTH_32, LENGTH_64, LENGTH_256
 
 
 class UserGroupAssociation(Base):

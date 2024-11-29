@@ -6,9 +6,9 @@ from sqlalchemy import exists
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-from src.app.crud.base import CRUDBase
-from src.app.models.models import UserTG
-from src.app.schemas.auth import UserCreate
+from app.crud.base import CRUDBase
+from app.models.models import UserTG
+from app.schemas.auth import UserCreate
 
 ModelType = TypeVar('ModelType')
 
@@ -76,22 +76,6 @@ class CRUDUserTG(CRUDBase):
             select(exists().where(UserTG.tg_id == tg_id)),
         )
         return not user_exists.scalar()
-
-    async def get_user_by_username(
-        self,
-        session: AsyncSession,
-        user_name: str,
-    ) -> UserTG | None:
-        """Получение пользователя по username."""
-        query = select(self.model).where(self.model.user_name == user_name)
-        result = await session.execute(query)
-        return result.scalars().first()
-
-    async def get(self, session: AsyncSession, user_id: int) -> UserTG | None:
-        """Получение пользователя по ID."""
-        query = select(self.model).where(self.model.id == user_id)
-        result = await session.execute(query)
-        return result.scalars().first()
 
 
 crud_user = CRUDUserTG(UserTG)

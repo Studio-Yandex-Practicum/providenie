@@ -1,12 +1,13 @@
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.middleware.authentication import AuthenticationMiddleware
 
-from src.app.config import BASE_DIR
-from src.app.core.authentication import MyAuthBackEnd
-from src.app.routers import auth as auth_router
+from app.config import BASE_DIR  # noqa: I001
+from app.core.authentication import MyAuthBackEnd
+from app.routers import auth as auth_router
 
 app = FastAPI()
 
@@ -18,9 +19,14 @@ app.add_middleware(
     allow_methods=['*'],
     allow_headers=['*'],
 )
-app.include_router(auth_router.router, prefix='/auth', tags=['Authentication'])
 
+app.include_router(auth_router.router, prefix='/auth', tags=['Authentication'])
 templates = Jinja2Templates(directory=BASE_DIR / 'app/templates')
+app.mount(
+    '/static',
+    StaticFiles(directory=BASE_DIR / 'app/static'),
+    name='static',
+)
 
 
 @app.exception_handler(404)

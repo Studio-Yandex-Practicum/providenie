@@ -1,76 +1,23 @@
-import bcrypt
 from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.app.config import BASE_DIR
-from src.app.core.auth import create_access_token
-from src.app.core.authentication import MyUser
-from src.app.core.db import get_async_session
-from src.app.crud.user_tg import crud_user
-from src.app.models.models import UserTG
-from src.app.schemas.auth import UserCreate
+from app.config import BASE_DIR
+from app.core.auth import get_current_admin, get_current_user
+from app.core.constants import KEY_USER_ID
+from app.core.db import get_async_session
+from app.core.jwt import create_access_token, password_verify
+from app.crud.user_tg import crud_user
+from app.models.models import UserTG
+from app.schemas.auth import UserCreate
 
 router = APIRouter()
 
 templates = Jinja2Templates(directory=BASE_DIR / 'app/templates')
 
 
-async def get_current_user(
-    request: Request,
-    session: AsyncSession = Depends(get_async_session),  # noqa: W0613
-) -> MyUser:
-    """Получение текущего пользователя.
-
-    Args:
-        request (Request): HTTP запрос.
-        session (AsyncSession): Асинхронная сессия для взаимодействия с БД.
-
-    Returns:
-        MyUser: Пользователь, полученный из запроса.
-
-    Raises:
-        HTTPException: Если пользователь не аутентифицирован.
-
-    """
-    if not request.user:
-        raise HTTPException(status_code=401, detail='UNAUTHORIZED')
-
-    user = await session.execute(
-        select(UserTG).where(UserTG.user_name == request.user.username),
-    )
-    if not user.scalar():
-        raise HTTPException(status_code=404, detail='Пользователь не неайден.')
-
-    return request.user
-
-
-async def get_current_admin(
-    user: MyUser = Depends(get_current_user),
-) -> MyUser:
-    """Проверка права администратора.
-
-    Args:
-        user (MyUser): Пользователь, полученный из запроса.
-
-    Returns:
-        MyUser: Пользователь с подтверждёнными правами администратора.
-
-    Raises:
-        HTTPException: Если пользователь не обладает правами администратора.
-
-    """
-    if not hasattr(user, 'is_admin') or not user.is_admin:
-        raise HTTPException(
-            status_code=403,
-            detail='Доступ запрещён: требуются права администратора',
-        )
-    return user
-
-
-@router.get('/login/', response_class=HTMLResponse)
+@router.get('/login/', response_class=HTMLResponse, name='auth_login')
 async def show_login_page(request: Request, message: str = None) -> Response:
     """Показывает страницу входа."""
     return templates.TemplateResponse(
@@ -101,26 +48,17 @@ async def login(
         или форма входа с ошибкой.
 
     """
-    user = await crud_user.get_user_by_username(session, user_name)
-
-    if not user:
+    user = await crud_user.get_one_by_attributes(
+        filters={'user_name': user_name},
+        session=session,
+    )
+    if not user or not password_verify(password, user.hashed_password):
         return templates.TemplateResponse(
             'login.html',
-            {'request': request, 'message': 'Неверные данные для входа'},
+            {'request': request, 'message': 'Invalid credentials'},
             status_code=401,
         )
-
-    if not bcrypt.checkpw(
-        password.encode('utf-8'),
-        user.hashed_password.encode('utf-8'),
-    ):
-        return templates.TemplateResponse(
-            'login.html',
-            {'request': request, 'message': 'Неверные данные для входа'},
-            status_code=401,
-        )
-
-    token = create_access_token({'user_id': user.id})
+    token = create_access_token({KEY_USER_ID: user.id})
     response = RedirectResponse(
         url='/auth/dashboard/',
         status_code=303,
@@ -151,7 +89,7 @@ async def logout(response: Response) -> Response:
 
 
 @router.get('/items/', dependencies=[Depends(get_current_admin)])
-async def read_items(user: MyUser = Depends(get_current_user)) -> dict:
+async def read_items(user: UserTG = Depends(get_current_user)) -> dict:
     """Получение информации о пользователе.
 
     Args:
@@ -164,7 +102,7 @@ async def read_items(user: MyUser = Depends(get_current_user)) -> dict:
     return {'user': user.display_name}
 
 
-@router.get('/register/', response_class=HTMLResponse)
+@router.get('/register/', response_class=HTMLResponse, name='auth_register')
 async def show_register_page(request: Request) -> HTMLResponse:
     """Показывает страницу регистрации.
 
@@ -211,9 +149,9 @@ async def register_user(
         tg_id=tg_id,
         is_admin=is_admin,
     )
-    existing_user = await crud_user.get_user_by_username(
-        session,
-        user.user_name,
+    existing_user = await crud_user.get_one_by_attributes(
+        filters={'user_name': user.user_name},
+        session=session,
     )
     if existing_user:
         raise HTTPException(

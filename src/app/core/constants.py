@@ -1,0 +1,5 @@
+KEY_ACCESS_TOKEN = 'access_token'
+KEY_STATUS = 'status'
+KEY_DATA = 'data'
+KEY_USER_ID = 'user_id'
+KEY_IS_ADMIN = 'is_admin'
