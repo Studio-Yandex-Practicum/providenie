@@ -4,7 +4,7 @@ from typing import Dict
 import uvicorn
 from fastapi import FastAPI
 
-from app.endpoints.routers import main_router
+from app.admin_endpoints.routers import main_router
 
 from bot.core import logger  # noqa
 from bot.services import init_bot
