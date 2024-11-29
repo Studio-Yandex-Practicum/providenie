@@ -36,9 +36,10 @@ class CRUDUserTG(CRUDBase):
                 user_id=new_user.id, group_id=group.id)
             session.add(association)
 
+        group_names = [group.name for group in group_objects]
         await session.commit()
         await session.refresh(new_user)
-        return {'user': new_user, 'groups': group_objects}
+        return {'user': new_user, 'group_names': group_names}
 
     async def update(
         self,
@@ -72,7 +73,8 @@ class CRUDUserTG(CRUDBase):
         result = await session.execute(select(Group).filter(
             Group.id.in_(pydantic_scheme_user.groups)))
         group_objects = result.scalars().all()
-        return {'user': db_user, 'groups': group_objects}
+        group_names = [group.name for group in group_objects]
+        return {'user': db_user, 'group_names': group_names}
 
     async def check_tg_id_unique(
         self,
