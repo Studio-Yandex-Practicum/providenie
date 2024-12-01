@@ -1,3 +1,4 @@
+exclude = ["src/alembic"]
 indent-width = 4
 line-length = 79
 required-version = ">=0.6.1"

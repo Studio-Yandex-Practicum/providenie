@@ -1,12 +1,15 @@
 version: '3.8'
 
 services:
-  bot:
+  app:
     build: .
     restart: always
     env_file:
       - ./src/.env
     volumes:
+      - ~:/app/bot/.data/
+    ports:
+      - "8000:8000"
       - ./src:/app  # Корректный путь к исходникам
     depends_on:
       - db
@@ -29,7 +32,8 @@ services:
     image: postgres:17-alpine
     restart: always
     env_file:
-      - ./src/.env
+      - path: ./src/.env
+        required: true
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
