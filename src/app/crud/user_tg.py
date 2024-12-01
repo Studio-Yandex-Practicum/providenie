@@ -24,7 +24,7 @@ class CRUDUserTG(CRUDBase):
         password = new_user_dict.pop('password')
         # TODO: "заменить на получение хеша после создания функций для
         # авторизации"
-        new_user_dict['hashed_password'] = hash(password)
+        new_user_dict['hashed_password'] = str(hash(password))
         new_user = self.model(**new_user_dict)
         session.add(new_user)
         await session.commit()
