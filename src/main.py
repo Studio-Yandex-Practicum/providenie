@@ -2,6 +2,7 @@ import asyncio
 
 import uvicorn
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
 from app.endpoints.routers import main_router
 
@@ -11,6 +12,11 @@ from bot.services import init_bot
 app = FastAPI(debug=True)
 
 app.include_router(main_router)
+app.mount(
+    '/static',
+    StaticFiles(directory='app/endpoints/static'),
+    name='static',
+)
 
 
 async def run_bot() -> None:
