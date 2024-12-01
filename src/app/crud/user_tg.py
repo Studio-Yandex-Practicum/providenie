@@ -5,10 +5,10 @@ from sqlalchemy import exists
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
+from app.core.jwt import get_hash_password
 from app.crud.base import CRUDBase
 from app.models.models import UserTG
 from app.schemas.auth import UserCreate
-from app.core.jwt import get_hash_password
 
 ModelType = TypeVar('ModelType')
 
