@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    {% include 'header.html' %}
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            {% include 'admin_sidebar.html' %}
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-4">
+                <h2>Создать новую группу</h2>
+                <form method="post" action="/admin/groups/create">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Название группы</label>
+                        <input type="text" id="name" name="name" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="is_active" class="form-label">Активна</label>
+                        <input type="checkbox" id="is_active" name="is_active" value="on" checked>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Создать группу</button>
+                </form>
+            </main>
+        </div>
+    </div>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    {% include 'footer.html' %}
+</body>
+</html>

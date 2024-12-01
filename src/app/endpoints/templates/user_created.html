@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Пользователь создан</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+</head>
+<body>
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Пользователь успешно создан</h1>
+
+            <div>
+                <h2 class="subtitle">Детали пользователя:</h2>
+                <div>
+                    <p><strong>Telegram ID:</strong> {{ user.tg_id }}</p>
+                    <p><strong>Имя:</strong> {{ user.first_name }}</p>
+                    <p><strong>Фамилия:</strong> {{ user.last_name }}</p>
+                    <p><strong>Имя пользователя:</strong> {{ user.user_name }}</p>
+                    <p><strong>Заблокирован:</strong> {{ user.is_block }}</p>
+                    <p><strong>Администратор:</strong> {{ user.is_admin }}</p>
+                    <p><strong>Активен:</strong> {{ user.is_active }}</p>
+
+                    <p><strong>Группы:</strong>
+                    {% if group_names %}
+                        <ul>
+                        {% for name in group_names %}
+                        <li>{{ name }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        Нет
+                    {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

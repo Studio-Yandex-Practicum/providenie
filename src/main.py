@@ -1,9 +1,20 @@
-from bot.core import logger  # noqa
+import asyncio
+
+import uvicorn
+from fastapi import FastAPI
+
+from app.endpoints.routers import main_router
+
+from bot.core import logger  # noqa  # noqa
 from bot.services import init_bot
 
+app = FastAPI(debug=True)
 
-def main() -> None:
-    """Run application."""
+app.include_router(main_router)
+
+
+async def run_bot() -> None:
+    """Launch the Telegram bot."""
     application = init_bot()
     await application.initialize()
     await application.start()
@@ -23,4 +34,4 @@ async def main() -> None:
 
 
 if __name__ == '__main__':
-    main()
+    asyncio.run(main())
