@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    {% include 'header.html' %}
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            {% include 'admin_sidebar.html' %}
+            
+            <!-- Основной контент -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <h2>Список пользователей</h2>
+
+                <form method="GET" action="/admin/users" class="mb-4">
+                    <div class="mb-3">
+                        <label for="groups" class="form-label">Группы:</label>
+                        <select name="groups" id="groups" class="form-select">
+                            <option value="">--Выберите группу--</option>
+                            {% for group in available_groups %}
+                            <option value="{{ group.id }}" {% if group.id == selected_group %}selected{% endif %}>
+                                {{ group.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="is_admin" class="form-label">Администратор:</label>
+                        <select name="is_admin" id="is_admin" class="form-select">
+                            <option value="">--Выберите--</option>
+                            <option value="true" {% if is_admin == 'true' %}selected{% endif %}>Да</option>
+                            <option value="false" {% if is_admin == 'false' %}selected{% endif %}>Нет</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="is_blocked" class="form-label">Заблокирован:</label>
+                        <select name="is_blocked" id="is_blocked" class="form-select">
+                            <option value="">--Выберите--</option>
+                            <option value="true" {% if is_blocked == 'true' %}selected{% endif %}>Да</option>
+                            <option value="false" {% if is_blocked == 'false' %}selected{% endif %}>Нет</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Фильтровать</button>
+                </form>
+                
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Админ</th>
+                            <th>Телеграм ID</th>
+                            <th>Имя</th>
+                            <th>Фамилия</th>
+                            <th>Имя пользователя</th>
+                            <th>Статус заблокирован</th>
+                            <th>Группы</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.is_admin }}</td>
+                            <td>{{ user.tg_id }}</td>
+                            <td>{{ user.first_name }}</td>
+                            <td>{{ user.last_name }}</td>
+                            <td>{{ user.user_name }}</td>
+                            <td>{{ user.is_blocked }}</td>
+                            <td>
+                                <ul>
+                                    {% if user_groups %}
+                                        {% for group in user_groups %}
+                                            <li>{{ group.name }}</li>
+                                        {% endfor %}
+                                    {% else %}
+                                        <li>Нет групп</li>
+                                    {% endif %}
+                                </ul>
+                            </td>
+                            <td>
+                                <a href="/admin/users/{{ user.tg_id }}/edit" class="btn btn-warning btn-sm">Изменить</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </main>
+        </div>
+    </div>
+
+    {% include 'footer.html' %}
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

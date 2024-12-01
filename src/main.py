@@ -1,19 +1,25 @@
 import asyncio
-from typing import Dict
 
 import uvicorn
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+
+from app.endpoints.routers import main_router
 
 from bot.core import logger  # noqa
 from bot.services import init_bot
 
-app = FastAPI()
+app = FastAPI(debug=True)
+
+app.include_router(main_router)
 
 
-@app.get('/')
-def read_root() -> Dict[str, str]:
-    """Return a welcome message in JSON format."""
-    return {'message': 'Hello, the API is working!'}
+# Убедитесь, что правильный путь к папке статических файлов
+app.mount(
+    '/static',
+    StaticFiles(directory='app/endpoints/static'),
+    name='static',
+)
 
 
 async def run_bot() -> None:

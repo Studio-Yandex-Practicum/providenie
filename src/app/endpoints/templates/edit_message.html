@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    {% include 'header.html' %}
+</head>
+<body>
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Текст</th>
+                    <th>Дата</th>
+                    <th>Отправлено</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for message in messages %}
+                <tr>
+                    <td>{{ message.id }}</td>
+                    <td class="text-break">{{ message.text }}</td>
+                    <td>{{ message.send_on }}</td>
+                    <td>{{ 'Да' if message.is_send else 'Нет' }}</td>
+                    <td>
+                        <a href="/admin/messages/{{ message.id }}/edit" class="btn btn-warning btn-sm">Изменить</a>
+                        <form action="/admin/messages/{{ message.id }}/delete" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    {% include 'footer.html' %}
+    
+</body>
+</html>

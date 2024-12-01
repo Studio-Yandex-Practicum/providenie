@@ -1,5 +1,4 @@
 version: '3.8'
-name: providenie
 
 services:
   app:
@@ -8,7 +7,7 @@ services:
     env_file:
       - ./src/.env
     volumes:
-      - ~:/app/bot/.data/
+      - ./app/bot/.data:/app/bot/.data
     ports:
       - "8000:8000"
     depends_on:
@@ -18,8 +17,7 @@ services:
     image: postgres:17-alpine
     restart: always
     env_file:
-      - path: ./src/.env
-        required: true
+      - ./src/.env
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:

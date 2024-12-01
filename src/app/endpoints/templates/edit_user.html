@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    {% include 'header.html' %}
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Боковая панель -->
+            {% include 'admin_sidebar.html' %}
+
+            <!-- Основной контент -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-4">
+                <h2>Редактирование пользователя</h2>
+                <form method="post" action="/admin/users/{{ user.tg_id }}/edit">
+                    <div class="form-group">
+                        <label for="first_name">Имя:</label>
+                        <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}" readonly class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="last_name">Фамилия:</label>
+                        <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}" readonly class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="user_name">Никнейм:</label>
+                        <input type="text" id="user_name" name="user_name" value="{{ user.user_name }}" readonly class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="is_admin">Админ:</label>
+                        <input type="checkbox" id="is_admin" name="is_admin" {% if user.is_admin %} checked {% endif %} class="form-check-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="is_block">Заблокирован:</label>
+                        <input type="checkbox" id="is_block" name="is_block" {% if user.is_block %} checked {% endif %} class="form-check-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Пароль:</label>
+                        <input type="password" id="password" name="password" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="groups">Группы:</label>
+                        <select multiple name="groups" id="groups" class="form-control">
+                            {% for group in groups %}
+                            <option value="{{ group.id }}" {% if group.id in user.groups %} selected {% endif %}>{{ group.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </form>
+            </main>
+        </div>
+    </div>
+    {% include 'footer.html' %}
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
