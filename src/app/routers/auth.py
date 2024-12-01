@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import BASE_DIR
 from app.core.auth import get_current_admin, get_current_user
-from app.core.constants import KEY_USER_ID
+from app.core.constants import KEY_ACCESS_TOKEN, KEY_USER_ID
 from app.core.db import get_async_session
 from app.core.jwt import create_access_token, password_verify
 from app.crud.user_tg import crud_user
@@ -64,7 +64,7 @@ async def login(
         status_code=303,
     )
     response.set_cookie(
-        key='access_token',
+        key=KEY_ACCESS_TOKEN,
         value=token,
         samesite='Lax',
         httponly=True,
@@ -84,7 +84,7 @@ async def logout(response: Response) -> Response:
 
     """
     response = RedirectResponse(url='/auth/login/', status_code=303)
-    response.delete_cookie('access_token')
+    response.delete_cookie(KEY_ACCESS_TOKEN)
     return response
 
 
@@ -116,7 +116,11 @@ async def show_register_page(request: Request) -> HTMLResponse:
     return templates.TemplateResponse('register.html', {'request': request})
 
 
-@router.post('/register/', response_model=dict)
+@router.post(
+    '/register/',
+    response_model=dict,
+    dependencies=[Depends(get_current_admin)],
+)
 async def register_user(
     user_name: str = Form(...),
     password: str = Form(...),

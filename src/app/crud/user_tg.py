@@ -1,6 +1,5 @@
 from typing import TypeVar
 
-import bcrypt
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy import exists
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -9,6 +8,7 @@ from sqlalchemy.future import select
 from app.crud.base import CRUDBase
 from app.models.models import UserTG
 from app.schemas.auth import UserCreate
+from app.core.jwt import get_hash_password
 
 ModelType = TypeVar('ModelType')
 
@@ -26,12 +26,7 @@ class CRUDUserTG(CRUDBase):
         password = new_user_dict.pop('password')
         # TODO: "заменить на получение хеша после создания функций для
         # авторизации"
-        # new_user_dict['hashed_password'] = str(hash(password))
-        new_user_dict['hashed_password'] = bcrypt.hashpw(
-            password.encode('utf-8'),
-            bcrypt.gensalt(),
-        ).decode('utf-8')
-
+        new_user_dict['hashed_password'] = get_hash_password(password)
         new_user = self.model(**new_user_dict)
         session.add(new_user)
         await session.commit()
@@ -54,7 +49,7 @@ class CRUDUserTG(CRUDBase):
             password = update_data.pop('password')
             # TODO: "заменить на получение хеша после создания функций
             # для авторизации"
-            update_data['hashed_password'] = hash(password)
+            update_data['hashed_password'] = get_hash_password(password)
         for field in update_data:
             if hasattr(user_data, field):
                 setattr(db_user, field, update_data[field])
