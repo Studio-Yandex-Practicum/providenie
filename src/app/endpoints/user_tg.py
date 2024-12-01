@@ -25,7 +25,7 @@ async def admin_users(
     request: Request,
     session: AsyncSession = Depends(get_async_session),
     group_id: Optional[int] = None,
-) -> HTMLResponse:  # Аннотируем тип возвращаемого значения
+) -> HTMLResponse:
     """Retrieve users for admin, with optional group filtering."""
     query = select(UserTG).options(selectinload(UserTG.groups))
 
@@ -57,17 +57,14 @@ async def edit_user(
     session: AsyncSession = Depends(get_async_session),
 ) -> HTMLResponse:
     """Edit user information."""
-    async with session.begin():  # Ожидаем сессию в асинхронном контексте
-        # Получаем пользователя
+    async with session.begin():
         user = await session.get(UserTG, user_id)
         if not user:
             raise HTTPException(status_code=404, detail='User not found')
 
-        # Получаем все группы для выбора
-        result = await session.execute(select(Group))  # Асинхронный запрос
-        groups = result.scalars().all()  # Получаем все группы
+        result = await session.execute(select(Group))
+        groups = result.scalars().all()
 
-    # Передаем данные в шаблон
     return templates.TemplateResponse(
         'edit_user.html',
         {

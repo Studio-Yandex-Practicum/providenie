@@ -12,7 +12,7 @@ router = APIRouter()
 @router.get('/admin', response_class=HTMLResponse)
 async def admin_dashboard(
     request: Request,
-) -> HTMLResponse:  # Аннотируем тип возвращаемого значения
+) -> HTMLResponse:
     """Главная страница админки."""
     return templates.TemplateResponse(
         'admin_dashboard.html',

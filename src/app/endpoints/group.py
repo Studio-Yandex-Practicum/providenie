@@ -62,7 +62,7 @@ async def groups(
 async def create_group_form(
     request: Request,
     session: AsyncSession = Depends(get_async_session),
-) -> HTMLResponse:  # Аннотируем тип возвращаемого значения
+) -> HTMLResponse:
     """Форма для создания новой группы."""
     return templates.TemplateResponse(
         'create_group.html',
@@ -127,7 +127,7 @@ async def update_group(
 ) -> HTMLResponse:
     """Эндпоинт для обновления группы."""
     method = await request.form()
-    if method.get('_method') == 'patch':  # Checking if it's a PATCH request
+    if method.get('_method') == 'patch':
         existing_group = await crud_group.get_one_by_attributes(
             {'id': group_id},
             session,
