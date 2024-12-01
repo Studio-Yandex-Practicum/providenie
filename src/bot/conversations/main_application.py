@@ -32,7 +32,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
             if existing_user.is_block:
                 await send_message(
                     update,
-                    text.MESSAGE_WELCOME,
+                    text.MESSAGE_BLOCK_ACCOUNT,
                     link_preview=False,
                 )
                 return None
