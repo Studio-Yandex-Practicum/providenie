@@ -4,6 +4,7 @@ from sqlalchemy import delete, exists
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
+from app.core.jwt import get_hash_password
 from app.crud.base import CRUDBase
 from app.models.models import Group, UserGroupAssociation, UserTG
 
@@ -22,8 +23,7 @@ class CRUDUserTG(CRUDBase):
         new_user_dict = pydantic_scheme_user.dict()
         password = new_user_dict.pop('password')
         groups = new_user_dict.pop('groups')
-        new_user_dict['hashed_password'] = str(hash(password))  # TODO:
-        # "заменить на получение хеша после создания функций для авторизации"  # noqa: E501
+        new_user_dict['hashed_password'] = get_hash_password(password)
         new_user: UserTG = self.model(**new_user_dict)
         session.add(new_user)
         if groups:
@@ -36,10 +36,9 @@ class CRUDUserTG(CRUDBase):
                 user_id=new_user.id, group_id=group.id)
             session.add(association)
 
-        group_names = [group.name for group in group_objects]
         await session.commit()
         await session.refresh(new_user)
-        return {'user': new_user, 'group_names': group_names}
+        return {'user': new_user}
 
     async def update(
         self,
@@ -53,8 +52,7 @@ class CRUDUserTG(CRUDBase):
             exclude_none=True)
         if 'password' in update_data:
             password = update_data.pop('password')
-            update_data['hashed_password'] = str(hash(password))  # TODO:
-            # "заменить на получение хеша после создания функций для авторизации"  # noqa: E501
+            update_data['hashed_password'] = get_hash_password(password)
 
         if 'groups' in update_data:
             groups = update_data.pop('groups')
@@ -70,11 +68,7 @@ class CRUDUserTG(CRUDBase):
                setattr(db_user, field, value)
         await session.commit()
         await session.refresh(db_user)
-        result = await session.execute(select(Group).filter(
-            Group.id.in_(pydantic_scheme_user.groups)))
-        group_objects = result.scalars().all()
-        group_names = [group.name for group in group_objects]
-        return {'user': db_user, 'group_names': group_names}
+        return {'user': db_user}
 
     async def check_tg_id_unique(
         self,
