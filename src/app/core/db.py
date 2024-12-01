@@ -25,9 +25,12 @@ class PreBase:
 
 Base = declarative_base(cls=PreBase)
 
-engine = create_async_engine(settings.database_url)
 
-AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession)
+engine = create_async_engine(settings.database_url, future=True)
+
+AsyncSessionLocal = sessionmaker(
+    engine, expire_on_commit=False, class_=AsyncSession,
+)
 
 
 async def get_async_session():  # noqa: ANN201

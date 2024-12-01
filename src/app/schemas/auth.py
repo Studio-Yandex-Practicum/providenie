@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
@@ -14,11 +16,20 @@ class LoginRequest(BaseModel):
     password: str
 
 
-class UserCreate(BaseModel):
-    """Модель для создания нового пользователя."""
+class UserCreate(LoginRequest):
+    """Модель для создания нового пользователя.
 
-    user_name: str
-    password: str
+    Наследует:
+        LoginRequest: Содержит имя пользователя и пароль.
+
+    Attributes:
+        first_name (str): Имя пользователя.
+        tg_id (str): Идентификатор пользователя в Telegram.
+        is_admin (bool): Флаг, является ли пользователь администратором.
+
+    """
+
     first_name: str
     tg_id: str
     is_admin: bool = False
+    password: Optional[str] = None

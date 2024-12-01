@@ -31,6 +31,7 @@ class CRUDUserTG(CRUDBase):
             password.encode('utf-8'),
             bcrypt.gensalt(),
         ).decode('utf-8')
+
         new_user = self.model(**new_user_dict)
         session.add(new_user)
         await session.commit()
