@@ -38,7 +38,7 @@ class CRUDUserTG(CRUDBase):
 
         await session.commit()
         await session.refresh(new_user)
-        return {'user': new_user}
+        return new_user
 
     async def update(
         self,
@@ -68,7 +68,7 @@ class CRUDUserTG(CRUDBase):
                setattr(db_user, field, value)
         await session.commit()
         await session.refresh(db_user)
-        return {'user': db_user}
+        return db_user
 
     async def check_tg_id_unique(
         self,
