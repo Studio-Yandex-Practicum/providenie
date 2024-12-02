@@ -4,6 +4,7 @@ from typing import Optional
 from fastapi import (
     APIRouter,
     Depends,
+    Form,
     HTTPException,
     Path,
     Query,
@@ -29,8 +30,10 @@ async def messages(
     sended_at: Optional[datetime] = Query(None),
     create_user: Optional[int] = Query(None),
     update_users: Optional[int] = Query(None),
+    page: int = Query(1, ge=1),
+    page_size: int = Query(10, ge=1, le=100),
     session: AsyncSession = Depends(get_async_session),
-    ) -> HTMLResponse:
+) -> HTMLResponse:
     """Endpoint to get messages."""
     filters = {}
     if is_send is not None:
@@ -43,40 +46,79 @@ async def messages(
         filters['update_users'] = update_users
 
     messages = await crud_message.get_all_by_attributes(filters, session)
-
+    messages = sorted(messages, key=lambda message: message.id)
+    total_messages = len(messages)
+    start_index = (page - 1) * page_size
+    end_index = start_index + page_size
+    paginated_messages = messages[start_index:end_index]
     return templates.TemplateResponse(
-        'messages.html',
-        {'request': request, 'messages': messages})
+        'admin_messages.html',
+        {
+            'request': request,
+            'messages': paginated_messages,
+            'page': page,
+            'total_pages': (total_messages // page_size)
+            + (1 if total_messages % page_size > 0 else 0),
+        },
+    )
+
+
+@router.get('/admin/messages/create', response_class=HTMLResponse)
+async def get_create_message_form(
+    request: Request,
+    session: AsyncSession = Depends(get_async_session)) -> HTMLResponse:
+    """Render form for creating a new message."""
+    return templates.TemplateResponse(
+        'create_message.html',
+        {'request': request},
+    )
 
 
 @router.post('/admin/messages/create', response_class=HTMLResponse)
 async def create_messages(
     request: Request,
-    text: Optional[str] = Query(None),
+    text: Optional[str] = Form(None),
     session: AsyncSession = Depends(get_async_session),
     ) -> HTMLResponse:
     """Endpoint to create a new message."""
     message = MessageCreate(
         text=text,
-        create_user=request.user.id,  # TODO Брать из current_user (Depends)
-        update_users=request.user.id)  # TODO Брать из current_user (Depends)
+        create_user=1,  # TODO Брать из current_user (Depends)
+        update_users=1)  # TODO Брать из current_user (Depends)
     new_message = await crud_message.create(message, session)
     return templates.TemplateResponse(
         'message_created.html',
         {'request': request, 'message': new_message})
 
 
-@router.patch('/admin/messages/{message_id}/edit',
-              response_class=HTMLResponse)
-async def update_message(
+@router.get('/admin/messages/{message_id}/edit', response_class=HTMLResponse)
+async def get_edit_message_form(
     request: Request,
-    text: Optional[str] = Query(None),
-    is_send: Optional[bool] = Query(None),
-    sended_at: Optional[datetime] = Query(None),
+    message_id: int = Path(...),
+    session: AsyncSession = Depends(get_async_session)) -> HTMLResponse:
+    """Render form for editing a message."""
+    existing_message = await crud_message.get_obj_by_id(message_id, session)
+    if not existing_message:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='Message not found.')
+    return templates.TemplateResponse(
+        'edit_message.html',
+        {'request': request, 'message': existing_message},
+    )
+
+
+@router.post('/admin/messages/{message_id}/edit',
+              response_class=HTMLResponse)
+async def edit_message(
+    request: Request,
+    text: Optional[str] = Form(None),
+    is_send: Optional[bool] = Form(None),
+    sended_at: Optional[datetime] = Form(None),
     message_id: int = Path(..., title='Message id in DB'),
     session: AsyncSession = Depends(get_async_session),
     ) -> HTMLResponse:
-    """Endpoint to update an existing message."""
+    """Endpoint to edit an existing message."""
     existing_message = await crud_message.get_obj_by_id(message_id, session)
     if not existing_message:
         raise HTTPException(
@@ -85,10 +127,10 @@ async def update_message(
     message = MessageUpdate(
         text=text,
         is_send=is_send,
-        update_users=request.user.id,  # TODO Брать из current_user (Depends)
+        update_users=1,  # TODO Брать из current_user (Depends)
         sended_at=sended_at)
     updated_message = await crud_message.update(
         existing_message, message, session)
     return templates.TemplateResponse(
-        'message_updated.html',
+        'edit_message.html',
         {'request': request, 'message': updated_message})

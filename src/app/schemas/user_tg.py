@@ -25,6 +25,7 @@ class UserCreate(BaseModel):
 class UserUpdate(BaseModel):
     """The pydantic model for update users."""
 
+    id: int = Field(...)
     is_block: Optional[bool] = Field(False)
     is_admin: Optional[bool] = Field(False)
     password: Optional[str] = Field(None)
