@@ -3,6 +3,7 @@ from typing import TypeVar
 from sqlalchemy import delete, exists
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy.orm import joinedload
 
 from app.core.jwt import get_hash_password
 from app.crud.base import CRUDBase
@@ -68,7 +69,11 @@ class CRUDUserTG(CRUDBase):
                setattr(db_user, field, value)
         await session.commit()
         await session.refresh(db_user)
-        return db_user
+        result = await session.execute(select(Group).filter(
+            Group.id.in_(pydantic_scheme_user.groups)))
+        group_objects = result.scalars().all()
+        group_names = [group.name for group in group_objects]
+        return {'user': db_user, 'group_names': group_names}
 
     async def check_tg_id_unique(
         self,
@@ -90,10 +95,11 @@ class CRUDUserTG(CRUDBase):
             filters: dict,
             session: AsyncSession) -> ModelType:
         """Get user by params."""
-        query = select(UserTG)
+        query = select(UserTG).options(joinedload(UserTG.groups))
         conditions = []
-        if 'groups' in filters:
-            conditions.append(UserTG.groups.any(Group.id.in_(filters['groups'])))
+        if 'group_id' in filters and filters['group_id'] is not None:
+            conditions.append(UserTG.groups.any(
+                Group.id == filters['group_id']))
         if 'is_admin' in filters:
             conditions.append(UserTG.is_admin == filters['is_admin'])
         if 'is_block' in filters:
@@ -101,7 +107,7 @@ class CRUDUserTG(CRUDBase):
         if conditions:
             query = query.where(*conditions)
         result = await session.execute(query)
-        return result.scalars().all()
+        return result.unique().scalars().all()
 
 
 crud_user = CRUDUserTG(UserTG)
