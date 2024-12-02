@@ -75,6 +75,14 @@ class Message(Base):
     sended_at = Column(DateTime, nullable=True)
 
 
+class GroupMessage(Base):
+    """Model for messages sent to groups."""
+
+    __tablename__ = 'group_message'
+    group_id = Column(BigInteger, ForeignKey('group.id'), primary_key=True)
+    message_id = Column(BigInteger, ForeignKey('message.id'), primary_key=True)
+
+
 class Photo(Base):
     """Photo model."""
 

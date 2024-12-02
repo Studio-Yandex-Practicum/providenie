@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head> 
+    {% include 'header.html' %}
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+           
+            <!-- Main Content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-4">
+                <h2>Создать новое сообщение</h2>
+                <!-- Отображение статуса сообщения -->
+                {% if status %}
+                    <div class="alert alert-info" role="alert">
+                        {{ status }}
+                    </div>
+                {% endif %}
+
+                <form method="post" action="/send_message/" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="message" class="form-label">Сообщение</label>
+                        <textarea id="message" name="message" class="form-control" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="group_id" class="form-label">Группа ID (пример: 1)</label>
+                        <input id="group_id" type="number" name="group_id" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="send_time" class="form-label">Время отправки (например, 2024-07-20T15:30)</label>
+                        <input id="send_time" type="datetime-local" name="send_time" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="photo" class="form-label">Загрузите изображение (необязательно)</label>
+                        <input id="photo" type="file" name="photo" class="form-control" accept="image/*">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Отправить</button>
+                </form>
+            </main>
+        </div>
+    </div>
+
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    {% include 'footer.html' %}
+</body>
+</html>

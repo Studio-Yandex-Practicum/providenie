@@ -18,7 +18,7 @@ def read_root() -> Dict[str, str]:
 
 async def run_bot() -> None:
     """Launch the Telegram bot."""
-    application = init_bot()
+    application = await init_bot()
     await application.initialize()
     await application.start()
     await application.updater.start_polling()
