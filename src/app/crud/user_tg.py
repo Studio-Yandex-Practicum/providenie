@@ -69,11 +69,7 @@ class CRUDUserTG(CRUDBase):
                setattr(db_user, field, value)
         await session.commit()
         await session.refresh(db_user)
-        result = await session.execute(select(Group).filter(
-            Group.id.in_(pydantic_scheme_user.groups)))
-        group_objects = result.scalars().all()
-        group_names = [group.name for group in group_objects]
-        return {'user': db_user, 'group_names': group_names}
+        return db_user
 
     async def check_tg_id_unique(
         self,
