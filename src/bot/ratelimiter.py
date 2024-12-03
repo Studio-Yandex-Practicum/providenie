@@ -119,3 +119,4 @@ async def ptb_post_init(app: Application):
         name='start_timer',
         misfire_grace_time=None  # Задача не будет пропущена из-за прошлого времени
     )
+
