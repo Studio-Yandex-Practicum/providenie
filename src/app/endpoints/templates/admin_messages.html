@@ -41,6 +41,37 @@
                         </tbody>
                     </table>
                 </div>
+
+                <!-- Пагинация -->
+                <nav aria-label="Навигация по страницам">
+                    <ul class="pagination">
+                        <!-- Номера страниц -->
+                        {% for p in range(1, total_pages + 1) %}
+                        <li class="page-item {% if p == page %}active{% endif %}">
+                            <a class="page-link" href="?page={{ p }}">{{ p }}</a>
+                        </li>
+                        {% endfor %}
+
+                        <!-- Кнопка "Вперед" -->
+                        {% if page < total_pages %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page + 1 }}" aria-label="Следующая">
+                                Вперед <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        {% endif %}
+
+                        <!-- Кнопка "Назад" -->
+                        {% if page > 1 %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page - 1 }}" aria-label="Предыдущая">
+                                <span aria-hidden="true">&laquo;</span> Назад
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+
                 <a href="/admin/messages/create" class="btn btn-success">Создать новое сообщение</a>
             </main>
         </div>

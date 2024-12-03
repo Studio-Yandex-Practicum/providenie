@@ -4,6 +4,7 @@ from fastapi import (
     APIRouter,
     Depends,
     HTTPException,
+    Query,
     Request,
 )
 from fastapi.responses import HTMLResponse
@@ -23,6 +24,8 @@ templates = Jinja2Templates(directory='app/endpoints/templates')
 @router.get('/admin/users', response_class=HTMLResponse)
 async def admin_users(
     request: Request,
+    page: int = Query(1, ge=1),
+    page_size: int = Query(10, ge=1, le=100),
     session: AsyncSession = Depends(get_async_session),
     group_id: Optional[int] = None,
 ) -> HTMLResponse:
@@ -38,14 +41,41 @@ async def admin_users(
         select(Group),
     )
     groups = groups.scalars().all()
+    total_users = len(users)
+    start_index = (page - 1) * page_size
+    end_index = start_index + page_size
+    paginated_users = users[start_index:end_index]
 
     return templates.TemplateResponse(
         'admin_users.html',
         {
             'request': request,
-            'users': users,
+            'users': paginated_users,
             'groups': groups,
             'title': 'Users',
+            'page': page,
+            'total_pages': (total_users // page_size)
+            + (1 if total_users % page_size > 0 else 0),
+        },
+    )
+
+
+@router.get('/admin/users/create', response_class=HTMLResponse)
+async def create_user_page(
+    request: Request,
+    session: AsyncSession = Depends(get_async_session),
+) -> HTMLResponse:
+    """Render the user creation page."""
+    # Получение всех групп пользователей для выбора при создании
+    result = await session.execute(select(Group))
+    groups = result.scalars().all()
+
+    return templates.TemplateResponse(
+        'create_user.html',
+        {
+            'request': request,
+            'groups': groups,  # Передаем группы для выбора при создании пользователя
+            'title': 'Create User',
         },
     )
 

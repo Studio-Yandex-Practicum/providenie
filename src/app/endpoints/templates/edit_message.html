@@ -2,39 +2,62 @@
 <html lang="ru">
 <head>
     {% include 'header.html' %}
+    <title>Редактировать сообщение</title>
 </head>
 <body>
-    <div class="table-responsive">
-        <table class="table table-striped table-sm">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Текст</th>
-                    <th>Дата</th>
-                    <th>Отправлено</th>
-                    <th>Действия</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for message in messages %}
-                <tr>
-                    <td>{{ message.id }}</td>
-                    <td class="text-break">{{ message.text }}</td>
-                    <td>{{ message.send_on }}</td>
-                    <td>{{ 'Да' if message.is_send else 'Нет' }}</td>
-                    <td>
-                        <a href="/admin/messages/{{ message.id }}/edit" class="btn btn-warning btn-sm">Изменить</a>
-                        <form action="/admin/messages/{{ message.id }}/delete" method="post" style="display:inline;">
-                            <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Боковая панель -->
+            {% include 'admin_sidebar.html' %}
+
+            <!-- Основной контент -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <h2 class="my-4">Редактирование сообщения</h2>
+
+                <form action="/admin/messages/{{ message.id }}/update" method="post" enctype="multipart/form-data">
+                    <!-- Текст сообщения -->
+                    <div class="mb-3">
+                        <label for="messageText" class="form-label">Текст сообщения</label>
+                        <textarea class="form-control" id="messageText" name="text" rows="5" {% if is_message_sent %}readonly{% endif %} required>{{ message.text }}</textarea>
+                    </div>
+
+                    <!-- Статус отправки -->
+                    <div class="mb-3">
+                        <label for="isSend" class="form-label">Отправлено</label>
+                        <input type="text" class="form-control" id="isSend" value="{{ 'Да' if message.is_send else 'Нет' }}" readonly>
+                    </div>
+
+                    <!-- Фотографии, связанные с сообщением -->
+                    <div class="mb-3">
+                        <label for="existingPhotos" class="form-label">Прикрепленные фотографии</label>
+                        <div class="d-flex flex-wrap">
+                            {% for photo in photos %}
+                                <div class="position-relative m-2">
+                                    <img src="{{ photo.url }}" alt="Фото" class="img-thumbnail" width="150">
+                                    <button type="submit" formaction="/admin/messages/{{ message.id }}/photos/{{ photo.id }}/delete"
+                                            class="btn btn-danger btn-sm position-absolute top-0 end-0 {% if is_message_sent %}disabled{% endif %}">Удалить</button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Добавление новых фотографий -->
+                    <div class="mb-3">
+                        <label for="newPhoto" class="form-label">Добавить новые фотографии</label>
+                        <input type="file" class="form-control" id="newPhoto" name="new_photos" {% if is_message_sent %}disabled{% endif %} multiple>
+                    </div>
+
+                    <!-- Кнопки сохранения или отмены -->
+                    <div class="mt-4 d-flex justify-content-between">
+                        <button type="submit" class="btn btn-primary" {% if is_message_sent %}disabled{% endif %}>Сохранить изменения</button>
+                        <a href="/admin/messages" class="btn btn-secondary">Отмена</a>
+                    </div>
+                </form>
+            </main>
+        </div>
     </div>
-    <script src="/static/js/bootstrap.bundle.min.js"></script>
+
     {% include 'footer.html' %}
-    
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

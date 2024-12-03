@@ -1,4 +1,3 @@
-# Используем базовый образ Python 3.12
 FROM python:3.12-bookworm
 
 WORKDIR /app
