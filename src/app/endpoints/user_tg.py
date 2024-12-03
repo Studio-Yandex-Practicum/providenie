@@ -74,7 +74,7 @@ async def create_user_page(
         'create_user.html',
         {
             'request': request,
-            'groups': groups,  # Передаем группы для выбора при создании пользователя
+            'groups': groups,
             'title': 'Create User',
         },
     )
