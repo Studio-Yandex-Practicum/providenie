@@ -74,7 +74,7 @@ async def edit_message(
     message_id: int,
     session: AsyncSession = Depends(get_async_session),
 ) -> HTMLResponse:
-    """Endpoint to get a single message by its ID for editing, along with associated photos."""
+    """Get a message by its ID for editing, along with associated photos."""
     # Fetch the message by its ID
     message = await crud_message.get_obj_by_id(message_id, session)
 
@@ -84,13 +84,12 @@ async def edit_message(
     )
     photos = result.scalars().all()
 
-    # Return the message and related photos to the template
     return templates.TemplateResponse(
         'edit_message.html',
         {
             'request': request,
             'message': message,
-            'photos': photos,  # Add photos to the context
-            'is_message_sent': message.is_send,  # Pass a flag for whether the message is sent
+            'photos': photos,
+            'is_message_sent': message.is_send,
         },
     )
