@@ -1,9 +1,16 @@
+import asyncio
+
+import uvicorn
+from fastapi import FastAPI
+
 from bot.core import logger  # noqa
 from bot.services import init_bot
 
+app = FastAPI()
 
-def main() -> None:
-    """Run application."""
+
+async def run_bot() -> None:
+    """Launch the Telegram bot."""
     application = init_bot()
     await application.initialize()
     await application.start()
@@ -23,4 +30,4 @@ async def main() -> None:
 
 
 if __name__ == '__main__':
-    main()
+    asyncio.run(main())
