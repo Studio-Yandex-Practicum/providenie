@@ -27,6 +27,8 @@ class CRUDUserTG(CRUDBase):
         new_user_dict['hashed_password'] = get_hash_password(password)
         new_user: UserTG = self.model(**new_user_dict)
         session.add(new_user)
+        await session.commit()
+        await session.refresh(new_user)
         if groups:
             result = await session.execute(select(Group).filter(
                 Group.id.in_(pydantic_scheme_user.groups)))
@@ -38,7 +40,6 @@ class CRUDUserTG(CRUDBase):
             session.add(association)
 
         await session.commit()
-        await session.refresh(new_user)
         return new_user
 
     async def update(
