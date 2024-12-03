@@ -6,10 +6,10 @@
 <body>
     <div class="container-fluid">
         <div class="row">
-            <!-- Sidebar -->
             {% include 'admin_sidebar.html' %}
             <main class="col-md-9 ms-sm-auto col-lg-10 px-4">
                 <h2>Отредактировать группу</h2>
+                {% include 'errors.html' %}
                 <form method="post">
                     <input type="hidden" name="_method" value="patch">
                     <div class="mb-3">

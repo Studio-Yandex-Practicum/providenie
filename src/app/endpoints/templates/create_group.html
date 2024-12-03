@@ -9,6 +9,7 @@
             {% include 'admin_sidebar.html' %}
             <main class="col-md-9 ms-sm-auto col-lg-10 px-4">
                 <h2>Создать новую группу</h2>
+                {% include 'errors.html' %}
                 <form method="post" action="/admin/groups/create">
                     <div class="mb-3">
                         <label for="name" class="form-label">Название группы</label>

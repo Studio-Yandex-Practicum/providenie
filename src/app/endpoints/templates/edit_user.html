@@ -6,14 +6,12 @@
 <body>
     <div class="container-fluid">
         <div class="row">
-            <!-- Боковая панель -->
             {% include 'admin_sidebar.html' %}
-
-            <!-- Основной контент -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <div class="main-header text-center">
                     <h1>Редактировать пользователя</h1>
                 </div>
+                {% include 'errors.html' %}
                 <form method="POST" action="{{ url_for('edit_user', user_id=user.id) }}">
                     <label for="first_name">Имя</label>
                     <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}" readonly>
