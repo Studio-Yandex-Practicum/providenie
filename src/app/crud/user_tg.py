@@ -24,9 +24,10 @@ class CRUDUserTG(CRUDBase):
         """Create new user in database."""
         new_user_dict = pydantic_scheme_user.dict()
         password = new_user_dict.pop('password')
-        groups = new_user_dict.pop('groups')
+        groups = new_user_dict.pop('groups', None)
 
-        new_user_dict['hashed_password'] = get_hash_password(password)
+        if password:
+            new_user_dict['hashed_password'] = get_hash_password(password)
         new_user: UserTG = self.model(**new_user_dict)
         session.add(new_user)
         await session.commit()
@@ -40,12 +41,12 @@ class CRUDUserTG(CRUDBase):
             )
             group_objects = result.scalars().all()
 
-        for group in group_objects:
-            association = UserGroupAssociation(
-                user_id=new_user.id,
-                group_id=group.id,
-            )
-            session.add(association)
+            for group in group_objects:
+                association = UserGroupAssociation(
+                    user_id=new_user.id,
+                    group_id=group.id,
+                )
+                session.add(association)
 
         await session.commit()
         return new_user
