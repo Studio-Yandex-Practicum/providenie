@@ -7,7 +7,10 @@ from sqlalchemy.orm import joinedload
 
 from app.core.jwt import get_hash_password
 from app.crud.base import CRUDBase
+
 from app.models.models import Group, UserGroupAssociation, UserTG
+from app.schemas.auth import UserCreate
+
 
 ModelType = TypeVar('ModelType')
 
@@ -17,18 +20,20 @@ class CRUDUserTG(CRUDBase):
 
     async def create(
         self,
-        pydantic_scheme_user: ModelType,
+        pydantic_scheme_user: UserCreate,
         session: AsyncSession,
     ) -> ModelType:
         """Create new user in database."""
         new_user_dict = pydantic_scheme_user.dict()
         password = new_user_dict.pop('password')
         groups = new_user_dict.pop('groups')
+        
         new_user_dict['hashed_password'] = get_hash_password(password)
         new_user: UserTG = self.model(**new_user_dict)
         session.add(new_user)
         await session.commit()
         await session.refresh(new_user)
+        
         if groups:
             result = await session.execute(select(Group).filter(
                 Group.id.in_(pydantic_scheme_user.groups)))
@@ -68,6 +73,8 @@ class CRUDUserTG(CRUDBase):
         for field, value in update_data.items():
            if hasattr(db_user, field):
                setattr(db_user, field, value)
+
+        session.add(db_user)
         await session.commit()
         await session.refresh(db_user)
         return db_user
