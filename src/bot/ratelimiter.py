@@ -1,22 +1,20 @@
 import asyncio
-import os
 import logging
+import os
 from collections import deque
-from datetime import datetime
-from typing import Any, Callable, List
+from datetime import datetime, timedelta
+from typing import Any, Callable
 
 from dotenv import load_dotenv
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import (
-    AsyncSession,
     async_sessionmaker,
     create_async_engine,
 )
 from telegram import Bot
-from telegram.error import TelegramError
-from telegram.ext import ApplicationBuilder, ContextTypes, Application
+from telegram.ext import Application, ApplicationBuilder, ContextTypes
 
-from app.models.models import Group
+from app.models.models import Message
 
 load_dotenv()
 DATABASE_URL = os.getenv('DATABASE_URL')
@@ -27,7 +25,7 @@ bot = Bot(token=TELEGRAM_TOKEN)
 
 application = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
 job_queue = application.job_queue
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 class RateLimiter:
     """Класс для ограничения скорости отправки сообщений."""
@@ -52,7 +50,7 @@ class RateLimiter:
             await asyncio.sleep(1 / self.rate_limit)
 
 
-async def load_unsent_messages()->None:
+async def load_unsent_messages(context: ContextTypes.DEFAULT_TYPE)->None:
     """Загрузка неотправленных сообщений из базы данных.
 
     Планирование их отправки.
@@ -65,58 +63,50 @@ async def load_unsent_messages()->None:
                 )
             for message in unsent_messages.scalars().all():
                 # Преобразование строки времени в datetime
-                if message.send_on > datetime.now():
-                    user_ids = await get_user_ids_of_group(message.group_id,
-                                                           session)
-                    for user_id in user_ids:
-                        job_queue.run_once(
-                            send_delayed_message,
-                            when=message.send_on.timestamp(),
-                            context=(user_id, message.text, message.photos),
-                            misfire_grace_time=None
-                        )
-                        message.is_send = True
+                if message.send_on < datetime.now():
+                    send_time = datetime.now() + timedelta(seconds=10)
+                else:
+                    send_time = message.send_on
+
+                job_queue.run_once(
+                    send_message,
+                    when=send_time.timestamp(),
+                    context={"message_id": message.id},
+                    name=f'send_mes_{message.id}',
+                    )
 
 
-async def get_user_ids_of_group(group_id: int,
-                                session: AsyncSession) -> List[int]:
-    """Получение идентификаторов пользователей группы."""
-    group = await session.get(Group, group_id)
-    return [user.tg_id for user in group.users] if group else []
+async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Отправка сообщения пользователям."""
+    message_id = context.job.data
+
+    async with SessionLocal() as session:
+        message = await session.get(Message, message_id)
+        if not message:
+            return
+        groups = message.groups
+        for group in groups:
+            user_ids = [user.tg_id for user in group.users]
+            for user_id in user_ids:
+                if message.photos:
+                    await bot.send_photo(chat_id=user_id, photo=message.photos,
+                                         caption=message.text)
+                else:
+                    await bot.send_message(chat_id=user_id, text=message.text)
+                await asyncio.sleep(1/20)
+
+        message.is_send = True
+        message.sended_at = datetime.now()
+        await session.commit()
 
 
-rate_limiter = RateLimiter(rate_limit=30)
-
-
-async def send_delayed_message(context: ContextTypes.DEFAULT_TYPE)->None:
-    """Отправка задержанного сообщения."""
-    user_id, message_text, photo = context.args
-
-    async def send()-> None:
-        try:
-            if photo:
-                await bot.send_photo(chat_id=user_id,
-                                     photo=photo, caption=message_text)
-            else:
-                await bot.send_message(chat_id=user_id, text=message_text)
-        except TelegramError as e:
-            print(f'Ошибка отправки сообщения пользователю {user_id}: {e}')
-
-    await rate_limiter.send_message(send)
-
-
-async def start_timer(context: ContextTypes.DEFAULT_TYPE):
-    """Функция, которая будет вызвана через 5 секунд."""
-    logging.info("Таймер сработал! Выполняем задачу.")
-
-async def ptb_post_init(app: Application):
+async def ptb_post_init(app: Application)-> None:
     """Функция для первоначальной инициализации приложения."""
     logging.info('Запуск функции post_init.')
     app.job_queue.run_once(
-        start_timer,
-        when=5,  # Начало через 5 секунд
-        context=None,  # Можно передать данные контекста
-        name='start_timer',
-        misfire_grace_time=None  # Задача не будет пропущена из-за прошлого времени
+        load_unsent_messages,
+        when=5,
+        context=None,
+        name='load_unsent_messages',
+        misfire_grace_time=None,
     )
-

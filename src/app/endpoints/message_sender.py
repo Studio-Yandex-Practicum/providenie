@@ -1,8 +1,8 @@
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from dotenv import load_dotenv
-from fastapi import BackgroundTasks, FastAPI, File, Form, Request, UploadFile
+from fastapi import FastAPI, File, Form, Request, UploadFile
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -10,12 +10,12 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from telegram import Bot
 from telegram.ext import ApplicationBuilder
 
-from app.models.models import Base, Group, Message
+from app.models.models import Group, Message
 
 from bot.ratelimiter import (
     RateLimiter,
-    load_unsent_messages,
-    send_delayed_message,
+    ptb_post_init,
+    send_message,
 )
 
 load_dotenv()
@@ -34,9 +34,10 @@ static_dir = os.path.normpath(os.path.abspath
 app.mount('/static', StaticFiles(directory=static_dir), name='static')
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 bot = Bot(token=TELEGRAM_TOKEN)
-application = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
-job_queue = application.job_queue
 rate_limiter = RateLimiter(rate_limit=30)
+application = ApplicationBuilder().token(
+    TELEGRAM_TOKEN).post_init(ptb_post_init).build()
+job_queue = application.job_queue
 
 
 @app.get('/', response_class=HTMLResponse)
@@ -46,13 +47,13 @@ async def read_form(request: Request) -> HTMLResponse:
 
 
 @app.post('/send_message/')
-async def send_message(
+async def send_message_endpoint(
     request: Request,
     message: str = Form(...),
     group_id: int = Form(...),
     send_time: str = Form(...),
     photo: UploadFile = File(None),
-    background_tasks: BackgroundTasks = None)-> HTMLResponse:
+    )-> HTMLResponse:
     """Обрабатывает запрос на отправку сообщения в определенной группе."""
     try:
         send_time_dt = datetime.fromisoformat(send_time)
@@ -70,26 +71,24 @@ async def send_message(
                                                     'message':
                                                      'Группа не найдена'})
 
-            user_ids = [user.tg_id for user in group.users]
             new_message = Message(text=message,
                                   send_on=send_time_dt, is_send=False)
+            new_message.groups.append(group)
             session.add(new_message)
             await session.commit()
 
-    for user_id in user_ids:
+            send_time = (send_time_dt
+                         if send_time_dt >= datetime.now()
+                         else datetime.now() + timedelta(seconds=10))
 
-        await rate_limiter.send_message(send_delayed_message,
-                                        context=(user_id, message, photo))
+            job_queue.run_once(
+                send_message,
+                when=send_time.timestamp(),
+                context={'message_id': new_message.id},
+                name=f'send_mes_{new_message.id}',
+            )
 
     return templates.TemplateResponse('success.html',
                                       {'request': request,
                                        'message': 'Сообщение запланировано!'},
                                        )
-
-
-@app.on_event('startup')
-async def startup_event()->None:
-    """Событие старта приложения."""
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    await load_unsent_messages()
