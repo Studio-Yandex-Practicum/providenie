@@ -7,10 +7,8 @@ from sqlalchemy.orm import joinedload
 
 from app.core.jwt import get_hash_password
 from app.crud.base import CRUDBase
-
 from app.models.models import Group, UserGroupAssociation, UserTG
 from app.schemas.auth import UserCreate
-
 
 ModelType = TypeVar('ModelType')
 
@@ -27,21 +25,26 @@ class CRUDUserTG(CRUDBase):
         new_user_dict = pydantic_scheme_user.dict()
         password = new_user_dict.pop('password')
         groups = new_user_dict.pop('groups')
-        
+
         new_user_dict['hashed_password'] = get_hash_password(password)
         new_user: UserTG = self.model(**new_user_dict)
         session.add(new_user)
         await session.commit()
         await session.refresh(new_user)
-        
+
         if groups:
-            result = await session.execute(select(Group).filter(
-                Group.id.in_(pydantic_scheme_user.groups)))
+            result = await session.execute(
+                select(Group).filter(
+                    Group.id.in_(pydantic_scheme_user.groups),
+                ),
+            )
             group_objects = result.scalars().all()
 
         for group in group_objects:
             association = UserGroupAssociation(
-                user_id=new_user.id, group_id=group.id)
+                user_id=new_user.id,
+                group_id=group.id,
+            )
             session.add(association)
 
         await session.commit()
@@ -56,7 +59,8 @@ class CRUDUserTG(CRUDBase):
         """Update user in database."""
         update_data = pydantic_scheme_user.dict(
             exclude_unset=True,
-            exclude_none=True)
+            exclude_none=True,
+        )
         if 'password' in update_data:
             password = update_data.pop('password')
             update_data['hashed_password'] = get_hash_password(password)
@@ -65,14 +69,18 @@ class CRUDUserTG(CRUDBase):
             groups = update_data.pop('groups')
             await session.execute(
                 delete(UserGroupAssociation).filter(
-                    UserGroupAssociation.user_id == db_user.id))
+                    UserGroupAssociation.user_id == db_user.id,
+                ),
+            )
             for group_id in groups:
                 association = UserGroupAssociation(
-                    user_id=db_user.id, group_id=group_id)
+                    user_id=db_user.id,
+                    group_id=group_id,
+                )
                 session.add(association)
         for field, value in update_data.items():
-           if hasattr(db_user, field):
-               setattr(db_user, field, value)
+            if hasattr(db_user, field):
+                setattr(db_user, field, value)
 
         session.add(db_user)
         await session.commit()
@@ -95,15 +103,17 @@ class CRUDUserTG(CRUDBase):
         return not user_exists.scalar()
 
     async def get_users_by_params(
-            self,
-            filters: dict,
-            session: AsyncSession) -> ModelType:
+        self,
+        filters: dict,
+        session: AsyncSession,
+    ) -> ModelType:
         """Get user by params."""
         query = select(UserTG).options(joinedload(UserTG.groups))
         conditions = []
         if 'group_id' in filters and filters['group_id'] is not None:
-            conditions.append(UserTG.groups.any(
-                Group.id == filters['group_id']))
+            conditions.append(
+                UserTG.groups.any(Group.id == filters['group_id']),
+            )
         if 'is_admin' in filters:
             conditions.append(UserTG.is_admin == filters['is_admin'])
         if 'is_block' in filters:
