@@ -1,4 +1,11 @@
+import os
+from pathlib import Path
+
 from pydantic import BaseSettings
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
+
+is_run_in_docker = bool(int(os.environ.get('RUN_IN_DOCKER', '0')))
 
 
 class Settings(BaseSettings):
@@ -36,7 +43,7 @@ class Settings(BaseSettings):
     token_expire_minutes: int = 30
 
     class Config:  # noqa: D106
-        env_file = '.env'
+        env_file = None if is_run_in_docker else BASE_DIR / 'infra/.env'
         env_file_encoding = 'utf-8'
         extra = 'ignore'
 
