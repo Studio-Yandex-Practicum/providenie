@@ -46,6 +46,7 @@ class UserTG(Base):
         'Group',
         secondary='user_group',
         back_populates='users',
+        lazy='joined',
     )
     is_block = Column(Boolean, default=False)
     is_admin = Column(Boolean, default=False)
@@ -69,6 +70,7 @@ class Group(Base):
         'UserTG',
         secondary='user_group',
         back_populates='groups',
+        lazy='joined',
     )
 
     # Связь с сообщениями
@@ -76,6 +78,7 @@ class Group(Base):
         'Message',
         secondary='message_group',
         back_populates='groups',
+        lazy='joined',
     )
 
 
@@ -95,6 +98,7 @@ class Message(Base):
         'Group',
         secondary='message_group',
         back_populates='messages',
+        lazy='joined',
     )
 
 
