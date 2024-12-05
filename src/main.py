@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from app.admin_endpoints.routers import main_router
 
 from bot.core import logger  # noqa
-from bot.services import init_bot
+from bot.services import bot_application
 
 app = FastAPI()
 app.include_router(main_router)
@@ -27,10 +27,9 @@ def read_root() -> Dict[str, str]:
 
 async def run_bot() -> None:
     """Launch the Telegram bot."""
-    application = init_bot()
-    await application.initialize()
-    await application.start()
-    await application.updater.start_polling()
+    await bot_application.initialize()
+    await bot_application.start()
+    await bot_application.updater.start_polling()
 
 
 async def run_fastapi() -> None:

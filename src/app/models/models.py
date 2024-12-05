@@ -38,7 +38,6 @@ class UserTG(Base):
 
     __tablename__ = 'user_tg'
 
-    id = Column(BigInteger, primary_key=True, autoincrement=True)
     tg_id = Column(String, nullable=False)
     first_name = Column(String(LENGTH_64), nullable=False)
     last_name = Column(String(LENGTH_64), nullable=True)
@@ -47,6 +46,7 @@ class UserTG(Base):
         'Group',
         secondary='user_group',
         back_populates='users',
+        lazy='joined',
     )
     is_block = Column(Boolean, default=False)
     is_admin = Column(Boolean, default=False)
@@ -64,13 +64,13 @@ class UserTG(Base):
 class Group(Base):
     """Group model."""
 
-    id = Column(BigInteger, primary_key=True, autoincrement=True)
     name = Column(String, unique=True, nullable=False)
     is_active = Column(Boolean, default=True)
     users = relationship(
         'UserTG',
         secondary='user_group',
         back_populates='groups',
+        lazy='joined',
     )
 
     # Связь с сообщениями
@@ -78,13 +78,13 @@ class Group(Base):
         'Message',
         secondary='message_group',
         back_populates='groups',
+        lazy='joined',
     )
 
 
 class Message(Base):
     """Message model."""
 
-    id = Column(BigInteger, primary_key=True, autoincrement=True)
     text = Column(String(LENGTH_256), nullable=True)
     photos = relationship('Photo')
     send_on = Column(DateTime, default=datetime.now())
@@ -98,12 +98,12 @@ class Message(Base):
         'Group',
         secondary='message_group',
         back_populates='messages',
+        lazy='joined',
     )
 
 
 class Photo(Base):
     """Photo model."""
 
-    id = Column(BigInteger, primary_key=True, autoincrement=True)
     filename = Column(String, nullable=False)
     message_id = Column(BigInteger, ForeignKey('message.id'), nullable=False)

@@ -12,3 +12,6 @@ def init_bot() -> Application:
     application.add_handler(main_menu_handler)
     application.add_error_handler(error_handler)
     return application
+
+
+bot_application = init_bot()

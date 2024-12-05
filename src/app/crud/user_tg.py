@@ -23,8 +23,8 @@ class CRUDUserTG(CRUDBase):
     ) -> ModelType:
         """Create new user in database."""
         new_user_dict = pydantic_scheme_user.dict()
-        password = new_user_dict.pop('password')
-        groups = new_user_dict.pop('groups')
+        password = new_user_dict.pop('password', '')
+        groups = new_user_dict.pop('groups', None)
 
         new_user_dict['hashed_password'] = get_hash_password(password)
         new_user: UserTG = self.model(**new_user_dict)
@@ -47,7 +47,8 @@ class CRUDUserTG(CRUDBase):
                 )
                 session.add(association)
 
-        await session.commit()
+            await session.commit()
+
         return new_user
 
     async def update(
@@ -59,7 +60,8 @@ class CRUDUserTG(CRUDBase):
         """Update user in database."""
         update_data = pydantic_scheme_user.dict(
             exclude_unset=True,
-            exclude_none=True)
+            exclude_none=True,
+        )
         if 'password' in update_data:
             password = update_data.pop('password')
             update_data['hashed_password'] = get_hash_password(password)
