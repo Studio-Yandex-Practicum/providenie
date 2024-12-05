@@ -66,7 +66,7 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['group_id'], ['group.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user_tg.id'], ),
-    sa.PrimaryKeyConstraint('user_id', 'group_id', 'id')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('message_group',
     sa.Column('message_id', sa.BigInteger(), nullable=False),
@@ -76,7 +76,7 @@ def upgrade() -> None:
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['group_id'], ['group.id'], ),
     sa.ForeignKeyConstraint(['message_id'], ['message.id'], ),
-    sa.PrimaryKeyConstraint('message_id', 'group_id', 'id')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('photo',
     sa.Column('filename', sa.String(), nullable=False),

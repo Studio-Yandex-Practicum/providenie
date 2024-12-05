@@ -20,8 +20,8 @@ class MessageGroupAssociation(Base):
 
     __tablename__ = 'message_group'
 
-    message_id = Column(ForeignKey('message.id'), primary_key=True)
-    group_id = Column(ForeignKey('group.id'), primary_key=True)
+    message_id = Column(ForeignKey('message.id'))
+    group_id = Column(ForeignKey('group.id'))
 
 
 class UserGroupAssociation(Base):
@@ -29,8 +29,8 @@ class UserGroupAssociation(Base):
 
     __tablename__ = 'user_group'
 
-    user_id = Column(ForeignKey('user_tg.id'), primary_key=True)
-    group_id = Column(ForeignKey('group.id'), primary_key=True)
+    user_id = Column(ForeignKey('user_tg.id'))
+    group_id = Column(ForeignKey('group.id'))
 
 
 class UserTG(Base):
