@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import BigInteger, Column, DateTime
+from sqlalchemy import Column, DateTime
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import declarative_base, declared_attr, sessionmaker
 
@@ -14,7 +14,6 @@ class PreBase:
     def __tablename__(cls) -> str:  # noqa
         return cls.__name__.lower()
 
-    id = Column(BigInteger, primary_key=True)
     created_at = Column(DateTime, default=datetime.now())
     updated_at = Column(
         DateTime,

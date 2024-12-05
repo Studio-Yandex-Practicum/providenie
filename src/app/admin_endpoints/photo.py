@@ -1,6 +1,16 @@
+from pathlib import Path
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Request
+import aiofiles
+from fastapi import (
+    APIRouter,
+    Depends,
+    File,
+    HTTPException,
+    Query,
+    Request,
+    UploadFile,
+)
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -34,16 +44,18 @@ async def photos(
 @router.post('/admin/photos/create', response_class=HTMLResponse)
 async def create_photo(
     request: Request,
-    filename: str = Query(...),
+    file: UploadFile = File(...),
     message_id: int = Query(...),
     session: AsyncSession = Depends(get_async_session),
 ) -> HTMLResponse:
     """Endpoint to create a new photo."""
-    file_location = f"staticfiles/{filename}"
-    # async with aiofiles.open(file_location, "wb") as f:
-    #     content = await filename.read()
-    #     await f.write(content) TODO Исправить после того как станет ясно
-    #                             откуда брать и куда сохранять фото.
+    directory = Path('app/admin_endpoints/static')
+    if not directory.exists():
+        directory.mkdir(parents=True, exist_ok=True)
+    file_location = f"{directory}/{file.filename}"
+    async with aiofiles.open(file_location, 'wb') as f:
+        content = await file.read()
+        await f.write(content)
     new_photo = PhotoCreate(filename=file_location, message_id=message_id)
     created_photo = await crud_photo.create(new_photo, session)
     return templates.TemplateResponse(
@@ -51,26 +63,44 @@ async def create_photo(
         {'request': request, 'photo': created_photo})
 
 
-@router.patch('/admin/photos/{photo_id}/edit', response_class=HTMLResponse)
+@router.post('/admin/photos/{photo_id}/edit', response_class=HTMLResponse)
 async def update_photo(
     request: Request,
     photo_id: int,
-    filename: str = Query(...),
+    file: UploadFile = File(...),
     session: AsyncSession = Depends(get_async_session),
 ) -> HTMLResponse:
-    """Endpoint to update an existing photo."""
+    """Endpoint to edit an existing photo."""
     existing_photo = await crud_photo.get_obj_by_id(photo_id, session)
     if not existing_photo:
         raise HTTPException(
             status_code=404,
             detail="Photo with this ID not found")
-    file_location = f"staticfiles/{filename}"
-    # async with aiofiles.open(file_location, "wb") as f:
-    #     content = await filename.read()
-    #     await f.write(content) TODO Исправить после того как станет ясно
-    #                             откуда брать и куда сохранять фото.
+    file_location = f"app/admin_endpoints/static/{file.filename}"
+    async with aiofiles.open(file_location, "wb") as f:
+        content = await file.read()
+        await f.write(content)
     new_photo = PhotoUpdate(filename=file_location)
     updated_photo = await crud_photo.update(existing_photo, new_photo, session)
     return templates.TemplateResponse(
         'photo_updated.html',
         {'request': request, 'photo': updated_photo})
+
+
+@router.post('/admin/photos/{photo_id}/delete', response_class=HTMLResponse)
+async def delete_photo(
+    request: Request,
+    photo_id: int,
+    session: AsyncSession = Depends(get_async_session),
+) -> HTMLResponse:
+    """Endpoint to delete a photo."""
+    existing_photo = await crud_photo.get_obj_by_id(photo_id, session)
+    if not existing_photo:
+        raise HTTPException(
+            status_code=404,
+            detail="Photo with this ID not found")
+
+    await crud_photo.delete(existing_photo, session)
+    return templates.TemplateResponse(
+        'photo_deleted.html',
+        {'request': request, 'photo_id': photo_id})

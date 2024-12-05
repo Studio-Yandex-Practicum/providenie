@@ -38,6 +38,7 @@ class UserTG(Base):
 
     __tablename__ = 'user_tg'
 
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
     tg_id = Column(String, nullable=False)
     first_name = Column(String(LENGTH_64), nullable=False)
     last_name = Column(String(LENGTH_64), nullable=True)
@@ -63,6 +64,7 @@ class UserTG(Base):
 class Group(Base):
     """Group model."""
 
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
     name = Column(String, unique=True, nullable=False)
     is_active = Column(Boolean, default=True)
     users = relationship(
@@ -82,6 +84,7 @@ class Group(Base):
 class Message(Base):
     """Message model."""
 
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
     text = Column(String(LENGTH_256), nullable=True)
     photos = relationship('Photo')
     send_on = Column(DateTime, default=datetime.now())
@@ -101,5 +104,6 @@ class Message(Base):
 class Photo(Base):
     """Photo model."""
 
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
     filename = Column(String, nullable=False)
     message_id = Column(BigInteger, ForeignKey('message.id'), nullable=False)

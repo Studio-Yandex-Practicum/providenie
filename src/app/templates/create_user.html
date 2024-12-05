@@ -12,6 +12,10 @@
                 <h2 class="my-4">Создание пользователя</h2>
                 {% include 'web_errors.html' %}
                 <form action="/admin/users/create" method="post">
+                    <div class="mb-3">
+                        <label for="tg_id" class="form-label">tg_id</label>
+                        <input type="text" class="form-control" id="tg_id" name="tg_id" required>
+                    </div>
 
                     <div class="mb-3">
                         <label for="first_name" class="form-label">Имя</label>

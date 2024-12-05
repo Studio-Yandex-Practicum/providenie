@@ -31,6 +31,8 @@ async def get_users(
     group_id: Optional[int] = Query(None),
     is_admin: Optional[bool] = Query(None),
     is_block: Optional[bool] = Query(None),
+    page: int = Query(1, ge=1),
+    page_size: int = Query(10, ge=1, le=100),
     session: AsyncSession = Depends(get_async_session),
     ) -> HTMLResponse:
     """Endpoint to get users."""
@@ -44,60 +46,43 @@ async def get_users(
     users = await crud_user.get_users_by_params(filters, session)
     users = sorted(users, key=lambda user: user.id)
     groups = await crud_group.get_all_objs(session)
+    total_users = len(users)
+    start_index = (page - 1) * page_size
+    end_index = start_index + page_size
+    paginated_users = users[start_index:end_index]
     return templates.TemplateResponse(
         'admin_users.html',
-        {'request': request, 'users': users, 'groups': groups})
+        {'request': request,
+         'users': paginated_users,
+            'page': page,
+            'total_pages': (total_users // page_size)
+            + (1 if total_users % page_size > 0 else 0),
+         'groups': groups})
 
 
 @router.get('/admin/users/create', response_class=HTMLResponse)
 async def create_users(
     request: Request,
-    tg_id: str = Query(...),
-    first_name: str = Query( ...),
-    last_name: Optional[str] = Query(None),
-    user_name: Optional[str] = Query(None),
-    is_block: Optional[bool] = Query(False),
-    is_admin: Optional[bool] = Query(False),
-    password: Optional[str] = Query(None),
-    is_active: Optional[bool] = Query(True),
-    groups: Optional[List[int]] = Query(None),
     session: AsyncSession = Depends(get_async_session),
     )-> HTMLResponse:
     """Endpoint to get form a new user."""
-    user = UserCreate(
-        tg_id=tg_id,
-        first_name=first_name,
-        last_name=last_name,
-        user_name=user_name,
-        is_block=is_block,
-        is_admin=is_admin,
-        password=password,
-        is_active=is_active,
-        groups=groups)
-    is_unique = await crud_user.check_tg_id_unique(user, session)
-    if not is_unique:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail='User with this tg_id already exists.')
     groups = await crud_group.get_all_objs(session)
     return templates.TemplateResponse(
-        'create_user.html', {'request': request,
-                              'user': user,
-                              'groups': groups})
+        'create_user.html', {'request': request, 'groups': groups})
 
 
 @router.post('/admin/users/create', response_class=HTMLResponse)
 async def create_users(
     request: Request,
-    tg_id: str = Query(...),
-    first_name: str = Query( ...),
-    last_name: Optional[str] = Query(None),
-    user_name: Optional[str] = Query(None),
-    is_block: Optional[bool] = Query(False),
-    is_admin: Optional[bool] = Query(False),
-    password: Optional[str] = Query(None),
+    tg_id: str = Form(...),
+    first_name: str = Form(...),
+    last_name: Optional[str] = Form(None),
+    user_name: Optional[str] = Form(None),
+    is_block: Optional[bool] = Form(False),
+    is_admin: Optional[bool] = Form(False),
+    password: Optional[str] = Form(None),
     is_active: Optional[bool] = Query(True),
-    groups: Optional[List[int]] = Query(None),
+    group_id: Optional[List[int]] = Form(None), # Переименовал из groups в group_id под шаблон  # noqa: E501
     session: AsyncSession = Depends(get_async_session),
     )-> HTMLResponse:
     """Endpoint to create a new user."""
@@ -110,10 +95,10 @@ async def create_users(
         is_admin=is_admin,
         password=password,
         is_active=is_active,
-        groups=groups)
+        groups=group_id) # Переименовал из groups в group_id под шаблон
     user = await crud_user.create(user, session)
     groups = await session.execute(select(Group).filter(
-                Group.id.in_(user.groups)))
+                Group.id.in_(group_id))) # Переименовал из groups в group_id под шаблон  # noqa: E501
     groups = groups.scalars().all()
     return templates.TemplateResponse(
         'user_created.html', {'request': request,
@@ -128,7 +113,7 @@ async def get_user_edit_form(
     is_block: Optional[bool] = Form(False),
     is_admin: Optional[bool] = Form(False),
     password: Optional[str] = Form(None),
-    groups: Optional[List[int]] = Query(None),
+    group_id: Optional[List[int]] = Query(None), # Переименовал из groups в group_id под шаблон  # noqa: E501
     session: AsyncSession = Depends(get_async_session),
     ) -> HTMLResponse:
     """Endpoint to get editing form an existing user."""
@@ -143,7 +128,7 @@ async def get_user_edit_form(
         is_block=is_block,
         is_admin=is_admin,
         password=password,
-        groups=groups)
+        groups=group_id)  # Переименовал из groups в group_id под шаблон
     groups = await crud_group.get_all_objs(session)
     return templates.TemplateResponse(
         'edit_user.html', {'request': request,
@@ -155,10 +140,10 @@ async def get_user_edit_form(
 async def edit_user(
     request: Request,
     user_id: int = Path(..., title='The ID of the user to update'),
-    is_block: Optional[bool] = Query(False),
-    is_admin: Optional[bool] = Query(False),
-    password: Optional[str] = Query(None),
-    groups: Optional[List[int]] = Query(None),
+    is_block: Optional[bool] = Form(False),
+    is_admin: Optional[bool] = Form(False),
+    password: Optional[str] = Form(None),
+    group_id: Optional[List[int]] = Form(None), # Переименовал из groups в group_id под шаблон  # noqa: E501
     session: AsyncSession = Depends(get_async_session),
     ) -> HTMLResponse:
     """Endpoint to update an existing user."""
@@ -173,11 +158,12 @@ async def edit_user(
         is_block=is_block,
         is_admin=is_admin,
         password=password,
-        groups=groups)
+        groups=group_id) # Переименовал из groups в group_id под шаблон
     updated_user = await crud_user.update(existing_user, user_scheme, session)
-    groups =  result = await session.execute(select(Group).filter(
-                Group.id.in_(updated_user.groups)))
-    groups = result.scalars().all()
+    if group_id:  # Переименовал из groups в group_id под шаблон
+        groups = await session.execute(select(Group).filter(
+                    Group.id.in_(user_scheme.groups)))
+        groups = groups.scalars().all()
     return templates.TemplateResponse(
         'user_updated.html', {'request': request,
                               'user': updated_user,

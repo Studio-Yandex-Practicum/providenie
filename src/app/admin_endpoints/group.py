@@ -36,11 +36,7 @@ async def groups(
         filters['is_active'] = is_active
 
     groups = await crud_group.get_all_by_attributes(filters, session)
-
-    # Сортировка по id
     groups = sorted(groups, key=lambda group: group.id)
-
-    # Реализация пагинации
     total_groups = len(groups)
     start_index = (page - 1) * page_size
     end_index = start_index + page_size
@@ -90,7 +86,7 @@ async def create_groups(
     group = GroupCreate(name=name, is_active=is_active)
     new_group = await crud_group.create(group, session)
     return templates.TemplateResponse(
-        'create_group.html',
+        'group_created.html',
         {'request': request, 'group': new_group},
     )
 
@@ -144,3 +140,22 @@ async def edit_group(
             {'request': request, 'group': updated_group},
         )
     raise HTTPException(status_code=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+@router.post('/admin/groups/{group_id}/delete', response_class=HTMLResponse)
+async def delete_group(
+    request: Request,
+    group_id: int,
+    session: AsyncSession = Depends(get_async_session),
+) -> HTMLResponse:
+    """Endpoint to delete a group."""
+    existing_group = await crud_group.get_obj_by_id(group_id, session)
+    if not existing_group:
+        raise HTTPException(
+            status_code=404,
+            detail="Group with this ID not found")
+
+    await crud_group.delete(existing_group, session)
+    return templates.TemplateResponse(
+        'group_deleted.html',
+        {'request': request, 'group': existing_group})

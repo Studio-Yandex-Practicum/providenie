@@ -40,12 +40,12 @@ class CRUDUserTG(CRUDBase):
             )
             group_objects = result.scalars().all()
 
-        for group in group_objects:
-            association = UserGroupAssociation(
-                user_id=new_user.id,
-                group_id=group.id,
-            )
-            session.add(association)
+            for group in group_objects:
+                association = UserGroupAssociation(
+                    user_id=new_user.id,
+                    group_id=group.id,
+                )
+                session.add(association)
 
         await session.commit()
         return new_user
@@ -59,8 +59,7 @@ class CRUDUserTG(CRUDBase):
         """Update user in database."""
         update_data = pydantic_scheme_user.dict(
             exclude_unset=True,
-            exclude_none=True,
-        )
+            exclude_none=True)
         if 'password' in update_data:
             password = update_data.pop('password')
             update_data['hashed_password'] = get_hash_password(password)

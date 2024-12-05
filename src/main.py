@@ -3,6 +3,7 @@ from typing import Dict
 
 import uvicorn
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
 from app.admin_endpoints.routers import main_router
 
@@ -11,6 +12,11 @@ from bot.services import init_bot
 
 app = FastAPI()
 app.include_router(main_router)
+app.mount(
+    '/static',
+    StaticFiles(directory='app/admin_endpoints/static'),
+    name='static',
+)
 
 
 @app.get('/')
