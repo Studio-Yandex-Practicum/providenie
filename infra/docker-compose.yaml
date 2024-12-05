@@ -3,8 +3,10 @@ name: providenie
 
 services:
   app:
-    build: .
+    build: ./src
     restart: unless-stopped
+    environment:
+      - RUN_IN_DOCKER=1
     env_file:
       - ./.env
     volumes:
