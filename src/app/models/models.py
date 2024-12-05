@@ -15,6 +15,15 @@ from app.core.db import Base
 from app.models.constants import LENGTH_32, LENGTH_64, LENGTH_256
 
 
+class MessageGroupAssociation(Base):
+    """Model for many-to-many relation between messages and groups."""
+
+    __tablename__ = 'message_group'
+
+    message_id = Column(ForeignKey('message.id'), primary_key=True)
+    group_id = Column(ForeignKey('group.id'), primary_key=True)
+
+
 class UserGroupAssociation(Base):
     """Model for many-to-many relation between users and groups."""
 
@@ -62,6 +71,13 @@ class Group(Base):
         back_populates='groups',
     )
 
+    # Связь с сообщениями
+    messages = relationship(
+        'Message',
+        secondary='message_group',
+        back_populates='groups',
+    )
+
 
 class Message(Base):
     """Message model."""
@@ -73,6 +89,13 @@ class Message(Base):
     create_user = Column(BigInteger, ForeignKey('user_tg.id'), nullable=False)
     update_users = Column(BigInteger, ForeignKey('user_tg.id'), nullable=False)
     sended_at = Column(DateTime, nullable=True)
+
+    # Связь с группами
+    groups = relationship(
+        'Group',
+        secondary='message_group',
+        back_populates='messages',
+    )
 
 
 class Photo(Base):

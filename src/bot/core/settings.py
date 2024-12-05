@@ -18,6 +18,11 @@ class Settings(BaseSettings):
     smtp_server_bot_password: str = ''
 
     email_curator: str = ''
+    database_url: str
+
+    SECRET_KEY: str = 'my_secret_key'
+    ALGORITHM: str = 'HS256'
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
     postgres_user: str
     postgres_password: str

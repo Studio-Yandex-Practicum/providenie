@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Дашборд</title>
+    <link rel="stylesheet" href="/static/main.css">
+</head>
+<body>
+    <div class="form-container">
+        <h1>Добро пожаловать в дашборд</h1>
+        <form action="{{ url_for('logout') }}" method="post">
+            <button type="submit">Выйти</button>
+        </form>
+    </div>
+</body>
+</html>

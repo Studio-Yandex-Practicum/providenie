@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="/static/main.css">
+</head>
+<body>
+    <div class="form-container">
+        <h1>Регистрация</h1>
+        <form method="post" action="{{ url_for('auth_register') }}">
+            <label for="user_name">Имя пользователя:</label>
+            <input type="text" id="user_name" name="user_name" required>
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" required>
+            <label for="first_name">Имя:</label>
+            <input type="text" id="first_name" name="first_name" required>
+            <label for="tg_id">Telegram ID:</label>
+            <input type="text" id="tg_id" name="tg_id" required>
+            <label for="is_admin">Админ:</label>
+            <input type="checkbox" id="is_admin" name="is_admin" value="true">
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+    </div>
+</body>
+</html>

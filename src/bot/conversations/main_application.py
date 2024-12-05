@@ -39,7 +39,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         else:
             new_user = UserCreate(**user_data)
             await crud_user.create(
-                pydantic_scheme_obj=new_user,
+                pydantic_scheme_user=new_user,
                 session=session,
             )
 
