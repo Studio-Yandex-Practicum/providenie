@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    {% include 'header.html' %}
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            {% include 'admin_sidebar.html' %}
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-4">
+                <h2>Отредактировать группу</h2>
+                {% include 'web_errors.html' %}
+                <form method="post">
+                    <input type="hidden" name="_method" value="patch">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Название группы</label>
+                        <input type="text" id="name" name="name" class="form-control" value="{{ group.name }}" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </form>
+            </main>
+        </div>
+    </div>
+
+    {% include 'footer.html' %}
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

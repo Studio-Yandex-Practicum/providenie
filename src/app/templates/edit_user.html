@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    {% include 'header.html' %}
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            {% include 'admin_sidebar.html' %}
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="main-header text-center">
+                    <h1>Редактировать пользователя</h1>
+                </div>
+                {% include 'web_errors.html' %}
+                <form method="POST" action="{{ url_for('edit_user', user_id=user.id) }}">
+                    <label for="first_name">Имя</label>
+                    <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}" readonly>
+                    
+                    <label for="last_name">Фамилия</label>
+                    <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}" readonly>
+
+                    <label for="user_name">Имя пользователя</label>
+                    <input type="text" id="user_name" name="user_name" value="{{ user.user_name }}" readonly>
+
+                    <label for="is_admin">Администратор</label>
+                    <input type="checkbox" id="is_admin" name="is_admin" {% if user.is_admin %}checked{% endif %}>
+
+                    <label for="is_block">Заблокирован</label>
+                    <input type="checkbox" id="is_block" name="is_block" {% if user.is_block %}checked{% endif %}>
+
+                    <label for="password">Пароль:</label>
+                    <input type="password" id="password" name="password" value="{{ user.password }}" required>
+
+                    <label for="group_id">Группа:</label>
+                    <select name="group_id" id="group_id">
+                        <option value="">Все</option>
+                        {% for group in groups %}
+                            <option value="{{ group.id }}" {% if group.id == group_id %} selected {% endif %}>{{ group.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit">Сохранить изменения</button>
+                </form>
+            </main>
+        </div>
+    </div>
+
+    {% include 'footer.html' %}
+    
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+</body>
+</html>
