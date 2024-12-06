@@ -36,7 +36,6 @@ class Settings(BaseSettings):
     postgres_db: str
     postgres_server: str
     postgres_port: str
-    database_url: str
 
     token_secret_key: str = 'my_secret_key'
     token_algorithm: str = 'HS256'
@@ -46,6 +45,16 @@ class Settings(BaseSettings):
         env_file = None if is_run_in_docker else BASE_DIR / 'infra/.env'
         env_file_encoding = 'utf-8'
         extra = 'ignore'
+
+    @property
+    def database_url(self) -> str:
+        """Возвращает строку подключения к БД."""
+        host = self.postgres_server if is_run_in_docker else 'localhost'
+        return (
+            f'postgresql+asyncpg://{self.postgres_user}:'
+            f'{self.postgres_password}@{host}:{self.postgres_port}'
+            f'/{self.postgres_db}'
+        )
 
 
 settings = Settings()
