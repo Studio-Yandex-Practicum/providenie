@@ -3,7 +3,7 @@ name: providenie
 
 services:
   app:
-    build: ./src
+    build: ../src
     restart: unless-stopped
     environment:
       - RUN_IN_DOCKER=1
