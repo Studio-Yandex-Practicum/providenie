@@ -8,53 +8,56 @@
     <div class="container-fluid">
         <div class="row">
             {% include 'admin_sidebar.html' %}
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="margin-bottom: 60px;">
                 <h2 class="my-4">Создание пользователя</h2>
                 {% include 'web_errors.html' %}
                 <form action="/admin/users/create" method="post">
                     <div class="mb-3">
-                        <label for="tg_id" class="form-label">tg_id</label>
+                        <label for="tg_id" class="form-label">tg_id:</label>
                         <input type="text" class="form-control" id="tg_id" name="tg_id" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="first_name" class="form-label">Имя</label>
+                        <label for="first_name" class="form-label">Имя:</label>
                         <input type="text" class="form-control" id="first_name" name="first_name" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="last_name" class="form-label">Фамилия</label>
+                        <label for="last_name" class="form-label">Фамилия:</label>
                         <input type="text" class="form-control" id="last_name" name="last_name" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="user_name" class="form-label">Имя пользователя</label>
-                        <input type="text" class="form-control" id="user_name" name="user_name" required>
+                        <label for="user_name" class="form-label">Имя пользователя:</label>
+                        <input type="text" class="form-control" id="user_name" name="user_name" required minlength="5">
                     </div>
 
                     <div class="form-check mb-3">
                         <input type="checkbox" class="form-check-input" id="is_admin" name="is_admin">
-                        <label for="is_admin" class="form-check-label">Администратор</label>
+                        <label for="is_admin" class="form-check-label">Администратор:</label>
                     </div>
 
                     <div class="form-check mb-3">
                         <input type="checkbox" class="form-check-input" id="is_block" name="is_block">
-                        <label for="is_block" class="form-check-label">Заблокирован</label>
+                        <label for="is_block" class="form-check-label">Заблокирован:</label>
                     </div>
 
                     <div class="mb-3">
-                        <label for="password" class="form-label">Пароль</label>
+                        <label for="password" class="form-label">Пароль:</label>
                         <input type="password" class="form-control" id="password" name="password" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="group_id" class="form-label">Группа</label>
-                        <select class="form-select" id="group_id" name="group_id">
-                            <option value="">Выберите группу</option>
-                            {% for group in groups %}
-                                <option value="{{ group.id }}">{{ group.name }}</option>
-                            {% endfor %}
-                        </select>
+                        <label for="group_id" class="form-label">Группы:</label>
+                          <div>
+                            <p>Выберите группы:</p>
+                              {% for group in groups %}
+                                <div>
+                                  <input type="checkbox" id="group_{{ group.id }}" name="group_id" value="{{ group.id }}">
+                                  <label for="group_{{ group.id }}">{{ group.name }}</label>
+                                </div>
+                              {% endfor %}
+                          </div>
                     </div>
 
                     <div class="mt-4">

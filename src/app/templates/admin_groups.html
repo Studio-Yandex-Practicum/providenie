@@ -7,7 +7,7 @@
     <div class="container-fluid">
         <div class="row">
             {% include 'admin_sidebar.html' %}
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="margin-bottom: 60px;">
                 <h2>Список групп</h2>
                 <table class="table table-striped">
                     <thead>
@@ -32,7 +32,6 @@
                         {% endfor %}
                     </tbody>
                 </table>
-                <a href="/admin/groups/create" class="btn btn-success">Создать новую группу</a>
 
                 <nav aria-label="Навигация по страницам">
                     <ul class="pagination">
@@ -60,6 +59,8 @@
                         {% endif %}
                     </ul>
                 </nav>
+
+                <a href="/admin/groups/create" class="btn btn-success">Создать новую группу</a>
             </main>
         </div>
     </div>

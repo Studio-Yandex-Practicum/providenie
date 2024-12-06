@@ -15,6 +15,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.auth import get_current_admin
 from app.core.db import get_async_session
 from app.crud.photo import crud_photo
 from app.schemas.photo import PhotoCreate, PhotoUpdate
@@ -23,7 +24,9 @@ router = APIRouter()
 templates = Jinja2Templates(directory='app/templates')
 
 
-@router.get('/admin/photos', response_class=HTMLResponse)
+@router.get('/admin/photos',
+             # dependencies=[Depends(get_current_admin)],
+             response_class=HTMLResponse)
 async def photos(
     request: Request,
     message_id: Optional[int] = Query(None),
@@ -41,7 +44,9 @@ async def photos(
         {'request': request, 'photos': photos})
 
 
-@router.post('/admin/photos/create', response_class=HTMLResponse)
+@router.post('/admin/photos/create',
+              # dependencies=[Depends(get_current_admin)],
+              response_class=HTMLResponse)
 async def create_photo(
     request: Request,
     file: UploadFile = File(...),
@@ -49,7 +54,7 @@ async def create_photo(
     session: AsyncSession = Depends(get_async_session),
 ) -> HTMLResponse:
     """Endpoint to create a new photo."""
-    directory = Path('app/admin_endpoints/static')
+    directory = Path('app/static')
     if not directory.exists():
         directory.mkdir(parents=True, exist_ok=True)
     file_location = f"{directory}/{file.filename}"
@@ -63,7 +68,9 @@ async def create_photo(
         {'request': request, 'photo': created_photo})
 
 
-@router.post('/admin/photos/{photo_id}/edit', response_class=HTMLResponse)
+@router.post('/admin/photos/{photo_id}/edit',
+              # dependencies=[Depends(get_current_admin)],
+              response_class=HTMLResponse)
 async def update_photo(
     request: Request,
     photo_id: int,
@@ -76,7 +83,7 @@ async def update_photo(
         raise HTTPException(
             status_code=404,
             detail="Photo with this ID not found")
-    file_location = f"app/admin_endpoints/static/{file.filename}"
+    file_location = f"app/static/{file.filename}"
     async with aiofiles.open(file_location, "wb") as f:
         content = await file.read()
         await f.write(content)
@@ -87,7 +94,9 @@ async def update_photo(
         {'request': request, 'photo': updated_photo})
 
 
-@router.post('/admin/photos/{photo_id}/delete', response_class=HTMLResponse)
+@router.post('/admin/photos/{photo_id}/delete',
+              # dependencies=[Depends(get_current_admin)],
+              response_class=HTMLResponse)
 async def delete_photo(
     request: Request,
     photo_id: int,

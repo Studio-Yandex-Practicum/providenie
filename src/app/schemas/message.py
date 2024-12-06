@@ -1,7 +1,7 @@
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 
 
 class MessageCreate(BaseModel):
@@ -10,11 +10,23 @@ class MessageCreate(BaseModel):
     text: Optional[str] = Field(None)
     create_user: int = Field(...)
     update_users: int = Field(...)
+    groups: Optional[List[int]] = Field(None)
 
     class Config:
         """Config subclass for MessageCreate."""
 
         orm_mode = True
+
+    @validator('groups', pre=True, always=True)
+    def only_integer(cls, value) -> int:  # noqa: ANN001, N805
+        """Only integer validator."""
+        if isinstance(value, list):
+            return [g for g in value if isinstance(g, int)]
+
+        if isinstance(value, int):
+            return [value]
+
+        return None
 
 
 class MessageUpdate(BaseModel):

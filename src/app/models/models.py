@@ -1,3 +1,4 @@
+import pathlib
 from datetime import datetime
 
 from sqlalchemy import (
@@ -107,3 +108,9 @@ class Photo(Base):
 
     filename = Column(String, nullable=False)
     message_id = Column(BigInteger, ForeignKey('message.id'), nullable=False)
+
+    @property
+    def url(self) -> str:
+        """Get url file."""
+        file = pathlib.Path(self.filename).name
+        return f"/static/photos/{file}"

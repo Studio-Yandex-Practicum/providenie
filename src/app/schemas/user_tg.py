@@ -1,15 +1,18 @@
 from typing import List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
+
+from app.models.constants import LENGTH_5, LENGTH_32, LENGTH_64
 
 
 class UserCreate(BaseModel):
     """The pydantic model for creating users."""
 
     tg_id: str = Field(...)
-    first_name: str = Field( ..., max_length=64)
-    last_name: Optional[str] = Field(None, max_length=64)
-    user_name: Optional[str] = Field(..., min_length=5, max_length=32)
+    first_name: str = Field( ..., max_length=LENGTH_64)
+    last_name: Optional[str] = Field(None, max_length=LENGTH_64)
+    user_name: Optional[str] = Field(..., min_length=LENGTH_5,
+                                     max_length=LENGTH_32)
     is_block: Optional[bool] = Field(False)
     is_admin: Optional[bool] = Field(False)
     password: Optional[str] = Field(None)
@@ -20,6 +23,17 @@ class UserCreate(BaseModel):
         """Config subclass for UserCreate model."""
 
         orm_mode = True
+
+    @validator('groups', pre=True, always=True)
+    def only_integer(cls, value) -> int:  # noqa: ANN001, N805
+        """Only integer validator."""
+        if isinstance(value, list):
+            return [g for g in value if isinstance(g, int)]
+
+        if isinstance(value, int):
+            return [value]
+
+        return None
 
 
 class UserUpdate(BaseModel):
@@ -35,3 +49,14 @@ class UserUpdate(BaseModel):
         """Config subclass for UserUpdate model."""
 
         orm_mode = True
+
+    @validator('groups', pre=True, always=True)
+    def only_integer(cls, value) -> int:  # noqa: ANN001, N805
+        """Only integer validator."""
+        if isinstance(value, list):
+            return [g for g in value if isinstance(g, int)]
+
+        if isinstance(value, int):
+            return [value]
+
+        return None

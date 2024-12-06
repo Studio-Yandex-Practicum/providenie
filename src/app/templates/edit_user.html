@@ -7,7 +7,7 @@
     <div class="container-fluid">
         <div class="row">
             {% include 'admin_sidebar.html' %}
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="margin-bottom: 60px;">
                 <div class="main-header text-center">
                     <h1>Редактировать пользователя</h1>
                 </div>
@@ -32,12 +32,17 @@
                     <input type="password" id="password" name="password" value="{{ user.password }}" required>
 
                     <label for="group_id">Группа:</label>
-                    <select name="group_id" id="group_id">
-                        <option value="">Все</option>
-                        {% for group in groups %}
-                            <option value="{{ group.id }}" {% if group.id == group_id %} selected {% endif %}>{{ group.name }}</option>
-                        {% endfor %}
-                    </select>
+                            <div>
+                              <p>Выберите группы:</p>
+                                {% for group in groups %}
+                                  <div>
+                                    <input type="checkbox" id="group_{{ group.id }}" name="group_id" value="{{ group.id }}"
+                                    {% if group in user.groups %}checked{% endif %}>
+                                    <label for="group_{{ group.id }}">{{ group.name }}</label>
+                                   </div>
+                                {% endfor %}
+                                <input type="hidden" name="group_id" value="none">
+                            </div>
                     <button type="submit">Сохранить изменения</button>
                 </form>
             </main>

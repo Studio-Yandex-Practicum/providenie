@@ -7,7 +7,7 @@
     <div class="container-fluid">
         <div class="row">
             {% include 'admin_sidebar.html' %}
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="margin-bottom: 60px;">
                 <h1 class="h2 my-4">Пользователи</h1>
 
                 <form method="get" class="mb-4">
@@ -47,7 +47,6 @@
                         {% endfor %}
                     </tbody>
                 </table>
-                <a href="/admin/users/create" class="btn btn-success">Создать нового пользователя</a>
 
                 <nav aria-label="Навигация по страницам">
                     <ul class="pagination">
@@ -74,6 +73,8 @@
                         {% endif %}
                     </ul>
                 </nav>
+
+                <a href="/admin/users/create" class="btn btn-success">Создать нового пользователя</a>
             </main>
         </div>
     </div>

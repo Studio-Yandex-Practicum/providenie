@@ -5,16 +5,20 @@ from fastapi import (
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-templates = Jinja2Templates(directory='app/templates')
+from app.core.auth import get_current_admin
+
+templates = Jinja2Templates(directory="app/templates")
 router = APIRouter()
 
 
-@router.get('/admin', response_class=HTMLResponse)
+@router.get("/admin",
+            # dependencies=[Depends(get_current_admin)],
+            response_class=HTMLResponse)
 async def admin_dashboard(
     request: Request,
 ) -> HTMLResponse:
     """Главная страница админки."""
     return templates.TemplateResponse(
-        'admin_dashboard.html',
-        {'request': request, 'title': 'Admin Dashboard'},
+        "admin_dashboard.html",
+        {"request": request, "title": "Admin Dashboard"},
     )
