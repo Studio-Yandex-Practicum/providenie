@@ -33,7 +33,7 @@ templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/admin/users",
-            # dependencies=[Depends(get_current_admin)],
+            dependencies=[Depends(get_current_admin)],
             response_class=HTMLResponse)
 async def get_users(
     request: Request,
@@ -73,7 +73,7 @@ async def get_users(
 
 
 @router.get("/admin/users/create",
-            # dependencies=[Depends(get_current_admin)],
+            dependencies=[Depends(get_current_admin)],
             response_class=HTMLResponse)
 async def create_users(
     request: Request,
@@ -87,7 +87,7 @@ async def create_users(
 
 
 @router.post("/admin/users/create",
-             # dependencies=[Depends(get_current_admin)],
+             dependencies=[Depends(get_current_admin)],
              response_class=HTMLResponse)
 async def create_users(
     request: Request,
@@ -119,7 +119,7 @@ async def create_users(
 
 
 @router.get("/admin/users/{user_id}/edit",
-            # dependencies=[Depends(get_current_admin)],
+            dependencies=[Depends(get_current_admin)],
             response_class=HTMLResponse)
 async def get_user_edit_form(
     request: Request,
@@ -140,7 +140,7 @@ async def get_user_edit_form(
 
 
 @router.post("/admin/users/{user_id}/edit",
-             # dependencies=[Depends(get_current_admin)],
+             dependencies=[Depends(get_current_admin)],
              response_class=HTMLResponse)
 async def edit_user(
     request: Request,
@@ -166,6 +166,3 @@ async def edit_user(
     await crud_user.update(existing_user, user_scheme, session)
     return RedirectResponse(
         url="/admin/users/", status_code=status.HTTP_303_SEE_OTHER)
-
-# Эндпоинты для входа и выхода из системы.
-# Создание первого админа на проде.

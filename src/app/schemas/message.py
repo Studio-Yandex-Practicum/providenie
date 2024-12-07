@@ -35,6 +35,7 @@ class MessageUpdate(BaseModel):
     text: Optional[str] = Field(None)
     is_send: Optional[bool] = Field(None)
     sended_at: Optional[datetime] = Field(None)
+    update_users: int = Field(...)
 
     class Config:
         """Config subclass for MessageUpdate."""

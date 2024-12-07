@@ -43,7 +43,7 @@ templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/admin/messages",
-             # dependencies=[Depends(get_current_admin)],
+             dependencies=[Depends(get_current_admin)],
              response_class=HTMLResponse)
 async def messages(
     request: Request,
@@ -87,7 +87,7 @@ async def messages(
 
 
 @router.get("/admin/messages/create",
-             # dependencies=[Depends(get_current_admin)],
+             dependencies=[Depends(get_current_admin)],
              response_class=HTMLResponse)
 async def get_create_message_form(
     request: Request,
@@ -101,7 +101,7 @@ async def get_create_message_form(
 
 
 @router.post("/admin/messages/create",
-              # dependencies=[Depends(get_current_admin)],
+              dependencies=[Depends(get_current_admin)],
               response_class=HTMLResponse)
 async def create_messages(
     request: Request,
@@ -113,8 +113,8 @@ async def create_messages(
     """Endpoint to create a new message."""
     message = MessageCreate(
         text=text,
-        create_user=1,  # TODO Брать из current_user (Depends)
-        update_users=1, # TODO Брать из current_user (Depends)
+        create_user=request.user.id,
+        update_users=request.user.id,
         groups=group_id)
     new_message = await crud_message.create(message, session)
 
@@ -142,7 +142,7 @@ async def create_messages(
 
 
 @router.get("/admin/messages/{message_id}/edit",
-             # dependencies=[Depends(get_current_admin)],
+             dependencies=[Depends(get_current_admin)],
              response_class=HTMLResponse)
 async def get_edit_message_form(
     request: Request,
@@ -167,7 +167,7 @@ async def get_edit_message_form(
 
 
 @router.post("/admin/messages/{message_id}/update",
-              # dependencies=[Depends(get_current_admin)],
+              dependencies=[Depends(get_current_admin)],
               response_class=HTMLResponse)
 async def edit_message(
     request: Request,
@@ -186,7 +186,7 @@ async def edit_message(
     message = MessageUpdate(
         text=text,
         is_send=is_send,
-        update_users=1,  # TODO Брать из current_user (Depends)
+        update_users=request.user.id,
         sended_at=sended_at)
     updated_message = await crud_message.update(
         existing_message, message, session)
@@ -222,7 +222,7 @@ async def edit_message(
 
 
 @router.post("/admin/messages/{message_id}/delete",
-              # dependencies=[Depends(get_current_admin)],
+              dependencies=[Depends(get_current_admin)],
              response_class=HTMLResponse)
 async def delete_message(
     request: Request,
@@ -249,7 +249,7 @@ async def delete_message(
 
 @router.post(
     "/admin/messages/{message_id}/photos/{photo_id}/delete",
-     # dependencies=[Depends(get_current_admin)],
+     dependencies=[Depends(get_current_admin)],
     response_class=HTMLResponse)
 async def delete_photo_from_message(
     request: Request,

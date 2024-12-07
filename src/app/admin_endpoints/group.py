@@ -33,7 +33,7 @@ templates = Jinja2Templates(directory="app/templates")
 
 
 @router.get("/admin/groups",
-            # dependencies=[Depends(get_current_admin)],
+            dependencies=[Depends(get_current_admin)],
             response_class=HTMLResponse)
 async def groups(
     request: Request,
@@ -67,7 +67,7 @@ async def groups(
 
 
 @router.get("/admin/groups/create",
-            # dependencies=[Depends(get_current_admin)],
+            dependencies=[Depends(get_current_admin)],
             response_class=HTMLResponse)
 async def create_group_form(
     request: Request,
@@ -81,7 +81,7 @@ async def create_group_form(
 
 
 @router.post("/admin/groups/create",
-             # dependencies=[Depends(get_current_admin)],
+             dependencies=[Depends(get_current_admin)],
              response_class=HTMLResponse)
 async def create_groups(
     request: Request,
@@ -106,7 +106,7 @@ async def create_groups(
 
 
 @router.get("/admin/groups/{group_id}/edit",
-             # dependencies=[Depends(get_current_admin)],
+             dependencies=[Depends(get_current_admin)],
             response_class=HTMLResponse)
 async def get_group_edit_page(
     request: Request,
@@ -129,7 +129,7 @@ async def get_group_edit_page(
 
 
 @router.post("/admin/groups/{group_id}/edit",
-              # dependencies=[Depends(get_current_admin)],
+              dependencies=[Depends(get_current_admin)],
              response_class=HTMLResponse)
 async def edit_group(
     request: Request,
@@ -153,7 +153,7 @@ async def edit_group(
 
 
 @router.post("/admin/groups/{group_id}/delete",
-              # dependencies=[Depends(get_current_admin)],
+              dependencies=[Depends(get_current_admin)],
               response_class=HTMLResponse)
 async def delete_group(
     request: Request,

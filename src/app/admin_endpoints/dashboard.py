@@ -1,5 +1,6 @@
 from fastapi import (
     APIRouter,
+    Depends,
     Request,
 )
 from fastapi.responses import HTMLResponse
@@ -12,7 +13,7 @@ router = APIRouter()
 
 
 @router.get("/admin",
-            # dependencies=[Depends(get_current_admin)],
+            dependencies=[Depends(get_current_admin)],
             response_class=HTMLResponse)
 async def admin_dashboard(
     request: Request,

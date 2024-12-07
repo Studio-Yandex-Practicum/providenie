@@ -25,7 +25,7 @@ templates = Jinja2Templates(directory='app/templates')
 
 
 @router.get('/admin/photos',
-             # dependencies=[Depends(get_current_admin)],
+             dependencies=[Depends(get_current_admin)],
              response_class=HTMLResponse)
 async def photos(
     request: Request,
@@ -45,7 +45,7 @@ async def photos(
 
 
 @router.post('/admin/photos/create',
-              # dependencies=[Depends(get_current_admin)],
+              dependencies=[Depends(get_current_admin)],
               response_class=HTMLResponse)
 async def create_photo(
     request: Request,
@@ -69,7 +69,7 @@ async def create_photo(
 
 
 @router.post('/admin/photos/{photo_id}/edit',
-              # dependencies=[Depends(get_current_admin)],
+              dependencies=[Depends(get_current_admin)],
               response_class=HTMLResponse)
 async def update_photo(
     request: Request,
@@ -95,7 +95,7 @@ async def update_photo(
 
 
 @router.post('/admin/photos/{photo_id}/delete',
-              # dependencies=[Depends(get_current_admin)],
+              dependencies=[Depends(get_current_admin)],
               response_class=HTMLResponse)
 async def delete_photo(
     request: Request,
