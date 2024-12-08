@@ -15,7 +15,7 @@ class UserCreate(BaseModel):
                                      max_length=LENGTH_32)
     is_block: Optional[bool] = Field(False)
     is_admin: Optional[bool] = Field(False)
-    password: Optional[str] = Field(None)
+    password: str = Field(None)
     is_active: Optional[bool] = Field(True)
     groups: Optional[List[int]] = Field(None)
 

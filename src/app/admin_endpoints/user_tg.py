@@ -98,7 +98,7 @@ async def create_users(
     user_name: Optional[str] = Form(None),
     is_block: Optional[bool] = Form(False),
     is_admin: Optional[bool] = Form(False),
-    password: Optional[str] = Form(None),
+    password: str = Form(...),
     is_active: Optional[bool] = Query(True),
     group_id: Optional[List[Union[int, str]]] = Form(None),
     session: AsyncSession = Depends(get_async_session),
@@ -113,23 +113,17 @@ async def create_users(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="User with this Telegram ID already exists.",
         )
-    user_data = {
-    "tg_id": tg_id,
-    "first_name": first_name,
-    "last_name": last_name,
-    "user_name": user_name,
-    "is_block": is_block,
-    "is_admin": is_admin,
-    "password": password,
-    "is_active": is_active,
-    "groups": group_id}
-
-    if not user_data["password"]:
-        user = UserCreate(**user_data)
-        user_copy = user.copy(exclude={"password"})
-    else:
-        user_copy = UserCreate(**user_data)
-    user = await crud_user.create(user_copy, session)
+    user = UserCreate(
+        tg_id=tg_id,
+        first_name=first_name,
+        last_name=last_name,
+        user_name=user_name,
+        is_block=is_block,
+        is_admin=is_admin,
+        password=password,
+        is_active=is_active,
+        groups=group_id)
+    user = await crud_user.create(user, session)
     return RedirectResponse(url="/admin/users",
                             status_code=status.HTTP_303_SEE_OTHER)
 
@@ -175,12 +169,17 @@ async def edit_user(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail='User with this ID is not found.')
-    user_scheme = UserUpdate(
-        id=user_id,
-        is_block=is_block,
-        is_admin=is_admin,
-        password=password,
-        groups=group_id)
-    await crud_user.update(existing_user, user_scheme, session)
+    user_data = {
+        "id": user_id,
+        "is_block": is_block,
+        "is_admin": is_admin,
+        "password": password,
+        "groups": group_id}
+    if not user_data["password"]:
+        user = UserUpdate(**user_data)
+        user_copy = user.copy(exclude={"password"})
+    else:
+        user_copy = UserUpdate(**user_data)
+    await crud_user.update(existing_user, user_copy, session)
     return RedirectResponse(
         url="/admin/users/", status_code=status.HTTP_303_SEE_OTHER)
