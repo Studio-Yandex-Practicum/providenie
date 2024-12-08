@@ -62,7 +62,7 @@ class CRUDUserTG(CRUDBase):
             exclude_unset=True,
             exclude_none=True,
         )
-        if 'password' in update_data:
+        if 'password' in update_data and update_data['password']:
             password = update_data.pop('password')
             update_data['hashed_password'] = get_hash_password(password)
 

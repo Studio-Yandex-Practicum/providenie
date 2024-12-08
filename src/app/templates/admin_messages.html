@@ -25,7 +25,7 @@
                             <tr>
                                 <td>{{ message.id }}</td>
                                 <td>{{ message.text }}</td>
-                                <td>{{ message.send_on }}</td>
+                                <td>{{ message.send_on.strftime('%d.%m.%Y %H:%M') }}</td>
                                 <td>{{ 'Да' if message.is_send else 'Нет' }}</td>
                                 <td>
                                     <a href="/admin/messages/{{ message.id }}/edit" class="btn btn-warning btn-sm">Изменить</a>

@@ -50,6 +50,13 @@ class UserUpdate(BaseModel):
 
         orm_mode = True
 
+    @validator('password', pre=True, always=True)
+    def no_empty_password(cls, value) -> str:  # noqa: ANN001, N805
+        """Ensure password is not empty if provided."""
+        if value is None or value.strip() == "":
+            return None  # Не включаем пустой пароль
+        return value
+
     @validator('groups', pre=True, always=True)
     def only_integer(cls, value) -> int:  # noqa: ANN001, N805
         """Only integer validator."""

@@ -4,6 +4,7 @@ from fastapi import (
     APIRouter,
     Depends,
     Form,
+    HTTPException,
     Path,
     Query,
     Request,
@@ -103,6 +104,15 @@ async def create_users(
     session: AsyncSession = Depends(get_async_session),
 ) -> HTMLResponse:
     """Endpoint to create a new user."""
+    existing_user = await crud_user.get_one_by_attributes(
+        {"tg_id": tg_id},
+        session,
+    )
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User with this Telegram ID already exists.",
+        )
     user = UserCreate(
         tg_id=tg_id,
         first_name=first_name,
@@ -130,8 +140,9 @@ async def get_user_edit_form(
     existing_user = await crud_user.get_one_by_attributes(
         {"id": user_id}, session)
     if not existing_user:
-        return templates.TemplateResponse(
-        "404.html", {"request": request})
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='User with this ID is not found.')
     groups = await crud_group.get_all_objs(session)
     user = await crud_user.get_user_with_groups(existing_user, session)
     return templates.TemplateResponse(
@@ -155,8 +166,9 @@ async def edit_user(
     existing_user = await crud_user.get_one_by_attributes(
         {"id": user_id}, session)
     if not existing_user:
-        return templates.TemplateResponse(
-        "404.html", {"request": request})
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='User with this ID is not found.')
     user_scheme = UserUpdate(
         id=user_id,
         is_block=is_block,

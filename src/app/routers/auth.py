@@ -53,11 +53,8 @@ async def login(
         session=session,
     )
     if not user or not password_verify(password, user.hashed_password):
-        return templates.TemplateResponse(
-            'login.html',
-            {'request': request, 'message': 'Invalid credentials'},
-            status_code=401,
-        )
+        raise HTTPException(status_code=401, detail='Неверный логин/пароль')
+
     token = create_access_token(str(user.id))
     response = RedirectResponse(
         url='/admin/',
@@ -180,14 +177,5 @@ async def dashboard(request: Request) -> HTMLResponse:
     """
     return templates.TemplateResponse(
         'dashboard.html',
-        {'request': request},
-    )
-
-
-@router.get('/forbidden/', response_class=HTMLResponse)
-async def forbidden(request: Request) -> HTMLResponse:
-    """Endpoint for 403 page."""
-    return templates.TemplateResponse(
-        '403.html',
         {'request': request},
     )

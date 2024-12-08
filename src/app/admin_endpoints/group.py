@@ -119,8 +119,10 @@ async def get_group_edit_page(
         session,
     )
     if not existing_group:
-        return templates.TemplateResponse(
-            "404.html", {"request": request})
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Group with this ID not found.",
+        )
 
     return templates.TemplateResponse(
         "edit_group.html",
@@ -144,8 +146,11 @@ async def edit_group(
             session,
         )
     if not existing_group:
-        return templates.TemplateResponse(
-            "404.html", {"request": request})
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Group with this ID not found.",
+        )
+
     group = GroupUpdate(name=name, is_active=is_active)
     await crud_group.update(existing_group, group, session)
     return RedirectResponse(url="/admin/groups",
@@ -163,8 +168,10 @@ async def delete_group(
     """Endpoint to delete a group."""
     existing_group = await crud_group.get_obj_by_id(group_id, session)
     if not existing_group:
-        return templates.TemplateResponse(
-            "404.html", {"request": request})
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Group with this ID not found.",
+        )
 
     await crud_group.delete(existing_group, session)
     return RedirectResponse(url="/admin/groups",

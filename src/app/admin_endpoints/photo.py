@@ -1,3 +1,4 @@
+import uuid
 from pathlib import Path
 from typing import Optional
 
@@ -10,11 +11,13 @@ from fastapi import (
     Query,
     Request,
     UploadFile,
+    status,
 )
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.admin_endpoints.constants import STATIC_DIR
 from app.core.auth import get_current_admin
 from app.core.db import get_async_session
 from app.crud.photo import crud_photo
@@ -57,10 +60,14 @@ async def create_photo(
     directory = Path('app/static')
     if not directory.exists():
         directory.mkdir(parents=True, exist_ok=True)
-    file_location = f"{directory}/{file.filename}"
-    async with aiofiles.open(file_location, 'wb') as f:
+
+    extension = file.filename.split(".")[-1]
+    unique_filename = f"{uuid.uuid4()}.{extension}"
+    file_location = f"{directory}/{unique_filename}"
+    async with aiofiles.open(file_location, "wb") as f:
         content = await file.read()
         await f.write(content)
+
     new_photo = PhotoCreate(filename=file_location, message_id=message_id)
     created_photo = await crud_photo.create(new_photo, session)
     return templates.TemplateResponse(
@@ -81,12 +88,19 @@ async def update_photo(
     existing_photo = await crud_photo.get_obj_by_id(photo_id, session)
     if not existing_photo:
         raise HTTPException(
-            status_code=404,
+            status_code=status.HTTP_404_NOT_FOUND,
             detail="Photo with this ID not found")
-    file_location = f"app/static/{file.filename}"
+    directory = Path(STATIC_DIR)
+    if not directory.exists():
+        directory.mkdir(parents=True, exist_ok=True)
+
+    extension = file.filename.split(".")[-1]
+    unique_filename = f"{uuid.uuid4()}.{extension}"
+    file_location = f"{directory}/{unique_filename}"
     async with aiofiles.open(file_location, "wb") as f:
         content = await file.read()
         await f.write(content)
+
     new_photo = PhotoUpdate(filename=file_location)
     updated_photo = await crud_photo.update(existing_photo, new_photo, session)
     return templates.TemplateResponse(
@@ -106,7 +120,7 @@ async def delete_photo(
     existing_photo = await crud_photo.get_obj_by_id(photo_id, session)
     if not existing_photo:
         raise HTTPException(
-            status_code=404,
+            status_code=status.HTTP_404_NOT_FOUND,
             detail="Photo with this ID not found")
 
     await crud_photo.delete(existing_photo, session)

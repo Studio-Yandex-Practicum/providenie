@@ -9,6 +9,7 @@ from fastapi import (
     Depends,
     File,
     Form,
+    HTTPException,
     Path,
     Query,
     Request,
@@ -151,8 +152,10 @@ async def get_edit_message_form(
     """Render form for editing a message."""
     message = await crud_message.get_obj_by_id(message_id, session)
     if not message:
-        return templates.TemplateResponse(
-            "404.html", {"request": request})
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Message with this ID not found.",
+        )
 
     photos = await crud_photo.get_all_by_attributes(
         {"message_id": message_id}, session)
@@ -181,8 +184,10 @@ async def edit_message(
     """Endpoint to edit an existing message."""
     existing_message = await crud_message.get_obj_by_id(message_id, session)
     if not existing_message:
-        return templates.TemplateResponse(
-            "404.html", {"request": request})
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Message with this ID not found.",
+        )
     message = MessageUpdate(
         text=text,
         is_send=is_send,
@@ -235,8 +240,10 @@ async def delete_message(
     existing_message = await crud_message.get_obj_by_id(
         obj_id=message_id, session=session)
     if not existing_message:
-        return templates.TemplateResponse(
-            "404.html", {"request": request})
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Message with this ID not found.",
+        )
     if not existing_photos:
         await crud_message.delete(existing_message, session)
     else:
@@ -262,8 +269,10 @@ async def delete_photo_from_message(
     existing_photo = await crud_photo.get_obj_by_id(
         obj_id=photo_id, session=session)
     if not existing_message or not existing_photo:
-        return templates.TemplateResponse(
-            "404.html", {"request": request})
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Message or photo with this ID not found.",
+        )
     await crud_photo.delete(existing_photo, session)
     photos = await crud_photo.get_all_by_attributes(
         filters={"message_id": message_id}, session=session)
