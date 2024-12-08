@@ -113,17 +113,23 @@ async def create_users(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="User with this Telegram ID already exists.",
         )
-    user = UserCreate(
-        tg_id=tg_id,
-        first_name=first_name,
-        last_name=last_name,
-        user_name=user_name,
-        is_block=is_block,
-        is_admin=is_admin,
-        password=password,
-        is_active=is_active,
-        groups=group_id)
-    user = await crud_user.create(user, session)
+    user_data = {
+    "tg_id": tg_id,
+    "first_name": first_name,
+    "last_name": last_name,
+    "user_name": user_name,
+    "is_block": is_block,
+    "is_admin": is_admin,
+    "password": password,
+    "is_active": is_active,
+    "groups": group_id}
+
+    if not user_data["password"]:
+        user = UserCreate(**user_data)
+        user_copy = user.copy(exclude={"password"})
+    else:
+        user_copy = UserCreate(**user_data)
+    user = await crud_user.create(user_copy, session)
     return RedirectResponse(url="/admin/users",
                             status_code=status.HTTP_303_SEE_OTHER)
 
