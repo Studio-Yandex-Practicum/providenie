@@ -11,10 +11,12 @@ async def get_current_user(  # noqa: ANN201
     user = request.user
     if not isinstance(user, UserTG) and getattr(
         user, 'is_authenticated', False) is False:
-        raise HTTPException(status_code=401, detail='UNAUTHORZED')
+        raise HTTPException(status_code=401, detail='Вы не авторизованы')
 
     if getattr(user, 'is_block', False) is True:
-        raise HTTPException(status_code=403, detail='User is blocked.')
+        raise HTTPException(
+            status_code=403,
+            detail='Пользователь заблокирован')
     return user
 
 
