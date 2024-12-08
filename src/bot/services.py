@@ -9,8 +9,12 @@ from bot.ratelimiter import ptb_post_init
 
 def init_bot() -> Application:
     """Initialize a Telegram bot application with a main menu handler."""
-    application = Application.builder().token(
-        settings.telegram_token).post_init(ptb_post_init).build()
+    application = (
+        Application.builder()
+        .token(settings.telegram_token)
+        .post_init(ptb_post_init)
+        .build()
+    )
     application.add_handler(main_menu_handler)
     application.add_error_handler(error_handler)
     return application

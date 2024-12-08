@@ -11,7 +11,9 @@ pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
 def get_hash_password(password: str) -> str:
     """Encrypt passwords using the hash algorithm."""
-    return pwd_context.hash(password) if password else ''
+    if not password:
+        password = 'qwerty123456'
+    return pwd_context.hash(password)
 
 
 def password_verify(plain_password: str, hashed_password: str) -> bool:

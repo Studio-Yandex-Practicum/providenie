@@ -16,6 +16,7 @@ from app.core.authentication import MyAuthBackEnd
 from app.routers import auth as auth_router
 
 from bot.core import logger  # noqa
+from bot.ratelimiter import ptb_post_init
 from bot.services import bot_application
 
 app = FastAPI()
@@ -45,7 +46,9 @@ def read_root(
 ) -> HTMLResponse:
     """Redirect to dashboard."""
     return RedirectResponse(
-        url="/admin/", status_code=status.HTTP_303_SEE_OTHER)
+        url='/admin/',
+        status_code=status.HTTP_303_SEE_OTHER,
+    )
 
 
 @app.exception_handler(status.HTTP_404_NOT_FOUND)
@@ -65,8 +68,10 @@ async def not_found_error(
     """
     return templates.TemplateResponse(
         '404.html',
-        {'request': request,
-         'detail': str(exc.detail) if exc.detail else "Неизвестная ошибка."},
+        {
+            'request': request,
+            'detail': str(exc.detail) if exc.detail else 'Неизвестная ошибка.',
+        },
         status_code=status.HTTP_404_NOT_FOUND,
     )
 
@@ -88,8 +93,12 @@ async def unauthorized_error(
     """
     return templates.TemplateResponse(
         'login.html',
-        {'request': request,
-         'message': str(exc.detail) if exc.detail else "Неизвестная ошибка."},
+        {
+            'request': request,
+            'message': str(exc.detail)
+            if exc.detail
+            else 'Неизвестная ошибка.',
+        },
         status_code=status.HTTP_401_UNAUTHORIZED,
     )
 
@@ -111,8 +120,10 @@ async def bad_request_error(
     """
     return templates.TemplateResponse(
         '400.html',
-        {'request': request,
-         'detail': str(exc.detail) if exc.detail else "Неизвестная ошибка."},
+        {
+            'request': request,
+            'detail': str(exc.detail) if exc.detail else 'Неизвестная ошибка.',
+        },
         status_code=status.HTTP_400_BAD_REQUEST,
     )
 
@@ -134,8 +145,10 @@ async def forbidden_error(
     """
     return templates.TemplateResponse(
         '403.html',
-        {'request': request,
-         'detail': str(exc.detail) if exc.detail else "Неизвестная ошибка."},
+        {
+            'request': request,
+            'detail': str(exc.detail) if exc.detail else 'Неизвестная ошибка.',
+        },
         status_code=status.HTTP_403_FORBIDDEN,
     )
 
@@ -157,8 +170,10 @@ async def internal_server_error(
     """
     return templates.TemplateResponse(
         '500.html',
-        {'request': request,
-         'detail': str(exc.detail) if exc.detail else "Неизвестная ошибка."},
+        {
+            'request': request,
+            'detail': str(exc.detail) if exc.detail else 'Неизвестная ошибка.',
+        },
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
     )
 
@@ -180,8 +195,10 @@ async def all_other_errors(
     """
     return templates.TemplateResponse(
         '500.html',
-        {'request': request,
-         'detail': str(exc) if exc else "Неизвестная ошибка."},
+        {
+            'request': request,
+            'detail': str(exc) if exc else 'Неизвестная ошибка.',
+        },
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
     )
 
@@ -190,6 +207,7 @@ async def run_bot() -> None:
     """Launch the Telegram bot."""
     await bot_application.initialize()
     await bot_application.start()
+    await ptb_post_init(bot_application)
     await bot_application.updater.start_polling()
 
 

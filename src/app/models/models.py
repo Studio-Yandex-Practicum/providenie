@@ -87,7 +87,7 @@ class Message(Base):
     """Message model."""
 
     text = Column(String(LENGTH_256), nullable=True)
-    photos = relationship('Photo')
+    photos = relationship('Photo', lazy='joined')
     send_on = Column(DateTime, default=datetime.now())
     is_send = Column(Boolean, default=False)
     create_user = Column(BigInteger, ForeignKey('user_tg.id'), nullable=False)
@@ -113,4 +113,4 @@ class Photo(Base):
     def url(self) -> str:
         """Get url file."""
         file = pathlib.Path(self.filename).name
-        return f"/static/photos/{file}"
+        return f'/static/photos/{file}'

@@ -15,7 +15,7 @@
                             <tr>
                                 <th>ID Сообщения</th>
                                 <th>Текст</th>
-                                <th>Дата отправки</th>
+                                <th>Когда отправить</th>
                                 <th>Отправлено</th>
                                 <th>Действия</th>
                             </tr>
@@ -26,7 +26,7 @@
                                 <td>{{ message.id }}</td>
                                 <td>{{ message.text }}</td>
                                 <td>{{ message.send_on.strftime('%d.%m.%Y %H:%M') }}</td>
-                                <td>{{ 'Да' if message.is_send else 'Нет' }}</td>
+                                <td>{{ message.sended_at.strftime('%d.%m.%Y %H:%M') if message.is_send else 'Нет' }}</td>
                                 <td>
                                     <a href="/admin/messages/{{ message.id }}/edit" class="btn btn-warning btn-sm">Изменить</a>
                                     <form action="/admin/messages/{{ message.id }}/delete" method="post" style="display:inline;">

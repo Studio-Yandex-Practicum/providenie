@@ -16,16 +16,16 @@ async def load_unsent_messages(context: ContextTypes.DEFAULT_TYPE) -> None:
 
     Планирование их отправки.
     """
-    async with get_async_session() as session:
+    async for session in get_async_session():
         unsent_messages = await crud_message.get_unsent_messages(session)
         for message in unsent_messages:
             # Преобразование строки времени в datetime
             if message.send_on < datetime.now():
-                send_time = datetime.now() + timedelta(seconds=10)
+                send_time = timedelta(minutes=1)  # Delay 1 minutes
             else:
-                send_time = message.send_on
+                send_time = message.send_on - datetime.now()
 
-            context.job_queue.run_once(
+            job = context.job_queue.run_once(
                 send_message,
                 when=send_time,
                 data={'message_id': message.id},
@@ -34,6 +34,7 @@ async def load_unsent_messages(context: ContextTypes.DEFAULT_TYPE) -> None:
                     'misfire_grace_time': None,
                 },
             )
+            logging.info(f'Запланирована задача {job.name} на {job.next_t}')
 
 
 async def send_message_to_user(
@@ -63,8 +64,12 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:
     """Отправка сообщения пользователям."""
     message_id = context.job.data['message_id']
 
-    async with get_async_session() as session:
-        message = await crud_message.get_obj_by_id(obj_id=message_id)
+    message = None
+    async for session in get_async_session():
+        message = await crud_message.get_obj_by_id(
+            obj_id=message_id,
+            session=session,
+        )
 
     if not message:
         return  # Если сообщение не найдено, выходим из функции
@@ -80,7 +85,8 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:
     else:
         # Если групп нет, получаем всех активных пользователей,
         # исключая администратора и заблокированных
-        async with get_async_session() as session:
+        active_users = None
+        async for session in get_async_session():
             active_users = await crud_user.get_all_by_attributes(
                 filters={
                     'is_admin': False,
@@ -89,13 +95,13 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:
             )
 
         for user in active_users:
-            if user.is_active and not user.is_blocked:
+            if user.is_active and not user.is_block:
                 await send_message_to_user(context, user.tg_id, message)
 
     # Обновление статуса сообщения после отправки
     message.is_send = True
     message.sended_at = datetime.now()
-    async with get_async_session() as session:
+    async for session in get_async_session():
         session.add(message)
         await session.commit()
 
