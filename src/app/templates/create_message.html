@@ -7,16 +7,35 @@
     <div class="container-fluid">
         <div class="row">
             {% include 'admin_sidebar.html' %}
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-4">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-4" style="margin-bottom: 60px;">
                 <h2>Создать новое сообщение</h2>
                 {% include 'web_errors.html' %}
-                <form method="post">
+                <form method="post" enctype="multipart/form-data">
                     <div class="mb-3">
-                        <label for="text" class="form-label">Текст сообщения</label>
+                        <label for="text" class="form-label">Текст сообщения:</label>
                         <textarea id="text" name="text" class="form-control" rows="3" required></textarea>
                     </div>
+                     <div class="mb-3">
+                        <label for="send_on" class="form-label">Когда отправить:</label>
+                        <input type="datetime-local" id="send_on" name="send_on" class="form-control">
+                    </div>
                     <div class="mb-3">
-                        <label for="photos" class="form-label">Фото</label>
+                        <label for="group_id" class="form-label">Группы:</label>
+                    <div>
+                      <p>Выберите группы:</p>
+                        <div class="mb-3">  <!-- Добавлен отступ -->
+                          <input type="checkbox" id="group_0" name="group_id" value="0">
+                          <label for="group_0">Всем</label>
+                        </div>
+                        {% for group in groups %}
+                        <div>
+                          <input type="checkbox" id="group_{{ group.id }}" name="group_id" value="{{ group.id }}">
+                          <label for="group_{{ group.id }}">{{ group.name }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="photos" class="form-label">Фото:</label>
                         <input type="file" id="photos" name="photos" class="form-control" multiple>
                     </div>
                     <button type="submit" class="btn btn-primary">Создать сообщение</button>

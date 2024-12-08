@@ -7,38 +7,59 @@
     <div class="container-fluid">
         <div class="row">
             {% include 'admin_sidebar.html' %}
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="margin-bottom: 60px;">
                 <div class="main-header text-center">
                     <h1>Редактировать пользователя</h1>
                 </div>
                 {% include 'web_errors.html' %}
                 <form method="POST" action="{{ url_for('edit_user', user_id=user.id) }}">
-                    <label for="first_name">Имя</label>
-                    <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}" readonly>
-                    
-                    <label for="last_name">Фамилия</label>
-                    <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}" readonly>
+                
+                    <div class="mb-3">
+                        <label for="first_name" class="form-label">Имя</label>
+                        <input type="text" id="first_name" name="first_name" class="form-control" value="{{ user.first_name }}" readonly>
+                    </div>
 
-                    <label for="user_name">Имя пользователя</label>
-                    <input type="text" id="user_name" name="user_name" value="{{ user.user_name }}" readonly>
+                    <div class="mb-3">
+                        <label for="last_name" class="form-label">Фамилия</label>
+                        <input type="text" id="last_name" name="last_name" class="form-control" value="{{ user.last_name }}" readonly>
+                    </div>
 
-                    <label for="is_admin">Администратор</label>
-                    <input type="checkbox" id="is_admin" name="is_admin" {% if user.is_admin %}checked{% endif %}>
+                    <div class="mb-3">
+                        <label for="user_name" class="form-label">Имя пользователя</label>
+                        <input type="text" id="user_name" name="user_name" class="form-control" value="{{ user.user_name }}" readonly>
+                    </div>
 
-                    <label for="is_block">Заблокирован</label>
-                    <input type="checkbox" id="is_block" name="is_block" {% if user.is_block %}checked{% endif %}>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" id="is_admin" name="is_admin" class="form-check-input" {% if user.is_admin %}checked{% endif %}>
+                        <label for="is_admin" class="form-check-label">Администратор</label>
+                    </div>
 
-                    <label for="password">Пароль:</label>
-                    <input type="password" id="password" name="password" value="{{ user.password }}" required>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" id="is_block" name="is_block" class="form-check-input" {% if user.is_block %}checked{% endif %}>
+                        <label for="is_block" class="form-check-label">Заблокирован</label>
+                    </div>
 
-                    <label for="group_id">Группа:</label>
-                    <select name="group_id" id="group_id">
-                        <option value="">Все</option>
-                        {% for group in groups %}
-                            <option value="{{ group.id }}" {% if group.id == group_id %} selected {% endif %}>{{ group.name }}</option>
-                        {% endfor %}
-                    </select>
-                    <button type="submit">Сохранить изменения</button>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Пароль:</label>
+                        <input type="password" id="password" name="password" class="form-control" value="{{ user.password }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="group_id" class="form-label">Группа:</label>
+                        <div>
+                            <p>Выберите группы:</p>
+                            {% for group in groups %}
+                                <div class="form-check">
+                                    <input type="checkbox" id="group_{{ group.id }}" name="group_id" value="{{ group.id }}" class="form-check-input"
+                                    {% if group in user.groups %}checked{% endif %}>
+                                    <label for="group_{{ group.id }}" class="form-check-label">{{ group.name }}</label>
+                                </div>
+                            {% endfor %}
+                            <input type="hidden" name="group_id" value="none">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
                 </form>
             </main>
         </div>
