@@ -19,7 +19,7 @@ def password_verify(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def create_access_token(sub: dict) -> str:
+def create_access_token(sub: str) -> str:
     """Generate encryption token."""
     expire = datetime.now() + timedelta(minutes=settings.token_expire_minutes)
 
@@ -50,7 +50,7 @@ def jwt_decode(token: str) -> dict:
             return response
 
         response['status'] = 'ok'
-        response['data'] = sub
+        response['user_id'] = sub
     except InvalidTokenError:
         response['error'] = 'Could not validate credentials'
 

@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 Not Found</title>
+    <title>400 Bad Request</title>
     <link rel="stylesheet" href="/static/main.css">
 </head>
 <body>
     <div class="error-container">
-        <h1>404 - Страница не найдена</h1>
-        <p>Извините, запрашиваемая страница не найдена.</p>
+        <h1>400 - Неверный запрос</h1>
+        <p>Извините, ваш запрос не может быть обработан.</p>
         {% if detail %}
             <p><strong>Подробности ошибки:</strong> {{ detail }}</p>
         {% endif %}

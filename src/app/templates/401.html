@@ -10,6 +10,9 @@
     <div class="error-container">
         <h1>Ошибка 401</h1>
         <p>Вы не авторизованы для доступа к этой странице.</p>
+        {% if detail %}
+            <p><strong>Подробности ошибки:</strong> {{ detail }}</p>
+        {% endif %}
         <a href="{{ url_for('login') }}">Перейти к странице входа</a>
     </div>
 </body>

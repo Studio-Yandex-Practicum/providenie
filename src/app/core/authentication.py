@@ -3,7 +3,6 @@ from starlette.authentication import AuthCredentials, AuthenticationBackend
 
 from app.core.constants import (
     KEY_ACCESS_TOKEN,
-    KEY_DATA,
     KEY_STATUS,
     KEY_USER_ID,
 )
@@ -29,11 +28,10 @@ class MyAuthBackEnd(AuthenticationBackend):
         if decoded_token.get(KEY_STATUS) != 'ok':
             return None
 
-        payload = decoded_token[KEY_DATA]
-        user_id = payload.get(KEY_USER_ID)
+        user_id = int(decoded_token[KEY_USER_ID])
 
         async for session in get_async_session():
-            user = await crud_user.get(session, user_id)
+            user = await crud_user.get_obj_by_id(user_id, session)
             if not user or not user.is_active:
                 return None
 

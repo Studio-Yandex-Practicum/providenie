@@ -38,7 +38,7 @@ class CRUDUserTG(CRUDBase):
                     Group.id.in_(pydantic_scheme_user.groups),
                 ),
             )
-            group_objects = result.scalars().all()
+            group_objects = result.unique().scalars().all()
 
             for group in group_objects:
                 association = UserGroupAssociation(
@@ -62,7 +62,7 @@ class CRUDUserTG(CRUDBase):
             exclude_unset=True,
             exclude_none=True,
         )
-        if 'password' in update_data:
+        if 'password' in update_data and update_data['password']:
             password = update_data.pop('password')
             update_data['hashed_password'] = get_hash_password(password)
 
@@ -123,6 +123,17 @@ class CRUDUserTG(CRUDBase):
             query = query.where(*conditions)
         result = await session.execute(query)
         return result.unique().scalars().all()
+
+    async def get_user_with_groups(
+        self,
+        user: UserTG,
+        session: AsyncSession,
+    ) -> ModelType:
+        """Get user with associated groups."""
+        query = select(UserTG).options(joinedload(UserTG.groups)).where(
+            UserTG.id == user.id)
+        result = await session.execute(query)
+        return result.unique().scalars().first()
 
 
 crud_user = CRUDUserTG(UserTG)

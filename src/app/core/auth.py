@@ -4,16 +4,20 @@ from app.core.constants import KEY_IS_ADMIN
 from app.models.models import UserTG
 
 
-async def get_current_user(
+async def get_current_user(  # noqa: ANN201
     request: Request,
-) -> UserTG:
+):
     """Получение текущего пользователя."""
-    if not request.user:
-        raise HTTPException(status_code=401, detail='UNAUTHORIZED')
-    if getattr(request.user, 'is_blocked', False):
-        raise HTTPException(status_code=403, detail='User is blocked.')
+    user = request.user
+    if not isinstance(user, UserTG) and getattr(
+        user, 'is_authenticated', False) is False:
+        raise HTTPException(status_code=401, detail='Вы не авторизованы')
 
-    return request.user
+    if getattr(user, 'is_block', False) is True:
+        raise HTTPException(
+            status_code=403,
+            detail='Пользователь заблокирован')
+    return user
 
 
 async def get_current_admin(
