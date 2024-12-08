@@ -1,5 +1,6 @@
+import logging
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path as PathDir
 from typing import List, Optional, Union
 
@@ -39,7 +40,8 @@ from app.crud.user_tg import crud_user
 from app.schemas.message import MessageCreate, MessageUpdate
 from app.schemas.photo import PhotoCreate
 
-# from bot.services import bot_application
+from bot.ratelimiter import send_message
+from bot.services import bot_application
 
 router = APIRouter()
 templates = Jinja2Templates(directory='app/templates')
@@ -150,6 +152,21 @@ async def create_messages(
                 )
                 await crud_photo.create(new_photo, session)
 
+    if new_message.send_on < datetime.now():
+        send_time = timedelta(minutes=1)
+    else:
+        send_time = new_message.send_on - datetime.now()
+
+    job = bot_application.job_queue.run_once(
+        send_message,
+        when=send_time.total_seconds(),
+        data={'message_id': new_message.id},
+        name=f'send_mes_{new_message.id}',
+        job_kwargs={
+            'misfire_grace_time': None,
+        },
+    )
+    logging.info(f'Запланирована задача {job.name} на {job.next_t}')
     # TODO: Вставить запуск задачи отправки сообщения (по аналогии с кодом
     #  функции `load_unsent_messages`, только сообщение у нас лежит в
     #  `new_message`
@@ -250,7 +267,26 @@ async def edit_message(
             filters={'message_id': message_id},
             session=session,
         )
+    job_name = f'send_mes_{updated_message.id}'
+    current_job = bot_application.job_queue.get_job(job_name)
+    if current_job:
+        current_job.remove()
 
+    if updated_message.send_on < datetime.now():
+        send_time = timedelta(minutes=1)
+    else:
+        send_time = updated_message.send_on - datetime.now()
+
+    job = bot_application.job_queue.run_once(
+        send_message,
+        when=send_time,
+        data={'message_id': updated_message.id},
+        name=job_name,
+        job_kwargs={
+            'misfire_grace_time': None,
+        },
+    )
+    logging.info(f'Запланирована задача {job.name} на {job.next_t}')
     # TODO: Вставить запуск задачи отправки сообщения (по аналогии с кодом
     #  функции `load_unsent_messages`, только сообщение у нас лежит в
     #  `updated_message`. Предварительно нужно удалить соответствующую задачу.
@@ -296,6 +332,11 @@ async def delete_message(
             await crud_photo.delete(photo, session)
         await crud_message.delete(existing_message, session)
 
+    job_name = f'send_mes_{message_id}'
+    current_jobs = bot_application.job_queue.get_jobs_by_name(job_name)
+    if current_jobs:
+        for job in current_jobs:
+            job.schedule_removal()
     # TODO: Вставить удаление задачи отправки сообщения. ID сообщения лежит
     #  в `message_id`
 
