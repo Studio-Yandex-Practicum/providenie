@@ -15,11 +15,11 @@ class PreBase:
         return cls.__name__.lower()
 
     id = Column(BigInteger, primary_key=True)
-    created_at = Column(DateTime, default=datetime.now())
+    created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(
         DateTime,
-        default=datetime.now(),
-        onupdate=datetime.now(),
+        default=datetime.now,
+        onupdate=datetime.now,
     )
 
 
@@ -29,7 +29,9 @@ Base = declarative_base(cls=PreBase)
 engine = create_async_engine(settings.database_url, future=True)
 
 AsyncSessionLocal = sessionmaker(
-    engine, expire_on_commit=False, class_=AsyncSession,
+    engine,
+    expire_on_commit=False,
+    class_=AsyncSession,
 )
 
 

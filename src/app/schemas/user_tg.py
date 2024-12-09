@@ -9,10 +9,13 @@ class UserCreate(BaseModel):
     """The pydantic model for creating users."""
 
     tg_id: str = Field(...)
-    first_name: str = Field( ..., max_length=LENGTH_64)
+    first_name: str = Field(..., max_length=LENGTH_64)
     last_name: Optional[str] = Field(None, max_length=LENGTH_64)
-    user_name: Optional[str] = Field(..., min_length=LENGTH_5,
-                                     max_length=LENGTH_32)
+    user_name: Optional[str] = Field(
+        None,
+        min_length=LENGTH_5,
+        max_length=LENGTH_32,
+    )
     is_block: Optional[bool] = Field(False)
     is_admin: Optional[bool] = Field(False)
     password: str = Field(None)
@@ -53,7 +56,7 @@ class UserUpdate(BaseModel):
     @validator('password', pre=True, always=True)
     def no_empty_password(cls, value) -> str:  # noqa: ANN001, N805
         """Ensure password is not empty if provided."""
-        if value is None or value.strip() == "":
+        if value is None or value.strip() == '':
             return None  # Не включаем пустой пароль
         return value
 

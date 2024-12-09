@@ -20,7 +20,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         'tg_id': str(tg_user.id),
         'first_name': tg_user.first_name or 'Unknown',
         'last_name': tg_user.last_name or 'Unknown',
-        'user_name': tg_user.username,
+        'user_name': tg_user.username or tg_user.first_name,
     }
 
     async for session in get_async_session():

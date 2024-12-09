@@ -60,7 +60,7 @@ async def send_message_to_user(
     await asyncio.sleep(1 / 20)
 
 
-async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:
+async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C901
     """Отправка сообщения пользователям."""
     message_id = context.job.data['message_id']
 

@@ -1,6 +1,5 @@
 from typing import TypeVar
 
-
 from sqlalchemy import not_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -46,7 +45,6 @@ class CRUDMessage(CRUDBase):
 
         return new_message
 
-
     async def get_unsent_messages(self, session: AsyncSession) -> ModelType:
         """Get unsent messages."""
         unsent_messages = await session.execute(
@@ -54,7 +52,6 @@ class CRUDMessage(CRUDBase):
         )
 
         return unsent_messages.unique().scalars().all()
-
 
 
 crud_message = CRUDMessage(Message)

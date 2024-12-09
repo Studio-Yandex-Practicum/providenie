@@ -11,6 +11,7 @@ class MessageCreate(BaseModel):
     create_user: int = Field(...)
     update_users: int = Field(...)
     groups: Optional[List[int]] = Field(None)
+    send_on: datetime = Field(...)
 
     class Config:
         """Config subclass for MessageCreate."""

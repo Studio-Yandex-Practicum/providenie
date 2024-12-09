@@ -118,6 +118,7 @@ async def create_messages(
     text: Optional[str] = Form(None),
     photos: List[UploadFile] = File(...),
     group_id: Optional[List[Union[int, str]]] = Form(None),
+    send_on: Optional[datetime] = Form(None),
     session: AsyncSession = Depends(get_async_session),
 ) -> HTMLResponse:
     """Endpoint to create a new message."""
@@ -126,6 +127,7 @@ async def create_messages(
         create_user=request.user.id,
         update_users=request.user.id,
         groups=group_id,
+        send_on=send_on if send_on else datetime.now(),
     )
     new_message = await crud_message.create(message, session)
 

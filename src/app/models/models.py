@@ -88,7 +88,7 @@ class Message(Base):
 
     text = Column(String(LENGTH_256), nullable=True)
     photos = relationship('Photo', lazy='joined')
-    send_on = Column(DateTime, default=datetime.now())
+    send_on = Column(DateTime, default=datetime.now)
     is_send = Column(Boolean, default=False)
     create_user = Column(BigInteger, ForeignKey('user_tg.id'), nullable=False)
     update_users = Column(BigInteger, ForeignKey('user_tg.id'), nullable=False)
