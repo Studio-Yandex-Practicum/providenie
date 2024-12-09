@@ -159,7 +159,7 @@ async def create_messages(
 
     job = bot_application.job_queue.run_once(
         send_message,
-        when=send_time.total_seconds(),
+        when=send_time,
         data={'message_id': new_message.id},
         name=f'send_mes_{new_message.id}',
         job_kwargs={
@@ -167,10 +167,7 @@ async def create_messages(
         },
     )
     logging.info(f'Запланирована задача {job.name} на {job.next_t}')
-    # TODO: Вставить запуск задачи отправки сообщения (по аналогии с кодом
-    #  функции `load_unsent_messages`, только сообщение у нас лежит в
-    #  `new_message`
-
+    
     return RedirectResponse(
         url='/admin/messages',
         status_code=status.HTTP_303_SEE_OTHER,
@@ -268,7 +265,7 @@ async def edit_message(
             session=session,
         )
     job_name = f'send_mes_{updated_message.id}'
-    current_job = bot_application.job_queue.get_job(job_name)
+    current_job = bot_application.job_queue.get_jobs_by_name(job_name)
     if current_job:
         current_job.remove()
 
@@ -287,10 +284,7 @@ async def edit_message(
         },
     )
     logging.info(f'Запланирована задача {job.name} на {job.next_t}')
-    # TODO: Вставить запуск задачи отправки сообщения (по аналогии с кодом
-    #  функции `load_unsent_messages`, только сообщение у нас лежит в
-    #  `updated_message`. Предварительно нужно удалить соответствующую задачу.
-
+    
     return templates.TemplateResponse(
         'edit_message.html',
         {
@@ -337,9 +331,7 @@ async def delete_message(
     if current_jobs:
         for job in current_jobs:
             job.schedule_removal()
-    # TODO: Вставить удаление задачи отправки сообщения. ID сообщения лежит
-    #  в `message_id`
-
+    
     return RedirectResponse(
         url='/admin/messages',
         status_code=status.HTTP_303_SEE_OTHER,
