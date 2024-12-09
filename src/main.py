@@ -1,4 +1,5 @@
 import asyncio
+from contextlib import asynccontextmanager
 
 import uvicorn
 from fastapi import Depends, FastAPI, Request, Response, status
@@ -20,7 +21,15 @@ from bot.core import logger  # noqa
 from bot.ratelimiter import ptb_post_init
 from bot.services import bot_application
 
-app = FastAPI()
+
+@asynccontextmanager
+async def fastapi_lifespan(app: FastAPI):
+    """Выполняется перед стартом FastAPI и после завершения работы."""
+    await create_first_superuser()
+    yield
+
+
+app = FastAPI(lifespan=fastapi_lifespan)
 app.include_router(main_router)
 app.include_router(auth_router.router, prefix='/auth', tags=['Authentication'])
 templates = Jinja2Templates(directory=BASE_DIR / 'app/templates')
@@ -39,12 +48,6 @@ app.add_middleware(
     allow_methods=['*'],
     allow_headers=['*'],
 )
-
-
-@app.on_event("startup")
-async def startup():  # noqa: ANN201
-    """Create first_superuser."""
-    await create_first_superuser()
 
 
 @app.get('/', dependencies=[Depends(get_current_admin)])
