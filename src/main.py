@@ -23,7 +23,7 @@ from bot.services import bot_application
 
 
 @asynccontextmanager
-async def fastapi_lifespan(app: FastAPI):
+async def fastapi_lifespan(app: FastAPI) -> None:
     """Выполняется перед стартом FastAPI и после завершения работы."""
     await create_first_superuser()
     yield
