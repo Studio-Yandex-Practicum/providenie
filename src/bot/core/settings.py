@@ -34,12 +34,18 @@ class Settings(BaseSettings):
     postgres_user: str
     postgres_password: str
     postgres_db: str
-    postgres_server: str
+    postgres_server: str = 'localhost'
     postgres_port: str
 
     token_secret_key: str = 'my_secret_key'
     token_algorithm: str = 'HS256'
     token_expire_minutes: int = 30
+
+    first_superuser_tg_id: str | None = None
+    first_superuser_first_name: str | None = None
+    first_superuser_user_name: str | None = None
+    first_superuser_password: str | None = None
+    first_superuser_is_admin: bool | None = None
 
     class Config:  # noqa: D106
         env_file = None if is_run_in_docker else BASE_DIR / 'infra/.env'
