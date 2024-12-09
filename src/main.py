@@ -13,6 +13,7 @@ from app.admin_endpoints.routers import main_router
 from app.config import BASE_DIR  # noqa: I001
 from app.core.auth import get_current_admin
 from app.core.authentication import MyAuthBackEnd
+from app.core.first_admin import create_first_superuser
 from app.routers import auth as auth_router
 
 from bot.core import logger  # noqa
@@ -38,6 +39,12 @@ app.add_middleware(
     allow_methods=['*'],
     allow_headers=['*'],
 )
+
+
+@app.on_event("startup")
+async def startup():  # noqa: ANN201
+    """Create first_superuser."""
+    await create_first_superuser()
 
 
 @app.get('/', dependencies=[Depends(get_current_admin)])

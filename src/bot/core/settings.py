@@ -41,6 +41,12 @@ class Settings(BaseSettings):
     token_algorithm: str = 'HS256'
     token_expire_minutes: int = 30
 
+    first_superuser_tg_id: str
+    first_superuser_first_name: str
+    first_superuser_user_name:str
+    first_superuser_password:str
+    first_superuser_is_admin: bool
+
     class Config:  # noqa: D106
         env_file = None if is_run_in_docker else BASE_DIR / 'infra/.env'
         env_file_encoding = 'utf-8'
