@@ -53,10 +53,16 @@ async def send_message_to_user(
         )
     else:
         media = [
-            InputMediaPhoto(media=message.photos[i].filename)
+            InputMediaPhoto(
+                media=open(message.photos[i].filename, 'rb'),  # noqa: ASYNC230
+            )
             for i in range(min(10, len(message.photos)))
         ]
-        await context.bot.send_media_group(chat_id=user_id, media=media)
+        await context.bot.send_media_group(
+            chat_id=user_id,
+            media=media,
+            caption=message.text,
+        )
     await asyncio.sleep(1 / 20)
 
 
