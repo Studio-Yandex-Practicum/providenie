@@ -167,7 +167,7 @@ async def create_messages(
         },
     )
     logging.info(f'Запланирована задача {job.name} на {job.next_t}')
-    
+
     return RedirectResponse(
         url='/admin/messages',
         status_code=status.HTTP_303_SEE_OTHER,
@@ -265,9 +265,10 @@ async def edit_message(
             session=session,
         )
     job_name = f'send_mes_{updated_message.id}'
-    current_job = bot_application.job_queue.get_jobs_by_name(job_name)
-    if current_job:
-        current_job.remove()
+    current_jobs = bot_application.job_queue.get_jobs_by_name(job_name)
+    if current_jobs:
+        for job in current_jobs:
+            job.schedule_removal()
 
     if updated_message.send_on < datetime.now():
         send_time = timedelta(minutes=1)
@@ -284,7 +285,7 @@ async def edit_message(
         },
     )
     logging.info(f'Запланирована задача {job.name} на {job.next_t}')
-    
+
     return templates.TemplateResponse(
         'edit_message.html',
         {
@@ -331,7 +332,7 @@ async def delete_message(
     if current_jobs:
         for job in current_jobs:
             job.schedule_removal()
-    
+
     return RedirectResponse(
         url='/admin/messages',
         status_code=status.HTTP_303_SEE_OTHER,
