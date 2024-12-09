@@ -136,7 +136,7 @@ async def get_group_edit_page(
 async def edit_group(
     request: Request,
     name: str = Form(...),
-    is_active: Optional[bool] = Form(True),
+    is_active: bool = Form(...),
     group_id: int = Path(..., title="Group id in DB"),
     session: AsyncSession = Depends(get_async_session),
 ) -> HTMLResponse:

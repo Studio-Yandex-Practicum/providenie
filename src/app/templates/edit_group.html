@@ -13,8 +13,13 @@
                 <form method="post">
                     <input type="hidden" name="_method" value="patch">
                     <div class="mb-3">
-                        <label for="name" class="form-label">Название группы</label>
+                        <label for="name" class="form-label">Название группы:</label>
                         <input type="text" id="name" name="name" class="form-control" value="{{ group.name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="is_active" class="form-check-label">Активна</label>
+                        <input type="hidden" name="is_active" value="off">
+                        <input type="checkbox" id="is_active" name="is_active" value="on" class="form-check-input" {% if group.is_active %}checked{% endif %}>
                     </div>
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                 </form>
