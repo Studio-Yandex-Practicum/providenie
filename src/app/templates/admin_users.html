@@ -8,7 +8,7 @@
         <div class="row">
             {% include 'admin_sidebar.html' %}
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="margin-bottom: 60px;">
-                <h1 class="h2 my-4">Пользователи</h1>
+                <h2>Пользователи</h2>
 
                 <form method="get" class="mb-4">
                     <label for="group_id">Группа:</label>
@@ -41,7 +41,7 @@
                                   {% endfor %}
                               </td>
                               <td>
-                                  <a href="/admin/users/{{ user.id }}/edit" class="btn btn-secondary btn-sm">Редактировать</a>
+                                  <a href="/admin/users/{{ user.id }}/edit" class="btn btn-warning btn-sm">Изменить</a>
                               </td>
                           </tr>
                           {% endfor %}

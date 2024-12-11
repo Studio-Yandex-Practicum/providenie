@@ -219,6 +219,7 @@ async def edit_message(
     text: Optional[str] = Form(None),
     is_send: Optional[bool] = Form(None),
     sended_at: Optional[datetime] = Form(None),
+    send_on: Optional[datetime] = Form(None),
     message_id: int = Path(..., title='Message id in DB'),
     new_photos: List[UploadFile] = File(None),
     session: AsyncSession = Depends(get_async_session),
@@ -235,6 +236,7 @@ async def edit_message(
         is_send=is_send,
         update_users=request.user.id,
         sended_at=sended_at,
+        send_on=send_on,
     )
     updated_message = await crud_message.update(
         existing_message,

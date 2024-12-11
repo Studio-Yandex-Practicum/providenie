@@ -25,6 +25,11 @@
                     </div>
 
                     <div class="mb-3">
+                        <label for="sendOn" class="form-label">Время отправки</label>
+                        <input type="datetime-local" class="form-control" id="sendOn" name="send_on" value="{{ message.send_on.strftime('%Y-%m-%dT%H:%M') }}" {% if is_message_sent %}readonly{% endif %} required>
+                    </div>
+
+                    <div class="mb-3">
                         <label for="existingPhotos" class="form-label">Прикрепленные фотографии</label>
                         <div class="d-flex flex-wrap">
                             {% for photo in photos %}
@@ -43,8 +48,8 @@
                     </div>
 
                     <div class="mt-4 d-flex justify-content-between">
-                        <button type="submit" class="btn btn-primary" {% if is_message_sent %}disabled{% endif %}>Сохранить изменения</button>
-                        <a href="/admin/messages" class="btn btn-secondary">Отмена</a>
+                        <button type="submit" class="btn btn-primary" {% if is_message_sent %}disabled{% endif %}>Сохранить</button>
+                        <a href="/admin/messages" class="btn btn-secondary">К списку сообщений</a>
                     </div>
                 </form>
             </main>

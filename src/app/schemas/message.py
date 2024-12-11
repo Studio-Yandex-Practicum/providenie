@@ -36,6 +36,7 @@ class MessageUpdate(BaseModel):
     text: Optional[str] = Field(None)
     is_send: Optional[bool] = Field(None)
     sended_at: Optional[datetime] = Field(None)
+    send_on: Optional[datetime] = Field(None)
     update_users: int = Field(...)
 
     class Config:
