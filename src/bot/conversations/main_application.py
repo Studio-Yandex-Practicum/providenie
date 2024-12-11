@@ -81,6 +81,7 @@ async def admin_menu(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
 ) -> int:
+    """Show admin menu."""
     await send_message(
         update,
         text.ADMIN_WELCOME,
@@ -88,7 +89,7 @@ async def admin_menu(
             [
                 button.ADMIN_SETTING_BTN,
                 button.ADMMIN_MAIN_MENU_BTN,
-            ]
+            ],
         ]),
     )
 

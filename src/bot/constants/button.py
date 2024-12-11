@@ -25,5 +25,5 @@ CANCEL_CMD = BotCommand('/cancel', text.CANCEL_CMD)
 # ADMIN
 ADMIN_SETTING_BTN = Button(text.ADMIN_SETTING, url=settings.admin_site_url)
 ADMMIN_MAIN_MENU_BTN = Button(
-    text.ADMIN_MAIN_MENU_BACK, callback_data=callback.ADMIN_BACK
+    text.ADMIN_MAIN_MENU_BACK, callback_data=callback.ADMIN_BACK,
 )
