@@ -47,6 +47,8 @@ class Settings(BaseSettings):
     first_superuser_password: str | None = None
     first_superuser_is_admin: bool | None = None
 
+    admin_site_url: str = 'http://ya.ru'
+
     class Config:  # noqa: D106
         env_file = None if is_run_in_docker else BASE_DIR / 'infra/.env'
         env_file_encoding = 'utf-8'
