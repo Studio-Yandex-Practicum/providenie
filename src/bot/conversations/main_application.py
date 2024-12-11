@@ -36,6 +36,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
                     link_preview=False,
                 )
                 return None
+
+            if existing_user.is_admin:
+                return await admin_menu(update, context)
         else:
             new_user = UserCreate(**user_data)
             await crud_user.create(
@@ -72,3 +75,21 @@ async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     await send_message(update, text.STOP)
 
     return ConversationHandler.END
+
+
+async def admin_menu(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+) -> int:
+    await send_message(
+        update,
+        text.ADMIN_WELCOME,
+        keyboard=Keyboard([
+            [
+                button.ADMIN_SETTING_BTN,
+                button.ADMMIN_MAIN_MENU_BTN,
+            ]
+        ]),
+    )
+
+    return state.MAIN_MENU

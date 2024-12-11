@@ -72,6 +72,10 @@ main_menu_handler = ConversationHandler(
                 menu_application.show_option,
                 pattern=rf'^{key.OPTION}_\S*$',
             ),
+            CallbackQueryHandler(
+                main_application.main_menu,
+                pattern=callback.ADMIN_BACK,
+            ),
         ],
     },
     fallbacks=[

@@ -3,6 +3,7 @@ from telegram import InlineKeyboardButton as Button
 
 from bot.constants import callback
 from bot.constants.info import text
+from bot.core.settings import settings
 
 # BACK
 MAIN_MENU = Button(text.MAIN_BACK, callback_data=callback.BACK)
@@ -20,3 +21,9 @@ START_CMD = BotCommand('/start', text.START_CMD)
 STOP_CMD = BotCommand('/stop', text.STOP_CMD)
 MENU_CMD = BotCommand('/menu', text.MENU_CMD)
 CANCEL_CMD = BotCommand('/cancel', text.CANCEL_CMD)
+
+# ADMIN
+ADMIN_SETTING_BTN = Button(text.ADMIN_SETTING, url=settings.admin_site_url)
+ADMMIN_MAIN_MENU_BTN = Button(
+    text.ADMIN_MAIN_MENU_BACK, callback_data=callback.ADMIN_BACK
+)

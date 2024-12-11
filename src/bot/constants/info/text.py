@@ -96,3 +96,8 @@ MESSAGE_BLOCK_ACCOUNT = (
     'Ваш аккаунт заблокирован. Свяжитесь с администратором для разблокировки.'
 )
 MESSAGE_WELCOME = 'Добро пожаловать!'
+
+# ADMIN_MENU
+ADMIN_WELCOME = 'Меню администратора'
+ADMIN_SETTING = 'Настройки'
+ADMIN_MAIN_MENU_BACK = 'Основное меню'
