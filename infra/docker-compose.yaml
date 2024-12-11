@@ -7,6 +7,7 @@ services:
     restart: unless-stopped
     environment:
       - RUN_IN_DOCKER=1
+      - TZ=Europe/Moscow
     env_file:
       - ./.env
     volumes:
@@ -19,6 +20,8 @@ services:
   db:
     image: postgres:17-alpine
     restart: unless-stopped
+    environment:
+      - TZ=Europe/Moscow
     env_file:
       - path: ./.env
         required: true
