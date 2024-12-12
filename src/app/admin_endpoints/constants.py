@@ -6,3 +6,4 @@ PAGE_SIZE_LE = 100
 FIRST_PAGE = 1
 EXTRA_PAGE = 1
 STATIC_DIR = "app/static/photos"
+TIMEDELTA_MIN = 1
