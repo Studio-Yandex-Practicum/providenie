@@ -1,5 +1,6 @@
 import asyncio
 from contextlib import asynccontextmanager
+from typing import Awaitable, Callable
 
 import uvicorn
 from fastapi import Depends, FastAPI, Request, Response, status
@@ -18,12 +19,13 @@ from app.core.first_admin import create_first_superuser
 from app.routers import auth as auth_router
 
 from bot.core import logger  # noqa
+from bot.core.settings import settings
 from bot.ratelimiter import ptb_post_init
 from bot.services import bot_application
 
 
 @asynccontextmanager
-async def fastapi_lifespan(app: FastAPI) -> None:
+async def fastapi_lifespan(app: FastAPI):  # noqa: ANN201
     """Выполняется перед стартом FastAPI и после завершения работы."""
     await create_first_superuser()
     yield
@@ -43,11 +45,25 @@ app.add_middleware(AuthenticationMiddleware, backend=MyAuthBackEnd())
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['http://localhost:8000'],
+    allow_origins=['http://localhost:8000', settings.admin_site_url],
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*'],
 )
+
+
+@app.middleware('http')
+async def check_https(  # noqa: ANN201
+    request: Request,
+    call_next: Callable[[Request], Awaitable],
+):
+    """Заменяем протокол при необходимости."""
+    # scheme = request.headers.get('X-Forwarded-Proto', None)
+    # if scheme:
+    #     logger.logger.info(f'Схема {scheme}')
+    # else:
+    #     logger.logger.info('Схема не определена')
+    return await call_next(request)
 
 
 @app.get('/', dependencies=[Depends(get_current_admin)])
