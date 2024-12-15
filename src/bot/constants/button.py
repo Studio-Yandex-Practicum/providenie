@@ -1,4 +1,4 @@
-from telegram import BotCommand
+from telegram import BotCommand, WebAppInfo
 from telegram import InlineKeyboardButton as Button
 
 from bot.constants import callback
@@ -23,7 +23,11 @@ MENU_CMD = BotCommand('/menu', text.MENU_CMD)
 CANCEL_CMD = BotCommand('/cancel', text.CANCEL_CMD)
 
 # ADMIN
-ADMIN_SETTING_BTN = Button(text.ADMIN_SETTING, url=settings.admin_site_url)
+ADMIN_SETTING_BTN = Button(
+    text.ADMIN_SETTING,
+    web_app=WebAppInfo(url=settings.admin_site_url),
+)
 ADMMIN_MAIN_MENU_BTN = Button(
-    text.ADMIN_MAIN_MENU_BACK, callback_data=callback.ADMIN_BACK,
+    text.ADMIN_MAIN_MENU_BACK,
+    callback_data=callback.ADMIN_BACK,
 )
