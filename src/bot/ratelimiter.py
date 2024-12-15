@@ -84,10 +84,15 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
     if groups:
         # Если у сообщения есть группы,
         # отправляем сообщения пользователям из групп
-        for group in groups:
-            for user in group.users:
-                if user.is_active:  # Убедитесь, что пользователь активен
-                    await send_message_to_user(context, user.tg_id, message)
+        # Если пользователь состоит оновременно в нескольких группах,
+        # то в сете он все равно окажется в единственном экземпляре.
+        users_to_notify = {
+            user.tg_id for group in groups
+            for user in group.users
+            if user.is_active}
+
+        for user_id in users_to_notify:
+            await send_message_to_user(context, user_id, message)
     else:
         # Если групп нет, получаем всех активных пользователей,
         # исключая администратора и заблокированных

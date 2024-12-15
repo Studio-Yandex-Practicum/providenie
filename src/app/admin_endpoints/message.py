@@ -30,6 +30,7 @@ from app.admin_endpoints.constants import (
     PAGE_SIZE_GE,
     PAGE_SIZE_LE,
     STATIC_DIR,
+    TIMEDELTA_MIN,
 )
 from app.core.auth import get_current_admin
 from app.core.db import get_async_session
@@ -155,7 +156,7 @@ async def create_messages(
                 await crud_photo.create(new_photo, session)
 
     if new_message.send_on < datetime.now():
-        send_time = timedelta(minutes=1)
+        send_time = timedelta(minutes=TIMEDELTA_MIN)
     else:
         send_time = new_message.send_on - datetime.now()
 
