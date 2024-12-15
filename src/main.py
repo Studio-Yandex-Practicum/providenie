@@ -1,6 +1,5 @@
 import asyncio
 from contextlib import asynccontextmanager
-from typing import Awaitable, Callable
 
 import uvicorn
 from fastapi import Depends, FastAPI, Request, Response, status
@@ -53,16 +52,11 @@ app.add_middleware(
 
 
 @app.middleware('http')
-async def check_https(  # noqa: ANN201
-    request: Request,
-    call_next: Callable[[Request], Awaitable],
-):
-    """Заменяем протокол при необходимости."""
-    # scheme = request.headers.get('X-Forwarded-Proto', None)
-    # if scheme:
-    #     logger.logger.info(f'Схема {scheme}')
-    # else:
-    #     logger.logger.info('Схема не определена')
+async def check_http(request: Request, call_next):  # noqa: ANN001, ANN201
+    """Проверка протокола."""
+    protocol = request.headers.get('X-Forwarded-Protocol', None)
+    if protocol in ('http', 'https'):
+        request.scope['scheme'] = protocol
     return await call_next(request)
 
 
