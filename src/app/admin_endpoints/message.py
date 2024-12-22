@@ -181,27 +181,6 @@ async def create_messages(
     new_message = await crud_message.create(message, session)
     await save_new_photos(
         new_photos=photos, message_id=new_message.id, session=session)
-    # directory = PathDir(STATIC_DIR)
-    # if not directory.exists():
-    #     directory.mkdir(parents=True, exist_ok=True)
-
-    # if photos:
-    #     for file_photo in photos:
-    #         if file_photo.filename:
-    #             extension = file_photo.filename.split('.')[-1]
-    #             unique_filename = f'{uuid.uuid4()}.{extension}'
-    #             file_location = f'{directory}/{unique_filename}'
-
-    #             async with aiofiles.open(file_location, 'wb') as f:
-    #                 content = await file_photo.read()
-    #                 await f.write(content)
-
-    #             new_photo = PhotoCreate(
-    #                 filename=file_location,
-    #                 message_id=new_message.id,
-    #             )
-    #             await crud_photo.create(new_photo, session)
-
     if new_message.send_on < datetime.now():
         send_time = timedelta(minutes=TIMEDELTA_MIN)
     else:
@@ -242,10 +221,6 @@ async def get_edit_message_form(
             detail='Message with this ID not found.',
         )
     photos = await fetch_photos(message_id, session)
-    # photos = await crud_photo.get_all_by_attributes(
-    #     {'message_id': message_id},
-    #     session,
-    # )
     return templates.TemplateResponse(
         'edit_message.html',
         {
@@ -281,10 +256,6 @@ async def edit_message(
         )
     if text and len(text) > LENGTH_1000:
         photos = await fetch_photos(message_id, session)
-        # photos = await crud_photo.get_all_by_attributes(
-        #     {'message_id': message_id},
-        #     session,
-        # )
         return templates.TemplateResponse(
             'edit_message.html',
             {
@@ -314,30 +285,7 @@ async def edit_message(
     if new_photos:
         await save_new_photos(
             new_photos=new_photos, message_id=message_id, session=session)
-        # directory = PathDir(STATIC_DIR)
-        # if not directory.exists():
-        #     directory.mkdir(parents=True, exist_ok=True)
-
-        # for file_photo in new_photos:
-        #     if file_photo.filename:
-        #         extension = file_photo.filename.split('.')[-1]
-        #         unique_filename = f'{uuid.uuid4()}.{extension}'
-        #         file_location = f'{directory}/{unique_filename}'
-
-        #         async with aiofiles.open(file_location, 'wb') as f:
-        #             content = await file_photo.read()
-        #             await f.write(content)
-
-        #         new_photo = PhotoCreate(
-        #             filename=file_location,
-        #             message_id=updated_message.id,
-        #         )
-        #         await crud_photo.create(new_photo, session)
         photos = await fetch_photos(message_id, session)
-        # photos = await crud_photo.get_all_by_attributes(
-        #     filters={'message_id': message_id},
-        #     session=session,
-        # )
     job_name = f'send_mes_{updated_message.id}'
     current_jobs = bot_application.job_queue.get_jobs_by_name(job_name)
     if current_jobs:
@@ -381,10 +329,6 @@ async def delete_message(
     session: AsyncSession = Depends(get_async_session),
 ) -> HTMLResponse:
     """Endpoint to delete a message."""
-    # existing_photos = await crud_photo.get_all_by_attributes(
-    #     filters={'message_id': message_id},
-    #     session=session,
-    # )
     existing_photos = await fetch_photos(message_id, session)
     existing_message = await crud_message.get_obj_by_id(
         obj_id=message_id,
@@ -438,10 +382,6 @@ async def delete_photo_from_message(
         )
     await crud_photo.delete(existing_photo, session)
     photos = await fetch_photos(message_id, session)
-    # photos = await crud_photo.get_all_by_attributes(
-    #     filters={'message_id': message_id},
-    #     session=session,
-    # )
     return templates.TemplateResponse(
         'edit_message.html',
         {'request': request, 'message': existing_message, 'photos': photos},
