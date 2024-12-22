@@ -24,6 +24,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.admin_endpoints.constants import (
     EXTRA_PAGE,
     FIRST_PAGE,
+    MAX_LENGTH_MESSAGE,
     PAGE,
     PAGE_GE,
     PAGE_SIZE,
@@ -38,6 +39,7 @@ from app.crud.group import crud_group
 from app.crud.message import crud_message
 from app.crud.photo import crud_photo
 from app.crud.user_tg import crud_user
+from app.models.constants import LENGTH_1000
 from app.schemas.message import MessageCreate, MessageUpdate
 from app.schemas.photo import PhotoCreate
 
@@ -46,6 +48,37 @@ from bot.services import bot_application
 
 router = APIRouter()
 templates = Jinja2Templates(directory='app/templates')
+
+
+async def fetch_photos(message_id: int, session: AsyncSession) -> List:
+    """Fetch all photos associated with a message ID."""
+    return await crud_photo.get_all_by_attributes(
+        {'message_id': message_id}, session,
+    )
+
+
+async def save_new_photos(
+    new_photos: List[UploadFile], message_id: int, session: AsyncSession,
+) -> None:
+    """Save new uploaded photos and return the created photo objects."""
+    directory = PathDir(STATIC_DIR)
+    if not directory.exists():
+        directory.mkdir(parents=True, exist_ok=True)
+
+    for file_photo in new_photos:
+        if file_photo.filename:
+            extension = file_photo.filename.split('.')[-1]
+            unique_filename = f'{uuid.uuid4()}.{extension}'
+            file_location = f'{directory}/{unique_filename}'
+
+            async with aiofiles.open(file_location, 'wb') as f:
+                content = await file_photo.read()
+                await f.write(content)
+
+            new_photo = PhotoCreate(
+                filename=file_location, message_id=message_id,
+            )
+            await crud_photo.create(new_photo, session)
 
 
 @router.get(
@@ -125,6 +158,19 @@ async def create_messages(
     session: AsyncSession = Depends(get_async_session),
 ) -> HTMLResponse:
     """Endpoint to create a new message."""
+    if text and len(text) > LENGTH_1000:
+        groups = await crud_group.get_all_objs(session=session)
+        return templates.TemplateResponse(
+            'create_message.html',
+            {
+                'request': request,
+                'groups': groups,
+                'text': text,
+                'errors': [
+                    MAX_LENGTH_MESSAGE,
+                    f'Сократите на {abs(LENGTH_1000 - len(text))} символов.'],
+            },
+        )
     message = MessageCreate(
         text=text,
         create_user=request.user.id,
@@ -133,27 +179,28 @@ async def create_messages(
         send_on=send_on if send_on else datetime.now(),
     )
     new_message = await crud_message.create(message, session)
+    await save_new_photos(
+        new_photos=photos, message_id=new_message.id, session=session)
+    # directory = PathDir(STATIC_DIR)
+    # if not directory.exists():
+    #     directory.mkdir(parents=True, exist_ok=True)
 
-    directory = PathDir(STATIC_DIR)
-    if not directory.exists():
-        directory.mkdir(parents=True, exist_ok=True)
+    # if photos:
+    #     for file_photo in photos:
+    #         if file_photo.filename:
+    #             extension = file_photo.filename.split('.')[-1]
+    #             unique_filename = f'{uuid.uuid4()}.{extension}'
+    #             file_location = f'{directory}/{unique_filename}'
 
-    if photos:
-        for file_photo in photos:
-            if file_photo.filename:
-                extension = file_photo.filename.split('.')[-1]
-                unique_filename = f'{uuid.uuid4()}.{extension}'
-                file_location = f'{directory}/{unique_filename}'
+    #             async with aiofiles.open(file_location, 'wb') as f:
+    #                 content = await file_photo.read()
+    #                 await f.write(content)
 
-                async with aiofiles.open(file_location, 'wb') as f:
-                    content = await file_photo.read()
-                    await f.write(content)
-
-                new_photo = PhotoCreate(
-                    filename=file_location,
-                    message_id=new_message.id,
-                )
-                await crud_photo.create(new_photo, session)
+    #             new_photo = PhotoCreate(
+    #                 filename=file_location,
+    #                 message_id=new_message.id,
+    #             )
+    #             await crud_photo.create(new_photo, session)
 
     if new_message.send_on < datetime.now():
         send_time = timedelta(minutes=TIMEDELTA_MIN)
@@ -194,11 +241,11 @@ async def get_edit_message_form(
             status_code=status.HTTP_404_NOT_FOUND,
             detail='Message with this ID not found.',
         )
-
-    photos = await crud_photo.get_all_by_attributes(
-        {'message_id': message_id},
-        session,
-    )
+    photos = await fetch_photos(message_id, session)
+    # photos = await crud_photo.get_all_by_attributes(
+    #     {'message_id': message_id},
+    #     session,
+    # )
     return templates.TemplateResponse(
         'edit_message.html',
         {
@@ -232,6 +279,26 @@ async def edit_message(
             status_code=status.HTTP_404_NOT_FOUND,
             detail='Message with this ID not found.',
         )
+    if text and len(text) > LENGTH_1000:
+        photos = await fetch_photos(message_id, session)
+        # photos = await crud_photo.get_all_by_attributes(
+        #     {'message_id': message_id},
+        #     session,
+        # )
+        return templates.TemplateResponse(
+            'edit_message.html',
+            {
+                'request': request,
+                'message': existing_message,
+                'photos': photos,
+                'is_message_sent': existing_message.is_send,
+                'errors': [
+                    'Длина сообщения должна быть не более '
+                    f'{LENGTH_1000} символов.',
+                    f'Сократите на {abs(LENGTH_1000 - len(text))} символов.',
+                ],
+            },
+        )
     message = MessageUpdate(
         text=text,
         is_send=is_send,
@@ -245,30 +312,32 @@ async def edit_message(
         session,
     )
     if new_photos:
-        directory = PathDir(STATIC_DIR)
-        if not directory.exists():
-            directory.mkdir(parents=True, exist_ok=True)
+        await save_new_photos(
+            new_photos=new_photos, message_id=message_id, session=session)
+        # directory = PathDir(STATIC_DIR)
+        # if not directory.exists():
+        #     directory.mkdir(parents=True, exist_ok=True)
 
-        for file_photo in new_photos:
-            if file_photo.filename:
-                extension = file_photo.filename.split('.')[-1]
-                unique_filename = f'{uuid.uuid4()}.{extension}'
-                file_location = f'{directory}/{unique_filename}'
+        # for file_photo in new_photos:
+        #     if file_photo.filename:
+        #         extension = file_photo.filename.split('.')[-1]
+        #         unique_filename = f'{uuid.uuid4()}.{extension}'
+        #         file_location = f'{directory}/{unique_filename}'
 
-                async with aiofiles.open(file_location, 'wb') as f:
-                    content = await file_photo.read()
-                    await f.write(content)
+        #         async with aiofiles.open(file_location, 'wb') as f:
+        #             content = await file_photo.read()
+        #             await f.write(content)
 
-                new_photo = PhotoCreate(
-                    filename=file_location,
-                    message_id=updated_message.id,
-                )
-                await crud_photo.create(new_photo, session)
-
-        photos = await crud_photo.get_all_by_attributes(
-            filters={'message_id': message_id},
-            session=session,
-        )
+        #         new_photo = PhotoCreate(
+        #             filename=file_location,
+        #             message_id=updated_message.id,
+        #         )
+        #         await crud_photo.create(new_photo, session)
+        photos = await fetch_photos(message_id, session)
+        # photos = await crud_photo.get_all_by_attributes(
+        #     filters={'message_id': message_id},
+        #     session=session,
+        # )
     job_name = f'send_mes_{updated_message.id}'
     current_jobs = bot_application.job_queue.get_jobs_by_name(job_name)
     if current_jobs:
@@ -312,10 +381,11 @@ async def delete_message(
     session: AsyncSession = Depends(get_async_session),
 ) -> HTMLResponse:
     """Endpoint to delete a message."""
-    existing_photos = await crud_photo.get_all_by_attributes(
-        filters={'message_id': message_id},
-        session=session,
-    )
+    # existing_photos = await crud_photo.get_all_by_attributes(
+    #     filters={'message_id': message_id},
+    #     session=session,
+    # )
+    existing_photos = await fetch_photos(message_id, session)
     existing_message = await crud_message.get_obj_by_id(
         obj_id=message_id,
         session=session,
@@ -367,10 +437,11 @@ async def delete_photo_from_message(
             detail='Message or photo with this ID not found.',
         )
     await crud_photo.delete(existing_photo, session)
-    photos = await crud_photo.get_all_by_attributes(
-        filters={'message_id': message_id},
-        session=session,
-    )
+    photos = await fetch_photos(message_id, session)
+    # photos = await crud_photo.get_all_by_attributes(
+    #     filters={'message_id': message_id},
+    #     session=session,
+    # )
     return templates.TemplateResponse(
         'edit_message.html',
         {'request': request, 'message': existing_message, 'photos': photos},

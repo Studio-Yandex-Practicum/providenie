@@ -3,11 +3,13 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field, validator
 
+from app.models.constants import LENGTH_1000
+
 
 class MessageCreate(BaseModel):
     """The pydantic model for create message."""
 
-    text: Optional[str] = Field(None)
+    text: Optional[str] = Field(None, max_length=LENGTH_1000)
     create_user: int = Field(...)
     update_users: int = Field(...)
     groups: Optional[List[int]] = Field(None)
