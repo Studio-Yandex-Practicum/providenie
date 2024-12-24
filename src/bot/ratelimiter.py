@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from typing import Any
 
 from telegram import InputMediaPhoto
+from telegram.constants import ParseMode
 from telegram.ext import Application, ContextTypes
 
 from app.core.db import get_async_session
@@ -44,10 +45,16 @@ async def send_message_to_user(
 ) -> None:
     """Отправляет сообщение пользователю по его ID."""
     if not message.photos:
-        await context.bot.send_message(chat_id=user_id, text=message.text)
+        await context.bot.send_message(
+            chat_id=user_id,
+            text=message.text,
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True,
+        )
     elif len(message.photos) == 1:
         await context.bot.send_photo(
             chat_id=user_id,
+            parse_mode=ParseMode.MARKDOWN,
             photo=message.photos[0].filename,
             caption=message.text,
         )
@@ -60,6 +67,7 @@ async def send_message_to_user(
         ]
         await context.bot.send_media_group(
             chat_id=user_id,
+            parse_mode=ParseMode.MARKDOWN,
             media=media,
             caption=message.text,
         )

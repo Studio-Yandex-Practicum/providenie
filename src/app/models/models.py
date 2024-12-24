@@ -13,7 +13,7 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 
 from app.core.db import Base
-from app.models.constants import LENGTH_32, LENGTH_64, LENGTH_256
+from app.models.constants import LENGTH_32, LENGTH_64, LENGTH_1000
 
 
 class MessageGroupAssociation(Base):
@@ -86,7 +86,7 @@ class Group(Base):
 class Message(Base):
     """Message model."""
 
-    text = Column(String(LENGTH_256), nullable=True)
+    text = Column(String(LENGTH_1000), nullable=True)
     photos = relationship('Photo', lazy='joined')
     send_on = Column(DateTime, default=datetime.now)
     is_send = Column(Boolean, default=False)

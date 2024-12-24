@@ -17,6 +17,7 @@
                     <div class="mb-3">
                         <label for="messageText" class="form-label">Текст сообщения</label>
                         <textarea class="form-control" id="messageText" name="text" rows="5" {% if is_message_sent %}readonly{% endif %} required>{{ message.text }}</textarea>
+                        <small class="form-text text-muted">Использование символов ` * _ | ~ в тексте может привести к неверному форматированию сообщения.<br>Пример ссылки: [URL](http://www.example.com/)</small>
                     </div>
 
                     <div class="mb-3">
