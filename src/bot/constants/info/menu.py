@@ -95,7 +95,7 @@ ALL_MENU = {
         key.BUTTON_TEXT: 'Отчеты Фонда',
         key.DESCRIPTION: (
             'Вы сможете найти годовую отчетность Фонда, перейдя по ссылке '
-            "ниже:\n<a href='https://fond-providenie.ru/docs/'>"
+            "ниже:\n<a href='https://fond-providenie.ru/reports/'>"
             'Ссылка на страницу с отчетами Фонда</a>'
         ),
     },
