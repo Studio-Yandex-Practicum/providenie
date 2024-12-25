@@ -9,10 +9,7 @@ DONATION = {
             'можем планировать нашу работу и поддерживать тех, кто сейчас '
             'наиболее уязвим.'
         ),
-        key.LINK: (
-            'https://fond-providenie.ru/help-chidren/sdelat-pozhertovanie'
-            '/sdelat-pozhertvovanie-s-bankovskoj-karty/'
-        ),
+        key.LINK: 'https://fond-providenie.ru/donations/',
     },
     f'{key.OPTION}_TARGETED_HELP': {
         key.BUTTON_TEXT: 'Поддержать адресно',
