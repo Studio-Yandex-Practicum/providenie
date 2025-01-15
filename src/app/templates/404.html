@@ -1,19 +1,12 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 Not Found</title>
-    <link rel="stylesheet" href="/static/main.css">
-</head>
-<body>
-    <div class="error-container">
-        <h1>404 - Страница не найдена</h1>
-        <p>Извините, запрашиваемая страница не найдена.</p>
-        {% if detail %}
-            <p><strong>Подробности ошибки:</strong> {{ detail }}</p>
-        {% endif %}
-        <a href="/admin">Вернуться на главную</a>
-    </div>
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}404 Not Found{% endblock title %}
+{% block content %}
+  <div class="error-container">
+    <h1>404 - Страница не найдена</h1>
+    <p>Извините, запрашиваемая страница не найдена.</p>
+    {% if detail %}
+        <p><strong>Подробности ошибки:</strong> {{ detail }}</p>
+    {% endif %}
+    <a href="/admin">Вернуться на главную</a>
+  </div>
+{% endblock content %}

@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Сообщение обновлено</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Сообщение обновлено{% endblock title %}
+{% block content %}
     <h1>Сообщение успешно обновлено!</h1>
     <p>Сообщение: <strong>{{ message.text }}</strong></p>
     <a href="/admin/messages">Вернуться к списку сообщений</a>
-</body>
-</html>
+{% endblock content %}
