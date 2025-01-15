@@ -120,7 +120,7 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
     # Обновление статуса сообщения после отправки
     message.is_send = True
     message.sended_at = datetime.now()
-    async for session in get_async_session():
+    async with get_async_session() as session:
         session.add(message)
         await session.commit()
 
