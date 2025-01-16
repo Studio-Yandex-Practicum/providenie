@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Группа удалена</titleудалено>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Группа удалена{% endblock title %}
+{% block content %}
     <h1>Группа успешно удалена!</h1>
     <p>Группа: <strong>{{ group }}</strong></p>
     <a href="/admin/groups">Вернуться к списку групп</a>
-</body>
-</html>
+{% endblock content %}

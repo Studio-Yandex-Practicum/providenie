@@ -1,75 +1,71 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    {% include 'header.html' %}
-</head>
-<body>
-    <div class="container-fluid">
-        <div class="row">
-            {% include 'admin_sidebar.html' %}
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-4" style="margin-bottom: 60px;">
-                <h2>Список сообщений</h2>
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>ID Сообщения</th>
-                                <th>Текст</th>
-                                <th>Когда отправить</th>
-                                <th>Отправлено</th>
-                                <th>Действия</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for message in messages %}
-                            <tr>
-                                <td>{{ message.id }}</td>
-                                <td>{{ message.text }}</td>
-                                <td>{{ message.send_on.strftime('%d.%m.%Y %H:%M') }}</td>
-                                <td>{{ message.sended_at.strftime('%d.%m.%Y %H:%M') if message.is_send else 'Нет' }}</td>
-                                <td>
-                                    <a href="/admin/messages/{{ message.id }}/edit" class="btn btn-warning btn-sm">Изменить</a>
-                                    <form action="/admin/messages/{{ message.id }}/delete" method="post" style="display:inline;">
-                                        <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-
-                <nav aria-label="Навигация по страницам">
-                    <ul class="pagination">
-                        {% if page > 1 %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ page - 1 }}" aria-label="Предыдущая">
-                                <span aria-hidden="true">&laquo;</span> Назад
-                            </a>
-                        </li>
-                        {% endif %}
-                        {% for p in range(1, total_pages + 1) %}
-                        <li class="page-item {% if p == page %}active{% endif %}">
-                            <a class="page-link" href="?page={{ p }}">{{ p }}</a>
-                        </li>
+{% extends "base.html" %}
+{% block title %}Список сообщений{% endblock title %}
+{% block content %}
+  <div class="container-fluid">
+    <div class="row">
+        {% include 'admin_sidebar.html' %}
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-4" style="margin-bottom: 60px;">
+            <h2>Список сообщений</h2>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID Сообщения</th>
+                            <th>Текст</th>
+                            <th>Когда отправить</th>
+                            <th>Отправлено</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for message in messages|reverse %}
+                        <tr>
+                            <td>{{ message.id }}</td>
+                            <td>{{ message.text }}</td>
+                            <td>{{ message.send_on.strftime('%d.%m.%Y %H:%M') }}</td>
+                            <td>{{ message.sended_at.strftime('%d.%m.%Y %H:%M') if message.is_send else 'Нет' }}</td>
+                            <td>
+                                <a href="/admin/messages/{{ message.id }}/edit" class="btn btn-warning btn-sm">Изменить</a>
+                                <form action="/admin/messages/{{ message.id }}/delete" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                                </form>
+                            </td>
+                        </tr>
                         {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-                        {% if page < total_pages %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ page + 1 }}" aria-label="Следующая">
-                                Вперед <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                        {% endif %}
-                    </ul>
-                </nav>
+            <nav aria-label="Навигация по страницам">
+                <ul class="pagination">
+                    {% if page > 1 %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page - 1 }}" aria-label="Предыдущая">
+                            <span aria-hidden="true">&laquo;</span> Назад
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% for p in range(1, total_pages + 1) %}
+                    <li class="page-item {% if p == page %}active{% endif %}">
+                        <a class="page-link" href="?page={{ p }}">{{ p }}</a>
+                    </li>
+                    {% endfor %}
 
-                <a href="/admin/messages/create" class="btn btn-success">Создать новое сообщение</a>
-            </main>
-        </div>
+                    {% if page < total_pages %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page + 1 }}" aria-label="Следующая">
+                            Вперед <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+
+            <a href="/admin/messages/create" class="btn btn-success">Создать новое сообщение</a>
+        </main>
     </div>
+  </div>
 
-    {% include 'footer.html' %}
-    <script src="/static/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+  {% include 'footer.html' %}
+  <script src="/static/js/bootstrap.bundle.min.js"></script>
+{% endblock content %}

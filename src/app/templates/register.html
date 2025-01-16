@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Регистрация</title>
-    <link rel="stylesheet" href="/static/main.css">
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Регистрация{% endblock title %}
+{% block content %}
     <div class="form-container">
         <h1>Регистрация</h1>
         <form method="post" action="{{ url_for('auth_register') }}">
@@ -23,5 +17,4 @@
             <button type="submit">Зарегистрироваться</button>
         </form>
     </div>
-</body>
-</html>
+{% endblock content %}
