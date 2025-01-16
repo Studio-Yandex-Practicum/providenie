@@ -7,7 +7,7 @@ from telegram import InputMediaPhoto
 from telegram.constants import ParseMode
 from telegram.ext import Application, ContextTypes
 
-from app.core.db import get_async_session
+from app.core.db import get_async_session_context
 from app.crud.message import crud_message
 from app.crud.user_tg import crud_user
 
@@ -17,7 +17,7 @@ async def load_unsent_messages(context: ContextTypes.DEFAULT_TYPE) -> None:
 
     Планирование их отправки.
     """
-    async with get_async_session() as session:
+    async with get_async_session_context() as session:
         unsent_messages = await crud_message.get_unsent_messages(session)
         for message in unsent_messages:
             # Преобразование строки времени в datetime
@@ -79,7 +79,7 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
     message_id = context.job.data['message_id']
 
     message = None
-    async with get_async_session() as session:
+    async with get_async_session_context() as session:
         message = await crud_message.get_obj_by_id(
             obj_id=message_id,
             session=session,
@@ -120,7 +120,7 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
     # Обновление статуса сообщения после отправки
     message.is_send = True
     message.sended_at = datetime.now()
-    async with get_async_session() as session:
+    async with get_async_session_context() as session:
         session.add(message)
         await session.commit()
 
