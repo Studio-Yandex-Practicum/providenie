@@ -44,7 +44,7 @@ async def get_async_session():  # noqa: ANN201
 
 @asynccontextmanager
 async def get_async_session_context():  # noqa: ANN201
-    """Асинхронный контекстный менеджер для работы с сессией."""
+    """Asynchronous context manager."""
     async with AsyncSessionLocal() as session:
         try:
             yield session
