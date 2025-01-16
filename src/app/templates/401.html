@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block title %}Неавторизован{% endblock title %}
 {% block content %}
+{% include "admin_sidebar.html" %}
+<main>
   <div class="error-container">
     <h1>Ошибка 401</h1>
     <p>Вы не авторизованы для доступа к этой странице.</p>
@@ -9,4 +11,5 @@
     {% endif %}
     <a href="{{ url_for('login') }}">Перейти к странице входа</a>
   </div>
+</main>
 {% endblock content %}

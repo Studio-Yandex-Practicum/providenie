@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block title %}500 Internal Server Error{% endblock title %}
 {% block content %}
+{% include "admin_sidebar.html" %}
+<main>
   <div class="error-container">
     <h1>500 - Внутренняя ошибка сервера</h1>
     <p>Извините, на сервере произошла ошибка при обработке вашего запроса.</p>
@@ -10,4 +12,5 @@
     <a href="/auth/login">Перейти к авторизации</a>
     <a href="/admin">Вернуться на главную</a>
   </div>
+</main>
 {% endblock content %}

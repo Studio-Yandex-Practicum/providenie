@@ -18,7 +18,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for message in messages %}
+                        {% for message in messages|reverse %}
                         <tr>
                             <td>{{ message.id }}</td>
                             <td>{{ message.text }}</td>

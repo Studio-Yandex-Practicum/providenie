@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block title %}400 Bad Request{% endblock title%}
 {% block content %}
+{% include "admin_sidebar.html" %}
+<main>
   <div class="error-container">
     <h1>400 - Неверный запрос</h1>
     <p>Извините, ваш запрос не может быть обработан.</p>
@@ -9,4 +11,5 @@
     {% endif %}
     <a href="/admin">Вернуться на главную</a>
   </div>
+</main>
 {% endblock content %}
