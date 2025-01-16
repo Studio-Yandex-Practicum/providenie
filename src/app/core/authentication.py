@@ -6,7 +6,7 @@ from app.core.constants import (
     KEY_STATUS,
     KEY_USER_ID,
 )
-from app.core.db import get_async_session
+from app.core.db import get_async_session_context
 from app.core.jwt import jwt_decode
 from app.crud.user_tg import crud_user
 from app.models.models import UserTG
@@ -30,7 +30,7 @@ class MyAuthBackEnd(AuthenticationBackend):
 
         user_id = int(decoded_token[KEY_USER_ID])
 
-        async for session in get_async_session():
+        async with get_async_session_context() as session:
             user = await crud_user.get_obj_by_id(user_id, session)
             if not user or not user.is_active:
                 return None

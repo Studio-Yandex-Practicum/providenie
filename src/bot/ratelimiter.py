@@ -7,7 +7,7 @@ from telegram import InputMediaPhoto
 from telegram.constants import ParseMode
 from telegram.ext import Application, ContextTypes
 
-from app.core.db import get_async_session
+from app.core.db import get_async_session_context
 from app.crud.message import crud_message
 from app.crud.user_tg import crud_user
 
@@ -17,7 +17,7 @@ async def load_unsent_messages(context: ContextTypes.DEFAULT_TYPE) -> None:
 
     Планирование их отправки.
     """
-    async for session in get_async_session():
+    async with get_async_session_context() as session:
         unsent_messages = await crud_message.get_unsent_messages(session)
         for message in unsent_messages:
             # Преобразование строки времени в datetime
@@ -79,7 +79,7 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
     message_id = context.job.data['message_id']
 
     message = None
-    async for session in get_async_session():
+    async with get_async_session_context() as session:
         message = await crud_message.get_obj_by_id(
             obj_id=message_id,
             session=session,
@@ -95,23 +95,23 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
         # Если пользователь состоит оновременно в нескольких группах,
         # то в сете он все равно окажется в единственном экземпляре.
         users_to_notify = {
-            user.tg_id for group in groups
+            user.tg_id
+            for group in groups
             for user in group.users
-            if user.is_active}
+            if user.is_active
+        }
 
         for user_id in users_to_notify:
             await send_message_to_user(context, user_id, message)
     else:
         # Если групп нет, получаем всех активных пользователей,
         # исключая администратора и заблокированных
-        active_users = None
-        async for session in get_async_session():
-            active_users = await crud_user.get_all_by_attributes(
-                filters={
-                    'is_admin': False,
-                },
-                session=session,
-            )
+        active_users = await crud_user.get_all_by_attributes(
+            filters={
+                'is_admin': False,
+            },
+            session=session,
+        )
 
         for user in active_users:
             if user.is_active and not user.is_block:
@@ -120,7 +120,7 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
     # Обновление статуса сообщения после отправки
     message.is_send = True
     message.sended_at = datetime.now()
-    async for session in get_async_session():
+    async with get_async_session_context() as session:
         session.add(message)
         await session.commit()
 

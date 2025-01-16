@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from datetime import datetime
 
 from sqlalchemy import BigInteger, Column, DateTime
@@ -39,3 +40,13 @@ async def get_async_session():  # noqa: ANN201
     """Asynchronous session generator."""
     async with AsyncSessionLocal() as async_session:
         yield async_session
+
+
+@asynccontextmanager
+async def get_async_session_context():  # noqa: ANN201
+    """Asynchronous context manager."""
+    async with AsyncSessionLocal() as session:
+        try:
+            yield session
+        finally:
+            await session.close()

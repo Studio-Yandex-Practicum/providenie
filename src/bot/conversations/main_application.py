@@ -2,7 +2,7 @@ from telegram import BotCommandScopeChat, Update
 from telegram import InlineKeyboardMarkup as Keyboard
 from telegram.ext import ContextTypes, ConversationHandler
 
-from app.core.db import get_async_session
+from app.core.db import get_async_session_context
 from app.crud.user_tg import crud_user
 from app.schemas.auth import UserCreate
 
@@ -23,7 +23,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
         'user_name': tg_user.username or tg_user.first_name,
     }
 
-    async for session in get_async_session():
+    async with get_async_session_context() as session:
         existing_user = await crud_user.get_one_by_attributes(
             filters={'tg_id': user_data['tg_id']},
             session=session,
