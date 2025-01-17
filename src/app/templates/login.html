@@ -1,13 +1,7 @@
 <!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход</title>
-    <link rel="stylesheet" href="/static/main.css">
-
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Вход{% endblock title %}
+{% block content %}
     <div class="form-container">
         <h1>Вход</h1>
         {% if message %}
@@ -21,5 +15,4 @@
             <button type="submit">Войти</button>
         </form>
     </div>
-</body>
-</html>
+{% endblock content %}

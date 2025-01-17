@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Пользователь редактирован</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Пользователь редактирован{% endblock title %}
+{% block content %}
     <section class="section">
         <div class="container">
             <h1 class="title">Пользователь успешно редактирован</h1>
@@ -37,5 +31,4 @@
             </div>
         </div>
     </section>
-</body>
-</html>
+{% endblock content %}
