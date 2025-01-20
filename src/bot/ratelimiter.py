@@ -33,7 +33,7 @@ async def load_unsent_messages(context: ContextTypes.DEFAULT_TYPE) -> None:
                 when=send_time,
                 data={
                     'message_id': message.id,
-                    'user_id': message.create_user  # Передаём ID пользователя
+                    'user_id': message.create_user,  # Передаём ID пользователя
                 },
                 name=f'send_mes_{message.id}',
                 job_kwargs={
@@ -128,9 +128,9 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
             pydantic_scheme_obj=MessageUpdate(
                 is_send=True,
                 sended_at=datetime.now(),
-                update_users=user_id
+                update_users=user_id,
             ),
-            session=session
+            session=session,
         )
 
 
