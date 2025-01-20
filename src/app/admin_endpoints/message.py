@@ -189,7 +189,10 @@ async def create_messages(
     job = bot_application.job_queue.run_once(
         send_message,
         when=send_time,
-        data={'message_id': new_message.id},
+        data={
+            'message_id': new_message.id,
+            'user_id': request.user.id
+        },
         name=f'send_mes_{new_message.id}',
         job_kwargs={
             'misfire_grace_time': None,
@@ -300,7 +303,10 @@ async def edit_message(
     job = bot_application.job_queue.run_once(
         send_message,
         when=send_time,
-        data={'message_id': updated_message.id},
+        data={
+            'message_id': updated_message.id,
+            'user_id': request.user.id
+        },
         name=job_name,
         job_kwargs={
             'misfire_grace_time': None,
