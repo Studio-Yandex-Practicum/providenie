@@ -1,69 +1,70 @@
 {% extends "base.html" %}
 {% block title %}Создать пользователя{% endblock title %}
 {% block content %}
-  <div class="container-fluid">
-    <div class="row">
-        {% include 'admin_sidebar.html' %}
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="margin-bottom: 60px;">
+        <main class="container" style="margin-bottom: 60px;">
             <h2 class="my-4">Создание пользователя</h2>
             {% include 'web_errors.html' %}
             <form action="/admin/users/create" method="post">
-                <div class="mb-3">
-                    <label for="tg_id" class="form-label">tg_id:</label>
-                    <input type="text" class="form-control" id="tg_id" name="tg_id" required>
-                </div>
+                <div>
+                    <div class="mb-3">
+                        <label for="tg_id" class="form-label">Telegram ID</label>
+                        <input type="text" class="form-control container-input" id="tg_id" name="tg_id" required>
+                    </div>
 
-                <div class="mb-3">
-                    <label for="first_name" class="form-label">Имя:</label>
-                    <input type="text" class="form-control" id="first_name" name="first_name" required>
-                </div>
+                    <div class="mb-3">
+                        <label for="first_name" class="form-label">Имя пользователя</label>
+                        <input type="text" class="form-control container-input" id="first_name" name="first_name" required>
+                    </div>
 
-                <div class="mb-3">
-                    <label for="last_name" class="form-label">Фамилия:</label>
-                    <input type="text" class="form-control" id="last_name" name="last_name" required>
-                </div>
+                    <div class="mb-3">
+                        <label for="last_name" class="form-label">Фамилия пользователя</label>
+                        <input type="text" class="form-control container-input" id="last_name" name="last_name" required>
+                    </div>
 
-                <div class="mb-3">
-                    <label for="user_name" class="form-label">Имя пользователя:</label>
-                    <input type="text" class="form-control" id="user_name" name="user_name" required minlength="5">
-                </div>
+                    <div class="mb-3">
+                        <label for="user_name" class="form-label">Login (username)</label>
+                        <input type="text" class="form-control container-input" id="user_name" name="user_name" required minlength="5">
+                    </div>
 
-                <div class="form-check mb-3">
-                    <input type="checkbox" class="form-check-input" id="is_admin" name="is_admin">
-                    <label for="is_admin" class="form-check-label">Администратор:</label>
-                </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Пароль:</label>
+                        <input type="password" class="form-control container-input" id="password" name="password" required>
+                    </div>
 
-                <div class="form-check mb-3">
-                    <input type="checkbox" class="form-check-input" id="is_block" name="is_block">
-                    <label for="is_block" class="form-check-label">Заблокирован:</label>
-                </div>
+                    <div class="d-flex flex-column">
+                        <div class="d-flex form-check form-switch form-check-reverse mb-3">
+                            <label for="is_admin" class="form-check-label" style="left: 0;">Администратор:</label>
+                            <input class="form-check-input" style="margin-left: auto;" type="checkbox" role="switch" id="is_admin" name="is_admin">
+                        </div>
 
-                <div class="mb-3">
-                    <label for="password" class="form-label">Пароль:</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
-                </div>
+                        <div class="d-flex form-check form-switch form-check-reverse mb-3">
+                            <label for="is_block" class="form-check-label">Заблокирован:</label>
+                            <input class="form-check-input" style="margin-left: auto;" type="checkbox" role="switch" id="is_block" name="is_block">
+                        </div>
+                    </div>
 
-                <div class="mb-3">
-                    <label for="group_id" class="form-label">Группы:</label>
-                      <div>
-                        <p>Выберите группы:</p>
-                          {% for group in groups %}
-                            <div>
-                              <input type="checkbox" id="group_{{ group.id }}" name="group_id" value="{{ group.id }}">
-                              <label for="group_{{ group.id }}">{{ group.name }}</label>
+                    <div class="mb-3 d-flex flex-row;" style="justify-content: space-between;">
+                        <div style="d-flex flex-wrap margin-right: 5px;">
+                            <label for="group_id" class="form-label">Группы</label>
+                            <h6 style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal; max-width: 80px;">Если не выбрано ни одной группы, пользователь входит во все группы</h6>
+                        </div>
+                        <div class="d-flex flex-column group-input" style="max-height: 150px; overflow-y: scroll;">
+                            {% for group in groups %}
+                            <div class="d-flex flex-row" style="flex-direction: column; align-items: center; margin-left: 5px; margin-top: 2px;">
+                                <input class="form-check-input" style="transform: scale(0.5); margin-bottom: 2px; margin-top: 2px; border: 2px solid rgb(114, 111, 111);" type="checkbox" id="group_{{ group.id }}" name="group_id" value="{{ group.id }}">
+                                <label style="font-size: 12px;" for="group_{{ group.id }}" class="me-2">{{ group.name }}</label>
                             </div>
-                          {% endfor %}
-                      </div>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
 
-                <div class="mt-4">
-                    <button type="submit" class="btn btn-primary">Создать пользователя</button>
+                <div class="d-flex mt-4" style="justify-content: space-between;">
+                    <button type="submit" class="btn btn-primary">Создать</button>
                     <a href="/admin/users" class="btn btn-secondary">Отмена</a>
                 </div>
             </form>
         </main>
-    </div>
-  </div>
 
   {% include 'footer.html' %}
   <script src="/static/js/bootstrap.bundle.min.js"></script>

@@ -1,37 +1,35 @@
 {% extends "base.html" %}
 {% block title %}Создать сообщение{% endblock title %}
 {% block content %}
-  <div class="container-fluid">
-    <div class="row">
-        {% include 'admin_sidebar.html' %}
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-4" style="margin-bottom: 60px;">
+
+        <main class="container" style="margin-bottom: 60px;">
             {% include 'web_errors.html' %}
             <h2>Создать новое сообщение</h2>
             <form method="post" enctype="multipart/form-data">
-                <div class="mb-3">
+                <div class="mb-3" style="">
                     <label for="text" class="form-label">Текст сообщения:</label>
-                    <textarea id="text" name="text" class="form-control" rows="3" required>{{ text }}</textarea>
+                    <textarea id="text" name="text" class="form-control container-input" rows="3" required>{{ text }}</textarea>
                     <small class="form-text text-muted w-100">Использование символов ` * _ | ~ в тексте может привести к неверному форматированию сообщения.<br>Пример ссылки: [URL](http://www.example.com/)</small>
                 </div>
-                  <div class="mb-3">
-                    <label for="send_on" class="form-label">Когда отправить:</label>
-                    <input type="datetime-local" id="send_on" name="send_on" class="form-control">
-                </div>
                 <div class="mb-3">
-                    <label for="group_id" class="form-label">Группы:</label>
-                <div>
-                  <p>Выберите группы:</p>
-                    <div class="mb-3">  <!-- Добавлен отступ -->
-                      <input type="checkbox" id="group_0" name="group_id" value="0">
-                      <label for="group_0">Всем</label>
-                    </div>
-                    {% for group in groups %}
-                    <div>
-                      <input type="checkbox" id="group_{{ group.id }}" name="group_id" value="{{ group.id }}">
-                      <label for="group_{{ group.id }}">{{ group.name }}</label>
-                    </div>
-                    {% endfor %}
+                    <label for="send_on" class="form-label">Когда отправить:</label>
+                    <input type="datetime-local" style="border: 2px solid rgb(114, 111, 111);" id="send_on" name="send_on" class="form-control">
                 </div>
+                <div class="mb-3 d-flex flex-row;" style="justify-content: space-between;">
+                    <div style="d-flex flex-wrap margin-right: 5px;">
+                        <label for="group_id" class="form-label">Группы</label>
+                        <h6 style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal; max-width: 80px;">Если не выбрано ни одной группы, пользователь входит во все группы</h6>
+                    </div>
+                    <div class="d-flex flex-column group-input" style="max-height: 150px; overflow-y: scroll;">
+                        {% for group in groups %}
+                        <div class="d-flex flex-row" style="flex-direction: column; align-items: center; margin-left: 5px; margin-top: 2px;">
+                            <input class="form-check-input" style="transform: scale(0.5); margin-bottom: 2px; margin-top: 2px; border: 2px solid rgb(114, 111, 111);" type="checkbox" id="group_{{ group.id }}" name="group_id" value="{{ group.id }}">
+                            <label style="font-size: 12px;" for="group_{{ group.id }}" class="me-2">{{ group.name }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
                 <div class="mb-3">
                     <label for="photos" class="form-label">Фото:</label>
                     <input type="file" id="photos" name="photos" class="form-control" multiple>
@@ -39,9 +37,7 @@
                 <button type="submit" class="btn btn-primary">Создать сообщение</button>
             </form>
         </main>
-    </div>
-  </div>
 
-  <script src="/static/js/bootstrap.bundle.min.js"></script>
-  {% include 'footer.html' %}
+<script src="/static/js/bootstrap.bundle.min.js"></script>
+{% include 'footer.html' %}
 {% endblock content %}

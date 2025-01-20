@@ -3,55 +3,53 @@
 {% block content %}
   <div class="container-fluid">
       <div class="row">
-          <!-- Боковая панель -->
-          {% include 'admin_sidebar.html' %}
 
           <!-- Основной контент -->
-          <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="margin-bottom: 60px;">
-              <div class="main-header text-center">
-                  <h2>Добро пожаловать в Админ панель</h2>
-              </div>
-              <div class="row">
-                  <!-- Карточка Пользователи -->
-                  <div class="col-12 col-md-4 mb-4">
-                      <div class="card shadow-sm">
-                          <div class="card-body">
-                              <h5 class="card-title">Пользователи</h5>
-                              <p class="card-text">Просмотр, редактирование и управление аккаунтами.</p>
-                              <a href="/admin/users" class="btn btn-primary">
-                                  <i class="fas fa-users"></i> Перейти
-                              </a>
-                          </div>
-                      </div>
-                  </div>
-
-                  <!-- Карточка Группы -->
-                  <div class="col-12 col-md-4 mb-4">
-                      <div class="card shadow-sm">
-                          <div class="card-body">
-                              <h5 class="card-title">Группы</h5>
-                              <p class="card-text">Управление пользовательскими группами.</p>
-                              <a href="/admin/groups" class="btn btn-primary">
-                                  <i class="fas fa-users-cog"></i> Перейти
-                              </a>
-                          </div>
-                      </div>
-                  </div>
-
-                  <!-- Карточка Сообщения -->
-                  <div class="col-12 col-md-4 mb-4">
-                      <div class="card shadow-sm">
-                          <div class="card-body">
-                              <h5 class="card-title">Сообщения</h5>
-                              <p class="card-text">Управление сообщениями и уведомлениями.</p>
-                              <a href="/admin/messages" class="btn btn-primary">
-                                  <i class="fas fa-comment-dots"></i> Перейти
-                              </a>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </main>
+          <main class="container" style="margin-bottom: 60px;">
+            <div class="main-header text-center">
+                <h2>Добро пожаловать в Админ панель</h2>
+            </div>
+            <div class="row">
+                <!-- Карточка Пользователи -->
+                <div class="col-12 col-md-4 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Пользователи</h5>
+                            <p class="card-text">Просмотр, редактирование и управление аккаунтами.</p>
+                            <a href="/admin/users" class="btn btn-primary">
+                                <i class="fas fa-users"></i> Перейти
+                            </a>
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Карточка Группы -->
+                <div class="col-12 col-md-4 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Группы</h5>
+                            <p class="card-text">Управление пользовательскими группами.</p>
+                            <a href="/admin/groups" class="btn btn-primary">
+                                <i class="fas fa-users-cog"></i> Перейти
+                            </a>
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Карточка Сообщения -->
+                <div class="col-12 col-md-4 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Сообщения</h5>
+                            <p class="card-text">Управление сообщениями и уведомлениями.</p>
+                            <a href="/admin/messages" class="btn btn-primary">
+                                <i class="fas fa-comment-dots"></i> Перейти
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
       </div>
   </div>
 

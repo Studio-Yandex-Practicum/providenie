@@ -6,7 +6,6 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
   background-color: #f4f4f9;
 }
 .form-container, .error-container {
@@ -20,6 +19,10 @@ body {
 }
 h1 {
   font-size: 2rem;
+  color: #333;
+}
+h6 {
+  font-size: 0.7rem;
   color: #333;
 }
 p {

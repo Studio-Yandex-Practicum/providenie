@@ -1,18 +1,32 @@
 <!DOCTYPE html>
-{% extends "base.html" %}
-{% block title %}Вход{% endblock title %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/main.css">
+    <link rel="stylesheet" href="/static/styles.css">
+    <title>Вход в систему</title>
+</head>
 {% block content %}
-    <div class="form-container">
-        <h1>Вход</h1>
-        {% if message %}
-        <p style="color: red;">{{ message }}</p>
-        {% endif %}
-        <form action="{{ url_for('auth_login') }}" method="post">
-            <label for="user_name">Имя пользователя:</label>
-            <input type="text" id="user_name" name="user_name" required>
-            <label for="password">Пароль:</label>
-            <input type="password" id="password" name="password" required>
-            <button type="submit">Войти</button>
+<main>
+    <div class="form-container d-flex flex-column" style="max-width: 340px; height: 330px;">
+        <div>
+            <h1>ВХОД В СИСТЕМУ</h1>
+            {% if message %}
+            <p style="color: red;">{{ message }}</p>
+            {% endif %}
+        </div>
+        <form style="margin-top: 30px;" class="d-flex flex-column" action="{{ url_for('auth_login') }}" method="post">
+            <label style="text-align: left; margin-bottom: 5px;" for="user_name">Имя пользователя:</label>
+            <input style="border-color: DeepSkyBlue; border-radius: 10px; height: 33px;" type="text" id="user_name" name="user_name" required>
+            
+            <label style="text-align: left; margin-bottom: 5px;" for="password">Пароль:</label>
+            <input style="border-color: DeepSkyBlue; border-radius: 10px; height: 33px;" style="height: 38px;" type="password" id="password" name="password" required>
+            <divclass="d-flex">
+                <button class="btn btn-primary" style="justify-content: center; width: 100px;" type="submit">Войти</button>
+            </divclass=>
         </form>
     </div>
+</main>
 {% endblock content %}

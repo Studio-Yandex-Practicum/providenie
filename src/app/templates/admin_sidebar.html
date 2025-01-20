@@ -1,33 +1,51 @@
+<div class="admin-hamburger">
+    <h3 class="mobile-title">Админ панель</h3>
+    <div class="hamburger-area" id="toggle-menu">
+        <span class="navbar-toggler-icon"></span>
+        <span class="navbar-toggler-icon"></span>
+        <span class="navbar-toggler-icon"></span>
+    </div>
+</div>
 <div class="admin-sidebar">
     <nav id="sidebar" class="bg-dark text-white">
-        <div class="sidebar-header">
-            <h2>Админ панель</h2>
+        <div class="sidebar-header"></div>
+        <div class="nav-container">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin">
+                        <i class="fas fa-home"></i>
+                        <span>Главная</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/users">
+                        <i class="fas fa-users"></i>
+                        <span>Пользователи</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/groups">
+                        <i class="fas fa-users-cog"></i>
+                        <span>Группы</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/messages">
+                        <i class="fas fa-envelope"></i>
+                        <span>Сообщения</span>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav flex-row ml-auto desctop-logout"> <!-- Выход в правом углу -->
+                <li class="nav-item">
+                    <a class="nav-link text-danger" href="/auth/logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Выход</span>
+                    </a>
+                </li>
+            </ul>
         </div>
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link" href="/admin">
-                    <i class="fas fa-home"></i>
-                    <span>Главная</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/admin/users">
-                    <i class="fas fa-users"></i>
-                    <span>Пользователи</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/admin/groups">
-                    <i class="fas fa-users-cog"></i>
-                    <span>Группы</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/admin/messages">
-                    <i class="fas fa-envelope"></i>
-                    <span>Сообщения</span>
-                </a>
-            </li>
+        <ul class="nav flex-column mobile-logout"> <!-- Выход для мобильной версии -->
             <li class="nav-item">
                 <a class="nav-link text-danger" href="/auth/logout">
                     <i class="fas fa-sign-out-alt"></i>
@@ -37,3 +55,25 @@
         </ul>
     </nav>
 </div>
+
+<script>
+const isMobile = window.innerWidth < 1024;
+const navUl = document.querySelector('.nav-container ul.nav');
+
+if (isMobile) {
+    navUl.classList.add('flex-column');
+} else {
+    navUl.classList.add('flex-row');
+}
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const toggleButton = document.getElementById('toggle-menu');
+        const sidebar = document.getElementById('sidebar');
+
+        toggleButton.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+    });
+</script>

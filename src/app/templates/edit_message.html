@@ -1,31 +1,23 @@
 {% extends "base.html" %}
 {% block title %}Редактировать сообщение{% endblock title %}
 {% block content %}
-  <div class="container-fluid">
-    <div class="row">
-        {% include 'admin_sidebar.html' %}
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="margin-bottom: 60px;">
+        <main class="container" style="margin-bottom: 60px;">
             {% include 'web_errors.html' %}
             <h2 class="my-4">Редактирование сообщения</h2>
-
             <form action="/admin/messages/{{ message.id }}/update" method="post" enctype="multipart/form-data">
-
                 <div class="mb-3">
                     <label for="messageText" class="form-label">Текст сообщения</label>
-                    <textarea class="form-control" id="messageText" name="text" rows="5" {% if is_message_sent %}readonly{% endif %} required>{{ message.text }}</textarea>
+                    <textarea class="form-control container-input" id="messageText" name="text" rows="5" {% if is_message_sent %}readonly{% endif %} required>{{ message.text }}</textarea>
                     <small class="form-text text-muted">Использование символов ` * _ | ~ в тексте может привести к неверному форматированию сообщения.<br>Пример ссылки: [URL](http://www.example.com/)</small>
                 </div>
-
                 <div class="mb-3">
                     <label for="isSend" class="form-label">Отправлено</label>
-                    <input type="text" class="form-control" id="isSend" value="{{ 'Да' if message.is_send else 'Нет' }}" readonly>
+                    <input type="text" class="form-control container-input" id="isSend" value="{{ 'Да' if message.is_send else 'Нет' }}" readonly>
                 </div>
-
                 <div class="mb-3">
                     <label for="sendOn" class="form-label">Время отправки</label>
-                    <input type="datetime-local" class="form-control" id="sendOn" name="send_on" value="{{ message.send_on.strftime('%Y-%m-%dT%H:%M') }}" {% if is_message_sent %}readonly{% endif %} required>
+                    <input type="datetime-local" class="form-control container-input" id="sendOn" name="send_on" value="{{ message.send_on.strftime('%Y-%m-%dT%H:%M') }}" {% if is_message_sent %}readonly{% endif %} required>
                 </div>
-
                 <div class="mb-3">
                     <label for="existingPhotos" class="form-label">Прикрепленные фотографии</label>
                     <div class="d-flex flex-wrap">
@@ -38,20 +30,16 @@
                         {% endfor %}
                     </div>
                 </div>
-
                 <div class="mb-3">
                     <label for="newPhoto" class="form-label">Добавить новые фотографии</label>
-                    <input type="file" class="form-control" id="newPhoto" name="new_photos" {% if is_message_sent %}disabled{% endif %} multiple>
+                    <input type="file" class="form-control container-input " id="newPhoto" name="new_photos" {% if is_message_sent %}disabled{% endif %} multiple>
                 </div>
-
                 <div class="mt-4 d-flex justify-content-between">
                     <button type="submit" class="btn btn-primary" {% if is_message_sent %}disabled{% endif %}>Сохранить</button>
                     <a href="/admin/messages" class="btn btn-secondary">К списку сообщений</a>
                 </div>
             </form>
         </main>
-    </div>
-  </div>
 
   {% include 'footer.html' %}
   <script src="/static/js/bootstrap.bundle.min.js"></script>

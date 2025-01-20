@@ -1,9 +1,10 @@
 body {
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(to bottom, #e3f2fd, #ffffff);
+    background: #b4f6ff;
     margin: 0; /* Убираем отступы по умолчанию */
     color: #333;
 }
+
 
 #navbar {
     background-color: #343a40;
@@ -15,11 +16,7 @@ body {
     transition: height 0.3s ease;
     z-index: 1000; /* Убедитесь, что панель расположена выше контента */
 }
-#sidebar .sidebar-header h2 {
-    padding-left: 20px; /* Внутренний отступ слева */
-    padding-top: 5px;  /* Верхний отступ */
-    padding-bottom: 5px; /* Нижний отступ */
-}
+
 #navbar h1 {
     color: #fff; /* Цвет текста, если требуется */
     text-align: center; /* Центрирование текста */
@@ -28,10 +25,120 @@ body {
     font-size: 1.5rem; /* Размер шрифта, как нужно */
 }
 .admin-sidebar {
-    text-align: center;
+    top: 0;
+    text-align: relative;
     width: 100%;
-    padding: 20px;
+    overflow: auto;
+    justify-content: center;
+    overflow-y: auto;
+    z-index: 10000000;
 }
+
+.admin-hamburger {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: rgb(33, 37, 41);
+    color: white;
+}
+
+.admin-hamburger h3 {
+    font-family: Georgia, Times, 'Times New Roman', serif;
+    display: none;
+}
+
+.hamburger-area {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.navbar-toggler-icon {
+    width: 22px;
+    height: 2px;
+    background-color: rgb(255, 255, 255);
+    display: block;
+    margin: 6px 0;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+}
+.ml-auto {
+    margin-left: auto;
+}
+
+.mobile-logout {
+    display: none;
+}
+
+.nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-item {
+    margin: 0 10px;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+}
+
+.nav-link:hover {
+    text-decoration: underline;
+}
+
+#toggle-menu {
+    display: none;
+    z-index: 1000
+}
+.desctop-mobile {
+    align-items: center;
+}
+
+/* Разделитель в блоке списка сообщений и т.д... */
+.divider {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.container-input {
+    border: 2px solid rgb(114, 111, 111);
+    border-radius: 5px;
+    width: 100%;
+}
+
+.group-input {
+    display: flex;
+    right: 0;
+    background-color: #fff;
+    border: 2px solid rgb(114, 111, 111);
+    border-radius: 5px;
+    width: 200px;
+}
+
+.container-list {
+    display: flex;
+    background-color: #fff;
+    border: 2px solid rgb(114, 111, 111);
+    border-radius: 5px;
+    width: 40%;
+    bottom: 0;
+    margin: 10px 0;
+    padding: 0 20px;
+    overflow: hidden;
+}
+
 /* Элемент панели */
 .nav-item {
     display: inline-block; /* Элементы навигации располагаются в строку */
@@ -54,7 +161,7 @@ body {
 }
 
 main {
-    padding: 80px 20px 20px; /* Защита контента от верхней панели */
+    padding: 250px 20px 20px; /* Защита контента от верхней панели */
     transition: padding-top 0.3s ease;
     display: flex; /* Используем Flexbox */
     justify-content: center; /* Центрируем содержимое по горизонтали */
@@ -88,27 +195,72 @@ footer {
     body {
         font-size: 9px; /* Размер шрифта для мобильных */
     }
-
     #navbar {
         padding: 10px 0; /* Уменьшаем отступы на мобильных */
     }
-
     .nav-item a {
-        padding: 5px 10px; /* Уменьшаем отступы на мобильных */
+        padding: 5px 0px; /* Уменьшаем отступы на мобильных */
     }
-
     main {
         padding: 60px 10px 20px; /* Уменьшаем отступы для мобильных */
+        width: 80%;
+    }
+
+    .admin-hamburger h3 {
+        display: block;
+    }
+    .mobile-logout {
+        display: block;
+    }
+    .desctop-logout {
+        display: none;
+    }
+    #sidebar {
+        display: none;
+    }
+    #toggle-menu {
+        display: block;
+    }
+    #sidebar.active {
+        display: block;
+    }
+    .container-list {
+        width: 80%;
+    }
+    .desctop-mobile {
+        align-items: flex-start;
     }
 }
 
 /* Адаптивные стили для планшетов */
-@media (min-width: 601px) and (max-width: 1024px) {
+@media (min-width: 601px) and (max-width: 1023px) {
     main {
-        padding: 80px 20px 20px; /* Защита контента от верхней панели для планшетов */
+        padding: 80px 20px 20px;
     }
 
     body {
-        font-size: 12px; /* Размер шрифта для планшетов */
+        font-size: 12px;
+    }
+    .nav {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .nav-link {
+        color: white;
+        text-decoration: none;
+        font-size: 3;
+    }
+    #sidebar {
+        display: none;
+    }
+    #toggle-menu {
+        display: block;
+    }
+    
+    #sidebar.active {
+        display: block;
+    }
+    .admin-hamburger h3 {
+        display: block;
     }
 }

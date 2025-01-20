@@ -1,28 +1,23 @@
 {% extends "base.html" %}
 {% block title %}Отредактировать группу{% endblock title %}
 {% block content %}
-  <div class="container-fluid">
-    <div class="row">
-        {% include 'admin_sidebar.html' %}
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-4" style="margin-bottom: 60px;">
-            <h2>Отредактировать группу</h2>
-            {% include 'web_errors.html' %}
-            <form method="post">
-                <input type="hidden" name="_method" value="patch">
-                <div class="mb-3">
-                    <label for="name" class="form-label">Название группы:</label>
-                    <input type="text" id="name" name="name" class="form-control" value="{{ group.name }}" required>
-                </div>
-                <div class="mb-3">
-                    <label for="is_active" class="form-check-label">Активна</label>
-                    <input type="hidden" name="is_active" value="off">
-                    <input type="checkbox" id="is_active" name="is_active" value="on" class="form-check-input" {% if group.is_active %}checked{% endif %}>
-                </div>
-                <button type="submit" class="btn btn-primary">Сохранить</button>
-            </form>
-        </main>
-    </div>
-  </div>
+    <main class="container" style="margin-bottom: 60px;">
+        <h2>Отредактировать группу</h2>
+        {% include 'web_errors.html' %}
+        <form method="post">
+            <input type="hidden" name="_method" value="patch">
+            <div class="mb-3">
+                <label for="name" class="form-label">Название группы:</label>
+                <input type="text" id="name" name="name" class="form-control container-input" value="{{ group.name }}" required>
+            </div>
+            <div class="d-flex form-check form-switch form-check-reverse mb-3">
+                <label for="is_active" class="form-check-label">Активна</label>
+                <input type="hidden" name="is_active" value="off">
+                <input type="checkbox" id="is_active" name="is_active" value="on" style="margin-left: auto;" class="form-check-input container-input" {% if group.is_active %}checked{% endif %}>
+            </div>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </form>
+    </main>
 
   {% include 'footer.html' %}
   <script src="/static/js/bootstrap.bundle.min.js"></script>
