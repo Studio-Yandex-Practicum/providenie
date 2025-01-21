@@ -53,12 +53,15 @@ templates = Jinja2Templates(directory='app/templates')
 async def fetch_photos(message_id: int, session: AsyncSession) -> List:
     """Fetch all photos associated with a message ID."""
     return await crud_photo.get_all_by_attributes(
-        {'message_id': message_id}, session,
+        {'message_id': message_id},
+        session,
     )
 
 
 async def save_new_photos(
-    new_photos: List[UploadFile], message_id: int, session: AsyncSession,
+    new_photos: List[UploadFile],
+    message_id: int,
+    session: AsyncSession,
 ) -> None:
     """Save new uploaded photos and return the created photo objects."""
     directory = PathDir(STATIC_DIR)
@@ -76,7 +79,8 @@ async def save_new_photos(
                 await f.write(content)
 
             new_photo = PhotoCreate(
-                filename=file_location, message_id=message_id,
+                filename=file_location,
+                message_id=message_id,
             )
             await crud_photo.create(new_photo, session)
 
@@ -168,7 +172,8 @@ async def create_messages(
                 'text': text,
                 'errors': [
                     MAX_LENGTH_MESSAGE,
-                    f'Сократите на {abs(LENGTH_1000 - len(text))} символов.'],
+                    f'Сократите на {abs(LENGTH_1000 - len(text))} символов.',
+                ],
             },
         )
     message = MessageCreate(
@@ -180,7 +185,10 @@ async def create_messages(
     )
     new_message = await crud_message.create(message, session)
     await save_new_photos(
-        new_photos=photos, message_id=new_message.id, session=session)
+        new_photos=photos,
+        message_id=new_message.id,
+        session=session,
+    )
     if new_message.send_on < datetime.now():
         send_time = timedelta(minutes=TIMEDELTA_MIN)
     else:
@@ -189,7 +197,10 @@ async def create_messages(
     job = bot_application.job_queue.run_once(
         send_message,
         when=send_time,
-        data={'message_id': new_message.id},
+        data={
+            'message_id': new_message.id,
+            'user_id': request.user.id,
+        },
         name=f'send_mes_{new_message.id}',
         job_kwargs={
             'misfire_grace_time': None,
@@ -284,7 +295,10 @@ async def edit_message(
     )
     if new_photos:
         await save_new_photos(
-            new_photos=new_photos, message_id=message_id, session=session)
+            new_photos=new_photos,
+            message_id=message_id,
+            session=session,
+        )
         photos = await fetch_photos(message_id, session)
     job_name = f'send_mes_{updated_message.id}'
     current_jobs = bot_application.job_queue.get_jobs_by_name(job_name)
@@ -300,7 +314,10 @@ async def edit_message(
     job = bot_application.job_queue.run_once(
         send_message,
         when=send_time,
-        data={'message_id': updated_message.id},
+        data={
+            'message_id': updated_message.id,
+            'user_id': request.user.id,
+        },
         name=job_name,
         job_kwargs={
             'misfire_grace_time': None,
