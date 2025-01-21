@@ -26,10 +26,11 @@ VOLUNTEERS = {
     f'{key.OPTION}_HELP': {
         key.BUTTON_TEXT: 'Хочу стать волонтером',
         key.DESCRIPTION: (
-            'Далее необходимо заполнить заявку на сайте '
-            'перейти на нее вы можете нажав на кнопку '
+            'Чтобы стать волонтером, Вам необходимо заполнить заявку'
+            'на сайте. Нажмите кнопку ниже, чтобы перейти на форму'
+            'заполнения.'
         ),
-        key.LINK: 'https://fond-providenie.ru/donations/',
+        key.LINK: 'https://register.fond-providenie.ru/registration-volunteer',
     },
 }
 
