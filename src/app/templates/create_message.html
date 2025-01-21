@@ -7,17 +7,17 @@
             <h2>Создать новое сообщение</h2>
             <form method="post" enctype="multipart/form-data">
                 <div class="mb-3" style="">
-                    <label for="text" class="form-label">Текст сообщения:</label>
+                    <label for="text" class="form-label lead">Текст сообщения:</label>
                     <textarea id="text" name="text" class="form-control container-input" rows="3" required>{{ text }}</textarea>
-                    <small class="form-text text-muted w-100">Использование символов ` * _ | ~ в тексте может привести к неверному форматированию сообщения.<br>Пример ссылки: [URL](http://www.example.com/)</small>
+                    <h6 class="text-muted">Использование символов ` * _ | ~ в тексте может привести к неверному форматированию сообщения.<br>Пример ссылки: [URL](http://www.example.com/)</h6>
                 </div>
                 <div class="mb-3">
-                    <label for="send_on" class="form-label">Когда отправить:</label>
+                    <label for="send_on" class="form-label lead">Когда отправить:</label>
                     <input type="datetime-local" style="border: 2px solid rgb(114, 111, 111);" id="send_on" name="send_on" class="form-control">
                 </div>
                 <div class="mb-3 d-flex flex-row;" style="justify-content: space-between;">
                     <div style="d-flex flex-wrap margin-right: 5px;">
-                        <label for="group_id" class="form-label">Группы</label>
+                        <label for="group_id" class="form-label lead">Группы</label>
                         <h6 style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal; max-width: 80px;">Если не выбрано ни одной группы, пользователь входит во все группы</h6>
                     </div>
                     <div class="d-flex flex-column group-input" style="max-height: 150px; overflow-y: scroll;">
@@ -31,7 +31,7 @@
                 </div>
             </div>
                 <div class="mb-3">
-                    <label for="photos" class="form-label">Фото:</label>
+                    <label for="photos" class="form-label lead">Фото:</label>
                     <input type="file" id="photos" name="photos" class="form-control" multiple>
                 </div>
                 <button type="submit" class="btn btn-primary">Создать сообщение</button>

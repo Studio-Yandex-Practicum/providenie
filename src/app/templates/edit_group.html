@@ -7,13 +7,13 @@
         <form method="post">
             <input type="hidden" name="_method" value="patch">
             <div class="mb-3">
-                <label for="name" class="form-label">Название группы:</label>
+                <label for="name" class="form-label lead">Название группы:</label>
                 <input type="text" id="name" name="name" class="form-control container-input" value="{{ group.name }}" required>
             </div>
             <div class="d-flex form-check form-switch form-check-reverse mb-3">
-                <label for="is_active" class="form-check-label">Активна</label>
+                <label for="is_active" class="form-check-label lead">Активна</label>
                 <input type="hidden" name="is_active" value="off">
-                <input type="checkbox" id="is_active" name="is_active" value="on" style="margin-left: auto;" class="form-check-input container-input" {% if group.is_active %}checked{% endif %}>
+                <input type="checkbox" id="is_active" name="is_active" value="on" style="width: 50px; margin-left: auto;" class="form-check-input container-input" {% if group.is_active %}checked{% endif %}>
             </div>
             <button type="submit" class="btn btn-primary">Сохранить</button>
         </form>

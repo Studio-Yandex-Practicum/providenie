@@ -10,23 +10,25 @@
 </head>
 {% block content %}
 <main>
-    <div class="form-container d-flex flex-column" style="max-width: 340px; height: 330px;">
+    <div class="form-container d-flex flex-column" style="max-width: 340px; max-height: 360px;">
         <div>
             <h1>ВХОД В СИСТЕМУ</h1>
             {% if message %}
             <p style="color: red;">{{ message }}</p>
             {% endif %}
         </div>
-        <form style="margin-top: 30px;" class="d-flex flex-column" action="{{ url_for('auth_login') }}" method="post">
-            <label style="text-align: left; margin-bottom: 5px;" for="user_name">Имя пользователя:</label>
-            <input style="border-color: DeepSkyBlue; border-radius: 10px; height: 33px;" type="text" id="user_name" name="user_name" required>
-            
-            <label style="text-align: left; margin-bottom: 5px;" for="password">Пароль:</label>
-            <input style="border-color: DeepSkyBlue; border-radius: 10px; height: 33px;" style="height: 38px;" type="password" id="password" name="password" required>
-            <divclass="d-flex">
-                <button class="btn btn-primary" style="justify-content: center; width: 100px;" type="submit">Войти</button>
-            </divclass=>
-        </form>
+        <div>
+            <form style="margin-top: 30px;" class="d-flex flex-column" action="{{ url_for('auth_login') }}" method="post">
+                <label style="text-align: left; margin-bottom: 5px;" for="user_name">Имя пользователя:</label>
+                <input style="border-color: DeepSkyBlue; border-radius: 10px; height: 33px;" type="text" id="user_name" name="user_name" required>
+                
+                <label style="text-align: left; margin-bottom: 5px;" for="password">Пароль:</label>
+                <input style="border-color: DeepSkyBlue; border-radius: 10px; height: 33px;" style="height: 38px;" type="password" id="password" name="password" required>
+                <divclass="d-flex">
+                    <button class="btn btn-primary" style="justify-content: center; width: 100px;" type="submit">Войти</button>
+                </divclass=>
+            </form>
+        </div>
     </div>
 </main>
 {% endblock content %}

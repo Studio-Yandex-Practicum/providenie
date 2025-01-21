@@ -7,45 +7,45 @@
             <form action="/admin/users/create" method="post">
                 <div>
                     <div class="mb-3">
-                        <label for="tg_id" class="form-label">Telegram ID</label>
+                        <label for="tg_id" class="form-label lead">Telegram ID</label>
                         <input type="text" class="form-control container-input" id="tg_id" name="tg_id" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="first_name" class="form-label">Имя пользователя</label>
+                        <label for="first_name" class="form-label lead">Имя пользователя</label>
                         <input type="text" class="form-control container-input" id="first_name" name="first_name" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="last_name" class="form-label">Фамилия пользователя</label>
+                        <label for="last_name" class="form-label lead">Фамилия пользователя</label>
                         <input type="text" class="form-control container-input" id="last_name" name="last_name" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="user_name" class="form-label">Login (username)</label>
+                        <label for="user_name" class="form-label lead">Login (username)</label>
                         <input type="text" class="form-control container-input" id="user_name" name="user_name" required minlength="5">
                     </div>
 
                     <div class="mb-3">
-                        <label for="password" class="form-label">Пароль:</label>
+                        <label for="password" class="form-label lead">Пароль:</label>
                         <input type="password" class="form-control container-input" id="password" name="password" required>
                     </div>
 
                     <div class="d-flex flex-column">
                         <div class="d-flex form-check form-switch form-check-reverse mb-3">
-                            <label for="is_admin" class="form-check-label" style="left: 0;">Администратор:</label>
+                            <label for="is_admin" class="form-check-label lead" style="left: 0;">Администратор:</label>
                             <input class="form-check-input" style="margin-left: auto;" type="checkbox" role="switch" id="is_admin" name="is_admin">
                         </div>
 
                         <div class="d-flex form-check form-switch form-check-reverse mb-3">
-                            <label for="is_block" class="form-check-label">Заблокирован:</label>
+                            <label for="is_block" class="form-check-label lead">Заблокирован:</label>
                             <input class="form-check-input" style="margin-left: auto;" type="checkbox" role="switch" id="is_block" name="is_block">
                         </div>
                     </div>
 
                     <div class="mb-3 d-flex flex-row;" style="justify-content: space-between;">
                         <div style="d-flex flex-wrap margin-right: 5px;">
-                            <label for="group_id" class="form-label">Группы</label>
+                            <label for="group_id" class="form-label lead">Группы</label>
                             <h6 style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal; max-width: 80px;">Если не выбрано ни одной группы, пользователь входит во все группы</h6>
                         </div>
                         <div class="d-flex flex-column group-input" style="max-height: 150px; overflow-y: scroll;">
