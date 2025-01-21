@@ -82,7 +82,7 @@ async def send_message_to_user(
 async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C901
     """Отправка сообщения пользователям."""
     message_id = context.job.data['message_id']
-    user_id = context.job.data.get('user_id')  # Извлекаем ID пользователя
+    user_id = context.job.data['user_id']  # Извлекаем ID пользователя
 
     async with get_async_session_context() as session:
         message = await crud_message.get_obj_by_id(
@@ -122,14 +122,19 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
                 if user.is_active and not user.is_block:
                     await send_message_to_user(context, user.tg_id, message)
 
+        update_data = {
+            'is_send': True,
+            'sended_at': datetime.now(),
+            'update_users': message.update_users,
+        }
+
+        if not message.update_users:
+            update_data['update_users'] = user_id
+
         # Обновление статуса сообщения через CRUD-функцию
         await crud_message.update(
             db_obj=message,
-            pydantic_scheme_obj=MessageUpdate(
-                is_send=True,
-                sended_at=datetime.now(),
-                update_users=user_id,
-            ),
+            pydantic_scheme_obj=MessageUpdate(**update_data),
             session=session,
         )
 
