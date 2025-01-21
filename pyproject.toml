@@ -8,7 +8,7 @@ authors = [
     "Ирина Финатова", "Юлий Митряшкин", "Яна Денисова"
 ]
 readme = "README.md"
-package-mode = false
+#package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.11"

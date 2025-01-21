@@ -3,8 +3,6 @@ from bot.constants.info import option, text
 from bot.conversations.models import (
     AskQuestionForm,
     ChatForm,
-    FundForm,
-    VolunteerForm,
 )
 
 ALL_MENU = {
@@ -25,15 +23,8 @@ ALL_MENU = {
         key.NAME: 'Заявка на помощь',
         key.FORM_HEADER: 'Выбранная программа',
         key.BUTTON_TEXT: 'Подать заявку в Фонд',
-        key.DESCRIPTION: 'Выберите программу Фонда:',
-        key.MODEL: FundForm,
+        key.DESCRIPTION: 'Подать заявку в Фонд',
         key.OPTIONS: option.FUND,
-        key.RESPONSE: (
-            'Спасибо за ваши ответы!'
-            '\nВаша заявка отправлена. Координатор Фонда свяжется '
-            'с Вами в течение 7 рабочих дней.'
-            f'\n{text.REQUIRED_DOCUMENTS}'
-        ),
     },
     f'{key.MENU}_VOLONTEER': {
         key.NAME: 'Заявка на волонтёрство',
@@ -41,12 +32,7 @@ ALL_MENU = {
         key.DESCRIPTION: (
             'Далее необходимо предоставить информацию для координатора'
         ),
-        key.MODEL: VolunteerForm,
-        key.RESPONSE: (
-            'Спасибо за ваши ответы!'
-            '\nВаша заявка отправлена.'
-            '\nТелефон для связи с координатором Фонда +79169814619 (Юлия)'
-        ),
+        key.OPTIONS: option.VOLUNTEERS,
     },
     f'{key.MENU}_DONATORS_FAQ': {
         key.BUTTON_TEXT: 'Частые вопросы жертвователей',
@@ -95,7 +81,7 @@ ALL_MENU = {
         key.BUTTON_TEXT: 'Отчеты Фонда',
         key.DESCRIPTION: (
             'Вы сможете найти годовую отчетность Фонда, перейдя по ссылке '
-            "ниже:\n<a href='https://fond-providenie.ru/docs/'>"
+            "ниже:\n<a href='https://fond-providenie.ru/reports/'>"
             'Ссылка на страницу с отчетами Фонда</a>'
         ),
     },
