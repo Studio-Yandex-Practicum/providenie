@@ -6,7 +6,7 @@
             {% include 'web_errors.html' %}
             <h2>Создать новое сообщение</h2>
             <form method="post" enctype="multipart/form-data">
-                <div class="mb-3" style="">
+                <div class="mb-3">
                     <label for="text" class="form-label lead">Текст сообщения:</label>
                     <textarea id="text" name="text" class="form-control container-input" rows="3" required>{{ text }}</textarea>
                     <h6 class="text-muted">Использование символов ` * _ | ~ в тексте может привести к неверному форматированию сообщения.<br>Пример ссылки: [URL](http://www.example.com/)</h6>
@@ -16,7 +16,7 @@
                     <input type="datetime-local" style="border: 2px solid rgb(114, 111, 111);" id="send_on" name="send_on" class="form-control">
                 </div>
                 <div class="mb-3 d-flex flex-row;" style="justify-content: space-between;">
-                    <div style="d-flex flex-wrap margin-right: 5px;">
+                    <div class="d-flex flex-wrap me-5">
                         <label for="group_id" class="form-label lead">Группы</label>
                         <h6 style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal; max-width: 80px;">Если не выбрано ни одной группы, пользователь входит во все группы</h6>
                     </div>
@@ -37,7 +37,4 @@
                 <button type="submit" class="btn btn-primary">Создать сообщение</button>
             </form>
         </main>
-
-<script src="/static/js/bootstrap.bundle.min.js"></script>
-{% include 'footer.html' %}
 {% endblock content %}

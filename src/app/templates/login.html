@@ -1,33 +1,30 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/main.css">
-    <link rel="stylesheet" href="/static/styles.css">
-    <title>Вход в систему</title>
-</head>
+{% extends "base.html" %}
+{% block title %}Вход в систему{% endblock title %}
 {% block content %}
 <main>
-    <div class="form-container d-flex flex-column" style="max-width: 340px; max-height: 360px;">
-        <div>
-            <h1>ВХОД В СИСТЕМУ</h1>
-            {% if message %}
-            <p style="color: red;">{{ message }}</p>
-            {% endif %}
-        </div>
-        <div>
-            <form style="margin-top: 30px;" class="d-flex flex-column" action="{{ url_for('auth_login') }}" method="post">
-                <label style="text-align: left; margin-bottom: 5px;" for="user_name">Имя пользователя:</label>
-                <input style="border-color: DeepSkyBlue; border-radius: 10px; height: 33px;" type="text" id="user_name" name="user_name" required>
-                
-                <label style="text-align: left; margin-bottom: 5px;" for="password">Пароль:</label>
-                <input style="border-color: DeepSkyBlue; border-radius: 10px; height: 33px;" style="height: 38px;" type="password" id="password" name="password" required>
-                <divclass="d-flex">
-                    <button class="btn btn-primary" style="justify-content: center; width: 100px;" type="submit">Войти</button>
-                </divclass=>
-            </form>
+    <div class="d-flex justify-content-center">
+        <div class="bg-light p-4 rounded">
+            <div>
+                <h1>ВХОД В СИСТЕМУ</h1>
+                {% if message %}
+                <div class="alert alert-danger">
+                <h3>{{ message }}</h3>
+                </div>
+                {% endif %}
+            </div>
+            <div>
+                <form class="mt-3" action="{{ url_for('auth_login') }}" method="post">
+                    <label class="form-label" for="user_name"><h4>Имя пользователя:</h4></label>
+                    <input class="form-control rounded" type="text" id="user_name" name="user_name" required>
+                    
+                    <label class="form-label mt-3" for="password"><h4>Пароль:</h4></label>
+                    <input class="form-control rounded" type="password" id="password" name="password" required>
+                    <div class="d-flex justify-content-center">
+                        <button class="btn btn-primary mt-5 fs-5 w-50" type="submit">Войти</button>
+                    </div>
+                    
+                </form>
+            </div>
         </div>
     </div>
 </main>

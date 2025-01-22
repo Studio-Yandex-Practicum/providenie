@@ -1,9 +1,21 @@
 <!DOCTYPE html>
 <html lang="ru">
-{% include 'header.html' %}
-<title>{% block title %}{% endblock title %}</title>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/static/main.css">
+        <link rel="stylesheet" href="/static/styles.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <title>{% block title %}{% endblock title %}</title>
+    </head>
 <body>
-    {% block content %}{% endblock content %}
-    {% include 'footer.html' %}
+    <div class="container">
+        {% include 'admin_sidebar.html' %}
+        {% block content %}{% endblock content %}
+        {% include 'footer.html' %}
+    </div>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 </body>
 </html>
