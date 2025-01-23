@@ -1,70 +1,78 @@
 {% extends "base.html" %}
 {% block title %}Редактирование пользователя{% endblock title %}
 {% block content %}
-<main class="container" style="margin-bottom: 60px;">
-    <h2 class="my-4">Редактирование пользователя</h2>
-    {% include 'web_errors.html' %}
-    <form method="POST" action="{{ url_for('edit_user', user_id=user.id) }}">
-        <div>
-            <div class="mb-3">
-                <label for="tg_id" class="form-label lead">Telegram ID</label>
-                <input type="text" class="form-control container-input" id="tg_id" name="tg_id" required value="{{ user.tg_id }}">
+<main>
+    <div class="d-flex justify-content-center">
+        <div class="bg-light p-4 rounded">
+            <div>
+                <h2 class="my-4">Редактирование пользователя</h2>
             </div>
-
-            <div class="mb-3">
-                <label for="first_name" class="form-label lead">Имя пользователя</label>
-                <input type="text" class="form-control container-input" id="first_name" name="first_name" value="{{ user.first_name }}">
-            </div>
-
-            <div class="mb-3">
-                <label for="last_name" class="form-label lead">Фамилия пользователя</label>
-                <input type="text" class="form-control container-input" id="last_name" name="last_name" value="{{ user.last_name if user.last_name else '' }}">
-            </div>
-
-            <div class="mb-3">
-                <label for="user_name" class="form-label lead">Login (username)</label>
-                <input type="text" class="form-control container-input" id="user_name" name="user_name" required minlength="5" value="{{ user.user_name }}">
-            </div>
-
-            <div class="mb-3">
-                <label for="password" class="form-label lead">Пароль:</label>
-                <input type="password" class="form-control container-input" id="password" name="password" value="{{ user.password }}">
-            </div>
-
-            <div class="d-flex flex-column">
-                <div class="d-flex form-check form-switch form-check-reverse mb-3">
-                    <label for="is_admin" class="form-check-label lead" style="left: 0;">Администратор:</label>
-                    <input class="form-check-input" style="margin-left: auto; width: 50px;" type="checkbox" role="switch" id="is_admin" name="is_admin" {% if user.is_admin %}checked{% endif %}>
-                </div>
-
-                <div class="d-flex form-check form-switch form-check-reverse mb-3">
-                    <label for="is_block" class="form-check-label lead">Заблокирован:</label>
-                    <input class="form-check-input" style="margin-left: auto; width: 50px;" type="checkbox" role="switch" id="is_block" name="is_block" {% if user.is_block %}checked{% endif %}>
-                </div>
-            </div>
-
-            <div class="mb-3 d-flex flex-row;" style="justify-content: space-between;">
-                <div class="d-flex flex-wrap me-5">
-                    <label for="group_id" class="form-label lead">Группы</label>
-                    <h6 style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal; max-width: 80px;">Если не выбрано ни одной группы, пользователь входит во все группы</h6>
-                </div>
-                <div class="d-flex flex-column group-input" style="max-height: 150px; overflow-y: scroll;">
-                    {% for group in groups %}
-                    <div class="d-flex flex-row" style="flex-direction: column; align-items: center; margin-left: 5px; margin-top: 2px;">
-                        <input class="form-check-input" style="transform: scale(0.5); margin-bottom: 2px; margin-top: 2px; border: 2px solid rgb(114, 111, 111);" type="checkbox" id="group_{{ group.id }}" name="group_id" value="{{ group.id }}" {% if group in user.groups %}checked{% endif %}>
-                        <label style="font-size: 12px;" for="group_{{ group.id }}" class="me-2">{{ group.name }}</label>
+            {% include 'web_errors.html' %}
+            <form method="POST" action="{{ url_for('edit_user', user_id=user.id) }}">
+                <div>
+                    <div class="mb-3">
+                        <label for="tg_id" class="form-label lead">Telegram ID</label>
+                        <input type="text" class="form-control container-input" id="tg_id" name="tg_id" required value="{{ user.tg_id }}">
                     </div>
-                    {% endfor %}
-                    <input type="hidden" name="group_id" value="none">
-                </div>
-            </div>
-        </div>
 
-        <div class="d-flex mt-4" style="justify-content: space-between;">
-            <button type="submit" class="btn btn-primary">Сохранить</button>
-            <a href="/admin/users" class="btn btn-secondary">Отмена</a>
+                    <div class="mb-3">
+                        <label for="first_name" class="form-label lead">Имя пользователя</label>
+                        <input type="text" class="form-control container-input" id="first_name" name="first_name" value="{{ user.first_name }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="last_name" class="form-label lead">Фамилия пользователя</label>
+                        <input type="text" class="form-control container-input" id="last_name" name="last_name" value="{{ user.last_name if user.last_name else '' }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="user_name" class="form-label lead">Login (username)</label>
+                        <input type="text" class="form-control container-input" id="user_name" name="user_name" required minlength="5" value="{{ user.user_name }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label lead">Пароль:</label>
+                        <input type="password" class="form-control container-input" id="password" name="password" value="{{ user.password }}">
+                    </div>
+
+                    <div class="d-flex flex-column">
+                        <div class="d-flex form-check form-switch form-check-reverse mb-3">
+                            <label for="is_admin" class="form-check-label lead" style="left: 0;">Администратор:</label>
+                            <input class="form-check-input" style="margin-left: auto; width: 50px;" type="checkbox" role="switch" id="is_admin" name="is_admin" {% if user.is_admin %}checked{% endif %}>
+                        </div>
+
+                        <div class="d-flex form-check form-switch form-check-reverse mb-3">
+                            <label for="is_block" class="form-check-label lead">Заблокирован:</label>
+                            <input class="form-check-input" style="margin-left: auto; width: 50px;" type="checkbox" role="switch" id="is_block" name="is_block" {% if user.is_block %}checked{% endif %}>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 d-flex flex-row;" style="justify-content: space-between;">
+                        <div class="d-flex flex-column me-5">
+                            <label for="group_id" class="form-label lead">Группы</label>
+                            <h6 style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal; max-width: 200px;">Если не выбрано ни одной группы, пользователь входит во все группы</h6>
+                        </div>
+
+                        <div class="d-flex flex-column group-input mt-2" style="border: 2px solid #dee2e6; border-radius: 5px; width: 100%; max-height: 150px; overflow-y: scroll;">
+                            <div class="mt-1 px-2">
+                                {% for group in groups %}
+                                <div class="d-flex flex-row mt-1" style="flex-direction: column; align-items: center;">
+                                    <input class="form-check-input mb-0 mt-1" style="width: 17px; height: 17px; border: 1px solid rgb(114, 111, 111);" type="checkbox" id="group_{{ group.id }}" name="group_id" value="{{ group.id }}" {% if group in user.groups %}checked{% endif %}>
+                                    <label class="me-2 px-2 mt-1"style="font-size: 12px;" for="group_{{ group.id }}">{{ group.name }}</label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex mt-4" style="justify-content: space-between;">
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <a href="/admin/users" class="btn btn-secondary">К списку пользователей</a>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 </main>
 
 {% endblock content %}

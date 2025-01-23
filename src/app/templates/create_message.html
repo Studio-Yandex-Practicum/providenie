@@ -2,39 +2,56 @@
 {% block title %}Создать сообщение{% endblock title %}
 {% block content %}
 
-        <main class="container" style="margin-bottom: 60px;">
-            {% include 'web_errors.html' %}
-            <h2>Создать новое сообщение</h2>
-            <form method="post" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <label for="text" class="form-label lead">Текст сообщения:</label>
-                    <textarea id="text" name="text" class="form-control container-input" rows="3" required>{{ text }}</textarea>
-                    <h6 class="text-muted">Использование символов ` * _ | ~ в тексте может привести к неверному форматированию сообщения.<br>Пример ссылки: [URL](http://www.example.com/)</h6>
-                </div>
-                <div class="mb-3">
-                    <label for="send_on" class="form-label lead">Когда отправить:</label>
-                    <input type="datetime-local" style="border: 2px solid rgb(114, 111, 111);" id="send_on" name="send_on" class="form-control">
-                </div>
-                <div class="mb-3 d-flex flex-row;" style="justify-content: space-between;">
-                    <div class="d-flex flex-wrap me-5">
-                        <label for="group_id" class="form-label lead">Группы</label>
-                        <h6 style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal; max-width: 80px;">Если не выбрано ни одной группы, пользователь входит во все группы</h6>
-                    </div>
-                    <div class="d-flex flex-column group-input" style="max-height: 150px; overflow-y: scroll;">
-                        {% for group in groups %}
-                        <div class="d-flex flex-row" style="flex-direction: column; align-items: center; margin-left: 5px; margin-top: 2px;">
-                            <input class="form-check-input" style="transform: scale(0.5); margin-bottom: 2px; margin-top: 2px; border: 2px solid rgb(114, 111, 111);" type="checkbox" id="group_{{ group.id }}" name="group_id" value="{{ group.id }}">
-                            <label style="font-size: 12px;" for="group_{{ group.id }}" class="me-2">{{ group.name }}</label>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
+<main>
+    <div class="d-flex justify-content-center">
+        <div class="bg-light p-4 rounded">
+            <div>
+                <h2 class="my-4">Создать новое сообщение</h2>
             </div>
-                <div class="mb-3">
-                    <label for="photos" class="form-label lead">Фото:</label>
-                    <input type="file" id="photos" name="photos" class="form-control" multiple>
+            {% include 'web_errors.html' %}
+
+            <form method="post" enctype="multipart/form-data">
+                <div>
+                    <div class="mb-4">
+                        <textarea id="text" name="text" class="form-control container-input" rows="3" required>{{ text }}</textarea>
+                        <h6 style="max-width: 400px;" class="text-muted">Использование символов ` * _ | ~ в тексте может привести к неверному форматированию сообщения.<br>Пример ссылки: [URL](http://www.example.com/)</h6>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="send_on" class="form-label lead">Когда отправить:</label>
+                        <input type="datetime-local" style="border: 2px solid #dee2e6;" id="send_on" name="send_on" class="form-control">
+                    </div>
+
+                    <div class="mb-4 d-flex flex-row;" style="justify-content: space-between;">
+                        <div class="d-flex flex-column me-5">
+                            <label for="group_id" class="form-label lead">Группы</label>
+                            <h6 class="text-muted" style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal; max-width: 200px;">Если не выбрано ни одной группы, пользователь входит во все группы</h6>
+                        </div>
+
+                        <div class="d-flex flex-column group-input mt-2" style="border: 2px solid #dee2e6; border-radius: 5px; width: 100%; max-height: 150px; overflow-y: scroll;">
+                            <div class="mt-1 px-2">
+                                {% for group in groups %}
+                                <div class="d-flex flex-row mt-1" style="flex-direction: column; align-items: center;">
+                                    <input class="form-check-input mb-0 mt-1" style="width: 17px; height: 17px; border: 1px solid rgb(114, 111, 111);" type="checkbox" id="group_{{ group.id }}" name="group_id" value="{{ group.id }}">
+                                    <label class="me-2 px-2 mt-1"style="font-size: 12px;" for="group_{{ group.id }}">{{ group.name }}</label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="photos" class="form-label lead">Фото:</label>
+                        <input type="file" id="photos" name="photos" class="form-control" multiple>
+                    </div>
+
+                    <div class="d-flex mt-4" style="justify-content: space-between;">
+                        <button type="submit" class="btn btn-primary">Создать</button>
+                        <a href="/admin/messages" class="btn btn-secondary">К списку сообщений</a>
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Создать сообщение</button>
             </form>
-        </main>
+        </div>
+    </div>
+</main>
 {% endblock content %}
