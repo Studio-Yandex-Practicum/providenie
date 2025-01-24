@@ -7,7 +7,7 @@
     </div>
 
     <div class="d-flex justify-content-center mt-2">
-        <a href="/admin/messages/create" class="btn btn-success">Создать новое сообщение</a>
+        <a href="{{ url_for('create_messages') }}" class="btn btn-success">Создать новое сообщение</a>
     </div>
 
     <div class="row mt-5">
@@ -48,8 +48,8 @@
                     </div>
 
                     <div class="card-footer">
-                        <a href="/admin/messages/{{ message.id }}/edit" class="btn btn-primary btn-sm">Редактировать</a>
-                        <form action="/admin/messages/{{ message.id }}/delete" method="post" style="display:inline;">
+                        <a href="{{ url_for('get_edit_message_form', message_id=message.id) }}" class="btn btn-primary btn-sm">Редактировать</a>
+                        <form action="{{ url_for('delete_message', message_id=message.id) }}" method="post" style="display:inline;">
                             <button type="submit" class="btn btn-danger btn-sm" style="margin-left: 10px;">Удалить</button>
                         </form>
                     </div>
@@ -88,7 +88,7 @@
 
     {% if messages %}
         <div class="d-flex justify-content-center mt-2">
-            <a href="/admin/messages/create" class="btn btn-success">Создать новое сообщение</a>
+            <a href="{{ url_for('create_messages') }}" class="btn btn-success">Создать новое сообщение</a>
         </div>
     {% endif %}
 </main>

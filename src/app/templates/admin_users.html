@@ -23,7 +23,7 @@
     
 
     <div class="d-flex justify-content-center mt-2">
-        <a href="/admin/users/create" class="btn btn-success">Создать нового пользователя</a>
+        <a href="{{ url_for('create_users') }}" class="btn btn-success">Создать нового пользователя</a>
     </div>
 
     <div class="row mt-5">
@@ -58,7 +58,7 @@
                         {% endif %}
                     </div>
                     <div class="card-footer">
-                        <a href="/admin/users/{{ user.id }}/edit" class="btn btn-primary btn-sm">Редактировать</a>
+                        <a href="{{ url_for('edit_user', user_id=user.id) }}" class="btn btn-primary btn-sm">Редактировать</a>
                         <form action="/admin/users/{{ user.id }}/delete" method="post" style="display:inline;">
                             <button type="submit" class="btn btn-danger btn-sm mx-3">Удалить</button>
                         </form>
@@ -98,7 +98,7 @@
 
     {% if users %}
         <div class="d-flex justify-content-center mt-2">
-            <a href="/admin/users/create" class="btn btn-success">Создать нового пользователя</a>
+            <a href="{{ url_for('create_users') }}" class="btn btn-success">Создать нового пользователя</a>
         </div>
     {% endif %}
 </main>

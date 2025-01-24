@@ -7,25 +7,25 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin">
+                    <a class="nav-link" href="{{ url_for('admin_dashboard') }}">
                         <i class="fas fa-home"></i>
                         <span>Главная</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/users">
+                    <a class="nav-link" href="{{ url_for('get_users') }}">
                         <i class="fas fa-users"></i>
                         <span>Пользователи</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/groups">
+                    <a class="nav-link" href="{{ url_for('groups') }}">
                         <i class="fas fa-users-cog"></i>
                         <span>Группы</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/messages">
+                    <a class="nav-link" href="{{ url_for('messages') }}">
                         <i class="fas fa-envelope"></i>
                         <span>Сообщения</span>
                     </a>
@@ -33,7 +33,7 @@
             </ul>
             <ul class="nav d-flex mx-auto"> <!-- Выход в правом углу -->
                 <li class="nav-item">
-                    <a class="nav-link text-danger" href="/auth/logout">
+                    <a class="nav-link text-danger" href="{{ url_for('logout') }}">
                         <i class="fas fa-sign-out-alt"></i>
                         <span>Выход</span>
                     </a>

@@ -9,7 +9,7 @@
             </div>
             {% include 'web_errors.html' %}
 
-            <form action="/admin/messages/{{ message.id }}/update" method="post" enctype="multipart/form-data">
+            <form action="{{ url_for('get_edit_message_form', message_id=message.id) }}" method="post" enctype="multipart/form-data">
                 <div>
                     <div class="mb-3">
                         <textarea class="form-control container-input" id="messageText" name="text" rows="5" {% if is_message_sent %}readonly{% endif %} required>{{ message.text }}</textarea>
@@ -48,7 +48,7 @@
 
                     <div class="d-flex mt-4" style="justify-content: space-between;">
                         <button type="submit" class="btn btn-primary" {% if is_message_sent %}disabled{% endif %}>Сохранить</button>
-                        <a href="/admin/messages" class="btn btn-secondary">К списку сообщений</a>
+                        <a href="{{ url_for('messages') }}" class="btn btn-secondary">К списку сообщений</a>
                     </div>
                 </div>
             </form>
