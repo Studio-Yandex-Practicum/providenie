@@ -33,7 +33,7 @@
                                 {% for photo in photos %}
                                     <div class="position-relative m-2">
                                         <img src="{{ photo.url }}" alt="Фото" class="img-thumbnail" width="150">
-                                        <button type="submit" formaction="/admin/messages/{{ message.id }}/photos/{{ photo.id }}/delete"
+                                        <button type="submit" formaction="{{ url_for('delete_photo_from_message', message_id=message.id, photo_id=photo.id) }}"
                                                 class="btn btn-danger btn-sm position-absolute top-0 end-0 {% if is_message_sent %}disabled{% endif %}">Удалить</button>
                                     </div>
                                 {% endfor %}
