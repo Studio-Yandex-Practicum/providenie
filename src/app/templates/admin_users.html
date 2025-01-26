@@ -1,81 +1,106 @@
 {% extends "base.html" %}
 {% block title %}Пользователи{% endblock title %}
 {% block content %}
-  <div class="container-fluid">
-    <div class="row">
-        {% include 'admin_sidebar.html' %}
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" style="margin-bottom: 60px;">
-            <h2>Пользователи</h2>
-
-            <form method="get" class="mb-4">
-                <label for="group_id">Группа:</label>
-                <select name="group_id" id="group_id">
+<main class="container mb-5">
+    <div class="d-flex justify-content-center mt-2">
+        <h2>Пользователи</h2>
+    </div>
+    
+    <div class="d-flex justify-content-center mt-2">
+        <form method="get" class="mb-4 mt-4">
+            <div class="d-flex align-items-center">
+                <label class="form-label fs-5" for="group_id">Группа:</label>
+                <select class="form-select mx-2 my-2" name="group_id" id="group_id">
                     <option value="">Все</option>
                     {% for group in groups %}
                     <option value="{{ group.id }}" {% if group.id == group_id %} selected {% endif %}>{{ group.name }}</option>
                     {% endfor %}
                 </select>
-                <button type="submit" class="btn btn-primary">Фильтровать</button>
-            </form>
-            <div class="table-responsive">
-              <table class="table table-striped">
-                  <thead>
-                      <tr>
-                          <th>ID пользователя</th>
-                          <th>Имя</th>
-                          <th>Группы</th>
-                          <th>Действия</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      {% for user in users %}
-                      <tr>
-                          <td>{{ user.id }}</td>
-                          <td>{{ user.first_name }} {{ user.last_name }}</td>
-                          <td>
-                              {% for group in user.groups %}
-                                  {{ group.name }}{% if not loop.last %}, {% endif %}
-                              {% endfor %}
-                          </td>
-                          <td>
-                              <a href="/admin/users/{{ user.id }}/edit" class="btn btn-warning btn-sm">Изменить</a>
-                          </td>
-                      </tr>
-                      {% endfor %}
-                  </tbody>
-              </table>
+                <button type="submit" class="btn btn-primary">Отобрать</button>
             </div>
-
-            <nav aria-label="Навигация по страницам">
-                <ul class="pagination">
-                    {% if page > 1 %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page - 1 }}" aria-label="Предыдущая">
-                            <span aria-hidden="true">&laquo;</span> Назад
-                        </a>
-                    </li>
-                    {% endif %}
-                    {% for p in range(1, total_pages + 1) %}
-                    <li class="page-item {% if p == page %}active{% endif %}">
-                        <a class="page-link" href="?page={{ p }}">{{ p }}</a>
-                    </li>
-                    {% endfor %}
-
-                    {% if page < total_pages %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page + 1 }}" aria-label="Следующая">
-                            Вперед <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </nav>
-
-            <a href="/admin/users/create" class="btn btn-success">Создать нового пользователя</a>
-        </main>
+        </form>
     </div>
-  </div>
+    
 
-  <script src="/static/js/bootstrap.bundle.min.js"></script>
-  {% include 'footer.html' %}
+    <div class="d-flex justify-content-center mt-2">
+        <a href="{{ url_for('create_users') }}" class="btn btn-success">Создать нового пользователя</a>
+    </div>
+
+    <div class="row mt-5">
+        {% for user in users %}
+            <div class="col-12 col-sm-6 col-lg-4 mb-3">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            {% if user.is_block %}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            {% else %}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="lime" class="bi bi-check-circle" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                    <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                                </svg>
+                            {% endif %}
+                            <h4 class="mb-0 mx-2">{{ user.first_name }}</h4>
+                        </div>
+                        {% if user.is_admin %}
+                            <p class="mt-2 mb-2 text-danger">Администратор</p>
+                        {% endif %}
+                        {% if user.groups %}
+                            <div class="d-flex align-items-center mt-2">
+                                <p class="m-0">Группы:&nbsp;</p>
+                                {% for group in user.groups %}
+                                    <p class="m-0">{{ group.name }}{% if not loop.last %}, &nbsp; {% endif %}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{ url_for('edit_user', user_id=user.id) }}" class="btn btn-primary btn-sm">Редактировать</a>
+                        <form action="/admin/users/{{ user.id }}/delete" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm mx-3">Удалить</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="d-flex justify-content-center mt-2">
+        <nav aria-label="Навигация по страницам">
+            <ul class="pagination">
+                {% if page > 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page - 1 }}" aria-label="Предыдущая">
+                        <span aria-hidden="true">&laquo;</span> Назад
+                    </a>
+                </li>
+                {% endif %}
+                {% for p in range(1, total_pages + 1) %}
+                <li class="page-item {% if p == page %}active{% endif %}">
+                    <a class="page-link" href="?page={{ p }}">{{ p }}</a>
+                </li>
+                {% endfor %}
+
+                {% if page < total_pages %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page + 1 }}" aria-label="Следующая">
+                        Вперед <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+
+
+    {% if users %}
+        <div class="d-flex justify-content-center mt-2">
+            <a href="{{ url_for('create_users') }}" class="btn btn-success">Создать нового пользователя</a>
+        </div>
+    {% endif %}
+</main>
+
 {% endblock content %}

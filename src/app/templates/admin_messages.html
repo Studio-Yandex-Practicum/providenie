@@ -1,71 +1,95 @@
 {% extends "base.html" %}
 {% block title %}Список сообщений{% endblock title %}
 {% block content %}
-  <div class="container-fluid">
-    <div class="row">
-        {% include 'admin_sidebar.html' %}
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-4" style="margin-bottom: 60px;">
-            <h2>Список сообщений</h2>
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>ID Сообщения</th>
-                            <th>Текст</th>
-                            <th>Когда отправить</th>
-                            <th>Отправлено</th>
-                            <th>Действия</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for message in messages|reverse %}
-                        <tr>
-                            <td>{{ message.id }}</td>
-                            <td>{{ message.text }}</td>
-                            <td>{{ message.send_on.strftime('%d.%m.%Y %H:%M') }}</td>
-                            <td>{{ message.sended_at.strftime('%d.%m.%Y %H:%M') if message.is_send else 'Нет' }}</td>
-                            <td>
-                                <a href="/admin/messages/{{ message.id }}/edit" class="btn btn-warning btn-sm">Изменить</a>
-                                <form action="/admin/messages/{{ message.id }}/delete" method="post" style="display:inline;">
-                                    <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
-                                </form>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-
-            <nav aria-label="Навигация по страницам">
-                <ul class="pagination">
-                    {% if page > 1 %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page - 1 }}" aria-label="Предыдущая">
-                            <span aria-hidden="true">&laquo;</span> Назад
-                        </a>
-                    </li>
-                    {% endif %}
-                    {% for p in range(1, total_pages + 1) %}
-                    <li class="page-item {% if p == page %}active{% endif %}">
-                        <a class="page-link" href="?page={{ p }}">{{ p }}</a>
-                    </li>
-                    {% endfor %}
-
-                    {% if page < total_pages %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page + 1 }}" aria-label="Следующая">
-                            Вперед <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </nav>
-
-            <a href="/admin/messages/create" class="btn btn-success">Создать новое сообщение</a>
-        </main>
+<main class="container mb-5">
+    <div class="d-flex justify-content-center mt-2">
+        <h2>Список сообщений</h2>
     </div>
-  </div>
 
-  {% include 'footer.html' %}
-  <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <div class="d-flex justify-content-center mt-2">
+        <a href="{{ url_for('create_messages') }}" class="btn btn-success">Создать новое сообщение</a>
+    </div>
+
+    <div class="row mt-5">
+        {% for message in messages|reverse %}
+            <div class="col-12 col-sm-6 col-lg-4 mb-3">
+                <div class="card shadow-sm h-100">
+
+                    <div class="card-body">
+                        <div>
+                            <h6 style="font-size: 15px; word-wrap: break-word; overflow-wrap: break-word;">{{ message.text | truncate(250, True, '...', 0) }}</h6>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="d-flex flex-row align-items-center mx-2 mb-2">
+                        <div class="d-flex flex-column px-3">
+                            <h6 class="mb-1">Дата отправки:</h6>
+                            <h6 class="mb-1">Отправлено:</h6>
+                        </div>
+                        
+                        <div class="d-flex flex-column px-3">
+                            <h6 class="mb-1">{{ message.send_on.strftime('%d.%m.%Y %H:%M') }}</h6>
+                            <h6 class="mb-1">{{ message.sended_at.strftime('%d.%m.%Y %H:%M') if message.is_send else 'Нет' }}</h6>
+                        </div>
+
+                        <div class="d-flex align-items-center" style="margin-left: auto;">
+                            {% if message.is_send %}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="lime" class="bi bi-check-circle" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                    <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                                </svg>
+                            {% else %}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="DeepSkyBlue" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                                    <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+                                    <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+                                </svg>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <a href="{{ url_for('get_edit_message_form', message_id=message.id) }}" class="btn btn-primary btn-sm">Редактировать</a>
+                        <form action="{{ url_for('delete_message', message_id=message.id) }}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm" style="margin-left: 10px;">Удалить</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="d-flex justify-content-center mt-2">
+        <nav aria-label="Навигация по страницам">
+            <ul class="pagination">
+                {% if page > 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page - 1 }}" aria-label="Предыдущая">
+                        <span aria-hidden="true">&laquo;</span> Назад
+                    </a>
+                </li>
+                {% endif %}
+                {% for p in range(1, total_pages + 1) %}
+                <li class="page-item {% if p == page %}active{% endif %}">
+                    <a class="page-link" href="?page={{ p }}">{{ p }}</a>
+                </li>
+                {% endfor %}
+
+                {% if page < total_pages %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page + 1 }}" aria-label="Следующая">
+                        Вперед <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+
+    {% if messages %}
+        <div class="d-flex justify-content-center mt-2">
+            <a href="{{ url_for('create_messages') }}" class="btn btn-success">Создать новое сообщение</a>
+        </div>
+    {% endif %}
+</main>
 {% endblock content %}

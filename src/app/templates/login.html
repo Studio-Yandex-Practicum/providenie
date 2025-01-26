@@ -1,18 +1,31 @@
-<!DOCTYPE html>
 {% extends "base.html" %}
-{% block title %}Вход{% endblock title %}
+{% block title %}Вход в систему{% endblock title %}
 {% block content %}
-    <div class="form-container">
-        <h1>Вход</h1>
-        {% if message %}
-        <p style="color: red;">{{ message }}</p>
-        {% endif %}
-        <form action="{{ url_for('auth_login') }}" method="post">
-            <label for="user_name">Имя пользователя:</label>
-            <input type="text" id="user_name" name="user_name" required>
-            <label for="password">Пароль:</label>
-            <input type="password" id="password" name="password" required>
-            <button type="submit">Войти</button>
-        </form>
+<main>
+    <div class="d-flex justify-content-center">
+        <div class="bg-light p-4 rounded">
+            <div>
+                <h1>ВХОД В СИСТЕМУ</h1>
+                {% if message %}
+                <div class="alert alert-danger">
+                <h3>{{ message }}</h3>
+                </div>
+                {% endif %}
+            </div>
+            <div>
+                <form class="mt-3" action="{{ url_for('auth_login') }}" method="post">
+                    <label class="form-label" for="user_name"><h4>Имя пользователя:</h4></label>
+                    <input class="form-control rounded" type="text" id="user_name" name="user_name" required>
+                    
+                    <label class="form-label mt-3" for="password"><h4>Пароль:</h4></label>
+                    <input class="form-control rounded" type="password" id="password" name="password" required>
+                    <div class="d-flex justify-content-center">
+                        <button class="btn btn-primary mt-5 fs-5 w-50" type="submit">Войти</button>
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
     </div>
+</main>
 {% endblock content %}
