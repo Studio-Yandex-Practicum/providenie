@@ -4,14 +4,14 @@ name: providenie
 services:
   app:
     build: ../src
-    restart: unless-stopped
+    restart: always
     environment:
       - RUN_IN_DOCKER=1
       - TZ=Europe/Moscow
     env_file:
       - ./.env
     volumes:
-      - ./logs/:/app/bot/.data/
+      - ./logs/:/app/bot/.data/logs/
 
     depends_on:
       - db
@@ -25,18 +25,23 @@ services:
 
   db:
     image: postgres:17-alpine
-    restart: unless-stopped
+    restart: always
     environment:
       - TZ=Europe/Moscow
-    env_file:
+    env_file: 
       - path: ./.env
         required: true
     volumes:
       - db_data:/var/lib/postgresql/data
-      - db_logs:/var/log/postgresql
+      - ./logs/:/var/log/
+    command: ["postgres", "-c", "logging_collector=on", "-c", "log_directory=/var/log", "-c", "log_filename=postgresql.log", "-c", "log_statement=all"]
     ports:
       - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   db_data:
-  db_logs:
