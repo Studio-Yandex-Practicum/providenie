@@ -93,6 +93,10 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
         if not message:
             return  # Если сообщение не найдено, выходим из функции
 
+        if message.is_send:
+            return
+
+        users_to_notify = set()
         groups = message.groups
         if groups:
             # Если у сообщения есть группы,
@@ -105,9 +109,6 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
                 for user in group.users
                 if user.is_active
             }
-
-            for user_id in users_to_notify:
-                await send_message_to_user(context, user_id, message)
         else:
             # Если групп нет, получаем всех активных пользователей,
             # исключая администратора и заблокированных
@@ -117,10 +118,14 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
                 },
                 session=session,
             )
+            users_to_notify = {
+                user.tg_id
+                for user in active_users
+                if user.is_active and not user.is_block
+            }
 
-            for user in active_users:
-                if user.is_active and not user.is_block:
-                    await send_message_to_user(context, user.tg_id, message)
+        for user_id in users_to_notify:
+            await send_message_to_user(context, user_id, message)
 
         update_data = {
             'is_send': True,
