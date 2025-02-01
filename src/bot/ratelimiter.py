@@ -6,11 +6,13 @@ from typing import Any
 from telegram import InputMediaPhoto
 from telegram.constants import ParseMode
 from telegram.ext import Application, ContextTypes
+from telegram.error import BadRequest, Forbidden
 
 from app.core.db import get_async_session_context
 from app.crud.message import crud_message
 from app.crud.user_tg import crud_user
 from app.schemas.message import MessageUpdate
+from app.models.models import MessageStatus
 
 
 async def load_unsent_messages(context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -96,6 +98,7 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
         if message.is_send:
             return
 
+        existing_statuses = crud_message.get_message_statuses(session, message_id)
         users_to_notify = set()
         groups = message.groups
         if groups:
@@ -123,25 +126,44 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
                 for user in active_users
                 if user.is_active and not user.is_block
             }
-
-        for user_id in users_to_notify:
-            await send_message_to_user(context, user_id, message)
-
-        update_data = {
-            'is_send': True,
-            'sended_at': datetime.now(),
-            'update_users': message.update_users,
-        }
-
-        if not message.update_users:
-            update_data['update_users'] = user_id
-
-        # Обновление статуса сообщения через CRUD-функцию
-        await crud_message.update(
-            db_obj=message,
-            pydantic_scheme_obj=MessageUpdate(**update_data),
-            session=session,
-        )
+        new_statuses = [
+            MessageStatus(message_id=message.id, user_id=user_id, status='pending')
+            for user_id in users_to_notify - existing_statuses.keys()
+        ]
+        session.add_all(new_statuses)
+        session.commit()
+        statuses = crud_message.get_message_statuses(session, message_id)
+        for user_id, status in statuses.items():
+            if status.status == 'sent':
+                continue
+            try:
+                await send_message_to_user(context, user_id, message)
+                status.status = 'sent'
+                status.error_reason = None
+                update_data = {
+                    'is_send': True,
+                    'sended_at': datetime.now(),
+                    'update_users': message.update_users,
+                }
+                if not message.update_users:
+                    update_data['update_users'] = user_id
+                # Обновление статуса сообщения через CRUD-функцию
+                await crud_message.update(
+                    db_obj=message,
+                    pydantic_scheme_obj=MessageUpdate(**update_data),
+                    session=session,
+                )
+            except (BadRequest, Forbidden) as e:
+                #Если указан неверный tg_id, или пользователь удалил аккаунт,
+                #или пользователь удалил бота
+                error_msg = str(e)
+                logging.error(f'Отправка сообщения отменена из-за ошибки {error_msg}')
+                session.delete(status)
+            except Exception as e:
+                error_msg = str(e)
+                status.status = 'failed'
+                status.error_reason = error_msg
+        await session.commit()
 
 
 async def ptb_post_init(app: Application) -> None:

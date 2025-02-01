@@ -9,6 +9,7 @@ from sqlalchemy import (
     DateTime,
     ForeignKey,
     String,
+    Enum,
 )
 from sqlalchemy.orm import relationship
 
@@ -54,6 +55,12 @@ class UserTG(Base):
     hashed_password = Column(String, nullable=True)
     is_active = Column(Boolean, default=True)
 
+    message_statuses = relationship(
+        'MessageStatus',
+        bacl_populates='user',
+        lazy='joined'
+    )
+
     __table_args__ = (
         CheckConstraint(
             'length(user_name) >= 5',
@@ -94,6 +101,11 @@ class Message(Base):
     update_users = Column(BigInteger, ForeignKey('user_tg.id'), nullable=False)
     sended_at = Column(DateTime, nullable=True)
 
+    message_statuses = relationship(
+        'MessageStatus',
+        bacl_populates='message',
+        lazy='joined'
+    )
     # Связь с группами
     groups = relationship(
         'Group',
@@ -114,3 +126,23 @@ class Photo(Base):
         """Get url file."""
         file = pathlib.Path(self.filename).name
         return f'/static/photos/{file}'
+
+
+class MessageStatus(Base):
+    """Message status model."""
+
+    __tablename__ = 'message_status'
+
+    message_id = Column(ForeignKey('message.id'))
+    user_id = Column(ForeignKey('user_tg.id'))
+    status = Column(Enum('pending', 'sent', 'failed'), default='pending')
+    error_reason = Column(String, nullable=True)
+
+    message = relationship(
+        'Message',
+        back_populates='message_statuses',
+    )
+    user = relationship(
+        'UserTG',
+        back_populates='message_statuses',
+    )

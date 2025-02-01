@@ -4,7 +4,7 @@ from sqlalchemy import not_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud.base import CRUDBase
-from app.models.models import Group, Message, MessageGroupAssociation
+from app.models.models import Group, Message, MessageGroupAssociation, MessageStatus
 from app.schemas.message import MessageCreate
 
 ModelType = TypeVar('ModelType')
@@ -52,6 +52,13 @@ class CRUDMessage(CRUDBase):
         )
 
         return unsent_messages.unique().scalars().all()
+
+    async def get_message_statuses(self, session: AsyncSession, message_id: int):
+        """Get statuses."""
+        statuses = await session.execute(
+            select(MessageStatus).where(MessageStatus.message_id == message_id)
+        )
+        return {s.user_id: s for s in statuses.scalars().all()}
 
 
 crud_message = CRUDMessage(Message)
