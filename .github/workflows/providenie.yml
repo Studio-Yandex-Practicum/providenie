@@ -1,34 +1,54 @@
-name: bot-providenie workflow
+name: Providenie CI/CD Workflow
 
 on:
   push:
     branches: [release]
 
-jobs:
-  build_and_deploy:
-    runs-on: ubuntu-latest
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 
+jobs:
+  build_and_push_ghcr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Build and push Docker image for Production
+        if: github.ref == 'refs/heads/master'
+        uses: docker/build-push-action@v5
+        with:
+          context: ./src/
+          file: ./src/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs:
+      - build_and_push_ghcr
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.12
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Run Tests
-        run: |
-          pytest --maxfail=1 --disable-warnings -q
-
-      - name: Build Docker image
-        run: |
-          docker build -t providenie-app -f Dockerfile .
 
       - name: Upload project files to remote server
         uses: appleboy/scp-action@master
@@ -37,8 +57,8 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.PORT }}
-          source: "src/,Dockerfile,docker-compose.yaml,requirements.txt"
-          target: /home/${{ secrets.USER }}/providenie
+          source: "infra/"
+          target: /etc/providenie
 
       - name: Build and Deploy on Remote Server
         uses: appleboy/ssh-action@master
@@ -48,7 +68,8 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            cd /home/${{ secrets.USER }}/providenie
+            cd /etc/providenie
+            cp providenie.service /etc/systemd/system/.
             rm -f .env
             touch .env
             echo TELEGRAM_TOKEN="${{ secrets.TELEGRAM_TOKEN }}" >> .env
@@ -67,7 +88,5 @@ jobs:
             echo TOKEN_SECRET_KEY="${{ secrets.TOKEN_SECRET_KEY }}" >> .env
             echo TOKEN_ALGORITHM="${{ secrets.TOKEN_ALGORITHM }}" >> .env
             echo TOKEN_EXPIRE_MINUTES="${{ secrets.TOKEN_EXPIRE_MINUTES }}" >> .env
-            docker compose --file docker-compose.yaml stop
-            docker compose --file docker-compose.yaml rm bot -f
-            docker compose --file docker-compose.yaml up --build -d
+            if [ ! systemctl is-enabled providenie.service ]; then systemctl enable providenie.service --now; else systemctl reload providenie.service; fi
             docker compose exec app alembic upgrade head
