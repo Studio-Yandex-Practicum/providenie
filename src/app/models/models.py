@@ -4,8 +4,15 @@ from datetime import datetime
 from app.core.db import Base
 from app.models.constants import LENGTH_32, LENGTH_64, LENGTH_1000
 
-from sqlalchemy import (BigInteger, Boolean, CheckConstraint, Column, DateTime,
-                        Enum, ForeignKey, String)
+from sqlalchemy import (
+    BigInteger,
+    Boolean,
+    CheckConstraint,
+    Column,
+    DateTime,
+    Enum,
+    ForeignKey,
+    String)
 from sqlalchemy.orm import relationship
 
 

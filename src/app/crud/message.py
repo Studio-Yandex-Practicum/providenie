@@ -1,4 +1,4 @@
-from typing import TypeVar
+from typing import Dict, TypeVar
 
 from app.crud.base import CRUDBase
 from app.models.models import (Group, Message, MessageGroupAssociation,
@@ -55,7 +55,11 @@ class CRUDMessage(CRUDBase):
 
         return unsent_messages.unique().scalars().all()
 
-    async def get_message_statuses(self, session: AsyncSession, message_id: int):
+    async def get_message_statuses(
+        self,
+        session: AsyncSession,
+        message_id: int
+    ) -> Dict[int, MessageStatus]:
         """Get statuses."""
         statuses = await session.execute(
             select(MessageStatus).where(MessageStatus.message_id == message_id)
