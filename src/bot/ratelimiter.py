@@ -3,16 +3,16 @@ import logging
 from datetime import datetime, timedelta
 from typing import Any
 
-from telegram import InputMediaPhoto
-from telegram.constants import ParseMode
-from telegram.ext import Application, ContextTypes
-from telegram.error import BadRequest, Forbidden
-
 from app.core.db import get_async_session_context
 from app.crud.message import crud_message
 from app.crud.user_tg import crud_user
-from app.schemas.message import MessageUpdate
 from app.models.models import MessageStatus
+from app.schemas.message import MessageUpdate
+
+from telegram import InputMediaPhoto
+from telegram.constants import ParseMode
+from telegram.error import BadRequest, Forbidden
+from telegram.ext import Application, ContextTypes
 
 
 async def load_unsent_messages(context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -127,7 +127,11 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
                 if user.is_active and not user.is_block
             }
         new_statuses = [
-            MessageStatus(message_id=message.id, user_id=user_id, status='pending')
+            MessageStatus(
+                message_id=message.id,
+                user_id=user_id,
+                status='pending'
+            )
             for user_id in users_to_notify - existing_statuses.keys()
         ]
         session.add_all(new_statuses)
@@ -157,7 +161,9 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
                 #Если указан неверный tg_id, или пользователь удалил аккаунт,
                 #или пользователь удалил бота
                 error_msg = str(e)
-                logging.error(f'Отправка сообщения отменена из-за ошибки {error_msg}')
+                logging.error(
+                    f'Отправка сообщения отменена из-за ошибки {error_msg}'
+                )
                 session.delete(status)
             except Exception as e:
                 error_msg = str(e)

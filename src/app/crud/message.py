@@ -1,11 +1,13 @@
 from typing import TypeVar
 
+from app.crud.base import CRUDBase
+from app.models.models import (Group, Message, MessageGroupAssociation,
+                               MessageStatus)
+from app.schemas.message import MessageCreate
+
 from sqlalchemy import not_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.crud.base import CRUDBase
-from app.models.models import Group, Message, MessageGroupAssociation, MessageStatus
-from app.schemas.message import MessageCreate
 
 ModelType = TypeVar('ModelType')
 
