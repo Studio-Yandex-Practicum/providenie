@@ -176,6 +176,8 @@ async def create_messages(
                 ],
             },
         )
+
+    # Создаем новое сообщение
     message = MessageCreate(
         text=text,
         create_user=request.user.id,
@@ -184,11 +186,16 @@ async def create_messages(
         send_on=send_on if send_on else datetime.now(),
     )
     new_message = await crud_message.create(message, session)
-    await save_new_photos(
-        new_photos=photos,
-        message_id=new_message.id,
-        session=session,
-    )
+
+    # Сохраняем новые фото
+    if photos:
+        await save_new_photos(
+            new_photos=photos,
+            message_id=new_message.id,
+            session=session,
+        )
+
+    # Планируем отправку сообщения
     if new_message.send_on < datetime.now():
         send_time = timedelta(minutes=TIMEDELTA_MIN)
     else:
@@ -202,9 +209,7 @@ async def create_messages(
             'user_id': request.user.id,
         },
         name=f'send_mes_{new_message.id}',
-        job_kwargs={
-            'misfire_grace_time': None,
-        },
+        job_kwargs={'misfire_grace_time': None},
     )
     logging.info(f'Запланирована задача {job.name} на {job.next_t}')
 
@@ -256,6 +261,9 @@ async def edit_message(
     send_on: Optional[datetime] = Form(None),
     message_id: int = Path(..., title='Message id in DB'),
     new_photos: List[UploadFile] = File(None),
+    deleted_photo_ids: Optional[List[int]] = Form(
+        None,
+    ),  # Новые параметры для удаления фото
     session: AsyncSession = Depends(get_async_session),
 ) -> HTMLResponse:
     """Endpoint to edit an existing message."""
@@ -265,6 +273,7 @@ async def edit_message(
             status_code=status.HTTP_404_NOT_FOUND,
             detail='Message with this ID not found.',
         )
+
     if text and len(text) > LENGTH_1000:
         photos = await fetch_photos(message_id, session)
         return templates.TemplateResponse(
@@ -281,6 +290,8 @@ async def edit_message(
                 ],
             },
         )
+
+    # Обновляем сообщение
     message = MessageUpdate(
         text=text,
         is_send=is_send,
@@ -293,13 +304,23 @@ async def edit_message(
         message,
         session,
     )
+
+    # Удаляем выбранные фото
+    if deleted_photo_ids:
+        for photo_id in deleted_photo_ids:
+            existing_photo = await crud_photo.get_obj_by_id(photo_id, session)
+            if existing_photo:
+                await crud_photo.delete(existing_photo, session)
+
+    # Добавляем новые фото
     if new_photos:
         await save_new_photos(
             new_photos=new_photos,
             message_id=message_id,
             session=session,
         )
-        photos = await fetch_photos(message_id, session)
+
+    # Обновляем задачу для отправки сообщения
     job_name = f'send_mes_{updated_message.id}'
     current_jobs = bot_application.job_queue.get_jobs_by_name(job_name)
     if current_jobs:
@@ -319,19 +340,14 @@ async def edit_message(
             'user_id': request.user.id,
         },
         name=job_name,
-        job_kwargs={
-            'misfire_grace_time': None,
-        },
+        job_kwargs={'misfire_grace_time': None},
     )
     logging.info(f'Запланирована задача {job.name} на {job.next_t}')
 
-    return templates.TemplateResponse(
-        'edit_message.html',
-        {
-            'request': request,
-            'message': updated_message,
-            'photos': photos,
-        },
+    # Перенаправляем пользователя обратно на форму редактирования
+    return RedirectResponse(
+        url=f'/admin/messages/{message_id}/edit',
+        status_code=status.HTTP_303_SEE_OTHER,
     )
 
 
@@ -386,19 +402,22 @@ async def delete_photo_from_message(
     photo_id: int,
     session: AsyncSession = Depends(get_async_session),
 ) -> HTMLResponse:
-    """Endpoint for delete photo from message."""
+    """Endpoint for deleting a photo from a message."""
     existing_message = await crud_message.get_obj_by_id(message_id, session)
-    existing_photo = await crud_photo.get_obj_by_id(
-        obj_id=photo_id,
-        session=session,
-    )
+    existing_photo = await crud_photo.get_obj_by_id(photo_id, session)
+
     if not existing_message or not existing_photo:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail='Message or photo with this ID not found.',
         )
+
+    # Удаляем фото из базы данных
     await crud_photo.delete(existing_photo, session)
+
+    # Получаем обновленный список фото
     photos = await fetch_photos(message_id, session)
+
     return templates.TemplateResponse(
         'edit_message.html',
         {'request': request, 'message': existing_message, 'photos': photos},
