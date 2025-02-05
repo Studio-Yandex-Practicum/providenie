@@ -98,7 +98,9 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
         if message.is_send:
             return
 
-        existing_statuses = crud_message.get_message_statuses(session, message_id)
+        existing_statuses = crud_message.get_message_statuses(
+            session, message_id
+        )
         users_to_notify = set()
         groups = message.groups
         if groups:
@@ -130,7 +132,7 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
             MessageStatus(
                 message_id=message.id,
                 user_id=user_id,
-                status='pending'
+                status='pending',
             )
             for user_id in users_to_notify - existing_statuses.keys()
         ]
@@ -143,7 +145,6 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
             try:
                 await send_message_to_user(context, user_id, message)
                 status.status = 'sent'
-                status.error_reason = None
                 update_data = {
                     'is_send': True,
                     'sended_at': datetime.now(),
@@ -157,18 +158,27 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
                     pydantic_scheme_obj=MessageUpdate(**update_data),
                     session=session,
                 )
+                session.delete(status)
             except (BadRequest, Forbidden) as e:
                 #Если указан неверный tg_id, или пользователь удалил аккаунт,
-                #или пользователь удалил бота
+                #или пользователь удалил бота.
                 error_msg = str(e)
                 logging.error(
-                    f'Отправка сообщения отменена из-за ошибки {error_msg}'
+                    f'Отправка сообщения отменена из-за ошибки {error_msg}',
                 )
                 session.delete(status)
             except Exception as e:
-                error_msg = str(e)
-                status.status = 'failed'
-                status.error_reason = error_msg
+                #Повторная отправка в случае сетевых ошибок.
+                await asyncio.sleep(10)
+                context.job_queue.run_once(
+                    send_message,
+                    when=10,
+                    data={
+                        'message_id': message_id,
+                        'user_id': user_id
+                    },
+                    name=f'retry_send_mes_{message_id}'
+                )
         await session.commit()
 
 

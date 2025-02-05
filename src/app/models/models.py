@@ -1,9 +1,6 @@
 import pathlib
 from datetime import datetime
 
-from app.core.db import Base
-from app.models.constants import LENGTH_32, LENGTH_64, LENGTH_1000
-
 from sqlalchemy import (
     BigInteger,
     Boolean,
@@ -14,6 +11,9 @@ from sqlalchemy import (
     ForeignKey,
     String)
 from sqlalchemy.orm import relationship
+
+from app.core.db import Base
+from app.models.constants import LENGTH_32, LENGTH_64, LENGTH_1000
 
 
 class MessageGroupAssociation(Base):
@@ -57,7 +57,7 @@ class UserTG(Base):
     message_statuses = relationship(
         'MessageStatus',
         bacl_populates='user',
-        lazy='joined'
+        lazy='joined',
     )
 
     __table_args__ = (
@@ -103,7 +103,7 @@ class Message(Base):
     message_statuses = relationship(
         'MessageStatus',
         bacl_populates='message',
-        lazy='joined'
+        lazy='joined',
     )
     # Связь с группами
     groups = relationship(
@@ -134,8 +134,7 @@ class MessageStatus(Base):
 
     message_id = Column(ForeignKey('message.id'))
     user_id = Column(ForeignKey('user_tg.id'))
-    status = Column(Enum('pending', 'sent', 'failed'), default='pending')
-    error_reason = Column(String, nullable=True)
+    status = Column(Enum('pending', 'sent'), default='pending')
 
     message = relationship(
         'Message',

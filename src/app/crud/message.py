@@ -1,12 +1,12 @@
 from typing import Dict, TypeVar
 
+from sqlalchemy import not_, select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.crud.base import CRUDBase
 from app.models.models import (Group, Message, MessageGroupAssociation,
                                MessageStatus)
 from app.schemas.message import MessageCreate
-
-from sqlalchemy import not_, select
-from sqlalchemy.ext.asyncio import AsyncSession
 
 
 ModelType = TypeVar('ModelType')
@@ -58,11 +58,11 @@ class CRUDMessage(CRUDBase):
     async def get_message_statuses(
         self,
         session: AsyncSession,
-        message_id: int
+        message_id: int,
     ) -> Dict[int, MessageStatus]:
         """Get statuses."""
         statuses = await session.execute(
-            select(MessageStatus).where(MessageStatus.message_id == message_id)
+            select(MessageStatus).where(MessageStatus.message_id == message_id,)
         )
         return {s.user_id: s for s in statuses.scalars().all()}
 
