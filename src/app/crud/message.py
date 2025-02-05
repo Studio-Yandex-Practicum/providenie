@@ -12,7 +12,6 @@ from app.models.models import (
 )
 from app.schemas.message import MessageCreate
 
-
 ModelType = TypeVar('ModelType')
 
 
@@ -67,7 +66,7 @@ class CRUDMessage(CRUDBase):
         """Get statuses."""
         statuses = await session.execute(
             select(MessageStatus).where(
-                MessageStatus.message_id == message_id
+                MessageStatus.message_id == message_id,
             ),
         )
         return {s.user_id: s for s in statuses.scalars().all()}
