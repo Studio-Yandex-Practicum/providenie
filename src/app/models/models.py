@@ -9,7 +9,8 @@ from sqlalchemy import (
     DateTime,
     Enum,
     ForeignKey,
-    String)
+    String,
+)
 from sqlalchemy.orm import relationship
 
 from app.core.db import Base

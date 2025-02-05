@@ -3,16 +3,16 @@ import logging
 from datetime import datetime, timedelta
 from typing import Any
 
+from telegram import InputMediaPhoto
+from telegram.constants import ParseMode
+from telegram.error import BadRequest, Forbidden
+from telegram.ext import Application, ContextTypes
+
 from app.core.db import get_async_session_context
 from app.crud.message import crud_message
 from app.crud.user_tg import crud_user
 from app.models.models import MessageStatus
 from app.schemas.message import MessageUpdate
-
-from telegram import InputMediaPhoto
-from telegram.constants import ParseMode
-from telegram.error import BadRequest, Forbidden
-from telegram.ext import Application, ContextTypes
 
 
 async def load_unsent_messages(context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -99,7 +99,7 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
             return
 
         existing_statuses = crud_message.get_message_statuses(
-            session, message_id
+            session, message_id,
         )
         users_to_notify = set()
         groups = message.groups
@@ -169,15 +169,19 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
                 session.delete(status)
             except Exception as e:
                 #Повторная отправка в случае сетевых ошибок.
+                error_msg = str(e)
+                logging.error(
+                    f'Ошибка отправки сообщения {error_msg}',
+                )
                 await asyncio.sleep(10)
                 context.job_queue.run_once(
                     send_message,
                     when=10,
                     data={
                         'message_id': message_id,
-                        'user_id': user_id
+                        'user_id': user_id,
                     },
-                    name=f'retry_send_mes_{message_id}'
+                    name=f'retry_send_mes_{message_id}',
                 )
         await session.commit()
 
