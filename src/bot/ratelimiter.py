@@ -98,7 +98,7 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
         if message.is_send:
             return
 
-        existing_statuses = crud_message.get_message_statuses(
+        existing_statuses = await crud_message.get_message_statuses(
             session, message_id,
         )
         users_to_notify = set()
@@ -138,27 +138,17 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
         ]
         session.add_all(new_statuses)
         session.commit()
-        statuses = crud_message.get_message_statuses(session, message_id)
-        for user_id, status in statuses.items():
+        statuses = await crud_message.get_message_statuses(session, message_id)
+        retry_count = 0
+
+        while statuses:
+            user_id, status = statuses.popitem()
             if status.status == 'sent':
                 continue
             try:
                 await send_message_to_user(context, user_id, message)
                 status.status = 'sent'
-                update_data = {
-                    'is_send': True,
-                    'sended_at': datetime.now(),
-                    'update_users': message.update_users,
-                }
-                if not message.update_users:
-                    update_data['update_users'] = user_id
-                # Обновление статуса сообщения через CRUD-функцию
-                await crud_message.update(
-                    db_obj=message,
-                    pydantic_scheme_obj=MessageUpdate(**update_data),
-                    session=session,
-                )
-                session.delete(status)
+                retry_count = 0
             except (BadRequest, Forbidden) as e:
                 #Если указан неверный tg_id, или пользователь удалил аккаунт,
                 #или пользователь удалил бота.
@@ -167,22 +157,35 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
                     f'Отправка сообщения отменена из-за ошибки {error_msg}',
                 )
                 session.delete(status)
+                retry_count = 0
             except Exception as e:
                 #Повторная отправка в случае сетевых ошибок.
                 error_msg = str(e)
                 logging.error(
                     f'Ошибка отправки сообщения {error_msg}',
                 )
-                await asyncio.sleep(10)
-                context.job_queue.run_once(
-                    send_message,
-                    when=10,
-                    data={
-                        'message_id': message_id,
-                        'user_id': user_id,
-                    },
-                    name=f'retry_send_mes_{message_id}',
-                )
+                retry_count += 1
+                if retry_count < 3:
+                    statuses[user_id] = status
+                    await asyncio.sleep(10)
+                else:
+                    session.delete(status)
+                    retry_count = 0
+            finally:
+                await session.commit()
+        update_data = {
+                'is_send': True,
+                'sended_at': datetime.now(),
+                'update_users': message.update_users,
+        }
+        if not message.update_users:
+            update_data['update_users'] = user_id
+        # Обновление статуса сообщения через CRUD-функцию
+        await crud_message.update(
+            db_obj=message,
+            pydantic_scheme_obj=MessageUpdate(**update_data),
+            session=session,
+        )
         await session.commit()
 
 

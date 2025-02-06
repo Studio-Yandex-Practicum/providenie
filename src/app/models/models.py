@@ -57,7 +57,7 @@ class UserTG(Base):
 
     message_statuses = relationship(
         'MessageStatus',
-        bacl_populates='user',
+        back_populates='user',
         lazy='joined',
     )
 
@@ -103,7 +103,7 @@ class Message(Base):
 
     message_statuses = relationship(
         'MessageStatus',
-        bacl_populates='message',
+        back_populates='message',
         lazy='joined',
     )
     # Связь с группами
