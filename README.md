@@ -249,6 +249,9 @@ docker-compose up -d --build
 </details>
 
 ## 4.3. GitHub Actions деплой на удаленный сервер <a id="git-actions"></a>
+> [!WARNING]
+> Не меняйте переменные POSTGRES_, если проект уже запущен на сервере.
+
 <details>
  <summary>
  Запуск проекта на сервере в docker-контейнере
@@ -278,9 +281,6 @@ sudo apt install docker.io
 ```
 3. Установите docker-compose, с этим вам поможет официальная [документация](https://docs.docker.com/compose/install/).
 4. В репозитории на Гитхабе добавьте данные в `Settings -> Secrets -> Actions -> New repository secret`:
-
->[!WARNING]
-> Не меняйте переменные POSTGRES_, если проект уже запущен на сервере.
 
 ```
 DOCKER_USERNAME - ваш username на dockerhub
