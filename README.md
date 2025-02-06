@@ -254,12 +254,23 @@ docker-compose up -d --build
  Запуск проекта на сервере в docker-контейнере
  </summary>
 <br>
-Workflow:
 
-  * `tests` - проверка кода на соответствие стандарту PEP8;
-  * `deploy` - автоматический деплой проекта на боевой сервер;
+### Workflow:
 
-Подготовьте сервер:
+  * `style_check` - проверка кода на соответствие стандарту PEP8;
+  * `providenie` - автоматический билд и деплой проекта на боевой сервер;
+
+Каждый push в release-ветку будет запускать воркфлоу providenie.
+
+### Стадии:
+- Сборка docker-image `bot` и размещение в Packages репозитория.
+- Деплой на сервер
+- - Копирование docker-compose.yaml, nginx.conf и providenie.service (Unit для обслуживания контейнеров с помощью `systemd`)
+- - Скачивание обновленного docker-образа и перезапуск контейнеров
+
+Процесс построен с учетом как того, что сервер может быть пуст, так и того, что на нем уже запущен проект.
+
+### Подготовка сервера:
 1. Войдите на свой удаленный сервер в облаке.
 2. Установите `docker`:
 ```
@@ -267,6 +278,10 @@ sudo apt install docker.io
 ```
 3. Установите docker-compose, с этим вам поможет официальная [документация](https://docs.docker.com/compose/install/).
 4. В репозитории на Гитхабе добавьте данные в `Settings -> Secrets -> Actions -> New repository secret`:
+
+>[!WARNING]
+> Не меняйте переменные POSTGRES_, если проект уже запущен на сервере.
+
 ```
 DOCKER_USERNAME - ваш username на dockerhub
 DOCKER_PASSWORD - ваш пароль на dockerhub
@@ -281,6 +296,26 @@ EMAIL_BOT=bot_mail@mail.ru
 EMAIL_BOT_PASSWORD=EmailPassword
 EMAIL_CURATOR=curator_mail@mail.ru
 LOG_LEVEL=INFO
+
+# Переменные для подключения к БД
+POSTGRES_USER=user
+POSTGRES_PASSWORD=password
+POSTGRES_DB=test_db
+POSTGRES_SERVER=db
+POSTGRES_PORT=5432
+
+# Переменные JWT
+TOKEN_SECRET_KEY=my_secret_key
+TOKEN_ALGORITHM=HS256
+TOKEN_EXPIRE_MINUTES=30
+
+# Переменные для создания первого админа.
+FIRST_SUPERUSER_TG_ID=tg_id
+FIRST_SUPERUSER_FIRST_NAME=first_name
+FIRST_SUPERUSER_USER_NAME=username
+FIRST_SUPERUSER_PASSWORD=password
+FIRST_SUPERUSER_IS_ADMIN=True
 ```
+
 
 </details>
