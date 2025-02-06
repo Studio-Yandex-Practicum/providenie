@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Создать сообщение{% endblock title %}
 {% block content %}
-
 <main>
     <div class="d-flex justify-content-center">
         <div class="bg-light p-4 rounded">
@@ -9,42 +8,38 @@
                 <h2 class="my-4">Создать новое сообщение</h2>
             </div>
             {% include 'web_errors.html' %}
-
-            <form method="post" enctype="multipart/form-data">
+            <form method="post" enctype="multipart/form-data" id="messageForm">
                 <div>
                     <div class="mb-4">
                         <textarea id="text" name="text" class="form-control container-input" rows="3" required>{{ text }}</textarea>
                         <h6 style="max-width: 400px;" class="text-muted">Использование символов ` * _ | ~ в тексте может привести к неверному форматированию сообщения.<br>Пример ссылки: [URL](http://www.example.com/)</h6>
                     </div>
-
                     <div class="mb-4">
                         <label for="send_on" class="form-label lead">Когда отправить:</label>
                         <input type="datetime-local" style="border: 2px solid #dee2e6;" id="send_on" name="send_on" class="form-control">
                     </div>
-
                     <div class="mb-4 d-flex flex-row;" style="justify-content: space-between;">
                         <div class="d-flex flex-column me-5">
                             <label for="group_id" class="form-label lead">Группы</label>
                             <small class="text-muted" style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal; max-width: 200px;">Если не выбрано ни одной группы, сообщение будет направлено всем</small>
                         </div>
-
                         <div class="d-flex flex-column group-input mt-2" style="border: 2px solid #dee2e6; border-radius: 5px; width: 100%; max-height: 150px; overflow-y: scroll;">
                             <div class="mt-1 px-2">
                                 {% for group in groups %}
                                 <div class="d-flex flex-row mt-1" style="flex-direction: column; align-items: center;">
                                     <input class="form-check-input mb-0 mt-1" style="width: 17px; height: 17px; border: 1px solid rgb(114, 111, 111);" type="checkbox" id="group_{{ group.id }}" name="group_id" value="{{ group.id }}">
-                                    <label class="me-2 px-2 mt-1"style="font-size: 12px;" for="group_{{ group.id }}">{{ group.name }}</label>
+                                    <label class="me-2 px-2 mt-1" style="font-size: 12px;" for="group_{{ group.id }}">{{ group.name }}</label>
                                 </div>
                                 {% endfor %}
                             </div>
                         </div>
                     </div>
-
                     <div class="mb-3">
                         <label for="photos" class="form-label lead">Фото:</label>
                         <input type="file" id="photos" name="photos" class="form-control" multiple>
                     </div>
-
+                    <!-- Контейнер для отображения загруженных фотографий -->
+                    <div id="uploadedPhotos" class="d-flex flex-wrap gap-2 mb-3"></div>
                     <div class="d-flex mt-4" style="justify-content: space-between;">
                         <button type="submit" class="btn btn-primary">Создать</button>
                         <a href="{{ url_for('messages') }}" class="btn btn-secondary">К списку сообщений</a>
@@ -53,5 +48,65 @@
             </form>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const photoInput = document.getElementById('photos');
+            const uploadedPhotosContainer = document.getElementById('uploadedPhotos');
+
+            // Обработка события выбора файлов
+            photoInput.addEventListener('change', function (event) {
+                const files = event.target.files;
+                if (files.length === 0) return;
+
+                // Очистка контейнера с предыдущими фото
+                uploadedPhotosContainer.innerHTML = '';
+
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    if (!file.type.startsWith('image/')) {
+                        alert(`Файл "${file.name}" не является изображением.`);
+                        continue;
+                    }
+
+                    // Создаем элемент для отображения фото
+                    const photoDiv = document.createElement('div');
+                    photoDiv.className = 'position-relative';
+
+                    // Создаем изображение
+                    const img = document.createElement('img');
+                    img.src = URL.createObjectURL(file);
+                    img.alt = file.name;
+                    img.width = 100;
+                    img.className = 'img-thumbnail';
+
+                    // Создаем кнопку удаления
+                    const deleteButton = document.createElement('button');
+                    deleteButton.type = 'button';
+                    deleteButton.className = 'btn btn-danger btn-sm position-absolute top-0 end-0';
+                    deleteButton.textContent = 'Удалить';
+                    deleteButton.onclick = function () {
+                        // Удаляем файл из списка
+                        const dt = new DataTransfer();
+                        Array.from(photoInput.files).forEach(function (f) {
+                            if (f.name !== file.name) {
+                                dt.items.add(f);
+                            }
+                        });
+                        photoInput.files = dt.files;
+
+                        // Удаляем элемент из DOM
+                        photoDiv.remove();
+                    };
+
+                    // Добавляем элементы в div
+                    photoDiv.appendChild(img);
+                    photoDiv.appendChild(deleteButton);
+
+                    // Добавляем div в контейнер
+                    uploadedPhotosContainer.appendChild(photoDiv);
+                }
+            });
+        });
+    </script>
 </main>
 {% endblock content %}
