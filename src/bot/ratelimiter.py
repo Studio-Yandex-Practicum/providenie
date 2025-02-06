@@ -139,16 +139,13 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
         session.add_all(new_statuses)
         session.commit()
         statuses = await crud_message.get_message_statuses(session, message_id)
-        retry_count = 0
+        retry_counts = {user_id: 0 for user_id in statuses.keys()}
 
         while statuses:
             user_id, status = statuses.popitem()
-            if status.status == 'sent':
-                continue
             try:
                 await send_message_to_user(context, user_id, message)
-                status.status = 'sent'
-                retry_count = 0
+                retry_counts.pop(user_id, None)
             except (BadRequest, Forbidden) as e:
                 #Если указан неверный tg_id, или пользователь удалил аккаунт,
                 #или пользователь удалил бота.
@@ -157,20 +154,20 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
                     f'Отправка сообщения отменена из-за ошибки {error_msg}',
                 )
                 session.delete(status)
-                retry_count = 0
+                retry_counts.pop(user_id, None)
             except Exception as e:
                 #Повторная отправка в случае сетевых ошибок.
                 error_msg = str(e)
                 logging.error(
                     f'Ошибка отправки сообщения {error_msg}',
                 )
-                retry_count += 1
-                if retry_count < 3:
+                retry_counts[user_id] += 1
+                if retry_counts[user_id] < 3:
                     statuses[user_id] = status
                     await asyncio.sleep(10)
                 else:
                     session.delete(status)
-                    retry_count = 0
+                    retry_counts.pop(user_id, None)
             finally:
                 await session.commit()
         update_data = {
