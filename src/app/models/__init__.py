@@ -15,5 +15,5 @@ __all__ = [
     UserTG,
     UserGroupAssociation,
     MessageGroupAssociation,
-    MessageStatus
+    MessageStatus,
 ]
