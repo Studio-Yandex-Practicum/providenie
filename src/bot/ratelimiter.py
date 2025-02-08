@@ -3,14 +3,15 @@ import logging
 from datetime import datetime, timedelta
 from typing import Any
 
-from telegram import InputMediaPhoto
-from telegram.constants import ParseMode
-from telegram.ext import Application, ContextTypes
-
 from app.core.db import get_async_session_context
 from app.crud.message import crud_message
 from app.crud.user_tg import crud_user
+from app.models.models import MessageStatus
 from app.schemas.message import MessageUpdate
+from telegram import InputMediaPhoto
+from telegram.constants import ParseMode
+from telegram.error import BadRequest, Forbidden
+from telegram.ext import Application, ContextTypes
 
 
 async def load_unsent_messages(context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -32,15 +33,15 @@ async def load_unsent_messages(context: ContextTypes.DEFAULT_TYPE) -> None:
                 send_message,
                 when=send_time,
                 data={
-                    'message_id': message.id,
-                    'user_id': message.create_user,  # Передаём ID пользователя
+                    "message_id": message.id,
+                    "user_id": message.create_user,  # Передаём ID пользователя
                 },
-                name=f'send_mes_{message.id}',
+                name=f"send_mes_{message.id}",
                 job_kwargs={
-                    'misfire_grace_time': None,
+                    "misfire_grace_time": None,
                 },
             )
-            logging.info(f'Запланирована задача {job.name} на {job.next_t}')
+            logging.info(f"Запланирована задача {job.name} на {job.next_t}")
 
 
 async def send_message_to_user(
@@ -66,7 +67,7 @@ async def send_message_to_user(
     else:
         media = [
             InputMediaPhoto(
-                media=open(message.photos[i].filename, 'rb'),  # noqa: ASYNC230
+                media=open(message.photos[i].filename, "rb"),  # noqa: ASYNC230
             )
             for i in range(min(10, len(message.photos)))
         ]
@@ -81,8 +82,8 @@ async def send_message_to_user(
 
 async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C901
     """Отправка сообщения пользователям."""
-    message_id = context.job.data['message_id']
-    user_id = context.job.data['user_id']  # Извлекаем ID пользователя
+    message_id = context.job.data["message_id"]
+    user_id = context.job.data["user_id"]  # Извлекаем ID пользователя
 
     async with get_async_session_context() as session:
         message = await crud_message.get_obj_by_id(
@@ -93,6 +94,14 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
         if not message:
             return  # Если сообщение не найдено, выходим из функции
 
+        if message.is_send:
+            return
+
+        existing_statuses = await crud_message.get_message_statuses(
+            session,
+            message_id,
+        )
+        users_to_notify = set()
         groups = message.groups
         if groups:
             # Если у сообщения есть группы,
@@ -100,54 +109,89 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
             # Если пользователь состоит оновременно в нескольких группах,
             # то в сете он все равно окажется в единственном экземпляре.
             users_to_notify = {
-                user.tg_id
-                for group in groups
-                for user in group.users
-                if user.is_active
+                user.tg_id for group in groups for user in group.users if user.is_active
             }
-
-            for user_id in users_to_notify:
-                await send_message_to_user(context, user_id, message)
         else:
             # Если групп нет, получаем всех активных пользователей,
             # исключая администратора и заблокированных
             active_users = await crud_user.get_all_by_attributes(
                 filters={
-                    'is_admin': False,
+                    "is_admin": False,
                 },
                 session=session,
             )
+            users_to_notify = {
+                user.tg_id
+                for user in active_users
+                if user.is_active and not user.is_block
+            }
+        new_statuses = [
+            MessageStatus(
+                message_id=message.id,
+                user_id=user_id,
+                status="pending",
+            )
+            for user_id in users_to_notify - existing_statuses.keys()
+        ]
+        session.add_all(new_statuses)
+        await session.commit()
+        statuses = await crud_message.get_message_statuses(session, message_id)
+        retry_counts = {user_id: 0 for user_id in statuses.keys()}
 
-            for user in active_users:
-                if user.is_active and not user.is_block:
-                    await send_message_to_user(context, user.tg_id, message)
-
+        while statuses:
+            user_id, status = statuses.popitem()
+            try:
+                await send_message_to_user(context, user_id, message)
+                retry_counts.pop(user_id, None)
+            except (BadRequest, Forbidden) as e:
+                # Если указан неверный tg_id, или пользователь удалил аккаунт,
+                # или пользователь удалил бота.
+                error_msg = str(e)
+                logging.error(
+                    f"Отправка сообщения отменена из-за ошибки {error_msg}",
+                )
+                session.delete(status)
+                retry_counts.pop(user_id, None)
+            except Exception as e:
+                # Повторная отправка в случае сетевых ошибок.
+                error_msg = str(e)
+                logging.error(
+                    f"Ошибка отправки сообщения {error_msg}",
+                )
+                retry_counts[user_id] += 1
+                if retry_counts[user_id] < 3:
+                    statuses[user_id] = status
+                    await asyncio.sleep(10)
+                else:
+                    session.delete(status)
+                    retry_counts.pop(user_id, None)
+            finally:
+                await session.commit()
         update_data = {
-            'is_send': True,
-            'sended_at': datetime.now(),
-            'update_users': message.update_users,
+            "is_send": True,
+            "sended_at": datetime.now(),
+            "update_users": message.update_users,
         }
-
         if not message.update_users:
-            update_data['update_users'] = user_id
-
+            update_data["update_users"] = user_id
         # Обновление статуса сообщения через CRUD-функцию
         await crud_message.update(
             db_obj=message,
             pydantic_scheme_obj=MessageUpdate(**update_data),
             session=session,
         )
+        await session.commit()
 
 
 async def ptb_post_init(app: Application) -> None:
     """Функция для первоначальной инициализации приложения."""
-    logging.info('Запуск функции post_init.')
+    logging.info("Запуск функции post_init.")
     app.job_queue.run_once(
         load_unsent_messages,
         when=5,
         data=None,
-        name='load_unsent_messages',
+        name="load_unsent_messages",
         job_kwargs={
-            'misfire_grace_time': None,
+            "misfire_grace_time": None,
         },
     )
