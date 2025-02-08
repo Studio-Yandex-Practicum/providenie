@@ -23,7 +23,7 @@ def upgrade() -> None:
     op.create_table('message_status',
     sa.Column('message_id', sa.BigInteger(), nullable=True),
     sa.Column('user_id', sa.BigInteger(), nullable=True),
-    sa.Column('status', sa.Enum('pending', 'sent'), nullable=True),
+    sa.Column('status', sa.Enum('pending', 'sent', name='message_status_enum'), nullable=True),
     sa.Column('id', sa.BigInteger(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
@@ -61,4 +61,6 @@ def downgrade() -> None:
                existing_type=sa.BIGINT(),
                nullable=False)
     op.drop_table('message_status')
+
+    op.execute('DROP TYPE message_status_enum')
     # ### end Alembic commands ###
