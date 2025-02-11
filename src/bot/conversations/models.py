@@ -1,18 +1,22 @@
 from datetime import datetime
 from typing import Optional
 
-from email_validate import validate_or_fail
 from pydantic import BaseModel, EmailStr, Field, root_validator, validator
+from validate_email import validate_email_or_fail
 
 from bot.constants.info.fields_order import FUND_FIELDS_ORDER
-from bot.constants.info.text import (FAMILY_MEMBERS, REGEX_FULL_NAME,
-                                     REGEX_NON_LATIN, REGEX_PHONE)
+from bot.constants.info.text import (
+    FAMILY_MEMBERS,
+    REGEX_FULL_NAME,
+    REGEX_NON_LATIN,
+    REGEX_PHONE,
+)
 
 
 class BaseForm(BaseModel):
     """Base model for forms."""
 
-    class Config:
+    class Config:  # noqa: D106
         min_anystr_length = 1
         max_anystr_length = 4096
         validate_assignment = True
@@ -26,9 +30,10 @@ class ShortForm(BaseForm):
     phone: str = Field(None, regex=REGEX_PHONE)
     email: Optional[EmailStr]
 
-    @validator("email")
-    def validator_email(cls, email):
-        validate_or_fail(
+    @validator('email')
+    def validator_email(cls, email: EmailStr) -> EmailStr:  # noqa: N805
+        """Email verification."""
+        validate_email_or_fail(
             email_address=email,
             check_blacklist=False,
             check_smtp=False,
@@ -44,21 +49,24 @@ class VolunteerForm(ShortForm):
     volunteer_help: str = Field(None, regex=REGEX_NON_LATIN)
     volunteer_time: str = Field(None, regex=REGEX_NON_LATIN)
 
-    @validator("birthday", pre=True)
-    def parse_birthday(cls, value):
-        return datetime.strptime(value, "%d.%m.%Y")
+    @validator('birthday', pre=True)
+    def parse_birthday(cls, value: str) -> datetime:  # noqa: N805
+        """Parse strint to datetime."""
+        return datetime.strptime(value, '%d.%m.%Y')
 
-    @validator("birthday")
-    def validate_birthday(cls, value):
+    @validator('birthday')
+    def validate_birthday(cls, value: datetime) -> str:  # noqa: N805
+        """Check the date of birth."""
         today = datetime.today()
         age = (
-            today.year - value.year
+            today.year
+            - value.year
             - ((today.month, today.day) < (value.month, value.day))
         )
         if age < 16 or age > 80:
-            raise ValueError("Пользователю должно быть не менее 16 лет")
+            raise ValueError('Пользователю должно быть не менее 16 лет')
 
-        return value.strftime("%d.%m.%Y")
+        return value.strftime('%d.%m.%Y')
 
 
 class AskQuestionForm(ShortForm):
@@ -84,31 +92,35 @@ class LongForm(BaseForm):
     child_diagnosis: str = Field(None, regex=REGEX_NON_LATIN)
     where_got_info: str = Field(None, regex=REGEX_NON_LATIN)
 
-    @validator("email")
-    def validator_email(cls, email):
-        validate_or_fail(
+    @validator('email')
+    def validator_email(cls, email: EmailStr) -> EmailStr:  # noqa: N805
+        """Email verification."""
+        validate_email_or_fail(
             email_address=email,
             check_blacklist=False,
             check_smtp=False,
         )
         return email
 
-    @validator("child_birthday", pre=True)
-    def parse_child_birthday(cls, value):
-        return datetime.strptime(value, "%d.%m.%Y")
+    @validator('child_birthday', pre=True)
+    def parse_birthday(cls, value: str) -> datetime:  # noqa: N805
+        """Parse strint to datetime."""
+        return datetime.strptime(value, '%d.%m.%Y')
 
-    @validator("child_birthday")
-    def validate_birthday(cls, value):
+    @validator('child_birthday')
+    def validate_birthday(cls, value: datetime) -> str:  # noqa: N805
+        """Check the date of birth."""
         today = datetime.today()
         age = (
-            today.year - value.year
+            today.year
+            - value.year
             - ((today.month, today.day) < (value.month, value.day))
         )
         if value >= today:
-            raise ValueError("День рождения не может быть в будущем")
+            raise ValueError('День рождения не может быть в будущем')
         if age >= 18:
-            raise ValueError("Пользователю должно быть не больше 18 лет")
-        return value.strftime("%d.%m.%Y")
+            raise ValueError('Пользователю должно быть не больше 18 лет')
+        return value.strftime('%d.%m.%Y')
 
 
 class ChatForm(LongForm):
@@ -137,5 +149,9 @@ class FundForm(LongForm):
     another_fund_member: str = Field(None, regex=REGEX_NON_LATIN)
 
     @root_validator
-    def order_fields(cls, values):
-        return {field_name: values.get(field_name) for field_name in FUND_FIELDS_ORDER}
+    def order_fields(cls, values: dict) -> dict:  # noqa: N805
+        """Make ordering fields dict."""
+        return {
+            field_name: values.get(field_name)
+            for field_name in FUND_FIELDS_ORDER
+        }

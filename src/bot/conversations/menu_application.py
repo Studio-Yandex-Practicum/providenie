@@ -1,7 +1,6 @@
-from telegram import BotCommandScopeChat
+from telegram import BotCommandScopeChat, Update
 from telegram import InlineKeyboardButton as Button
 from telegram import InlineKeyboardMarkup as Keyboard
-from telegram import Update
 from telegram.ext import ContextTypes
 
 from bot.constants import button, callback, key, state
@@ -10,7 +9,7 @@ from bot.constants.info.menu import ALL_MENU
 from bot.utils import get_menu_buttons, send_message
 
 
-async def show_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def show_menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Show the selected menu or sub-menu to the user."""
     await context.bot.set_my_commands(
         [button.MENU_CMD, button.START_CMD],
@@ -36,7 +35,10 @@ async def show_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return state.MAIN_MENU
 
 
-async def show_option(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def show_option(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+) -> int:
     """Show the option selected from the menu."""
     query = update.callback_query
     user_data = context.user_data
@@ -48,7 +50,8 @@ async def show_option(update: Update, context: ContextTypes.DEFAULT_TYPE):
         user_data[key.OPTION] = option
         title = option.get(key.NAME, option[key.BUTTON_TEXT])
         message = text.SHOW_DATA_TEMPLATE.format(
-            title=title, value=option.get(key.DESCRIPTION, '')
+            title=title,
+            value=option.get(key.DESCRIPTION, ''),
         )
         back_button = button.MENU_BACK
     else:

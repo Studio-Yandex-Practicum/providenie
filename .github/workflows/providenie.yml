@@ -1,42 +1,97 @@
-name: bot-providenie workflow
+name: Providenie CI/CD Workflow
 
 on:
   push:
     branches: [release]
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
+  build_and_push_ghcr:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Build and push Docker image for Production
+        if: github.ref == 'refs/heads/master'
+        uses: docker/build-push-action@v5
+        with:
+          context: ./src/
+          file: ./src/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
   deploy:
     runs-on: ubuntu-latest
+    needs:
+      - build_and_push_ghcr
     steps:
-      - uses: actions/checkout@master
-      - name: Uploading project files to remote server
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Upload project files to remote server
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.PORT }}
-          source: "src/,Dockerfile,docker-compose.yaml,requirements.txt"
-          target: /home/${{ secrets.USER }}/providenie
+          # port: ${{ secrets.PORT }}
+          source: "infra/"
+          target: /opt/providenie
 
-      - name: Building Docker image on remote server and deploy
+      - name: Build and Deploy on Remote Server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.PORT }}
+          # port: ${{ secrets.PORT }}
           script: |
-            cd /home/${{ secrets.USER }}/providenie
+            cd /opt/providenie
+            cp providenie.service /etc/systemd/system/.
             rm -f .env
             touch .env
             echo TELEGRAM_TOKEN="${{ secrets.TELEGRAM_TOKEN }}" >> .env
+            echo LOG_LEVEL=${{ secrets.LOG_LEVEL }} >> .env
+            echo EMAIL_CURATOR=${{ secrets.EMAIL_CURATOR }} >> .env
             echo SMTP_SERVER_PORT="${{ secrets.SMTP_SERVER_PORT }}" >> .env
             echo SMTP_SERVER_ADDRESS="${{ secrets.SMTP_SERVER_ADDRESS }}" >> .env
             echo SMTP_SERVER_BOT_EMAIL=${{ secrets.EMAIL_BOT }} >> .env
             echo SMTP_SERVER_BOT_PASSWORD=${{ secrets.EMAIL_BOT_PASSWORD }} >> .env
-            echo EMAIL_CURATOR=${{ secrets.EMAIL_CURATOR }} >> .env
-            echo LOG_LEVEL=${{ secrets.LOG_LEVEL }} >> .env
-            docker compose --file docker-compose.yaml stop
-            docker compose --file docker-compose.yaml rm bot -f
-            docker compose --file docker-compose.yaml up --build -d
+            echo POSTGRES_USER="${{ secrets.POSTGRES_USER }}" >> .env            
+            echo POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}" >> .env            
+            echo POSTGRES_DB="${{ secrets.POSTGRES_DB }}" >> .env
+            echo POSTGRES_SERVER="${{ secrets.POSTGRES_SERVER }}" >> .env
+            echo POSTGRES_PORT="${{ secrets.POSTGRES_PORT }}" >> .env
+            echo TOKEN_SECRET_KEY="${{ secrets.TOKEN_SECRET_KEY }}" >> .env
+            echo TOKEN_ALGORITHM="${{ secrets.TOKEN_ALGORITHM }}" >> .env
+            echo TOKEN_EXPIRE_MINUTES="${{ secrets.TOKEN_EXPIRE_MINUTES }}" >> .env
+            echo FIRST_SUPERUSER_TG_ID="${{ secrets.FIRST_SUPERUSER_TG_ID }}" >> .env
+            echo FIRST_SUPERUSER_FIRST_NAME="${{ secrets.FIRST_SUPERUSER_FIRST_NAME }}" >> .env
+            echo FIRST_SUPERUSER_USER_NAME="${{ secrets.FIRST_SUPERUSER_USER_NAME }}" >> .env
+            echo FIRST_SUPERUSER_PASSWORD="${{ secrets.FIRST_SUPERUSER_PASSWORD }}" >> .env
+            echo FIRST_SUPERUSER_IS_ADMIN="${{ secrets.FIRST_SUPERUSER_IS_ADMIN }}" >> .env
+            echo ADMIN_SITE_URL="${{ secrets.ADMIN_SITE_URL }}" >> .env
+            if [ ! systemctl is-enabled providenie.service ]; then systemctl enable providenie.service --now; else systemctl reload providenie.service; fi
+            docker compose exec app alembic upgrade head

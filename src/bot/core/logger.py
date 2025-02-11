@@ -3,7 +3,6 @@ from pathlib import Path
 
 from bot.core.settings import settings
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 LOG_PATH = BASE_DIR / '.data' / 'logs'
@@ -16,8 +15,8 @@ DEFAULT_LOGGING = {
     'disable_exising_loggers': False,
     'formatters': {
         'standard': {
-            'format': settings.log_format
-        }
+            'format': settings.log_format,
+        },
     },
     'handlers': {
         'default': {
@@ -34,7 +33,7 @@ DEFAULT_LOGGING = {
             'backupCount': 60,
             'level': settings.log_level,
             'formatter': 'standard',
-        }
+        },
     },
     'loggers': {
         '': {
@@ -42,7 +41,7 @@ DEFAULT_LOGGING = {
             'level': settings.log_level,
             'propagate': True,
         },
-    }
+    },
 }
 logging.config.dictConfig(DEFAULT_LOGGING)
 logger = logging.getLogger(__name__)

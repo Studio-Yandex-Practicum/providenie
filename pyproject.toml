@@ -8,19 +8,29 @@ authors = [
     "Ирина Финатова", "Юлий Митряшкин", "Яна Денисова"
 ]
 readme = "README.md"
+#package-mode = false
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.11"
 python-dotenv = "^0.21.0"
-python-telegram-bot = "20.0b0"
+python-telegram-bot = {extras = ["job-queue"], version = "20.0b0"}
 pydantic = {extras = ["email"], version = "^1.10.6"}
-email-validate = "^1.1.2"
+py3-validate-email = "1.0.5.post2"
+fastapi = "^0.115.4"
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.36"}
+alembic = "^1.13.3"
+uvicorn = "^0.32.0"
+asyncpg= "^0.30.0"
+bcrypt = "^4.1.2"
+pyjwt = "^2.8.0"
+passlib = {extras = ["bcrypt"], version="^1.7.4"}
+python-multipart = "^0.0.17"
+jinja2="^3.1.4"
+aiofiles="^24.1.0"
 
 [tool.poetry.group.dev.dependencies]
-pre-commit = "^2.20.0"
-isort = "^5.11.3"
-flake8 = "^6.0.0"
-black = "^22.12.0"
+ruff = "0.7.1"
+pre-commit = "4.0.1"
 
 [build-system]
 requires = ["poetry-core"]

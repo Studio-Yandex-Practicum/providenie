@@ -1,0 +1,15 @@
+from app.models.constants import LENGTH_1000
+
+PAGE = 1
+PAGE_GE = 1
+PAGE_SIZE = 10
+PAGE_SIZE_GE = 1
+PAGE_SIZE_LE = 100
+FIRST_PAGE = 1
+EXTRA_PAGE = 1
+STATIC_DIR = "app/static/photos"
+TIMEDELTA_MIN = 1
+MAX_LENGTH_MESSAGE = (
+    "Длина сообщения должна быть не более "
+    f"{LENGTH_1000} символов."
+)

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Список групп{% endblock title %}
+{% block content %}
+<main class="container mb-5">
+    <div class="d-flex justify-content-center mt-2">
+        <h2>Список групп</h2>
+    </div>
+
+    <div class="d-flex justify-content-center mt-2">
+        <a href="{{ url_for('create_groups') }}" class="btn btn-success">Создать новую группу</a>
+    </div>
+
+    <div class="row mt-5">
+        {% for group in groups %}
+            <div class="col-12 col-sm-6 col-lg-4 mb-3">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+
+                        <div class="d-flex align-items-center">
+                            {% if group.is_active %}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="lime" class="bi bi-check-circle" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                    <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                                </svg>
+                            {% else %}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                </svg>
+                            {% endif %}
+                            <h4 class="mb-0 mx-2">{{ group.name }}</h4>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <a href="{{ url_for('get_group_edit_page', group_id=group.id) }}" class="btn btn-primary btn-sm">Редактировать</a>
+                        <form action="{{ url_for('delete_group', group_id=group.id) }}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm mx-3">Удалить</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="d-flex justify-content-center mt-2">
+        <nav aria-label="Навигация по страницам">
+            <ul class="pagination">
+
+                {% if page > 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page - 1 }}" aria-label="Предыдущая">
+                        <span aria-hidden="true">&laquo;</span> Назад
+                    </a>
+                </li>
+                {% endif %}
+
+                {% for p in range(1, total_pages + 1) %}
+                <li class="page-item {% if p == page %}active{% endif %}">
+                    <a class="page-link" href="?page={{ p }}">{{ p }}</a>
+                </li>
+                {% endfor %}
+
+                {% if page < total_pages %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page + 1 }}" aria-label="Следующая">
+                        Вперед <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+
+    {% if groups %}
+        <div class="d-flex justify-content-center mt-2">
+            <a href="{{ url_for('create_groups')}}" class="btn btn-success">Создать новую группу</a>
+        </div>
+    {% endif %}
+</main>
+
+{% endblock content %}

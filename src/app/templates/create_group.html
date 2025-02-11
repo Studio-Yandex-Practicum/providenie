@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Создать группу{% endblock title %}
+{% block content %}
+<main>
+    <div class="d-flex justify-content-center">
+        <div class="bg-light p-4 rounded">
+            <div>
+                <h2 class="my-4">Создать новую группу</h2>
+            </div>
+            {% include 'web_errors.html' %}
+
+            <form method="post" action="{{ url_for('create_groups')}}">
+                <div class="mb-3">
+                    <label for="name" class="form-label lead">Название группы:</label>
+                    <input type="text" id="name" name="name" class="form-control container-input" required>
+                </div>
+
+                <div class="d-flex form-check form-switch form-check-reverse mb-3">
+                    <label for="is_active" class="form-check-label lead">Активна</label>
+                    <input type="hidden" name="is_active" value="off">
+                    <input class="form-check-input container-input" style="margin-left: auto;" type="checkbox" id="is_active" name="is_active" value="on" checked>
+                </div>
+
+                <div class="d-flex mt-4" style="justify-content: space-between;">
+                    <button type="submit" class="btn btn-primary">Создать</button>
+                    <a href="{{ url_for('groups')}}" class="btn btn-secondary">К списку групп</a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</main>
+{% endblock content %}

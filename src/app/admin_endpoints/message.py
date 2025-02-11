@@ -1,0 +1,424 @@
+import logging
+import uuid
+from datetime import datetime, timedelta
+from pathlib import Path as PathDir
+from typing import List, Optional, Union
+
+import aiofiles
+from fastapi import (
+    APIRouter,
+    Depends,
+    File,
+    Form,
+    HTTPException,
+    Path,
+    Query,
+    Request,
+    UploadFile,
+    status,
+)
+from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.templating import Jinja2Templates
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.admin_endpoints.constants import (
+    EXTRA_PAGE,
+    FIRST_PAGE,
+    MAX_LENGTH_MESSAGE,
+    PAGE,
+    PAGE_GE,
+    PAGE_SIZE,
+    PAGE_SIZE_GE,
+    PAGE_SIZE_LE,
+    STATIC_DIR,
+    TIMEDELTA_MIN,
+)
+from app.core.auth import get_current_admin
+from app.core.db import get_async_session
+from app.crud.group import crud_group
+from app.crud.message import crud_message
+from app.crud.photo import crud_photo
+from app.crud.user_tg import crud_user
+from app.models.constants import LENGTH_1000
+from app.schemas.message import MessageCreate, MessageUpdate
+from app.schemas.photo import PhotoCreate
+
+from bot.ratelimiter import send_message
+from bot.services import bot_application
+
+router = APIRouter()
+templates = Jinja2Templates(directory='app/templates')
+
+
+async def fetch_photos(message_id: int, session: AsyncSession) -> List:
+    """Fetch all photos associated with a message ID."""
+    return await crud_photo.get_all_by_attributes(
+        {'message_id': message_id},
+        session,
+    )
+
+
+async def save_new_photos(
+    new_photos: List[UploadFile],
+    message_id: int,
+    session: AsyncSession,
+) -> None:
+    """Save new uploaded photos and return the created photo objects."""
+    directory = PathDir(STATIC_DIR)
+    if not directory.exists():
+        directory.mkdir(parents=True, exist_ok=True)
+
+    for file_photo in new_photos:
+        if file_photo.filename:
+            extension = file_photo.filename.split('.')[-1]
+            unique_filename = f'{uuid.uuid4()}.{extension}'
+            file_location = f'{directory}/{unique_filename}'
+
+            async with aiofiles.open(file_location, 'wb') as f:
+                content = await file_photo.read()
+                await f.write(content)
+
+            new_photo = PhotoCreate(
+                filename=file_location,
+                message_id=message_id,
+            )
+            await crud_photo.create(new_photo, session)
+
+
+@router.get(
+    '/admin/messages',
+    dependencies=[Depends(get_current_admin)],
+    response_class=HTMLResponse,
+)
+async def messages(
+    request: Request,
+    is_send: Optional[bool] = Query(None),
+    sended_at: Optional[datetime] = Query(None),
+    create_user: Optional[int] = Query(None),
+    update_users: Optional[int] = Query(None),
+    page: int = Query(PAGE, ge=PAGE_GE),
+    page_size: int = Query(PAGE_SIZE, ge=PAGE_SIZE_GE, le=PAGE_SIZE_LE),
+    session: AsyncSession = Depends(get_async_session),
+) -> HTMLResponse:
+    """Endpoint to get messages."""
+    filters = {}
+    if is_send is not None:
+        filters['is_send'] = is_send
+    if sended_at is not None:
+        filters['sended_at'] = sended_at
+    if create_user is not None:
+        filters['create_user'] = create_user
+    if update_users is not None:
+        filters['update_users'] = update_users
+
+    users = await crud_user.get_all_objs(session=session)
+    messages = await crud_message.get_all_by_attributes(filters, session)
+    messages = sorted(messages, key=lambda message: message.id)
+    total_messages = len(messages)
+    start_index = (page - FIRST_PAGE) * page_size
+    end_index = start_index + page_size
+    paginated_messages = messages[start_index:end_index]
+    return templates.TemplateResponse(
+        'admin_messages.html',
+        {
+            'request': request,
+            'users': users,
+            'messages': paginated_messages,
+            'page': page,
+            'total_pages': (total_messages // page_size)
+            + (EXTRA_PAGE if total_messages % page_size > 0 else 0),
+        },
+    )
+
+
+@router.get(
+    '/admin/messages/create',
+    dependencies=[Depends(get_current_admin)],
+    response_class=HTMLResponse,
+)
+async def get_create_message_form(
+    request: Request,
+    session: AsyncSession = Depends(get_async_session),
+) -> HTMLResponse:
+    """Render form for creating a new message."""
+    groups = await crud_group.get_all_objs(session=session)
+    return templates.TemplateResponse(
+        'create_message.html',
+        {'request': request, 'groups': groups},
+    )
+
+
+@router.post(
+    '/admin/messages/create',
+    dependencies=[Depends(get_current_admin)],
+    response_class=HTMLResponse,
+)
+async def create_messages(
+    request: Request,
+    text: Optional[str] = Form(None),
+    photos: List[UploadFile] = File(...),
+    group_id: Optional[List[Union[int, str]]] = Form(None),
+    send_on: Optional[datetime | str] = Form(None),
+    session: AsyncSession = Depends(get_async_session),
+) -> HTMLResponse:
+    """Endpoint to create a new message."""
+    if text and len(text) > LENGTH_1000:
+        groups = await crud_group.get_all_objs(session=session)
+        return templates.TemplateResponse(
+            'create_message.html',
+            {
+                'request': request,
+                'groups': groups,
+                'text': text,
+                'errors': [
+                    MAX_LENGTH_MESSAGE,
+                    f'Сократите на {abs(LENGTH_1000 - len(text))} символов.',
+                ],
+            },
+        )
+
+    # Создаем новое сообщение
+    message = MessageCreate(
+        text=text,
+        create_user=request.user.id,
+        update_users=request.user.id,
+        groups=group_id,
+        send_on=send_on if send_on else datetime.now(),
+    )
+    new_message = await crud_message.create(message, session)
+
+    # Сохраняем новые фото
+    if photos:
+        await save_new_photos(
+            new_photos=photos,
+            message_id=new_message.id,
+            session=session,
+        )
+
+    # Планируем отправку сообщения
+    if new_message.send_on < datetime.now():
+        send_time = timedelta(minutes=TIMEDELTA_MIN)
+    else:
+        send_time = new_message.send_on - datetime.now()
+
+    job = bot_application.job_queue.run_once(
+        send_message,
+        when=send_time,
+        data={
+            'message_id': new_message.id,
+            'user_id': request.user.id,
+        },
+        name=f'send_mes_{new_message.id}',
+        job_kwargs={'misfire_grace_time': None},
+    )
+    logging.info(f'Запланирована задача {job.name} на {job.next_t}')
+
+    return RedirectResponse(
+        url='/admin/messages',
+        status_code=status.HTTP_303_SEE_OTHER,
+    )
+
+
+@router.get(
+    '/admin/messages/{message_id}/edit',
+    dependencies=[Depends(get_current_admin)],
+    response_class=HTMLResponse,
+)
+async def get_edit_message_form(
+    request: Request,
+    message_id: int = Path(...),
+    session: AsyncSession = Depends(get_async_session),
+) -> HTMLResponse:
+    """Render form for editing a message."""
+    message = await crud_message.get_obj_by_id(message_id, session)
+    if not message:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='Message with this ID not found.',
+        )
+    photos = await fetch_photos(message_id, session)
+    return templates.TemplateResponse(
+        'edit_message.html',
+        {
+            'request': request,
+            'message': message,
+            'photos': photos,
+            'is_message_sent': message.is_send,
+        },
+    )
+
+
+@router.post(
+    '/admin/messages/{message_id}/update',
+    dependencies=[Depends(get_current_admin)],
+    response_class=HTMLResponse,
+)
+async def edit_message(
+    request: Request,
+    text: Optional[str] = Form(None),
+    is_send: Optional[bool] = Form(None),
+    sended_at: Optional[datetime] = Form(None),
+    send_on: Optional[datetime] = Form(None),
+    message_id: int = Path(..., title='Message id in DB'),
+    new_photos: List[UploadFile] = File(None),
+    deleted_photo_ids: Optional[List[int]] = Form(
+        None,
+    ),  # Новые параметры для удаления фото
+    session: AsyncSession = Depends(get_async_session),
+) -> HTMLResponse:
+    """Endpoint to edit an existing message."""
+    existing_message = await crud_message.get_obj_by_id(message_id, session)
+    if not existing_message:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='Message with this ID not found.',
+        )
+
+    if text and len(text) > LENGTH_1000:
+        photos = await fetch_photos(message_id, session)
+        return templates.TemplateResponse(
+            'edit_message.html',
+            {
+                'request': request,
+                'message': existing_message,
+                'photos': photos,
+                'is_message_sent': existing_message.is_send,
+                'errors': [
+                    'Длина сообщения должна быть не более '
+                    f'{LENGTH_1000} символов.',
+                    f'Сократите на {abs(LENGTH_1000 - len(text))} символов.',
+                ],
+            },
+        )
+
+    # Обновляем сообщение
+    message = MessageUpdate(
+        text=text,
+        is_send=is_send,
+        update_users=request.user.id,
+        sended_at=sended_at,
+        send_on=send_on,
+    )
+    updated_message = await crud_message.update(
+        existing_message,
+        message,
+        session,
+    )
+
+    # Удаляем выбранные фото
+    if deleted_photo_ids:
+        for photo_id in deleted_photo_ids:
+            existing_photo = await crud_photo.get_obj_by_id(photo_id, session)
+            if existing_photo:
+                await crud_photo.delete(existing_photo, session)
+
+    # Добавляем новые фото
+    if new_photos:
+        await save_new_photos(
+            new_photos=new_photos,
+            message_id=message_id,
+            session=session,
+        )
+
+    # Обновляем задачу для отправки сообщения
+    job_name = f'send_mes_{updated_message.id}'
+    current_jobs = bot_application.job_queue.get_jobs_by_name(job_name)
+    if current_jobs:
+        for job in current_jobs:
+            job.schedule_removal()
+
+    if updated_message.send_on < datetime.now():
+        send_time = timedelta(minutes=1)
+    else:
+        send_time = updated_message.send_on - datetime.now()
+
+    job = bot_application.job_queue.run_once(
+        send_message,
+        when=send_time,
+        data={
+            'message_id': updated_message.id,
+            'user_id': request.user.id,
+        },
+        name=job_name,
+        job_kwargs={'misfire_grace_time': None},
+    )
+    logging.info(f'Запланирована задача {job.name} на {job.next_t}')
+
+    # Перенаправляем пользователя обратно на форму редактирования
+    return RedirectResponse(
+        url=f'/admin/messages/{message_id}/edit',
+        status_code=status.HTTP_303_SEE_OTHER,
+    )
+
+
+@router.post(
+    '/admin/messages/{message_id}/delete',
+    dependencies=[Depends(get_current_admin)],
+    response_class=HTMLResponse,
+)
+async def delete_message(
+    request: Request,
+    message_id: int,
+    session: AsyncSession = Depends(get_async_session),
+) -> HTMLResponse:
+    """Endpoint to delete a message."""
+    existing_photos = await fetch_photos(message_id, session)
+    existing_message = await crud_message.get_obj_by_id(
+        obj_id=message_id,
+        session=session,
+    )
+    if not existing_message:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='Message with this ID not found.',
+        )
+    if not existing_photos:
+        await crud_message.delete(existing_message, session)
+    else:
+        for photo in existing_photos:
+            await crud_photo.delete(photo, session)
+        await crud_message.delete(existing_message, session)
+
+    job_name = f'send_mes_{message_id}'
+    current_jobs = bot_application.job_queue.get_jobs_by_name(job_name)
+    if current_jobs:
+        for job in current_jobs:
+            job.schedule_removal()
+
+    return RedirectResponse(
+        url='/admin/messages',
+        status_code=status.HTTP_303_SEE_OTHER,
+    )
+
+
+@router.post(
+    '/admin/messages/{message_id}/photos/{photo_id}/delete',
+    dependencies=[Depends(get_current_admin)],
+    response_class=HTMLResponse,
+)
+async def delete_photo_from_message(
+    request: Request,
+    message_id: int,
+    photo_id: int,
+    session: AsyncSession = Depends(get_async_session),
+) -> HTMLResponse:
+    """Endpoint for deleting a photo from a message."""
+    existing_message = await crud_message.get_obj_by_id(message_id, session)
+    existing_photo = await crud_photo.get_obj_by_id(photo_id, session)
+
+    if not existing_message or not existing_photo:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='Message or photo with this ID not found.',
+        )
+
+    # Удаляем фото из базы данных
+    await crud_photo.delete(existing_photo, session)
+
+    # Получаем обновленный список фото
+    photos = await fetch_photos(message_id, session)
+
+    return templates.TemplateResponse(
+        'edit_message.html',
+        {'request': request, 'message': existing_message, 'photos': photos},
+    )

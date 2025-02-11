@@ -8,8 +8,11 @@ from telegram import InlineKeyboardButton as Button
 from telegram import InlineKeyboardMarkup, Update
 
 from bot.constants import key
-from bot.constants.info.text import (MAIL_SEND_ERROR_MESSAGE,
-                                     MAIL_SEND_OK_MESSAGE, MESSAGE_MARKDOWN)
+from bot.constants.info.text import (
+    MAIL_SEND_ERROR_MESSAGE,
+    MAIL_SEND_OK_MESSAGE,
+    MESSAGE_MARKDOWN,
+)
 from bot.core.settings import settings
 
 
@@ -17,8 +20,8 @@ async def send_message(
     update: Update,
     text: str,
     keyboard: Optional[InlineKeyboardMarkup] = None,
-    link_preview: bool = False
-):
+    link_preview: bool = False,
+) -> None:
     """Send a message with optional inline keyboard and link preview."""
     message_args = {
         'text': text,
@@ -34,9 +37,8 @@ async def send_message(
         await update.message.reply_text(**message_args)
 
 
-def get_menu_buttons(menu: dict):
+def get_menu_buttons(menu: dict) -> list:
     """Generate inline keyboard buttons for menu."""
-
     return [
         [Button(text=option.get(key.BUTTON_TEXT), callback_data=callback)]
         for callback, option in menu.items()

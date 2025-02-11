@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Группа создана{% endblock title %}
+{% block content %}
+  <h1>Группа успешно создана!</h1>
+  <p>Сообщение: <strong>{{ group.name }}</strong></p>
+  <a href="/admin/groups">Вернуться к списку групп</a>
+{% endblock content %}

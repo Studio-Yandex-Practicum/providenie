@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Пользователь редактирован{% endblock title %}
+{% block content %}
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Пользователь успешно редактирован</h1>
+
+            <div>
+                <h2 class="subtitle">Детали пользователя:</h2>
+                <div>
+                    <p><strong>Telegram ID:</strong> {{ user.tg_id }}</p>
+                    <p><strong>Имя:</strong> {{ user.first_name }}</p>
+                    <p><strong>Фамилия:</strong> {{ user.last_name }}</p>
+                    <p><strong>Имя пользователя:</strong> {{ user.user_name }}</p>
+                    <p><strong>Заблокирован:</strong> {{ user.is_block }}</p>
+                    <p><strong>Администратор:</strong> {{ user.is_admin }}</p>
+                    <p><strong>Активен:</strong> {{ user.is_active }}</p>
+
+                    <p><strong>Группы:</strong>
+                    {% if groups %}
+                        <ul>
+                        {% for group in groups %}
+                        <li>{{ group.name }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        Нет
+                    {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

@@ -1,7 +1,10 @@
-from telegram import BotCommandScopeChat
+from telegram import BotCommandScopeChat, Update
 from telegram import InlineKeyboardMarkup as Keyboard
-from telegram import Update
 from telegram.ext import ContextTypes, ConversationHandler
+
+from app.core.db import get_async_session_context
+from app.crud.user_tg import crud_user
+from app.schemas.auth import UserCreate
 
 from bot.constants import button, state
 from bot.constants.info import text
@@ -10,14 +13,49 @@ from bot.core.logger import logger  # noqa
 from bot.utils import get_menu_buttons, send_message
 
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Send a welcome message to the user."""
-    await send_message(update, text.START, link_preview=False)
+    tg_user = update.effective_user
+    user_data = {
+        'tg_id': str(tg_user.id),
+        'first_name': tg_user.first_name or 'Unknown',
+        'last_name': tg_user.last_name or 'Unknown',
+        'user_name': tg_user.username or tg_user.first_name,
+    }
+
+    async with get_async_session_context() as session:
+        existing_user = await crud_user.get_one_by_attributes(
+            filters={'tg_id': user_data['tg_id']},
+            session=session,
+        )
+        if existing_user:
+            if existing_user.is_block:
+                await send_message(
+                    update,
+                    text.MESSAGE_BLOCK_ACCOUNT,
+                    link_preview=False,
+                )
+                return None
+
+            if existing_user.is_admin:
+                return await admin_menu(update, context)
+        else:
+            new_user = UserCreate(**user_data)
+            await crud_user.create(
+                pydantic_scheme_user=new_user,
+                session=session,
+            )
+
+        await send_message(
+            update,
+            text.MESSAGE_WELCOME,
+            link_preview=False,
+        )
 
     return await main_menu(update, context)
 
 
-async def main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     """Show the main menu to the user and set the bot's commands."""
     await context.bot.set_my_commands(
         [button.START_CMD, button.STOP_CMD],
@@ -26,7 +64,7 @@ async def main_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await send_message(
         update,
         text.MAIN_MENU,
-        keyboard=Keyboard([*get_menu_buttons(ALL_MENU)])
+        keyboard=Keyboard([*get_menu_buttons(ALL_MENU)]),
     )
 
     return state.MAIN_MENU
@@ -37,3 +75,22 @@ async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     await send_message(update, text.STOP)
 
     return ConversationHandler.END
+
+
+async def admin_menu(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+) -> int:
+    """Show admin menu."""
+    await send_message(
+        update,
+        text.ADMIN_WELCOME,
+        keyboard=Keyboard([
+            [
+                button.ADMIN_SETTING_BTN,
+                button.ADMMIN_MAIN_MENU_BTN,
+            ],
+        ]),
+    )
+
+    return state.MAIN_MENU

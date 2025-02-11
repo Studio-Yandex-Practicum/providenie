@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Сообщение обновлено{% endblock title %}
+{% block content %}
+    <h1>Сообщение успешно обновлено!</h1>
+    <p>Сообщение: <strong>{{ message.text }}</strong></p>
+    <a href="/admin/messages">Вернуться к списку сообщений</a>
+{% endblock content %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Неавторизован{% endblock title %}
+{% block content %}
+<main>
+    <div class="d-flex justify-content-center">
+        <div class="d-flex flex-column bg-light p-4 rounded align-items-center">
+            <h1>Ошибка 401</h1>
+            <p>Вы не авторизованы для доступа к этой странице.</p>
+            {% if detail %}
+                <p><strong>Подробности ошибки:</strong> {{ detail }}</p>
+            {% endif %}
+            <a class="btn btn-primary mt-5 fs-5 w-50" href="{{ url_for('login') }}">Перейти к странице входа</a>
+        </div>
+    </div>
+</main>
+{% endblock content %}
