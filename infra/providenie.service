@@ -5,11 +5,11 @@ After=docker.service
 
 [Service]
 Type=oneshot
-WorkingDirectory=/etc/providenie
-EnvironmentFile=/etc/providenie/.env
-ExecStart=/usr/bin/env /usr/bin/docker-compose -f /etc/providenie/docker-compose.yml up -d
-ExecStop=/usr/bin/env /usr/bin/docker-compose -f /etc/providenie/docker-compose.yml stop
-ExecReload=/usr/bin/env /usr/bin/docker-compose -f /etc/providenie/docker-compose.yml down && /usr/bin/env /usr/bin/docker-compose -f /etc/providenie/docker-compose.yml up --build -d
+WorkingDirectory=/opt/providenie
+EnvironmentFile=/opt/providenie/.env
+ExecStart=/usr/bin/env /usr/bin/docker-compose -f /opt/providenie/docker-compose.yml up -d
+ExecStop=/usr/bin/env /usr/bin/docker-compose -f /opt/providenie/docker-compose.yml stop
+ExecReload=/usr/bin/env /usr/bin/docker-compose -f /opt/providenie/docker-compose.yml down && /usr/bin/env /usr/bin/docker-compose -f /opt/providenie/docker-compose.yml up --build -d
 StandardOutput=syslog
 RemainAfterExit=yes
 
