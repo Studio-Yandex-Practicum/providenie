@@ -54,6 +54,8 @@ jobs:
           script: |
             cd /opt/providenie
             docker compose down
+            mkdir -p logs
+            chmod -R go+w logs/
             rm -f .env
             touch .env
             echo TELEGRAM_TOKEN="${{ secrets.TELEGRAM_TOKEN }}" >> .env
