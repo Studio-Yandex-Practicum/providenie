@@ -59,6 +59,7 @@ jobs:
           # port: ${{ secrets.PORT }}
           source: "infra/"
           target: /opt/providenie
+          strip_components: 1
 
       - name: Build and Deploy on Remote Server
         uses: appleboy/ssh-action@master
