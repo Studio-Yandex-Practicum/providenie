@@ -58,7 +58,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.PORT }}
           source: "infra/"
-          target: /etc/providenie
+          target: /opt/providenie
 
       - name: Build and Deploy on Remote Server
         uses: appleboy/ssh-action@master
