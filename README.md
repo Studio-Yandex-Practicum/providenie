@@ -291,7 +291,7 @@ HOST - IP-адрес вашего сервера
 SSH_KEY - скопируйте приватный ключ с компьютера, имеющего доступ к боевому серверу (cat ~/.ssh/id_rsa)
 PASSPHRASE - если при создании ssh-ключа вы использовали фразу-пароль, то сохраните её в эту переменную
 
-TELEGRAM_TOKEN=5274023561:AAH3lUgvoGvLN51wtMze_ZGrTO0RRHGTuJM
+TELEGRAM_TOKEN=BotToken
 EMAIL_BOT=bot_mail@mail.ru
 EMAIL_BOT_PASSWORD=EmailPassword
 EMAIL_CURATOR=curator_mail@mail.ru
