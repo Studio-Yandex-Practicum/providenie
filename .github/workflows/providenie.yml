@@ -9,43 +9,64 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build_and_push_ghcr:
+  # build_and_push_ghcr:
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: read
+  #     packages: write
+  #     attestations: write
+  #     id-token: write
+
+  #   steps:
+  #     - uses: actions/checkout@v3
+
+  #     - name: Login to GitHub Container Registry
+  #       uses: docker/login-action@v3
+  #       with:
+  #         registry: ${{ env.REGISTRY }}
+  #         username: ${{ github.actor }}
+  #         password: ${{ secrets.GITHUB_TOKEN }}
+  #     - name: Extract metadata for Docker
+  #       id: meta
+  #       uses: docker/metadata-action@v5
+  #       with:
+  #         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+  #     - name: Build and push Docker image for Production
+  #       if: github.ref == 'refs/heads/master'
+  #       uses: docker/build-push-action@v5
+  #       with:
+  #         context: ./src/
+  #         file: ./src/Dockerfile
+  #         push: true
+  #         tags: ${{ steps.meta.outputs.tags }}
+  #         labels: ${{ steps.meta.outputs.labels }}
+  
+  build_and_push_to_docker_hub:
+    name: Push Docker image to DockerHub
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-      attestations: write
-      id-token: write
-
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+      - name: Check out the repo
+        uses: actions/checkout@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to Docker
+        uses: docker/login-action@v2
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Extract metadata for Docker
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
-      - name: Build and push Docker image for Production
-        if: github.ref == 'refs/heads/master'
-        uses: docker/build-push-action@v5
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Push to DockerHub
+        uses: docker/build-push-action@v4
         with:
           context: ./src/
-          file: ./src/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/providenie:latest
 
   deploy:
     runs-on: ubuntu-latest
     needs:
-      - build_and_push_ghcr
+      - build_and_push_to_docker_hub
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -70,7 +91,7 @@ jobs:
           # port: ${{ secrets.PORT }}
           script: |
             cd /opt/providenie
-            cp providenie.service /etc/systemd/system/.
+            docker compose down
             rm -f .env
             touch .env
             echo TELEGRAM_TOKEN="${{ secrets.TELEGRAM_TOKEN }}" >> .env
@@ -94,5 +115,4 @@ jobs:
             echo FIRST_SUPERUSER_PASSWORD="${{ secrets.FIRST_SUPERUSER_PASSWORD }}" >> .env
             echo FIRST_SUPERUSER_IS_ADMIN="${{ secrets.FIRST_SUPERUSER_IS_ADMIN }}" >> .env
             echo ADMIN_SITE_URL="${{ secrets.ADMIN_SITE_URL }}" >> .env
-            if [ ! systemctl is-enabled providenie.service ]; then systemctl enable providenie.service --now; else systemctl reload providenie.service; fi
-            docker compose exec app alembic upgrade head
+            docker compose up --build -d
