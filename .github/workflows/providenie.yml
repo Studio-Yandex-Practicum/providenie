@@ -91,7 +91,7 @@ jobs:
           # port: ${{ secrets.PORT }}
           script: |
             cd /opt/providenie
-            cp providenie.service /etc/systemd/system/.
+            docker compose down
             rm -f .env
             touch .env
             echo TELEGRAM_TOKEN="${{ secrets.TELEGRAM_TOKEN }}" >> .env
@@ -115,5 +115,4 @@ jobs:
             echo FIRST_SUPERUSER_PASSWORD="${{ secrets.FIRST_SUPERUSER_PASSWORD }}" >> .env
             echo FIRST_SUPERUSER_IS_ADMIN="${{ secrets.FIRST_SUPERUSER_IS_ADMIN }}" >> .env
             echo ADMIN_SITE_URL="${{ secrets.ADMIN_SITE_URL }}" >> .env
-            if [ ! systemctl is-enabled providenie.service ]; then systemctl enable providenie.service --now; else systemctl reload providenie.service; fi
-            docker compose exec app alembic upgrade head
+            docker compose up --build -d
