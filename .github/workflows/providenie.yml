@@ -68,7 +68,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            cd /etc/providenie
+            cd /opt/providenie
             cp providenie.service /etc/systemd/system/.
             rm -f .env
             touch .env
