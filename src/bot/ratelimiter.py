@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import os.path
 from datetime import datetime, timedelta
 from typing import Any
 
@@ -43,39 +44,71 @@ async def load_unsent_messages(context: ContextTypes.DEFAULT_TYPE) -> None:
             logging.info(f'Запланирована задача {job.name} на {job.next_t}')
 
 
+def check_photos_path(message: Any) -> dict[str]:
+    """Проверяет наличие файлов по заданнаому пути."""
+    if not message.photos:
+        return []
+
+    res = []
+    for photo in message.photos:
+        if os.path.isfile(photo.filename):
+            res.append(photo.filename)
+
+        if len(res) == 10:
+            break
+    return res
+
+
 async def send_message_to_user(
     context: ContextTypes.DEFAULT_TYPE,
     user_id: int,
     message: Any,
 ) -> None:
     """Отправляет сообщение пользователю по его ID."""
-    if not message.photos:
-        await context.bot.send_message(
-            chat_id=user_id,
-            text=message.text,
-            parse_mode=ParseMode.MARKDOWN,
-            disable_web_page_preview=True,
-        )
-    elif len(message.photos) == 1:
-        await context.bot.send_photo(
-            chat_id=user_id,
-            parse_mode=ParseMode.MARKDOWN,
-            photo=message.photos[0].filename,
-            caption=message.text,
-        )
+    photos = check_photos_path(message=message)
+
+    if not photos:
+        try:
+            await context.bot.send_message(
+                chat_id=user_id,
+                text=message.text,
+                parse_mode=ParseMode.MARKDOWN,
+                disable_web_page_preview=True,
+            )
+        except Exception:
+            logging.error(
+                f'Ошибка отправки сообщения пользователю TG ID {user_id}',
+            )
+    elif len(photos) == 1:
+        try:
+            await context.bot.send_photo(
+                chat_id=user_id,
+                parse_mode=ParseMode.MARKDOWN,
+                photo=photos[0],
+                caption=message.text,
+            )
+        except Exception:
+            logging.error(
+                f'Ошибка отправки сообщения пользователю TG ID {user_id}',
+            )
     else:
         media = [
             InputMediaPhoto(
-                media=open(message.photos[i].filename, 'rb'),  # noqa: ASYNC230
+                media=open(photos[i], 'rb'),  # noqa: ASYNC230
             )
-            for i in range(min(10, len(message.photos)))
+            for i in range(min(10, len(photos)))
         ]
-        await context.bot.send_media_group(
-            chat_id=user_id,
-            parse_mode=ParseMode.MARKDOWN,
-            media=media,
-            caption=message.text,
-        )
+        try:
+            await context.bot.send_media_group(
+                chat_id=user_id,
+                parse_mode=ParseMode.MARKDOWN,
+                media=media,
+                caption=message.text,
+            )
+        except Exception:
+            logging.error(
+                f'Ошибка отправки сообщения пользователю TG ID {user_id}',
+            )
     await asyncio.sleep(1 / 20)
 
 
@@ -107,7 +140,10 @@ async def send_message(context: ContextTypes.DEFAULT_TYPE) -> None:  # noqa: C90
             }
 
             for user_id in users_to_notify:
-                await send_message_to_user(context, user_id, message)
+                try:
+                    await send_message_to_user(context, user_id, message)
+                except Exception:
+                    pass
         else:
             # Если групп нет, получаем всех активных пользователей,
             # исключая администратора и заблокированных

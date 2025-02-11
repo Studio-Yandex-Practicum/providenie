@@ -39,7 +39,13 @@ AsyncSessionLocal = sessionmaker(
 async def get_async_session():  # noqa: ANN201
     """Asynchronous session generator."""
     async with AsyncSessionLocal() as async_session:
-        yield async_session
+        try:
+            yield async_session
+        except Exception as e:
+            await async_session.rollback()
+            raise e
+        finally:
+            await async_session.close()
 
 
 @asynccontextmanager
@@ -48,5 +54,8 @@ async def get_async_session_context():  # noqa: ANN201
     async with AsyncSessionLocal() as session:
         try:
             yield session
+        except Exception as e:
+            await session.rollback()
+            raise e
         finally:
             await session.close()
