@@ -3,7 +3,7 @@ name: providenie
 
 services:
   app:
-    image: "ghcr.io/studio-yandex-practicum/providenie:latest"
+    image: "yndrsateam/providenie:latest"
     restart: always
     environment:
       - RUN_IN_DOCKER=1
