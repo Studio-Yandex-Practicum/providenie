@@ -4,48 +4,10 @@ on:
   push:
     branches: [release]
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-
-jobs:
-  # build_and_push_ghcr:
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     contents: read
-  #     packages: write
-  #     attestations: write
-  #     id-token: write
-
-  #   steps:
-  #     - uses: actions/checkout@v3
-
-  #     - name: Login to GitHub Container Registry
-  #       uses: docker/login-action@v3
-  #       with:
-  #         registry: ${{ env.REGISTRY }}
-  #         username: ${{ github.actor }}
-  #         password: ${{ secrets.GITHUB_TOKEN }}
-  #     - name: Extract metadata for Docker
-  #       id: meta
-  #       uses: docker/metadata-action@v5
-  #       with:
-  #         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
-  #     - name: Build and push Docker image for Production
-  #       if: github.ref == 'refs/heads/master'
-  #       uses: docker/build-push-action@v5
-  #       with:
-  #         context: ./src/
-  #         file: ./src/Dockerfile
-  #         push: true
-  #         tags: ${{ steps.meta.outputs.tags }}
-  #         labels: ${{ steps.meta.outputs.labels }}
-  
+jobs:  
   build_and_push_to_docker_hub:
     name: Push Docker image to DockerHub
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
