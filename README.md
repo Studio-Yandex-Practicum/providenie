@@ -315,6 +315,9 @@ FIRST_SUPERUSER_FIRST_NAME=first_name
 FIRST_SUPERUSER_USER_NAME=username
 FIRST_SUPERUSER_PASSWORD=password
 FIRST_SUPERUSER_IS_ADMIN=True
+
+# Адрес (полный) сайта с администраторской панелью
+ADMIN_SITE_URL =
 ```
 
 
