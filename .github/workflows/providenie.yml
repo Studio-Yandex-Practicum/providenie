@@ -54,6 +54,7 @@ jobs:
           script: |
             cd /opt/providenie
             docker compose down
+            docker pull ${{ secrets.DOCKER_USERNAME }}/providenie:latest
             mkdir -p logs
             chmod -R go+w logs/
             rm -f .env
